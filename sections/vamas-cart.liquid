@@ -1,0 +1,203 @@
+{{ 'vamas-cart.css' | asset_url | stylesheet_tag }}
+
+<div class="breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a><span>&#8250;</span><span>My Cart</span>
+</div>
+
+<div class="cart-page-header">
+  <div style="display:flex;align-items:center;">
+    <span class="cart-page-title">My Cart</span>
+    <span class="cart-count-badge" id="cart-count-badge">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
+  </div>
+  <a href="{{ section.settings.continue_shopping_url | default: routes.all_products_collection_url }}" class="continue-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Continue Shopping
+  </a>
+</div>
+
+<div class="cart-layout">
+
+  <div id="cart-left">
+    {% assign free_threshold_cents = section.settings.free_delivery_threshold | times: 100 %}
+    {% if free_threshold_cents > 0 %}
+    <div class="free-del-box" id="free-del-box" {% if cart.total_price >= free_threshold_cents %}style="display:none;"{% endif %}>
+      <div class="fdel-top">
+        <div class="fdel-label">Add <strong id="fdel-amount">{{ free_threshold_cents | minus: cart.total_price | money }}</strong> more for free delivery!</div>
+      </div>
+      <div class="fdel-track"><div class="fdel-fill" id="fdel-fill" style="width:{{ cart.total_price | times: 100.0 | divided_by: free_threshold_cents | at_most: 100 }}%"></div></div>
+    </div>
+    <div class="fdel-success" id="fdel-success" {% unless cart.total_price >= free_threshold_cents %}style="display:none;"{% endunless %}>&#127881; You've unlocked <strong>FREE delivery!</strong></div>
+    {% endif %}
+
+    <div class="cart-items-wrap" id="cart-items-wrap" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>
+      <div class="cart-items-head">
+        <div>PRODUCT</div><div>PRICE</div><div>QUANTITY</div><div style="text-align:right;">SUBTOTAL</div><div></div>
+      </div>
+      <div id="cart-items-body">
+        {% for item in cart.items %}
+        <div class="cart-item" data-key="{{ item.key }}" data-line="{{ forloop.index }}">
+          <div class="ci-product">
+            <div class="ci-img"><img src="{{ item.image | img_url: '160x' }}" alt="{{ item.title | escape }}"></div>
+            <div>
+              <div class="ci-name"><a href="{{ item.url }}" style="color:inherit;text-decoration:none;">{{ item.product.title }}</a></div>
+              <div class="ci-type">{{ item.product.type }}</div>
+              <div class="ci-attrs">
+                {% for opt in item.options_with_values %}
+                  <span class="ci-attr">{{ opt.name }}: {{ opt.value }}</span>
+                {% endfor %}
+              </div>
+              <div class="ci-actions">
+                <button class="ci-action-btn" data-remove-line="{{ forloop.index }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg> Remove</button>
+              </div>
+            </div>
+          </div>
+          <div class="ci-price">{{ item.original_price | money }}
+            {% if item.original_price > item.final_price %}<div class="ci-orig">{{ item.original_price | money }}</div><div class="ci-save">{{ item.original_price | minus: item.final_price | times: 100.0 | divided_by: item.original_price | round }}% off</div>{% endif %}
+          </div>
+          <div class="ci-qty">
+            <button class="ci-qty-btn" data-line="{{ forloop.index }}" data-delta="-1">&#8722;</button>
+            <span class="ci-qty-num" id="qtynum-{{ forloop.index }}">{{ item.quantity }}</span>
+            <button class="ci-qty-btn" data-line="{{ forloop.index }}" data-delta="1">+</button>
+          </div>
+          <div class="ci-subtotal" id="sub-{{ forloop.index }}">{{ item.final_line_price | money }}</div>
+          <div class="ci-remove"><button class="ci-remove-btn" data-remove-line="{{ forloop.index }}" title="Remove"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="empty-cart" id="empty-cart" {% if cart.item_count > 0 %}style="display:none;"{% endif %}>
+      <div class="empty-icon">&#128722;</div>
+      <div class="empty-title">Your cart is empty</div>
+      <div class="empty-sub">{{ section.settings.empty_cart_text | default: "Looks like you haven't added anything yet." }}</div>
+      <a href="{{ routes.all_products_collection_url }}" class="btn-shop">SHOP NOW</a>
+    </div>
+  </div>
+
+  <div class="order-summary" id="order-summary-panel" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>
+    <div class="os-title">ORDER SUMMARY</div>
+
+    {% form 'cart' %}
+      <div class="coupon-form">
+        <input class="coupon-input" type="text" name="discount" placeholder="Enter coupon code" autocomplete="off">
+        <button class="coupon-btn" type="submit">APPLY</button>
+      </div>
+      <div class="coupon-result" style="color:#888;font-size:11px;margin-top:4px;">Discount codes are validated at checkout.</div>
+    {% endform %}
+
+    <div class="os-row"><span>MRP Total (<span id="os-item-count">{{ cart.item_count }} items</span>)</span><span id="os-mrp">{{ cart.original_total_price | money }}</span></div>
+    {% if cart.total_discount > 0 %}
+    <div class="os-row green"><span>Discount</span><span id="os-discount">− {{ cart.total_discount | money }}</span></div>
+    {% endif %}
+    <div class="os-row"><span>Delivery Charges</span><span id="os-delivery">{% if free_threshold_cents > 0 and cart.total_price >= free_threshold_cents %}FREE{% else %}Calculated at checkout{% endif %}</span></div>
+    <div class="os-divider"></div>
+    <div class="os-total"><span>TOTAL PAYABLE</span><span id="os-total">{{ cart.total_price | money }}</span></div>
+
+    {% form 'cart' %}
+      <button class="btn-checkout" type="submit" name="checkout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        PROCEED TO CHECKOUT
+      </button>
+    {% endform %}
+    <a href="{{ routes.all_products_collection_url }}" class="btn-continue" style="display:block;text-align:center;text-decoration:none;">Continue Shopping</a>
+
+    {% if section.settings.show_trust_mini %}
+    <div class="trust-mini">
+      <div class="tm-item"><svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>100% Secure Checkout</div>
+      <div class="tm-item"><svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>7-Day Easy Returns</div>
+      <div class="tm-item"><svg class="tm-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>Ships in 2–3 Business Days</div>
+    </div>
+    {% endif %}
+    <div class="pay-row">
+      <span class="pay-icon">UPI</span><span class="pay-icon">Visa</span><span class="pay-icon">MC</span><span class="pay-icon">NetBanking</span><span class="pay-icon">COD</span>
+    </div>
+  </div>
+
+</div>
+
+{% assign related_blocks = section.blocks | where: 'type', 'related_product' %}
+{% if related_blocks.size > 0 %}
+<section class="recently-section">
+  <div class="rs-title">{{ section.settings.related_heading | default: 'You May Also Like' }}</div>
+  <div class="rs-grid">
+    {% for block in related_blocks %}
+      {% assign rp = block.settings.product %}
+      {% if rp != blank %}
+      {% assign rfv = rp.selected_or_first_available_variant %}
+      <a href="{{ rp.url }}" class="rs-card" style="text-decoration:none;color:inherit;display:block;">
+        <div class="rs-img"><img src="{{ rp.featured_image | img_url: '400x' }}" alt="{{ rp.title | escape }}"></div>
+        <div class="rs-info">
+          <div class="rs-name">{{ rp.title }}</div>
+          <div class="rs-type">{{ rp.type }}</div>
+          <div class="rs-price-row">
+            <span class="rs-price">{{ rfv.price | money }}</span>
+            {% if rfv.compare_at_price > rfv.price %}<span class="rs-old">{{ rfv.compare_at_price | money }}</span>{% endif %}
+          </div>
+          {% form 'product', rp %}
+            <input type="hidden" name="id" value="{{ rfv.id }}">
+            <button type="submit" class="rs-add" onclick="event.stopPropagation();"{% unless rfv.available %} disabled{% endunless %}>ADD TO CART</button>
+          {% endform %}
+        </div>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<script>
+(function(){
+  function fmtMoney(cents){ return Shopify.formatMoney(cents, {{ shop.money_format | json }}); }
+
+  document.querySelectorAll('[data-line][data-delta]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var line = this.dataset.line;
+      var qtyEl = document.getElementById('qtynum-' + line);
+      var newQty = parseInt(qtyEl.textContent, 10) + parseInt(this.dataset.delta, 10);
+      if (newQty < 1) newQty = 1;
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: line, quantity: newQty })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(){ window.location.reload(); });
+    });
+  });
+
+  document.querySelectorAll('[data-remove-line]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var line = this.dataset.removeLine;
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: line, quantity: 0 })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(){ window.location.reload(); });
+    });
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Vamas Cart",
+  "settings": [
+    { "type": "url", "id": "continue_shopping_url", "label": "Continue Shopping URL" },
+    { "type": "text", "id": "free_delivery_threshold", "label": "Free Delivery Threshold (in shop currency, 0 to disable)", "default": "999" },
+    { "type": "textarea", "id": "empty_cart_text", "label": "Empty Cart Message", "default": "Looks like you haven't added anything yet. Explore our handcrafted collection!" },
+    { "type": "checkbox", "id": "show_trust_mini", "label": "Show Trust Badges", "default": true },
+    { "type": "text", "id": "related_heading", "label": "Related Products Heading", "default": "You May Also Like" }
+  ],
+  "blocks": [
+    {
+      "type": "related_product",
+      "name": "Related Product",
+      "settings": [{ "type": "product", "id": "product", "label": "Product" }]
+    }
+  ],
+  "presets": [{ "name": "Vamas Cart" }]
+}
+{% endschema %}

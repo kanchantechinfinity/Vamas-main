@@ -1,0 +1,80 @@
+{{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
+
+{% comment %} ── Announcement Bar ─────────────────── {% endcomment %}
+{% if section.settings.show_announce %}
+<div class="vamas-announce">{{ section.settings.announce_text }}</div>
+{% endif %}
+
+<div class="vamas-nav-wrapper" id="vamas-nav-wrapper">
+  <nav class="vamas-nav-outer">
+    <div class="vamas-nav">
+      <a href="{{ routes.root_url }}" class="vamas-nav__logo">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" class="vamas-nav__logo-img" width="120" height="42">
+        {% else %}
+          <span class="vamas-nav__brand">{{ shop.name }}</span>
+        {% endif %}
+      </a>
+
+      <div class="vamas-nav__links">
+        {% for link in section.settings.main_menu.links %}
+          <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
+        {% endfor %}
+      </div>
+
+      <div class="vamas-nav__icons">
+        <a href="{{ routes.search_url }}" title="Search" aria-label="Search">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </a>
+        {% if shop.customer_accounts_enabled %}
+        <a href="{{ routes.account_url }}" title="Account" aria-label="Account">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        {% endif %}
+        <a href="{{ routes.cart_url }}" id="vamas-nav-cart-link" title="Cart" aria-label="Cart" style="position:relative;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="vamas-cart-badge" id="vamas-nav-cart-badge" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>{{ cart.item_count }}</span>
+        </a>
+        {% if section.settings.contact_url != blank %}
+          <a href="{{ section.settings.contact_url }}" class="vamas-nav__contact-btn">{{ section.settings.contact_label | default: 'Contact Us' }}</a>
+        {% endif %}
+        <button class="vamas-nav__hamburger" id="vamas-nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="vamas-nav__mobile-menu" id="vamas-nav-mobile-menu">
+    {% for link in section.settings.main_menu.links %}
+      <a href="{{ link.url }}">{{ link.title | upcase }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+(function(){
+  var wrap = document.getElementById('vamas-nav-wrapper');
+  var btn = document.getElementById('vamas-nav-hamburger');
+  if (btn) {
+    btn.addEventListener('click', function(){
+      wrap.classList.toggle('vamas-nav-mobile-open');
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Vamas Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "link_list", "id": "main_menu", "label": "Navigation Menu", "default": "main-menu" },
+    { "type": "header", "content": "Contact Button" },
+    { "type": "text", "id": "contact_label", "label": "Button Text", "default": "Contact Us" },
+    { "type": "url", "id": "contact_url", "label": "Button URL" },
+    { "type": "header", "content": "Announcement Bar" },
+    { "type": "checkbox", "id": "show_announce", "label": "Show Announcement Bar", "default": true },
+    { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
+  ],
+  "presets": [{ "name": "Vamas Header" }]
+}
+{% endschema %}

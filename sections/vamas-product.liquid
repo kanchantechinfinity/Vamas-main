@@ -1,0 +1,692 @@
+{{ 'vamas-product.css' | asset_url | stylesheet_tag }}
+
+<div class="breadcrumb">
+  <a href="{{ routes.root_url }}">Home</a>
+  <span>&#8250;</span>
+  <a href="{{ product.collections.first.url | default: routes.all_products_collection_url }}">{{ product.collections.first.title | default: 'Collections' }}</a>
+  <span>&#8250;</span>
+  <span>{{ product.title }}</span>
+</div>
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+<section class="product-section">
+
+  <!-- ═══ LEFT: Gallery ═══ -->
+  <div class="prod-gallery">
+    <div class="gallery-main" id="gallery-main">
+      <img id="main-img" src="{{ current_variant.featured_image | default: product.featured_image | img_url: '1000x' }}" alt="{{ product.title | escape }}">
+      {% if section.settings.badge_text != blank %}<div class="gallery-badge">{{ section.settings.badge_text }}</div>{% endif %}
+      {% if product.images.size > 1 %}
+        <button class="gal-arrow gal-arrow-l" id="gal-prev">&#8249;</button>
+        <button class="gal-arrow gal-arrow-r" id="gal-next">&#8250;</button>
+      {% endif %}
+      <div class="zoom-hint">&#128269; Click to zoom</div>
+    </div>
+    {% if product.images.size > 1 %}
+    <div class="thumb-strip" id="thumb-strip">
+      {% for image in product.images %}
+        <div class="thumb-item{% if forloop.first %} active{% endif %}" data-idx="{{ forloop.index0 }}" data-src="{{ image | img_url: '1000x' }}">
+          <img src="{{ image | img_url: '200x' }}" alt="{{ image.alt | default: product.title | escape }}">
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- ═══ RIGHT: Product Info ═══ -->
+  <div class="prod-info">
+
+    <div class="prod-badge-row">
+      {% if section.settings.badge_text != blank %}<span class="prod-badge">{{ section.settings.badge_text }}</span>{% endif %}
+      {% if section.settings.badge_hot_text != blank %}<span class="prod-badge-hot">&#128293; {{ section.settings.badge_hot_text }}</span>{% endif %}
+    </div>
+    <h1 class="prod-name">{{ product.title }}</h1>
+    <div class="prod-type">{{ section.settings.subtitle }}</div>
+
+    {% if section.settings.show_rating %}
+    <div class="prod-rating">
+      <span class="stars">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
+      <span class="rating-num">{{ section.settings.rating }}</span>
+      <span class="rating-count">({{ section.settings.review_count }} reviews)</span>
+      {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
+      <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
+    </div>
+    {% endif %}
+
+    <div class="prod-price" id="prod-price-block">
+      <span class="price-now" id="price-now">{{ current_variant.price | money }}</span>
+      {% if current_variant.compare_at_price > current_variant.price %}
+        <span class="price-old" id="price-old">{{ current_variant.compare_at_price | money }}</span>
+        <span class="price-off" id="price-off">{{ current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round }}% off</span>
+      {% endif %}
+    </div>
+
+    {% if section.settings.offer_code != blank %}
+    <div class="offer-strip">
+      <span class="offer-tag">OFFER</span>
+      <span class="offer-text">Use code <span class="offer-code" id="coupon-code" title="Click to copy">{{ section.settings.offer_code }}</span> for <strong>{{ section.settings.offer_detail }}</strong></span>
+      <span class="offer-copied" id="offer-copied">Copied!</span>
+    </div>
+    {% endif %}
+
+    {% if section.settings.show_social_proof %}
+    <div class="social-proof">
+      <span class="social-dot"></span>
+      <span id="viewer-count">{{ section.settings.viewer_count }}</span> people are viewing this right now
+    </div>
+    {% endif %}
+
+    <div class="prod-divider"></div>
+
+    {% comment %} ── Variant Picker ── {% endcomment %}
+    <product-form>
+    {% form 'product', product %}
+      <input type="hidden" name="id" id="variant-id-input" value="{{ current_variant.id }}">
+
+      {% for option in product.options_with_values %}
+        {% assign option_down = option.name | downcase %}
+        {% if option_down contains 'colour' or option_down contains 'color' %}
+          <div class="color-section">
+            <div class="selector-label">SELECT {{ option.name | upcase }}</div>
+            <div class="color-swatches" data-option-index="{{ forloop.index0 }}">
+              {% for value in option.values %}
+                {% assign swatch_hex = '' %}
+                {% for sw in section.blocks %}
+                  {% if sw.type == 'color_swatch' and sw.settings.name == value %}{% assign swatch_hex = sw.settings.hex %}{% endif %}
+                {% endfor %}
+                <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
+                     style="background:{{ swatch_hex | default: value | handleize | replace: '-', '' }};"
+                     data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
+              {% endfor %}
+            </div>
+            <div class="color-name-label">{{ option.name }}: <strong id="color-name-text">{{ current_variant.options[forloop.index0] }}</strong></div>
+          </div>
+        {% elsif option_down contains 'size' %}
+          <div class="size-section">
+            <div class="size-label-row">
+              <div class="selector-label">SELECT {{ option.name | upcase }}</div>
+              {% if section.settings.show_size_chart %}<a href="#" class="size-chart-link" id="size-chart-link">Size Chart &#8594;</a>{% endif %}
+            </div>
+            <div class="size-buttons" data-option-index="{{ forloop.index0 }}">
+              {% for value in option.values %}
+                <button type="button" class="size-btn{% if value == current_variant.options[forloop.index0] %} active{% endif %}" data-value="{{ value | escape }}">{{ value }}</button>
+              {% endfor %}
+            </div>
+            <div class="stock-row">
+              <div class="stock-label" id="stock-label">
+                {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity <= 5 and current_variant.available %}
+                  &#9889; Only {{ current_variant.inventory_quantity }} left — hurry!
+                {% elsif current_variant.available %}
+                  &#10003; In stock
+                {% else %}
+                  Out of stock
+                {% endif %}
+              </div>
+              <div class="stock-track"><div class="stock-fill"></div></div>
+            </div>
+          </div>
+        {% else %}
+          <div class="size-section">
+            <div class="selector-label">{{ option.name | upcase }}</div>
+            <div class="size-buttons" data-option-index="{{ forloop.index0 }}">
+              {% for value in option.values %}
+                <button type="button" class="size-btn{% if value == current_variant.options[forloop.index0] %} active{% endif %}" data-value="{{ value | escape }}">{{ value }}</button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      {% if section.settings.custom_note != blank %}
+      <div class="custom-note">&#9986; {{ section.settings.custom_note }}</div>
+      {% endif %}
+
+      <div class="delivery-box">
+        {% if section.settings.delivery_line_1 != blank %}<div class="delivery-row"><span class="d-icon">&#128666;</span><span>{{ section.settings.delivery_line_1 }}</span></div>{% endif %}
+        {% if section.settings.delivery_line_2 != blank %}<div class="delivery-row"><span class="d-icon">&#128197;</span><span>{{ section.settings.delivery_line_2 }}</span></div>{% endif %}
+        {% if section.settings.delivery_line_3 != blank %}<div class="delivery-row"><span class="d-icon">&#8635;</span><span>{{ section.settings.delivery_line_3 }}</span></div>{% endif %}
+        {% if section.settings.show_pincode %}
+        <div class="pincode-form">
+          <input class="pincode-input" id="pincode-input" type="text" maxlength="6" placeholder="Enter pincode to check delivery">
+          <button type="button" class="pincode-btn" id="pincode-btn">CHECK</button>
+        </div>
+        <div class="pincode-result" id="pincode-result"></div>
+        {% endif %}
+      </div>
+
+      <div class="qty-row">
+        <span class="qty-label">QUANTITY</span>
+        <div class="qty-control">
+          <button type="button" class="qty-btn" id="qty-minus">&#8722;</button>
+          <span class="qty-num" id="qty-num">1</span>
+          <button type="button" class="qty-btn" id="qty-plus">&#43;</button>
+          <input type="hidden" name="quantity" id="qty-hidden-input" value="1">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-atc" id="atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
+        {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+      </button>
+      <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} disabled{% endunless %}>&#9889; BUY NOW</button>
+    {% endform %}
+    </product-form>
+
+    {% if section.settings.show_payment_strip %}
+    <div class="payment-strip">
+      <span class="pay-badge">UPI</span><span class="pay-badge">Visa</span><span class="pay-badge">Mastercard</span>
+      <span class="pay-badge">Net Banking</span><span class="pay-badge">COD</span>
+    </div>
+    {% endif %}
+
+    <a href="#" class="wishlist-link" id="wishlist-btn">&#9825; Add to Wishlist</a>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" id="share-wa" title="Share on WhatsApp">
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="#25D366"><path d="M16 3C8.832 3 3 8.832 3 16c0 2.625.77 5.074 2.086 7.129L3.05 28.855 9 26.875C10.973 28.023 13.41 29 16 29c7.168 0 13-5.832 13-13S23.168 3 16 3zm0 2c6.086 0 11 4.914 11 11s-4.914 11-11 11c-2.324 0-4.48-.766-6.25-2.063l-.399-.297-3.586.945.992-2.843-.334-.426A10.945 10.945 0 0 1 5 16C5 9.914 9.914 5 16 5zm-4.695 4.852c-.196 0-.504.07-.766.36-.261.292-1 .977-1 2.437s1.063 2.824 1.211 3.028c.148.203 2.121 3.351 5.199 4.585 2.547 1.032 3.082.844 3.656.793.574-.055 1.856-.719 2.106-1.41.25-.695.25-1.285.176-1.41-.074-.125-.277-.199-.578-.348-.3-.148-1.758-.863-2.035-.961-.277-.101-.477-.152-.676.149-.2.297-.773.961-.949 1.16-.176.2-.351.223-.652.075-.3-.149-1.282-.466-2.437-1.496-.9-.813-1.508-1.813-1.684-2.114-.176-.305-.02-.469.133-.617.136-.133.3-.348.45-.52.148-.175.197-.3.296-.5.098-.199.05-.372-.026-.52-.074-.149-.625-1.617-.875-2.207-.25-.574-.5-.492-.676-.5a12.71 12.71 0 0 0-.574-.008 1.1 1.1 0 0 0-.25 0z"/></svg>
+      </button>
+      <button class="share-btn" id="share-copy" title="Copy link">&#128279;</button>
+    </div>
+
+    {% if section.settings.show_trust_grid %}
+    <div class="trust-grid">
+      <div class="trust-item"><span class="trust-icon">&#10003;</span><span>100% Authentic Handcrafted</span></div>
+      <div class="trust-item"><span class="trust-icon">&#128666;</span><span>Free Shipping &gt; {{ section.settings.free_shipping_threshold }}</span></div>
+      <div class="trust-item"><span class="trust-icon">&#8635;</span><span>7-Day Easy Returns</span></div>
+      <div class="trust-item"><span class="trust-icon">&#128274;</span><span>100% Secure Payment</span></div>
+      <div class="trust-item"><span class="trust-icon">&#9986;</span><span>Free Custom Stitching</span></div>
+      <div class="trust-item"><span class="trust-icon">&#127470;&#127475;</span><span>Made in India</span></div>
+    </div>
+    {% endif %}
+
+    <div class="accordion">
+      <div class="acc-item open">
+        <div class="acc-header">PRODUCT DETAILS <span class="acc-icon">&#8722;</span></div>
+        <div class="acc-body"><div class="acc-content">{{ product.description }}</div></div>
+      </div>
+
+      {% assign size_rows = section.blocks | where: 'type', 'size_row' %}
+      {% if size_rows.size > 0 %}
+      <div class="acc-item" id="acc-size">
+        <div class="acc-header">MEASUREMENTS &amp; SIZING <span class="acc-icon">+</span></div>
+        <div class="acc-body">
+          <div class="acc-content">
+            <p style="margin-bottom:10px;font-size:11px;color:#888;">All measurements are in inches. If between sizes, choose the larger size.</p>
+            <table class="size-table">
+              <thead><tr><th>Size</th><th>Bust</th><th>Waist</th><th>Hip</th><th>Length</th></tr></thead>
+              <tbody id="size-table-body">
+                {% for block in size_rows %}
+                <tr data-size="{{ block.settings.size }}"{% if block.settings.size == current_variant.options[1] %} class="highlight"{% endif %}>
+                  <td>{{ block.settings.size }}</td><td>{{ block.settings.bust }}</td><td>{{ block.settings.waist }}</td><td>{{ block.settings.hip }}</td><td>{{ block.settings.length }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% assign care_items = section.blocks | where: 'type', 'care_item' %}
+      {% if care_items.size > 0 %}
+      <div class="acc-item">
+        <div class="acc-header">CARE INSTRUCTIONS <span class="acc-icon">+</span></div>
+        <div class="acc-body">
+          <div class="acc-content">
+            <div class="care-grid">
+              {% for block in care_items %}
+              <div class="care-item"><div class="care-icon-wrap">{{ block.settings.icon }}</div><div class="care-label">{{ block.settings.label }}</div></div>
+              {% endfor %}
+            </div>
+            {% if section.settings.care_note != blank %}<div class="care-note">&#128161; {{ section.settings.care_note }}</div>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if section.settings.shipping_returns_text != blank %}
+      <div class="acc-item">
+        <div class="acc-header">SHIPPING &amp; RETURNS <span class="acc-icon">+</span></div>
+        <div class="acc-body"><div class="acc-content">{{ section.settings.shipping_returns_text }}</div></div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% comment %} ── Related Products ── {% endcomment %}
+{% assign related_blocks = section.blocks | where: 'type', 'related_product' %}
+{% if related_blocks.size > 0 %}
+<section class="related-section">
+  <div class="rel-eyebrow">YOU MAY ALSO LIKE</div>
+  <h2 class="rel-heading">{{ section.settings.related_heading | default: 'More Handcrafted Beauties' }}</h2>
+  <div class="related-grid">
+    {% for block in related_blocks %}
+      {% assign rp = block.settings.product %}
+      {% if rp != blank %}
+      <div class="rel-card">
+        <a href="{{ rp.url }}" class="rel-img-wrap">
+          <img src="{{ rp.featured_image | img_url: '500x' }}" alt="{{ rp.title | escape }}">
+          {% if block.settings.badge != blank %}<div class="rel-badge">{{ block.settings.badge }}</div>{% endif %}
+        </a>
+        <div class="rel-info">
+          <a href="{{ rp.url }}" class="rel-name">{{ rp.title }}</a>
+          <div class="rel-type">{{ rp.type }}</div>
+          <div class="rel-price-row">
+            <span class="rel-price">{{ rp.price | money }}</span>
+            {% if rp.compare_at_price > rp.price %}<span class="rel-old">{{ rp.compare_at_price | money }}</span>{% endif %}
+          </div>
+          {% form 'product', rp %}
+            <input type="hidden" name="id" value="{{ rp.selected_or_first_available_variant.id }}">
+            <button type="submit" class="rel-add-btn"{% unless rp.selected_or_first_available_variant.available %} disabled{% endunless %}>ADD TO CART</button>
+          {% endform %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% comment %} ── Reviews ── {% endcomment %}
+{% assign review_blocks = section.blocks | where: 'type', 'review' %}
+{% if section.settings.show_reviews and review_blocks.size > 0 %}
+<section class="reviews-section" id="reviews">
+  <h2 class="rev-heading">Customer Reviews</h2>
+  <div class="reviews-grid">
+    <div class="rev-summary">
+      <div class="rev-big-score">{{ section.settings.rating }}</div>
+      <div class="rev-stars-big">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+      <div class="rev-count">Based on {{ section.settings.review_count }} reviews</div>
+    </div>
+    <div class="rev-cards">
+      {% for block in review_blocks %}
+      <div class="rev-card">
+        <div class="rev-top">
+          <div><span class="rev-name">{{ block.settings.name }}</span><span class="rev-verified">&#10003; Verified Purchase</span></div>
+          <div><div class="rev-stars-sm">{% for i in (1..5) %}{% if i <= block.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div><div class="rev-date">{{ block.settings.date }}</div></div>
+        </div>
+        <div class="rev-title">{{ block.settings.title }}</div>
+        <div class="rev-text">{{ block.settings.text }}</div>
+      </div>
+      {% endfor %}
+      <div class="write-rev-wrap"><button class="write-rev-btn">Write a Review</button></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if section.settings.show_size_chart %}
+<div class="sc-overlay" id="sc-overlay">
+  <div class="sc-modal">
+    <div class="sc-head">
+      <span class="sc-title">SIZE CHART</span>
+      <div class="sc-toggle">
+        <button class="sc-toggle-btn active" id="btn-inch">INCHES</button>
+        <button class="sc-toggle-btn" id="btn-cm">CM</button>
+      </div>
+      <button class="sc-close" id="sc-close">&times;</button>
+    </div>
+    <div class="sc-body">
+      <p class="sc-hint">Measure your body (not the garment). If between sizes, choose the larger size.</p>
+      <table class="sc-table">
+        <thead><tr><th>Size</th><th>Bust</th><th>Waist</th><th>Hip</th><th>Length</th></tr></thead>
+        <tbody id="sc-tbody">
+          {% for block in size_rows %}
+          <tr data-size="{{ block.settings.size }}">
+            <td>{{ block.settings.size }}</td>
+            <td class="sc-val" data-in="{{ block.settings.bust }}" data-cm="{{ block.settings.bust_cm }}">{{ block.settings.bust }}</td>
+            <td class="sc-val" data-in="{{ block.settings.waist }}" data-cm="{{ block.settings.waist_cm }}">{{ block.settings.waist }}</td>
+            <td class="sc-val" data-in="{{ block.settings.hip }}" data-cm="{{ block.settings.hip_cm }}">{{ block.settings.hip }}</td>
+            <td class="sc-val" data-in="{{ block.settings.length }}" data-cm="{{ block.settings.length_cm }}">{{ block.settings.length }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="sc-note">&#128161; <strong>How to measure:</strong> Use a soft measuring tape. Bust = fullest part of chest. Waist = narrowest part. Hip = fullest part below waist. Length = shoulder seam to blouse hem.</div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-arrow lb-prev" id="lb-prev">&#8249;</button>
+  <img id="lb-img" src="" alt="Zoomed view">
+  <button class="lb-arrow lb-next" id="lb-next">&#8250;</button>
+  <button class="lb-close" id="lb-close">&times;</button>
+</div>
+
+<div class="sticky-atc" id="sticky-atc">
+  <div class="sticky-thumb"><img src="{{ current_variant.featured_image | default: product.featured_image | img_url: '100x' }}" alt="{{ product.title | escape }}"></div>
+  <div class="sticky-info">
+    <div class="sticky-name">{{ product.title }}</div>
+    <div class="sticky-price" id="sticky-price">{{ current_variant.price | money }}</div>
+  </div>
+  <button class="sticky-btn" id="sticky-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>ADD TO CART</button>
+</div>
+
+<script>
+(function() {
+  var product = {{ product | json }};
+  var variants = product.variants;
+  var mainImg = document.getElementById('main-img');
+  var variantInput = document.getElementById('variant-id-input');
+  var atcBtn = document.getElementById('atc-btn');
+  var stickyBtn = document.getElementById('sticky-atc-btn');
+  var buyBtn = document.getElementById('buy-btn');
+
+  function getSelectedOptions() {
+    var opts = [];
+    document.querySelectorAll('[data-option-index]').forEach(function(group) {
+      var idx = parseInt(group.dataset.optionIndex, 10);
+      var active = group.querySelector('.active');
+      opts[idx] = active ? active.dataset.value : null;
+    });
+    return opts;
+  }
+
+  function findVariant(opts) {
+    for (var i = 0; i < variants.length; i++) {
+      var v = variants[i];
+      var match = true;
+      for (var j = 0; j < opts.length; j++) {
+        if (opts[j] && v.options[j] !== opts[j]) { match = false; break; }
+      }
+      if (match) return v;
+    }
+    return null;
+  }
+
+  function applyVariant(v) {
+    if (!v) return;
+    variantInput.value = v.id;
+    document.getElementById('price-now').textContent = Shopify.formatMoney(v.price, {{ shop.money_format | json }});
+    var priceOld = document.getElementById('price-old');
+    if (priceOld) {
+      if (v.compare_at_price && v.compare_at_price > v.price) {
+        priceOld.style.display = '';
+        priceOld.textContent = Shopify.formatMoney(v.compare_at_price, {{ shop.money_format | json }});
+      } else {
+        priceOld.style.display = 'none';
+      }
+    }
+    document.getElementById('sticky-price').textContent = Shopify.formatMoney(v.price, {{ shop.money_format | json }});
+    if (v.featured_image) {
+      mainImg.src = v.featured_image.src.replace(/(\.[a-zA-Z0-9]+)$/, '_1000x$1');
+      document.querySelector('.sticky-thumb img').src = v.featured_image.src.replace(/(\.[a-zA-Z0-9]+)$/, '_100x$1');
+    }
+    var available = v.available;
+    [atcBtn, stickyBtn, buyBtn].forEach(function(b){ if(b){ b.disabled = !available; } });
+    if (atcBtn) atcBtn.textContent = available ? 'ADD TO CART' : 'SOLD OUT';
+  }
+
+  document.querySelectorAll('.swatch, .size-btn').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var group = this.closest('[data-option-index]');
+      group.querySelectorAll('.swatch, .size-btn').forEach(function(x){ x.classList.remove('active'); });
+      this.classList.add('active');
+      if (this.classList.contains('swatch')) {
+        var label = document.getElementById('color-name-text');
+        if (label) label.textContent = this.dataset.value;
+      }
+      var v = findVariant(getSelectedOptions());
+      if (v) applyVariant(v);
+    });
+  });
+
+  /* Quantity */
+  var qty = 1;
+  var qtyNum = document.getElementById('qty-num');
+  var qtyHidden = document.getElementById('qty-hidden-input');
+  document.getElementById('qty-minus').addEventListener('click', function(){ if(qty>1){ qty--; qtyNum.textContent=qty; qtyHidden.value=qty; } });
+  document.getElementById('qty-plus').addEventListener('click', function(){ if(qty<10){ qty++; qtyNum.textContent=qty; qtyHidden.value=qty; } });
+
+  /* Buy now: add then redirect to real Shopify checkout */
+  if (buyBtn) {
+    buyBtn.addEventListener('click', function() {
+      window.VamasCart.add({ id: variantInput.value, quantity: qty }).then(function(){
+        window.location.href = '/checkout';
+      });
+    });
+  }
+
+  /* Gallery arrows / thumbs */
+  var thumbs = document.querySelectorAll('.thumb-item');
+  var curIdx = 0;
+  function setGalleryImg(idx) {
+    if (!thumbs.length) return;
+    curIdx = (idx + thumbs.length) % thumbs.length;
+    mainImg.src = thumbs[curIdx].dataset.src;
+    thumbs.forEach(function(t,i){ t.classList.toggle('active', i === curIdx); });
+  }
+  var galPrev = document.getElementById('gal-prev');
+  var galNext = document.getElementById('gal-next');
+  if (galPrev) galPrev.addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx-1); });
+  if (galNext) galNext.addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx+1); });
+  thumbs.forEach(function(t){ t.addEventListener('click', function(){ setGalleryImg(parseInt(this.dataset.idx,10)); }); });
+
+  /* Lightbox */
+  var lightbox = document.getElementById('lightbox');
+  var galleryMain = document.getElementById('gallery-main');
+  if (lightbox && galleryMain) {
+    galleryMain.addEventListener('click', function(){ document.getElementById('lb-img').src = mainImg.src; lightbox.classList.add('open'); });
+    document.getElementById('lb-close').addEventListener('click', function(){ lightbox.classList.remove('open'); });
+    lightbox.addEventListener('click', function(e){ if(e.target===lightbox) lightbox.classList.remove('open'); });
+    document.getElementById('lb-prev').addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx-1); document.getElementById('lb-img').src = mainImg.src; });
+    document.getElementById('lb-next').addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx+1); document.getElementById('lb-img').src = mainImg.src; });
+  }
+
+  /* Size chart modal */
+  var scOverlay = document.getElementById('sc-overlay');
+  if (scOverlay) {
+    var link = document.getElementById('size-chart-link');
+    if (link) link.addEventListener('click', function(e){ e.preventDefault(); scOverlay.classList.add('open'); document.body.style.overflow='hidden'; });
+    document.getElementById('sc-close').addEventListener('click', function(){ scOverlay.classList.remove('open'); document.body.style.overflow=''; });
+    scOverlay.addEventListener('click', function(e){ if(e.target===scOverlay){ scOverlay.classList.remove('open'); document.body.style.overflow=''; } });
+    document.getElementById('btn-inch').addEventListener('click', function(){ applyUnit('in'); });
+    document.getElementById('btn-cm').addEventListener('click', function(){ applyUnit('cm'); });
+    function applyUnit(unit) {
+      document.querySelectorAll('.sc-val').forEach(function(td){ td.textContent = unit==='cm' ? td.dataset.cm : td.dataset.in; });
+      document.getElementById('btn-inch').classList.toggle('active', unit==='in');
+      document.getElementById('btn-cm').classList.toggle('active', unit==='cm');
+    }
+  }
+
+  /* Pincode (UI-only) */
+  var pinBtn = document.getElementById('pincode-btn');
+  if (pinBtn) {
+    pinBtn.addEventListener('click', function(){
+      var val = document.getElementById('pincode-input').value.trim();
+      var res = document.getElementById('pincode-result');
+      if (/^\d{6}$/.test(val)) {
+        res.className = 'pincode-result ok';
+        res.textContent = '✓ Delivery available to ' + val + ' in 4–5 business days.';
+      } else {
+        res.className = 'pincode-result err';
+        res.textContent = 'Please enter a valid 6-digit pincode.';
+      }
+    });
+  }
+
+  /* Coupon copy */
+  var couponEl = document.getElementById('coupon-code');
+  if (couponEl) {
+    couponEl.addEventListener('click', function(){
+      var code = this.textContent;
+      navigator.clipboard && navigator.clipboard.writeText(code);
+      var copied = document.getElementById('offer-copied');
+      copied.style.display = 'inline';
+      setTimeout(function(){ copied.style.display = 'none'; }, 2000);
+    });
+  }
+
+  /* Wishlist (decorative) */
+  var wished = false;
+  var wishBtn = document.getElementById('wishlist-btn');
+  if (wishBtn) {
+    wishBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      wished = !wished;
+      this.textContent = wished ? '♥ Saved to Wishlist' : '♡ Add to Wishlist';
+    });
+  }
+
+  /* Share */
+  var shareWa = document.getElementById('share-wa');
+  if (shareWa) shareWa.addEventListener('click', function(){
+    window.open('https://wa.me/?text=' + encodeURIComponent('Check out ' + product.title + ' — ' + window.location.href), '_blank');
+  });
+  var shareCopy = document.getElementById('share-copy');
+  if (shareCopy) shareCopy.addEventListener('click', function(){
+    navigator.clipboard && navigator.clipboard.writeText(window.location.href);
+    this.textContent = '✓';
+    var self = this;
+    setTimeout(function(){ self.textContent = '🔗'; }, 1800);
+  });
+
+  /* Accordion */
+  document.querySelectorAll('.acc-header').forEach(function(h) {
+    h.addEventListener('click', function() {
+      var item = this.parentElement;
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.acc-item').forEach(function(x){ x.classList.remove('open'); var i=x.querySelector('.acc-icon'); if(i) i.textContent='+'; });
+      if (!isOpen) { item.classList.add('open'); this.querySelector('.acc-icon').textContent = '−'; }
+    });
+  });
+
+  /* Sticky ATC visibility */
+  var stickyBar = document.getElementById('sticky-atc');
+  if (stickyBar && atcBtn) {
+    window.addEventListener('scroll', function() {
+      var rect = atcBtn.getBoundingClientRect();
+      stickyBar.classList.toggle('visible', rect.bottom < 0);
+    }, { passive: true });
+  }
+
+  /* Real add-to-cart via product form */
+  document.querySelectorAll('product-form form').forEach(function(form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var formData = { id: variantInput.value, quantity: parseInt(qtyHidden.value, 10) || 1 };
+      window.VamasCart.add(formData).then(function() {
+        atcBtn.textContent = '✓ ADDED TO CART!';
+        atcBtn.classList.add('added');
+        setTimeout(function(){ atcBtn.textContent = 'ADD TO CART'; atcBtn.classList.remove('added'); }, 1800);
+      });
+    });
+  });
+  if (stickyBtn) stickyBtn.addEventListener('click', function(){
+    window.VamasCart.add({ id: variantInput.value, quantity: parseInt(qtyHidden.value,10)||1 });
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Vamas Product",
+  "settings": [
+    { "type": "text", "id": "subtitle", "label": "Subtitle (fabric/work line)", "default": "Handcrafted · Premium Quality" },
+    { "type": "text", "id": "badge_text", "label": "Badge Text", "default": "NEW ARRIVAL" },
+    { "type": "text", "id": "badge_hot_text", "label": "Hot Badge Text", "default": "TRENDING" },
+    { "type": "header", "content": "Rating" },
+    { "type": "checkbox", "id": "show_rating", "label": "Show Rating", "default": true },
+    { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 0.1, "label": "Rating Value", "default": 4.9 },
+    { "type": "text", "id": "review_count", "label": "Review Count", "default": "124" },
+    { "type": "text", "id": "sold_count", "label": "Sold Count", "default": "847" },
+    { "type": "header", "content": "Offer Strip" },
+    { "type": "text", "id": "offer_code", "label": "Coupon Code", "default": "FIRST10" },
+    { "type": "text", "id": "offer_detail", "label": "Offer Detail", "default": "10% off on your first order" },
+    { "type": "header", "content": "Social Proof" },
+    { "type": "checkbox", "id": "show_social_proof", "label": "Show Viewer Count", "default": true },
+    { "type": "text", "id": "viewer_count", "label": "Viewer Count", "default": "18" },
+    { "type": "header", "content": "Custom Stitching" },
+    { "type": "text", "id": "custom_note", "label": "Note", "default": "Free custom stitching available — just share your measurements at checkout" },
+    { "type": "header", "content": "Delivery Box" },
+    { "type": "text", "id": "delivery_line_1", "label": "Line 1", "default": "Free delivery on orders above ₹999" },
+    { "type": "text", "id": "delivery_line_2", "label": "Line 2", "default": "Order now — estimated delivery in 3-5 days" },
+    { "type": "text", "id": "delivery_line_3", "label": "Line 3", "default": "7-day easy returns on standard sizes" },
+    { "type": "checkbox", "id": "show_pincode", "label": "Show Pincode Checker", "default": true },
+    { "type": "text", "id": "free_shipping_threshold", "label": "Free Shipping Threshold Text", "default": "₹999" },
+    { "type": "checkbox", "id": "show_payment_strip", "label": "Show Payment Strip", "default": true },
+    { "type": "checkbox", "id": "show_trust_grid", "label": "Show Trust Grid", "default": true },
+    { "type": "header", "content": "Care Instructions" },
+    { "type": "textarea", "id": "care_note", "label": "Care Note", "default": "Pro tip: Always dry clean silk blouses. Avoid direct sunlight when storing." },
+    { "type": "header", "content": "Shipping & Returns" },
+    { "type": "richtext", "id": "shipping_returns_text", "label": "Shipping & Returns Text" },
+    { "type": "header", "content": "Related Products" },
+    { "type": "text", "id": "related_heading", "label": "Heading", "default": "More Handcrafted Beauties" },
+    { "type": "header", "content": "Reviews" },
+    { "type": "checkbox", "id": "show_reviews", "label": "Show Reviews Section", "default": true },
+    { "type": "header", "content": "Size Chart Modal" },
+    { "type": "checkbox", "id": "show_size_chart", "label": "Enable Size Chart Modal", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "color_swatch",
+      "name": "Color Swatch Override",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Option Value (must match exactly)", "default": "Maroon" },
+        { "type": "color", "id": "hex", "label": "Swatch Color", "default": "#420001" }
+      ]
+    },
+    {
+      "type": "size_row",
+      "name": "Size Chart Row",
+      "settings": [
+        { "type": "text", "id": "size", "label": "Size", "default": "34" },
+        { "type": "text", "id": "bust", "label": "Bust (in)", "default": "34" },
+        { "type": "text", "id": "bust_cm", "label": "Bust (cm)", "default": "86.4" },
+        { "type": "text", "id": "waist", "label": "Waist (in)", "default": "28" },
+        { "type": "text", "id": "waist_cm", "label": "Waist (cm)", "default": "71.1" },
+        { "type": "text", "id": "hip", "label": "Hip (in)", "default": "36" },
+        { "type": "text", "id": "hip_cm", "label": "Hip (cm)", "default": "91.4" },
+        { "type": "text", "id": "length", "label": "Length (in)", "default": "15" },
+        { "type": "text", "id": "length_cm", "label": "Length (cm)", "default": "38.1" }
+      ]
+    },
+    {
+      "type": "care_item",
+      "name": "Care Instruction",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Emoji Icon", "default": "🚫" },
+        { "type": "text", "id": "label", "label": "Label", "default": "No Machine Wash" }
+      ]
+    },
+    {
+      "type": "related_product",
+      "name": "Related Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "badge", "label": "Badge", "default": "BESTSELLER" }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Reviewer Name", "default": "Priya Sharma" },
+        { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 1, "label": "Rating", "default": 5 },
+        { "type": "text", "id": "title", "label": "Review Title", "default": "Absolutely Stunning!" },
+        { "type": "textarea", "id": "text", "label": "Review Text" },
+        { "type": "text", "id": "date", "label": "Date", "default": "Dec 2025" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vamas Product",
+      "blocks": [
+        { "type": "size_row", "settings": { "size": "32", "bust": "32", "waist": "26", "hip": "34", "length": "14.5" } },
+        { "type": "size_row", "settings": { "size": "34", "bust": "34", "waist": "28", "hip": "36", "length": "15" } },
+        { "type": "size_row", "settings": { "size": "36", "bust": "36", "waist": "30", "hip": "38", "length": "15.5" } },
+        { "type": "care_item", "settings": { "icon": "🚫", "label": "No Machine Wash" } },
+        { "type": "care_item", "settings": { "icon": "🧴", "label": "Dry Clean Only" } },
+        { "type": "care_item", "settings": { "icon": "✨", "label": "Handle Gently" } },
+        { "type": "review", "settings": { "name": "Priya Sharma", "rating": 5, "title": "Absolutely Stunning!", "text": "The quality of this blouse is beyond my expectations.", "date": "Dec 2025" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

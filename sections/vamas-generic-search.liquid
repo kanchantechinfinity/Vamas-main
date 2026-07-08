@@ -1,0 +1,14 @@
+<div style="max-width:1000px;margin:40px auto;padding:0 24px;min-height:40vh;">
+  {% form 'search', role: 'search' %}
+    <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search products..." style="width:100%;padding:14px 18px;border-radius:100px;border:1.5px solid rgba(66,0,1,.15);font-family:'Poppins',sans-serif;margin-bottom:32px;">
+  {% endform %}
+  {% if search.performed %}
+    <p style="margin-bottom:20px;color:#666;">{{ search.results_count }} results for "{{ search.terms }}"</p>
+    <div class="vamas-prod-grid">
+      {% for item in search.results %}
+        {% if item.object_type == 'product' %}{% render 'vamas-product-card', product: item %}{% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% schema %}{ "name": "Search", "presets": [{ "name": "Search" }] }{% endschema %}

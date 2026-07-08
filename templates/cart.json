@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "main": {
+      "type": "vamas-cart",
+      "blocks": {},
+      "block_order": []
+    }
+  },
+  "order": ["main"]
+}

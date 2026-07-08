@@ -1,0 +1,189 @@
+{{ 'vamas-collection.css' | asset_url | stylesheet_tag }}
+
+<section class="col-hero">
+  <div class="col-hero-left">
+    <div class="col-hero-breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span>&gt;</span>
+      <span style="color:rgba(231,209,166,.75);">{{ collection.title }}</span>
+    </div>
+    <h1 class="col-hero-title">{{ collection.title }}</h1>
+    <p class="col-hero-sub">{{ section.settings.hero_subtitle | default: collection.description | strip_html | default: 'Handcrafted designs celebrating Indian artistry' }}</p>
+  </div>
+  {% if section.settings.show_hero_motif %}
+  <div class="col-hero-right">
+    <svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="80" cy="100" rx="40" ry="60" stroke="#e7d1a6" stroke-width="1.5" fill="none" transform="rotate(-20 80 100)"/>
+      <ellipse cx="80" cy="100" rx="24" ry="40" stroke="#e7d1a6" stroke-width="1" fill="none" transform="rotate(-20 80 100)"/>
+      <circle cx="80" cy="68" r="8" stroke="#e7d1a6" stroke-width="1.2" fill="none"/>
+      <circle cx="80" cy="68" r="3" fill="#e7d1a6" opacity=".4"/>
+      <ellipse cx="200" cy="80" rx="35" ry="52" stroke="#e7d1a6" stroke-width="1.5" fill="none" transform="rotate(15 200 80)"/>
+      <ellipse cx="200" cy="80" rx="20" ry="34" stroke="#e7d1a6" stroke-width="1" fill="none" transform="rotate(15 200 80)"/>
+      <circle cx="215" cy="50" r="7" stroke="#e7d1a6" stroke-width="1.2" fill="none"/>
+      <circle cx="160" cy="110" r="18" stroke="#e7d1a6" stroke-width="1.2" fill="none" opacity=".5"/>
+      <circle cx="160" cy="110" r="8" stroke="#c9a96e" stroke-width="1" fill="none" opacity=".5"/>
+      <circle cx="160" cy="110" r="3" fill="#e7d1a6" opacity=".4"/>
+    </svg>
+  </div>
+  {% endif %}
+</section>
+
+<div class="mob-filter-bar">
+  <button class="mob-filter-btn" id="mob-filter-open" type="button">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    Filters
+  </button>
+  <div class="filter-chips" id="mob-chips" style="margin:0;"></div>
+</div>
+
+<div class="col-body">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <h3>FILTERS</h3>
+      {% if collection.filters.size > 0 %}<a href="{{ collection.url }}" class="clear-all">Clear All</a>{% endif %}
+    </div>
+
+    {% form 'facets', collection %}
+    {% for filter in collection.filters %}
+      <div class="acc-item">
+        <div class="acc-head open" onclick="toggleAcc(this)">
+          <span>{{ filter.label | upcase }}</span>
+          <span class="acc-arrow">&#9660;</span>
+        </div>
+        <div class="acc-body open">
+          {% if filter.type == 'price_range' %}
+            <div class="price-range">
+              <div class="price-labels">
+                <span id="priceMin">{{ filter.min_value.value | default: filter.range_min | money }}</span>
+                <span id="priceMax">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+              </div>
+              <div class="price-track">
+                <div class="price-fill" id="priceFill"></div>
+                <div class="price-thumb price-thumb-l" id="thumbL"></div>
+                <div class="price-thumb price-thumb-r" id="thumbR"></div>
+              </div>
+              <input type="range" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}">
+              <input type="range" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}">
+            </div>
+          {% elsif filter.type == 'list' and filter.label contains 'olor' %}
+            <div class="color-dots">
+              {% for value in filter.values %}
+                <label>
+                  <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} style="display:none;" class="c-dot-input">
+                  <div class="c-dot{% if value.active %} active{% endif %}" style="background:{{ value.label | handleize | replace: '-', '' }};" title="{{ value.label }}" onclick="this.previousElementSibling.click(); this.classList.toggle('active');"></div>
+                </label>
+              {% endfor %}
+            </div>
+          {% else %}
+            {% for value in filter.values %}
+              <label class="filter-check-row">
+                <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()">
+                {{ value.label }} ({{ value.count }})
+              </label>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    <div class="sidebar-apply">
+      <button type="submit" class="btn-primary" style="width:100%;">APPLY FILTERS</button>
+    </div>
+    {% endform %}
+  </aside>
+
+  <div class="prod-area">
+    {% paginate collection.products by section.settings.products_per_page %}
+    <div class="prod-topbar">
+      <div class="prod-count">Showing <strong>{{ paginate.current_offset | plus: 1 }}-{{ paginate.current_offset | plus: collection.products.size }}</strong> of <strong>{{ collection.products_count }}</strong> products</div>
+      <div class="sort-wrap">
+        <span class="sort-label">SORT BY</span>
+        {% form 'facets', collection %}
+        <select class="sort-sel" name="sort_by" onchange="this.form.submit()">
+          {% for option in collection.sort_options %}
+            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+          {% endfor %}
+        </select>
+        {% endform %}
+      </div>
+    </div>
+
+    {% if collection.filters.size > 0 %}
+    <div class="filter-chips" id="chip-container">
+      {% for filter in collection.filters %}
+        {% for value in filter.values %}
+          {% if value.active %}
+            <a href="{{ value.url_to_remove }}" class="f-chip">{{ value.label }}<span class="x"></span></a>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="prod-grid">
+      {% for product in collection.products %}
+        {% assign fv = product.variants.first %}
+        <a href="{{ product.url }}" class="p-card">
+          <div class="p-img-wrap">
+            <img src="{{ product.featured_image | img_url: '500x' }}" alt="{{ product.title | escape }}" style="width:100%;height:100%;object-fit:cover;object-position:top;" loading="lazy">
+            {% if fv.compare_at_price > fv.price %}<div class="p-badge">SALE</div>{% elsif product.tags contains 'bestseller' %}<div class="p-badge p-badge-gold">BESTSELLER</div>{% endif %}
+          </div>
+          <div class="p-info">
+            <div class="p-name">{{ product.title }}</div>
+            <div class="p-type">{{ product.type }}</div>
+            {% if product.variants.size > 1 %}
+            <div class="p-colors">
+              {% for v in product.variants limit: 4 %}
+                <div class="p-cdot" style="background:{{ v.option1 | handleize | replace: '-', '' }};" title="{{ v.option1 }}"></div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="p-stars">
+              <div class="stars-row">{% for i in (1..5) %}<span class="star{% if i > 4 %} empty{% endif %}">&#9733;</span>{% endfor %}</div>
+            </div>
+            <div class="p-pricing">
+              <span class="p-price">{{ fv.price | money }}</span>
+              {% if fv.compare_at_price > fv.price %}<span class="p-old">{{ fv.compare_at_price | money }}</span>{% endif %}
+            </div>
+          </div>
+        </a>
+      {% else %}
+        <p>No products found in this collection.</p>
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+    <div class="pagination">
+      {% if paginate.previous %}<a href="{{ paginate.previous.url }}" class="page-btn">&#8592; Previous</a>{% else %}<span class="page-btn disabled">&#8592; Previous</span>{% endif %}
+      {% for part in paginate.parts %}
+        {% if part.is_link %}<a href="{{ part.url }}" class="page-btn">{{ part.title }}</a>{% else %}<span class="page-btn{% if part.title == paginate.current_page %} active{% endif %}">{{ part.title }}</span>{% endif %}
+      {% endfor %}
+      {% if paginate.next %}<a href="{{ paginate.next.url }}" class="page-btn">Next &#8594;</a>{% else %}<span class="page-btn disabled">Next &#8594;</span>{% endif %}
+    </div>
+    {% endif %}
+    {% endpaginate %}
+  </div>
+</div>
+
+<script>
+function toggleAcc(head){
+  head.classList.toggle('open');
+  var body = head.nextElementSibling;
+  body.classList.toggle('open');
+}
+document.getElementById('mob-filter-open') && document.getElementById('mob-filter-open').addEventListener('click', function(){
+  document.getElementById('sidebar').classList.toggle('mob-open');
+});
+</script>
+
+{% schema %}
+{
+  "name": "Vamas Collection",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
+    { "type": "textarea", "id": "hero_subtitle", "label": "Hero Subtitle (overrides collection description)" },
+    { "type": "checkbox", "id": "show_hero_motif", "label": "Show Decorative Motif", "default": true }
+  ],
+  "presets": [{ "name": "Vamas Collection" }]
+}
+{% endschema %}
