@@ -28,6 +28,9 @@
         <a href="{{ routes.search_url }}" title="Search" aria-label="Search">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </a>
+        <a href="{{ section.settings.wishlist_url | default: '#' }}" title="Wishlist" aria-label="Wishlist">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
         {% if shop.customer_accounts_enabled %}
         <a href="{{ routes.account_url }}" title="Account" aria-label="Account">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -37,9 +40,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
           <span class="vamas-cart-badge" id="vamas-nav-cart-badge" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>{{ cart.item_count }}</span>
         </a>
-        {% if section.settings.contact_url != blank %}
-          <a href="{{ section.settings.contact_url }}" class="vamas-nav__contact-btn">{{ section.settings.contact_label | default: 'Contact Us' }}</a>
-        {% endif %}
+        <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="vamas-nav__contact-btn">{{ section.settings.contact_label | default: 'Contact Us' }}</a>
         <button class="vamas-nav__hamburger" id="vamas-nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
     </div>
@@ -74,6 +75,7 @@
     { "type": "header", "content": "Contact Button" },
     { "type": "text", "id": "contact_label", "label": "Button Text", "default": "Contact Us" },
     { "type": "url", "id": "contact_url", "label": "Button URL" },
+    { "type": "url", "id": "wishlist_url", "label": "Wishlist URL" },
     { "type": "header", "content": "Announcement Bar" },
     { "type": "checkbox", "id": "show_announce", "label": "Show Announcement Bar", "default": true },
     { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
