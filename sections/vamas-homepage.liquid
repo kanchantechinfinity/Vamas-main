@@ -340,29 +340,7 @@
 </section>
 {% endif %}
 
-{% comment %} ── Newsletter ───────────────────────── {% endcomment %}
-{% if section.settings.show_newsletter %}
-<section class="vamas-newsletter">
-  <p class="vamas-newsletter__eyebrow">EXCLUSIVE UPDATES</p>
-  <h2 class="vamas-newsletter__heading">{{ section.settings.nl_heading | default: 'Stay in Style' }}</h2>
-  <p class="vamas-newsletter__sub">{{ section.settings.nl_subtext | default: 'Subscribe for new arrivals, exclusive offers & style inspiration' }}</p>
-  {% form 'customer', id: 'vamas-nl-form' %}
-    <input type="hidden" name="contact[tags]" value="newsletter">
-    <div class="vamas-newsletter__form">
-      <input class="vamas-newsletter__input" type="email" name="contact[email]"
-             placeholder="{{ section.settings.nl_placeholder | default: 'Your email address' }}" required>
-      <button type="submit" class="vamas-newsletter__btn">
-        {{ section.settings.nl_btn | default: 'SUBSCRIBE' }}
-      </button>
-    </div>
-    {% if form.posted_successfully? %}
-      <p style="color:var(--color-maroon);margin-top:16px;font-size:14px;font-weight:700;">
-        Thank you for subscribing! ✦
-      </p>
-    {% endif %}
-  {% endform %}
-</section>
-{% endif %}
+{% comment %} Newsletter moved to footer (vamas-footer) so it appears on all pages {% endcomment %}
 
 {% schema %}
 {

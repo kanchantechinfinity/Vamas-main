@@ -1,6 +1,25 @@
 {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
 
 <footer class="vamas-footer">
+
+  {% if section.settings.show_newsletter %}
+  <div class="vamas-footer__newsletter">
+    <div class="vamas-footer__nl-eye">EXCLUSIVE UPDATES</div>
+    <h2 class="vamas-footer__nl-heading">Stay in <em>style.</em></h2>
+    <p class="vamas-footer__nl-sub">Subscribe for new arrivals, exclusive offers &amp; style inspiration</p>
+    {% form 'customer', id: 'vamas-footer-nl' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="vamas-footer__nl-form">
+        <input class="vamas-footer__nl-input" type="email" name="contact[email]" placeholder="Enter your email address" required>
+        <button type="submit" class="vamas-footer__nl-btn">SUBSCRIBE</button>
+      </div>
+      {% if form.posted_successfully? %}
+        <p class="vamas-footer__nl-success">Thank you for subscribing! ✦</p>
+      {% endif %}
+    {% endform %}
+  </div>
+  {% endif %}
+
   <div class="vamas-footer__grid">
 
     <div>
@@ -78,6 +97,7 @@
 {
   "name": "Vamas Footer",
   "settings": [
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show Newsletter", "default": true },
     { "type": "text", "id": "brand_name", "label": "Brand Name", "default": "VAMAS" },
     { "type": "textarea", "id": "brand_desc", "label": "Brand Description", "default": "Premium handcrafted blouses celebrating Indian artistry and elegance. Every piece tells a story." },
     { "type": "header", "content": "Social Links" },
