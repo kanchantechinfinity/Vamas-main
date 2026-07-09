@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "main": {
+      "type": "vamas-about",
+      "settings": {
+        "hero_eyebrow": "WHO WE ARE",
+        "hero_heading": "Our Story",
+        "hero_sub": "Born from a love of Indian craftsmanship, woven with tradition, worn with pride.",
+        "story_eyebrow": "THE VAMAS STORY",
+        "story_heading": "<p>Every blouse tells<br><em>a story.</em></p>",
+        "story_body": "<p>Founded with a deep love for Indian craftsmanship, Vamas was born from a simple belief — every woman deserves a blouse that tells her story. We work directly with skilled karigars across India to bring you heirloom-quality pieces at honest prices.</p><p>Our name, Vamas, is rooted in the Sanskrit tradition — it means \"beautiful\" and \"belonging to the left side,\" a sacred direction in Indian culture. Each stitch we make is a tribute to the artisans whose hands carry centuries of knowledge.</p><p>From the looms of Varanasi to the block-print studios of Jaipur, every Vamas blouse is a journey across India's rich textile heritage.</p>",
+        "story_image_asset": "slide-pink.jpg",
+        "values_eyebrow": "WHAT WE STAND FOR",
+        "values_heading": "Our Values",
+        "values_sub": "Three principles guide everything we create, from the studio to your wardrobe.",
+        "team_eyebrow": "THE PEOPLE BEHIND VAMAS",
+        "team_heading": "Meet Our Team",
+        "team_sub": "Passionate individuals united by a love for Indian textiles and a mission to celebrate our artisans.",
+        "tl_eyebrow": "OUR JOURNEY",
+        "tl_heading": "Milestones That Define Us",
+        "tl_sub": "From a small Jaipur studio to India's trusted blouse brand — here is how we grew."
+      },
+      "blocks": {
+        "stat-1": { "type": "stat", "settings": { "stat_num": "10,000+", "stat_label": "Happy Customers" } },
+        "stat-2": { "type": "stat", "settings": { "stat_num": "500+", "stat_label": "Designs" } },
+        "stat-3": { "type": "stat", "settings": { "stat_num": "15+", "stat_label": "States" } },
+        "stat-4": { "type": "stat", "settings": { "stat_num": "4.9 ★", "stat_label": "Rating" } },
+        "val-1": { "type": "value", "settings": { "icon": "craft", "title": "Craftsmanship", "desc": "Every piece is handmade with care by master karigars. No shortcuts, no compromises — only the finest finishing that stands the test of time." } },
+        "val-2": { "type": "value", "settings": { "icon": "sustain", "title": "Sustainability", "desc": "We source fabrics ethically, support fair-trade practices, and ensure every artisan in our network earns a dignified livelihood." } },
+        "val-3": { "type": "value", "settings": { "icon": "authentic", "title": "Authenticity", "desc": "We source directly from artisan communities, preserving traditional techniques and ensuring every design is genuinely handcrafted in India." } },
+        "member-1": { "type": "member", "settings": { "initials": "MS", "name": "Meera Sharma", "role": "Founder", "bio": "Visionary behind Vamas, passionate about preserving Indian textile heritage. Meera started the brand after a decade of working with karigars across Rajasthan and UP." } },
+        "member-2": { "type": "member", "settings": { "initials": "PN", "name": "Priya Nair", "role": "Head Designer", "bio": "Brings 12 years of design expertise to every collection. Priya blends contemporary aesthetics with classical motifs, creating pieces that are timeless yet modern." } },
+        "member-3": { "type": "member", "settings": { "initials": "RK", "name": "Ramesh Kumar", "role": "Master Artisan", "bio": "Trained in traditional embroidery techniques from Varanasi, Ramesh leads our karigar network and ensures every piece meets Vamas' signature quality standard." } },
+        "ms-1": { "type": "milestone", "settings": { "year": "2018", "desc": "Founded in Jaipur with just 10 designs and a single karigar workshop. The first collection sold out in 3 weeks.", "align_right": false } },
+        "ms-2": { "type": "milestone", "settings": { "year": "2020", "desc": "Expanded to 200+ designs and launched our online store, bringing handcrafted blouses to customers across India.", "align_right": true } },
+        "ms-3": { "type": "milestone", "settings": { "year": "2022", "desc": "Crossed 5,000 happy customers and partnered with artisan clusters in Varanasi, Lucknow, and Bhopal.", "align_right": false } },
+        "ms-4": { "type": "milestone", "settings": { "year": "2024", "desc": "Featured in Vogue India's \"Brands Celebrating Indian Craft\" spotlight. A proud moment for our entire karigar community.", "align_right": true } },
+        "ms-5": { "type": "milestone", "settings": { "year": "2026", "desc": "10,000+ customers, 500+ designs, and shipping to 15+ states. The journey continues — one blouse at a time.", "align_right": false } }
+      },
+      "block_order": ["stat-1","stat-2","stat-3","stat-4","val-1","val-2","val-3","member-1","member-2","member-3","ms-1","ms-2","ms-3","ms-4","ms-5"]
+    }
+  },
+  "order": ["main"]
+}
