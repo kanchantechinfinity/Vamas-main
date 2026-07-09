@@ -44,7 +44,8 @@
       {% if collection.filters.size > 0 %}<a href="{{ collection.url }}" class="clear-all">Clear All</a>{% endif %}
     </div>
 
-    {% form 'facets', collection %}
+    <form method="get">
+    {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
     {% for filter in collection.filters %}
       <div class="acc-item">
         <div class="acc-head open" onclick="toggleAcc(this)">
@@ -89,7 +90,7 @@
     <div class="sidebar-apply">
       <button type="submit" class="btn-primary" style="width:100%;">APPLY FILTERS</button>
     </div>
-    {% endform %}
+    </form>
   </aside>
 
   <div class="prod-area">
@@ -98,13 +99,18 @@
       <div class="prod-count">Showing <strong>{{ paginate.current_offset | plus: 1 }}-{{ paginate.current_offset | plus: collection.products.size }}</strong> of <strong>{{ collection.products_count }}</strong> products</div>
       <div class="sort-wrap">
         <span class="sort-label">SORT BY</span>
-        {% form 'facets', collection %}
+        <form method="get">
+        {% for filter in collection.filters %}
+          {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
+          {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
+          {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
+        {% endfor %}
         <select class="sort-sel" name="sort_by" onchange="this.form.submit()">
           {% for option in collection.sort_options %}
             <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
           {% endfor %}
         </select>
-        {% endform %}
+        </form>
       </div>
     </div>
 
