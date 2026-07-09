@@ -69,7 +69,7 @@
     <div class="empty-cart" id="empty-cart" {% if cart.item_count > 0 %}style="display:none;"{% endif %}>
       <div class="empty-icon">&#128722;</div>
       <div class="empty-title">Your cart is empty</div>
-      <div class="empty-sub">{{ section.settings.empty_cart_text | default: "Looks like you haven't added anything yet." }}</div>
+      <div class="empty-sub">{{ section.settings.empty_cart_text | default: "Looks like you haven't added anything yet.<br>Explore our handcrafted blouse collection!" }}</div>
       <a href="{{ routes.all_products_collection_url }}" class="btn-shop">SHOP NOW</a>
     </div>
   </div>
@@ -116,31 +116,53 @@
 </div>
 
 {% assign related_blocks = section.blocks | where: 'type', 'related_product' %}
-{% if related_blocks.size > 0 %}
+{% assign rel_col = collections[section.settings.related_collection] | default: collections.all %}
+{% if related_blocks.size > 0 or rel_col.products.size > 0 %}
 <section class="recently-section">
   <div class="rs-title">{{ section.settings.related_heading | default: 'You May Also Like' }}</div>
   <div class="rs-grid">
-    {% for block in related_blocks %}
-      {% assign rp = block.settings.product %}
-      {% if rp != blank %}
-      {% assign rfv = rp.selected_or_first_available_variant %}
-      <a href="{{ rp.url }}" class="rs-card" style="text-decoration:none;color:inherit;display:block;">
-        <div class="rs-img"><img src="{{ rp.featured_image | img_url: '400x' }}" alt="{{ rp.title | escape }}"></div>
-        <div class="rs-info">
-          <div class="rs-name">{{ rp.title }}</div>
-          <div class="rs-type">{{ rp.type }}</div>
-          <div class="rs-price-row">
-            <span class="rs-price">{{ rfv.price | money }}</span>
-            {% if rfv.compare_at_price > rfv.price %}<span class="rs-old">{{ rfv.compare_at_price | money }}</span>{% endif %}
+    {% if related_blocks.size > 0 %}
+      {% for block in related_blocks %}
+        {% assign rp = block.settings.product %}
+        {% if rp != blank %}
+        {% assign rfv = rp.selected_or_first_available_variant %}
+        <a href="{{ rp.url }}" class="rs-card" style="text-decoration:none;color:inherit;display:block;">
+          <div class="rs-img"><img src="{{ rp.featured_image | img_url: '400x' }}" alt="{{ rp.title | escape }}"></div>
+          <div class="rs-info">
+            <div class="rs-name">{{ rp.title }}</div>
+            <div class="rs-type">{{ rp.type }}</div>
+            <div class="rs-price-row">
+              <span class="rs-price">{{ rfv.price | money }}</span>
+              {% if rfv.compare_at_price > rfv.price %}<span class="rs-old">{{ rfv.compare_at_price | money }}</span>{% endif %}
+            </div>
+            {% form 'product', rp %}
+              <input type="hidden" name="id" value="{{ rfv.id }}">
+              <button type="submit" class="rs-add" onclick="event.stopPropagation();"{% unless rfv.available %} disabled{% endunless %}>ADD TO CART</button>
+            {% endform %}
           </div>
-          {% form 'product', rp %}
-            <input type="hidden" name="id" value="{{ rfv.id }}">
-            <button type="submit" class="rs-add" onclick="event.stopPropagation();"{% unless rfv.available %} disabled{% endunless %}>ADD TO CART</button>
-          {% endform %}
-        </div>
-      </a>
-      {% endif %}
-    {% endfor %}
+        </a>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {% for rp in rel_col.products limit: 4 %}
+        {% assign rfv = rp.selected_or_first_available_variant %}
+        <a href="{{ rp.url }}" class="rs-card" style="text-decoration:none;color:inherit;display:block;">
+          <div class="rs-img"><img src="{{ rp.featured_image | img_url: '400x' }}" alt="{{ rp.title | escape }}"></div>
+          <div class="rs-info">
+            <div class="rs-name">{{ rp.title }}</div>
+            <div class="rs-type">{{ rp.type }}</div>
+            <div class="rs-price-row">
+              <span class="rs-price">{{ rfv.price | money }}</span>
+              {% if rfv.compare_at_price > rfv.price %}<span class="rs-old">{{ rfv.compare_at_price | money }}</span>{% endif %}
+            </div>
+            {% form 'product', rp %}
+              <input type="hidden" name="id" value="{{ rfv.id }}">
+              <button type="submit" class="rs-add" onclick="event.stopPropagation();"{% unless rfv.available %} disabled{% endunless %}>ADD TO CART</button>
+            {% endform %}
+          </div>
+        </a>
+      {% endfor %}
+    {% endif %}
   </div>
 </section>
 {% endif %}
@@ -189,7 +211,8 @@
     { "type": "text", "id": "free_delivery_threshold", "label": "Free Delivery Threshold (in shop currency, 0 to disable)", "default": "999" },
     { "type": "textarea", "id": "empty_cart_text", "label": "Empty Cart Message", "default": "Looks like you haven't added anything yet. Explore our handcrafted collection!" },
     { "type": "checkbox", "id": "show_trust_mini", "label": "Show Trust Badges", "default": true },
-    { "type": "text", "id": "related_heading", "label": "Related Products Heading", "default": "You May Also Like" }
+    { "type": "text", "id": "related_heading", "label": "Related Products Heading", "default": "You May Also Like" },
+    { "type": "collection", "id": "related_collection", "label": "\"You May Also Like\" Collection", "info": "Shown when no related product blocks are added. Defaults to All products." }
   ],
   "blocks": [
     {
