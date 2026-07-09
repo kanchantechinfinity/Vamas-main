@@ -11,6 +11,8 @@
       <a href="{{ routes.root_url }}" class="vamas-nav__logo">
         {% if section.settings.logo != blank %}
           <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" class="vamas-nav__logo-img" width="120" height="42">
+        {% elsif section.settings.logo_asset != blank %}
+          <img src="{{ section.settings.logo_asset | asset_url }}" alt="{{ shop.name }}" class="vamas-nav__logo-img" width="120" height="42">
         {% else %}
           <span class="vamas-nav__brand">{{ shop.name }}</span>
         {% endif %}
@@ -67,6 +69,7 @@
   "name": "Vamas Header",
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "text", "id": "logo_asset", "label": "Or theme asset filename", "info": "e.g. vamas-logo.avif", "default": "vamas-logo.avif" },
     { "type": "link_list", "id": "main_menu", "label": "Navigation Menu", "default": "main-menu" },
     { "type": "header", "content": "Contact Button" },
     { "type": "text", "id": "contact_label", "label": "Button Text", "default": "Contact Us" },
