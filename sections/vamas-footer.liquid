@@ -5,10 +5,7 @@
 
     <div>
       <div class="vamas-footer__logo">
-        <div class="vamas-footer__logo-mark">
-          <img src="{{ 'vamas-logo.avif' | asset_url }}" alt="Vamas Logo" width="34" height="34">
-        </div>
-        <span class="vamas-footer__brand">{{ section.settings.brand_name }}</span>
+        <img src="{{ 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }} Logo" class="vamas-footer__logo-img">
       </div>
       <p class="vamas-footer__desc">{{ section.settings.brand_desc }}</p>
       <div class="vamas-footer__socials">
