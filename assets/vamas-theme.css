@@ -629,3 +629,48 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 #vc-toast-btn{background:var(--color-maroon);color:var(--color-gold);border:none;border-radius:6px;padding:8px 0;font-size:11px;font-weight:700;cursor:pointer;width:100%;font-family:'Poppins',sans-serif;letter-spacing:.5px;transition:background .2s;}
 #vc-toast-btn:hover{background:var(--color-maroon-light);}
 #vc-toast-close{position:absolute;top:8px;right:10px;background:none;border:none;font-size:18px;color:#ccc;cursor:pointer;line-height:1;padding:0;}
+
+/* ── Full Look Banner ─────────────────── */
+.vamas-full-banner { position: relative; width: 100%; height: 560px; overflow: hidden; }
+.vamas-full-banner img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.vamas-full-banner__overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(42,0,1,0.72) 0%, rgba(42,0,1,0.28) 60%, transparent 100%); display: flex; align-items: center; padding: 0 80px; }
+.vamas-full-banner__text { max-width: 520px; }
+.vamas-full-banner__tag { font-size: 10px; font-weight: 800; letter-spacing: 3px; color: var(--color-gold); opacity: 0.7; margin-bottom: 14px; }
+.vamas-full-banner__title { font-family: 'Playfair Display', Georgia, serif; font-size: 56px; font-weight: 700; color: #fff; line-height: 1.15; margin-bottom: 14px; }
+.vamas-full-banner__title em { color: var(--color-gold); font-style: italic; }
+.vamas-full-banner__sub { font-size: 13px; color: rgba(255,255,255,0.72); margin-bottom: 28px; line-height: 1.65; }
+.vamas-full-banner__btn { display: inline-block; background: var(--color-gold); color: var(--color-maroon); padding: 13px 28px; border-radius: 100px; font-size: 10px; font-weight: 800; letter-spacing: 2px; transition: background 0.2s; }
+.vamas-full-banner__btn:hover { background: #fff; }
+
+/* ── Instagram Reels ──────────────────── */
+.vamas-reels { padding: 64px 80px; background: #fff; }
+.vamas-reels__grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+.vamas-reel { position: relative; border-radius: 14px; overflow: hidden; aspect-ratio: 9/16; cursor: pointer; background: #0a0a0a; transition: transform 0.25s, box-shadow 0.25s; display: block; }
+.vamas-reel:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(66,0,1,0.2); }
+.vamas-reel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vamas-reel__overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0) 50%); }
+.vamas-reel__play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; }
+.vamas-reel:hover .vamas-reel__play { transform: translate(-50%,-50%) scale(1.12); background: #fff; }
+.vamas-reel__play svg { width: 18px; height: 18px; fill: var(--color-maroon); margin-left: 3px; }
+.vamas-reel__info { position: absolute; bottom: 0; left: 0; right: 0; padding: 14px 12px 12px; }
+.vamas-reel__handle { font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.vamas-reel__stats { display: flex; gap: 12px; }
+.vamas-reel__stat { font-size: 10px; color: rgba(255,255,255,0.72); display: flex; align-items: center; gap: 4px; }
+.vamas-reel__stat svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; }
+.vamas-reel__badge { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #fd5949 0%, #d6249f 50%, #285AEB 100%); display: flex; align-items: center; justify-content: center; }
+.vamas-reel__badge svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 1.8; }
+
+@media (max-width: 768px) {
+  .vamas-full-banner { height: 300px; }
+  .vamas-full-banner__overlay { padding: 0 24px; }
+  .vamas-full-banner__title { font-size: 26px; }
+  .vamas-full-banner__sub { display: none; }
+  .vamas-full-banner__btn { padding: 10px 18px; font-size: 9px; }
+  .vamas-reels { padding: 32px 16px; }
+  .vamas-reels__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .vamas-reel__handle, .vamas-reel__stats { font-size: 9px; }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .vamas-reels { padding: 48px 40px; }
+  .vamas-reels__grid { grid-template-columns: repeat(3, 1fr); }
+}

@@ -2,32 +2,40 @@
   "sections": {
     "vamas-homepage": {
       "type": "vamas-homepage",
+      "settings": {
+        "show_categories": true,
+        "cat_view_all": "/collections/all",
+        "show_new_arrivals": true,
+        "show_bestsellers": true,
+        "show_brand": true,
+        "brand_image_asset": "full-look.jpg",
+        "show_testimonials": true,
+        "show_newsletter": true,
+        "show_banner": true,
+        "banner_image_asset": "fulllook.webp",
+        "show_reels": true,
+        "reels_sub": "Follow @vamas.official for daily style inspiration"
+      },
       "blocks": {
-        "cat-1": { "type": "category", "settings": { "cat_name": "BRIDAL", "cat_count": "120+" } },
-        "cat-2": { "type": "category", "settings": { "cat_name": "FESTIVE", "cat_count": "90+" } },
-        "cat-3": { "type": "category", "settings": { "cat_name": "CASUAL", "cat_count": "200+" } },
-        "cat-4": { "type": "category", "settings": { "cat_name": "PARTY WEAR", "cat_count": "80+" } },
+        "slide-1": { "type": "slide", "settings": { "slide_bg": "#420001", "image_asset": "slide-pink.jpg", "eyebrow": "NEW COLLECTION 2026", "line1": "Craft Your", "line2_accent": "Perfect", "line3": "Silhouette", "subtext": "Handcrafted blouses that celebrate every occasion with elegance & timeless grace.", "btn1_text": "SHOP NOW", "btn1_url": "/collections/all", "btn2_text": "VIEW LOOKBOOK", "btn2_url": "/collections/all" } },
+        "slide-2": { "type": "slide", "settings": { "slide_bg": "#1a0a00", "image_asset": "slide-maroon.jpg", "eyebrow": "BRIDAL COLLECTION", "line1": "Elegance", "line2_accent": "Woven in", "line3": "Every Thread", "subtext": "Premium silk and velvet blouses crafted for your most precious moments and celebrations.", "btn1_text": "BRIDAL EDIT", "btn1_url": "/collections/all", "btn2_text": "EXPLORE MORE", "btn2_url": "/collections/all" } },
+        "slide-3": { "type": "slide", "settings": { "slide_bg": "#2d0001", "image_asset": "slide-green.jpg", "eyebrow": "FESTIVE SEASON EDIT", "line1": "Celebrate in", "line2_accent": "Colour", "line3": "& Style", "subtext": "Vibrant festive blouses with traditional embroidery to make every celebration unforgettable.", "btn1_text": "SHOP FESTIVE", "btn1_url": "/collections/all", "btn2_text": "VIEW OFFERS", "btn2_url": "/collections/all" } },
+        "cat-1": { "type": "category", "settings": { "cat_name": "BRIDAL", "cat_count": "120+", "image_asset": "bridal.jpg", "cat_url": "/collections/all" } },
+        "cat-2": { "type": "category", "settings": { "cat_name": "FESTIVE", "cat_count": "90+", "image_asset": "festive.jpg", "cat_url": "/collections/all" } },
+        "cat-3": { "type": "category", "settings": { "cat_name": "CASUAL", "cat_count": "200+", "image_asset": "casual.jpg", "cat_url": "/collections/all" } },
+        "cat-4": { "type": "category", "settings": { "cat_name": "PARTY WEAR", "cat_count": "80+", "image_asset": "party-wear.jpg", "cat_url": "/collections/all" } },
         "stat-1": { "type": "stat", "settings": { "stat_num": "500+", "stat_lbl": "DESIGNS" } },
         "stat-2": { "type": "stat", "settings": { "stat_num": "10K+", "stat_lbl": "CUSTOMERS" } },
         "stat-3": { "type": "stat", "settings": { "stat_num": "4.9★", "stat_lbl": "RATING" } },
-        "test-1": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding!",
-            "reviewer_name": "Priya Sharma"
-          }
-        },
-        "test-2": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "review_text": "Fast delivery and beautiful packaging. The fabric quality is exactly as shown. Will definitely order again from Vamas!",
-            "reviewer_name": "Anita Menon"
-          }
-        }
+        "test-1": { "type": "testimonial", "settings": { "rating": 5, "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding. Will definitely buy again!", "reviewer_name": "Priya Sharma", "product_type": "Silk Zari Blouse" } },
+        "test-2": { "type": "testimonial", "settings": { "rating": 5, "review_text": "Fast delivery and beautiful packaging. The fabric quality is exactly as shown. My order arrived in 3 days and the blouse fit perfectly. Love Vamas!", "reviewer_name": "Anita Menon", "product_type": "Kanjeevaram Blouse" } },
+        "reel-1": { "type": "reel", "settings": { "image_asset": "prod-blue.jpg", "reel_handle": "@vamas.official", "reel_likes": "2.1k", "reel_views": "2,072" } },
+        "reel-2": { "type": "reel", "settings": { "image_asset": "prod-darkmaroon.jpg", "reel_handle": "@vamas.official", "reel_likes": "953", "reel_views": "953" } },
+        "reel-3": { "type": "reel", "settings": { "image_asset": "prod-indigo.jpg", "reel_handle": "@vamas.official", "reel_likes": "1.2k", "reel_views": "1,215" } },
+        "reel-4": { "type": "reel", "settings": { "image_asset": "prod-brinjal.jpg", "reel_handle": "@vamas.official", "reel_likes": "1.4k", "reel_views": "1,439" } },
+        "reel-5": { "type": "reel", "settings": { "image_asset": "slide-pink.jpg", "reel_handle": "@vamas.official", "reel_likes": "26.6k", "reel_views": "26.6k" } }
       },
-      "block_order": ["cat-1", "cat-2", "cat-3", "cat-4", "stat-1", "stat-2", "stat-3", "test-1", "test-2"]
+      "block_order": ["slide-1","slide-2","slide-3","cat-1","cat-2","cat-3","cat-4","stat-1","stat-2","stat-3","test-1","test-2","reel-1","reel-2","reel-3","reel-4","reel-5"]
     }
   },
   "order": ["vamas-homepage"]

@@ -26,6 +26,11 @@
                    alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
                    loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
                    width="640" height="840">
+            {% elsif block.settings.image_asset != blank %}
+              <img src="{{ block.settings.image_asset | asset_url }}"
+                   alt="{{ block.settings.line1 | escape }}"
+                   loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                   width="640" height="840">
             {% else %}
               {{ 'model-1' | placeholder_svg_tag: 'placeholder-svg' }}
             {% endif %}
@@ -127,6 +132,9 @@
           {% if block.settings.cat_image != blank %}
             <img src="{{ block.settings.cat_image | img_url: '400x533', crop: 'center' }}"
                  alt="{{ block.settings.cat_name }}" loading="lazy" width="400" height="533">
+          {% elsif block.settings.image_asset != blank %}
+            <img src="{{ block.settings.image_asset | asset_url }}"
+                 alt="{{ block.settings.cat_name | escape }}" loading="lazy" width="400" height="533">
           {% else %}
             {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
           {% endif %}
@@ -141,6 +149,28 @@
     {% endfor %}
   </div>
 </section>
+{% endif %}
+
+
+{% comment %} ── Full Look Banner ─────────────────── {% endcomment %}
+{% if section.settings.show_banner %}
+<div class="vamas-full-banner">
+  {% if section.settings.banner_image != blank %}
+    <img src="{{ section.settings.banner_image | img_url: '1600x560', crop: 'center' }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
+  {% elsif section.settings.banner_image_asset != blank %}
+    <img src="{{ section.settings.banner_image_asset | asset_url }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
+  {% endif %}
+  {% if section.settings.banner_title != blank %}
+    <div class="vamas-full-banner__overlay">
+      <div class="vamas-full-banner__text">
+        {% if section.settings.banner_tag != blank %}<div class="vamas-full-banner__tag">{{ section.settings.banner_tag }}</div>{% endif %}
+        <div class="vamas-full-banner__title">{{ section.settings.banner_title }}</div>
+        {% if section.settings.banner_sub != blank %}<div class="vamas-full-banner__sub">{{ section.settings.banner_sub }}</div>{% endif %}
+        {% if section.settings.banner_btn_text != blank %}<a href="{{ section.settings.banner_btn_url | default: '/collections/all' }}" class="vamas-full-banner__btn">{{ section.settings.banner_btn_text }}</a>{% endif %}
+      </div>
+    </div>
+  {% endif %}
+</div>
 {% endif %}
 
 {% comment %} ── New Arrivals ─────────────────────── {% endcomment %}
@@ -189,6 +219,9 @@
     {% if section.settings.brand_image != blank %}
       <img src="{{ section.settings.brand_image | img_url: '500x640', crop: 'center' }}"
            alt="Vamas brand story" loading="lazy" width="500" height="640">
+    {% elsif section.settings.brand_image_asset != blank %}
+      <img src="{{ section.settings.brand_image_asset | asset_url }}"
+           alt="Vamas brand story" loading="lazy" width="500" height="640">
     {% else %}
       {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {% endif %}
@@ -212,6 +245,48 @@
       {% render 'vamas-product-card', product: product %}
     {% else %}
       {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+
+{% comment %} ── Instagram Reels ─────────────────── {% endcomment %}
+{% assign reel_blocks = section.blocks | where: 'type', 'reel' %}
+{% if reel_blocks.size > 0 and section.settings.show_reels %}
+<section class="vamas-reels">
+  <div class="vamas-section__header">
+    <div>
+      <h2 class="vamas-section__title">As Seen on <span>Instagram</span></h2>
+      <p class="vamas-section__subtitle">{{ section.settings.reels_sub | default: 'Follow @vamas.official for daily style inspiration' }}</p>
+    </div>
+    <a href="{{ section.settings.reels_follow_url | default: '#' }}" class="vamas-view-all" style="display:flex;align-items:center;gap:6px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>FOLLOW US
+    </a>
+  </div>
+  <div class="vamas-reels__grid">
+    {% for block in section.blocks %}
+      {% if block.type == 'reel' %}
+        <a class="vamas-reel" href="{{ block.settings.reel_url | default: '#' }}" {{ block.shopify_attributes }}>
+          {% if block.settings.reel_image != blank %}
+            <img class="vamas-reel__img" src="{{ block.settings.reel_image | img_url: '400x711', crop: 'center' }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy">
+          {% elsif block.settings.image_asset != blank %}
+            <img class="vamas-reel__img" src="{{ block.settings.image_asset | asset_url }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy">
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg vamas-reel__img' }}
+          {% endif %}
+          <div class="vamas-reel__overlay"></div>
+          <div class="vamas-reel__badge"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg></div>
+          <div class="vamas-reel__play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+          <div class="vamas-reel__info">
+            <div class="vamas-reel__handle">{{ block.settings.reel_handle | default: '@vamas.official' }}</div>
+            <div class="vamas-reel__stats">
+              <div class="vamas-reel__stat"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>{{ block.settings.reel_likes | default: '1.2k' }}</div>
+              <div class="vamas-reel__stat"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>{{ block.settings.reel_views | default: '1,215' }}</div>
+            </div>
+          </div>
+        </a>
+      {% endif %}
     {% endfor %}
   </div>
 </section>
@@ -309,6 +384,7 @@
     { "type": "textarea", "id": "brand_heading", "label": "Heading", "default": "Woven with Love, Crafted with Precision" },
     { "type": "textarea", "id": "brand_text", "label": "Body Text", "default": "Each blouse is handcrafted by skilled artisans using premium fabrics sourced across India. From bridal zari to everyday cotton, we celebrate the art of Indian craftsmanship." },
     { "type": "image_picker", "id": "brand_image", "label": "Brand Image" },
+    { "type": "text", "id": "brand_image_asset", "label": "Or theme asset filename", "info": "e.g. full-look.jpg", "default": "full-look.jpg" },
     { "type": "text", "id": "brand_btn_text", "label": "Button Text", "default": "EXPLORE OUR STORY" },
     { "type": "url", "id": "brand_btn_url", "label": "Button URL" },
     { "type": "header", "content": "Testimonials" },
@@ -319,6 +395,19 @@
     { "type": "text", "id": "nl_subtext", "label": "Subtext", "default": "Subscribe for new arrivals, exclusive offers & style inspiration" },
     { "type": "text", "id": "nl_placeholder", "label": "Input Placeholder", "default": "Your email address" },
     { "type": "text", "id": "nl_btn", "label": "Button Text", "default": "SUBSCRIBE" }
+    ,{ "type": "header", "content": "Full Look Banner" },
+    { "type": "checkbox", "id": "show_banner", "label": "Show Full Look Banner", "default": true },
+    { "type": "image_picker", "id": "banner_image", "label": "Banner Image" },
+    { "type": "text", "id": "banner_image_asset", "label": "Or theme asset filename", "info": "e.g. fulllook.webp", "default": "fulllook.webp" },
+    { "type": "text", "id": "banner_tag", "label": "Overlay Eyebrow (optional)" },
+    { "type": "text", "id": "banner_title", "label": "Overlay Title (leave blank for image-only)" },
+    { "type": "textarea", "id": "banner_sub", "label": "Overlay Subtext" },
+    { "type": "text", "id": "banner_btn_text", "label": "Overlay Button Text" },
+    { "type": "url", "id": "banner_btn_url", "label": "Overlay Button URL" },
+    { "type": "header", "content": "Instagram Reels" },
+    { "type": "checkbox", "id": "show_reels", "label": "Show Instagram Reels", "default": true },
+    { "type": "text", "id": "reels_sub", "label": "Subtext", "default": "Follow @vamas.official for daily style inspiration" },
+    { "type": "url", "id": "reels_follow_url", "label": "Follow URL" }
   ],
   "blocks": [
     {
@@ -327,6 +416,7 @@
       "settings": [
         { "type": "color", "id": "slide_bg", "label": "Background Color", "default": "#420001" },
         { "type": "image_picker", "id": "slide_image", "label": "Blouse Image" },
+        { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. slide-pink.jpg (used if no image uploaded above)" },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "NEW COLLECTION 2026" },
         { "type": "text", "id": "line1", "label": "Heading Line 1", "default": "Craft Your" },
         { "type": "text", "id": "line2_accent", "label": "Heading Accent Word (white)", "default": "Perfect" },
@@ -343,6 +433,7 @@
       "name": "Category Card",
       "settings": [
         { "type": "image_picker", "id": "cat_image", "label": "Category Image" },
+        { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. bridal.jpg" },
         { "type": "text", "id": "cat_name", "label": "Category Name", "default": "BRIDAL" },
         { "type": "text", "id": "cat_count", "label": "Style Count", "default": "120+" },
         { "type": "url", "id": "cat_url", "label": "Collection URL" }
@@ -366,23 +457,40 @@
         { "type": "text", "id": "product_type", "label": "Product Bought", "default": "Blouse Collection" }
       ]
     }
+    ,{
+      "type": "reel",
+      "name": "Instagram Reel",
+      "settings": [
+        { "type": "image_picker", "id": "reel_image", "label": "Reel Image" },
+        { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. prod-blue.jpg" },
+        { "type": "text", "id": "reel_handle", "label": "Handle", "default": "@vamas.official" },
+        { "type": "text", "id": "reel_likes", "label": "Likes", "default": "1.2k" },
+        { "type": "text", "id": "reel_views", "label": "Views", "default": "1,215" },
+        { "type": "url", "id": "reel_url", "label": "Link URL" }
+      ]
+    }
   ],
   "presets": [
     {
       "name": "Vamas Homepage",
       "blocks": [
-        { "type": "slide", "settings": { "slide_bg": "#420001", "eyebrow": "NEW COLLECTION 2026", "line1": "Craft Your", "line2_accent": "Perfect", "line3": "Silhouette", "btn1_text": "SHOP NOW", "btn2_text": "VIEW LOOKBOOK" } },
-        { "type": "slide", "settings": { "slide_bg": "#1a0a00", "eyebrow": "BRIDAL COLLECTION", "line1": "Elegance", "line2_accent": "Woven in", "line3": "Every Thread", "btn1_text": "BRIDAL EDIT", "btn2_text": "EXPLORE MORE" } },
-        { "type": "slide", "settings": { "slide_bg": "#2d0001", "eyebrow": "FESTIVE SEASON EDIT", "line1": "Celebrate in", "line2_accent": "Colour", "line3": "& Style", "btn1_text": "SHOP FESTIVE", "btn2_text": "VIEW OFFERS" } },
-        { "type": "category", "settings": { "cat_name": "BRIDAL", "cat_count": "120+" } },
-        { "type": "category", "settings": { "cat_name": "FESTIVE", "cat_count": "90+" } },
-        { "type": "category", "settings": { "cat_name": "CASUAL", "cat_count": "200+" } },
-        { "type": "category", "settings": { "cat_name": "PARTY WEAR", "cat_count": "80+" } },
+        { "type": "slide", "settings": { "slide_bg": "#420001", "image_asset": "slide-pink.jpg", "eyebrow": "NEW COLLECTION 2026", "line1": "Craft Your", "line2_accent": "Perfect", "line3": "Silhouette", "btn1_text": "SHOP NOW", "btn2_text": "VIEW LOOKBOOK" } },
+        { "type": "slide", "settings": { "slide_bg": "#1a0a00", "image_asset": "slide-maroon.jpg", "eyebrow": "BRIDAL COLLECTION", "line1": "Elegance", "line2_accent": "Woven in", "line3": "Every Thread", "btn1_text": "BRIDAL EDIT", "btn2_text": "EXPLORE MORE" } },
+        { "type": "slide", "settings": { "slide_bg": "#2d0001", "image_asset": "slide-green.jpg", "eyebrow": "FESTIVE SEASON EDIT", "line1": "Celebrate in", "line2_accent": "Colour", "line3": "& Style", "btn1_text": "SHOP FESTIVE", "btn2_text": "VIEW OFFERS" } },
+        { "type": "category", "settings": { "cat_name": "BRIDAL", "cat_count": "120+", "image_asset": "bridal.jpg", "cat_url": "/collections/all" } },
+        { "type": "category", "settings": { "cat_name": "FESTIVE", "cat_count": "90+", "image_asset": "festive.jpg" } },
+        { "type": "category", "settings": { "cat_name": "CASUAL", "cat_count": "200+", "image_asset": "casual.jpg" } },
+        { "type": "category", "settings": { "cat_name": "PARTY WEAR", "cat_count": "80+", "image_asset": "party-wear.jpg" } },
         { "type": "stat", "settings": { "stat_num": "500+", "stat_lbl": "DESIGNS" } },
         { "type": "stat", "settings": { "stat_num": "10K+", "stat_lbl": "CUSTOMERS" } },
         { "type": "stat", "settings": { "stat_num": "4.9★", "stat_lbl": "RATING" } },
         { "type": "testimonial", "settings": { "rating": 5, "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding!", "reviewer_name": "Priya Sharma", "product_type": "Silk Zari Blouse" } },
         { "type": "testimonial", "settings": { "rating": 5, "review_text": "Fast delivery and beautiful packaging. The fabric quality is exactly as shown. Will definitely order again from Vamas!", "reviewer_name": "Anita Menon", "product_type": "Kanjeevaram Blouse" } }
+        ,{ "type": "reel", "settings": { "image_asset": "prod-blue.jpg", "reel_likes": "2.1k", "reel_views": "2,072" } },
+        { "type": "reel", "settings": { "image_asset": "prod-darkmaroon.jpg", "reel_likes": "953", "reel_views": "953" } },
+        { "type": "reel", "settings": { "image_asset": "prod-indigo.jpg", "reel_likes": "1.2k", "reel_views": "1,215" } },
+        { "type": "reel", "settings": { "image_asset": "prod-brinjal.jpg", "reel_likes": "1.4k", "reel_views": "1,439" } },
+        { "type": "reel", "settings": { "image_asset": "slide-pink.jpg", "reel_likes": "26.6k", "reel_views": "26.6k" } }
       ]
     }
   ]
