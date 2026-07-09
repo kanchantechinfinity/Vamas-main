@@ -6,34 +6,31 @@
 
     {% for block in section.blocks %}
       {% if block.type == 'slide' %}
-        <div class="vamas-slide" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
-          <div class="vamas-slide__text">
-            <p class="vamas-slide__eyebrow">{{ block.settings.eyebrow }}</p>
-            <h1 class="vamas-slide__heading">
-              {{ block.settings.line1 }}<br>
-              <em>{{ block.settings.line2_accent }}</em><br>
-              {{ block.settings.line3 }}
-            </h1>
-            <p class="vamas-slide__sub">{{ block.settings.subtext }}</p>
-            <div class="vamas-slide__btns">
-              <a href="{{ block.settings.btn1_url }}" class="btn-primary">{{ block.settings.btn1_text }}</a>
-              <a href="{{ block.settings.btn2_url }}" class="btn-outline">{{ block.settings.btn2_text }}</a>
+        <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
+          {% if block.settings.slide_image != blank %}
+            <img class="vamas-slide__bg" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
+                 alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
+                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+          {% elsif block.settings.image_asset != blank %}
+            <img class="vamas-slide__bg" src="{{ block.settings.image_asset | asset_url }}"
+                 alt="{{ block.settings.line1 | escape }}"
+                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+          {% endif %}
+          <div class="vamas-slide__scrim"></div>
+          <div class="vamas-slide__inner">
+            <div class="vamas-slide__text">
+              {% if block.settings.eyebrow != blank %}<p class="vamas-slide__eyebrow">{{ block.settings.eyebrow }}</p>{% endif %}
+              <h1 class="vamas-slide__heading">
+                {{ block.settings.line1 }}{% if block.settings.line2_accent != blank %} <em>{{ block.settings.line2_accent }}</em>{% endif %}{% if block.settings.line3 != blank %} {{ block.settings.line3 }}{% endif %}
+              </h1>
+              {% if block.settings.offer != blank %}<div class="vamas-slide__offer">{{ block.settings.offer }}</div>{% endif %}
+              {% if block.settings.coupon != blank %}<div class="vamas-slide__coupon">WITH COUPON <span>{{ block.settings.coupon }}</span></div>{% endif %}
+              {% if block.settings.subtext != blank %}<p class="vamas-slide__sub">{{ block.settings.subtext }}</p>{% endif %}
+              <div class="vamas-slide__btns">
+                {% if block.settings.btn1_text != blank %}<a href="{{ block.settings.btn1_url | default: '/collections/all' }}" class="btn-primary">{{ block.settings.btn1_text }}</a>{% endif %}
+                {% if block.settings.btn2_text != blank %}<a href="{{ block.settings.btn2_url | default: '/collections/all' }}" class="btn-outline">{{ block.settings.btn2_text }}</a>{% endif %}
+              </div>
             </div>
-          </div>
-          <div class="vamas-slider__image">
-            {% if block.settings.slide_image != blank %}
-              <img src="{{ block.settings.slide_image | img_url: '640x840', crop: 'center' }}"
-                   alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
-                   loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-                   width="640" height="840">
-            {% elsif block.settings.image_asset != blank %}
-              <img src="{{ block.settings.image_asset | asset_url }}"
-                   alt="{{ block.settings.line1 | escape }}"
-                   loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-                   width="640" height="840">
-            {% else %}
-              {{ 'model-1' | placeholder_svg_tag: 'placeholder-svg' }}
-            {% endif %}
           </div>
         </div>
       {% endif %}
@@ -395,10 +392,13 @@
         { "type": "color", "id": "slide_bg", "label": "Background Color", "default": "#420001" },
         { "type": "image_picker", "id": "slide_image", "label": "Blouse Image" },
         { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. slide-pink.jpg (used if no image uploaded above)" },
+        { "type": "select", "id": "text_align", "label": "Text Alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "NEW COLLECTION 2026" },
         { "type": "text", "id": "line1", "label": "Heading Line 1", "default": "Craft Your" },
-        { "type": "text", "id": "line2_accent", "label": "Heading Accent Word (white)", "default": "Perfect" },
-        { "type": "text", "id": "line3", "label": "Heading Line 3", "default": "Silhouette" },
+        { "type": "text", "id": "line2_accent", "label": "Heading Accent Word (gold)", "default": "Perfect" },
+        { "type": "text", "id": "line3", "label": "Heading Line 3" },
+        { "type": "text", "id": "offer", "label": "Offer Text (e.g. UPTO 50% OFF)" },
+        { "type": "text", "id": "coupon", "label": "Coupon Code" },
         { "type": "textarea", "id": "subtext", "label": "Subtext", "default": "Handcrafted blouses that celebrate every occasion with elegance & grace." },
         { "type": "text", "id": "btn1_text", "label": "Primary Button", "default": "SHOP NOW" },
         { "type": "url", "id": "btn1_url", "label": "Primary Button URL" },

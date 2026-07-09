@@ -35,47 +35,34 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-slide {
   min-width: 100%;
-  min-height: 580px;
+  min-height: 520px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 80px 80px;
   position: relative;
   overflow: hidden;
 }
+.vamas-slide__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.vamas-slide__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(42,0,1,0.74) 0%, rgba(42,0,1,0.42) 42%, rgba(42,0,1,0.10) 100%); }
+.vamas-slide--right .vamas-slide__scrim { background: linear-gradient(270deg, rgba(42,0,1,0.74) 0%, rgba(42,0,1,0.42) 42%, rgba(42,0,1,0.10) 100%); }
+.vamas-slide--center .vamas-slide__scrim { background: linear-gradient(0deg, rgba(42,0,1,0.55) 0%, rgba(42,0,1,0.35) 100%); }
 
-.vamas-slide::before {
-  content: '';
-  position: absolute;
-  right: -80px;
-  top: -80px;
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: rgba(231, 209, 166, 0.035);
-  border: 70px solid rgba(231, 209, 166, 0.025);
-  pointer-events: none;
-}
+.vamas-slide__inner { position: relative; z-index: 2; width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 80px; }
+.vamas-slide--right .vamas-slide__inner { display: flex; justify-content: flex-end; }
+.vamas-slide--center .vamas-slide__inner { display: flex; justify-content: center; text-align: center; }
 
-.vamas-slide__text { max-width: 520px; z-index: 2; }
-.vamas-slide__eyebrow { color: rgba(231,209,166,0.65); font-size: 10px; font-weight: 700; letter-spacing: 4px; margin-bottom: 16px; }
-.vamas-slide__heading { color: var(--color-gold); font-size: 60px; font-weight: 800; line-height: 1.05; margin-bottom: 20px; }
-.vamas-slide__heading em { color: var(--color-white); font-style: normal; }
-.vamas-slide__sub { color: rgba(231,209,166,0.65); font-size: 15px; line-height: 1.8; margin-bottom: 32px; max-width: 340px; }
-
+.vamas-slide__text { max-width: 560px; }
+.vamas-slide--center .vamas-slide__text { max-width: 720px; }
+.vamas-slide__eyebrow { color: rgba(231,209,166,0.8); font-size: 10px; font-weight: 700; letter-spacing: 4px; margin-bottom: 16px; }
+.vamas-slide__heading { font-family: 'Playfair Display', Georgia, serif; color: #fff; font-size: 64px; font-weight: 700; line-height: 1.08; margin-bottom: 18px; }
+.vamas-slide__heading em { color: var(--color-gold); font-style: italic; }
+.vamas-slide__offer { color: #fff; font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 14px; }
+.vamas-slide__offer span { color: var(--color-gold); }
+.vamas-slide__coupon { display: inline-flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 22px; }
+.vamas-slide__coupon span { border: 1px solid var(--color-gold); color: var(--color-gold); padding: 4px 12px; border-radius: 4px; letter-spacing: 3px; }
+.vamas-slide__sub { color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.8; margin-bottom: 30px; max-width: 400px; }
+.vamas-slide--center .vamas-slide__sub { max-width: 520px; margin-left: auto; margin-right: auto; }
 .vamas-slide__btns { display: flex; gap: 14px; }
-
-.vamas-slider__image {
-  flex-shrink: 0;
-  width: 320px;
-  height: 420px;
-  border-radius: 4px;
-  overflow: hidden;
-  z-index: 2;
-  border: 1px solid rgba(231, 209, 166, 0.12);
-}
-
-.vamas-slider__image img { width: 100%; height: 100%; object-fit: cover; }
+.vamas-slide--center .vamas-slide__btns { justify-content: center; }
 
 /* Slider controls */
 .vamas-slider__dots {
@@ -539,7 +526,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 /* ── Responsive ───────────────────────── */
 @media (max-width: 1024px) {
-  .vamas-slide { padding: 60px 48px; }
+  .vamas-slide__inner { padding: 0 48px; }
   .vamas-section { padding: 52px 48px; }
   .vamas-brand { padding: 64px 48px; flex-direction: column; }
   .vamas-newsletter { padding: 52px 48px; }
@@ -553,10 +540,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 @media (max-width: 768px) {
-  .vamas-slide { flex-direction: column; padding: 48px 24px; min-height: auto; text-align: center; gap: 32px; }
-  .vamas-slide__btns { justify-content: center; }
+  .vamas-slide { min-height: 420px; }
+  .vamas-slide__inner { padding: 0 24px; }
   .vamas-slide__heading { font-size: 34px; }
-  .vamas-slider__image { width: 100%; max-width: 260px; height: 340px; }
+  .vamas-slide__offer { font-size: 26px; }
   .vamas-section { padding: 44px 24px; }
   .vamas-section__header { flex-direction: column; align-items: flex-start; gap: 12px; }
   .vamas-brand { padding: 48px 24px; }
