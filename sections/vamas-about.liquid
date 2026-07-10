@@ -208,25 +208,30 @@
     <p class="about-sub">{{ section.settings.tl_sub }}</p>
   </div>
   <div class="about-tl" style="position:relative; z-index:1;">
+    {% assign ml_index = 0 %}
     {% for block in section.blocks %}
       {% if block.type == 'milestone' %}
-        <div class="about-tl__item {% if block.settings.align_right %}right{% endif %}" {{ block.shopify_attributes }}>
-          {% if block.settings.align_right %}<div class="about-tl__spacer"></div>{% endif %}
-          {% unless block.settings.align_right %}
+        {% assign ml_index = ml_index | plus: 1 %}
+        {% assign is_right = ml_index | modulo: 2 %}
+        {% if is_right == 0 %}
+          <div class="about-tl__item right" {{ block.shopify_attributes }}>
+            <div class="about-tl__spacer"></div>
+            <div class="about-tl__dot"></div>
+            <div class="about-tl__content">
+              <div class="about-tl__year">{{ block.settings.year }}</div>
+              <div class="about-tl__desc">{{ block.settings.desc }}</div>
+            </div>
+          </div>
+        {% else %}
+          <div class="about-tl__item" {{ block.shopify_attributes }}>
             <div class="about-tl__content">
               <div class="about-tl__year">{{ block.settings.year }}</div>
               <div class="about-tl__desc">{{ block.settings.desc }}</div>
             </div>
             <div class="about-tl__dot"></div>
             <div class="about-tl__spacer"></div>
-          {% else %}
-            <div class="about-tl__dot"></div>
-            <div class="about-tl__content">
-              <div class="about-tl__year">{{ block.settings.year }}</div>
-              <div class="about-tl__desc">{{ block.settings.desc }}</div>
-            </div>
-          {% endunless %}
-        </div>
+          </div>
+        {% endif %}
       {% endif %}
     {% endfor %}
   </div>
