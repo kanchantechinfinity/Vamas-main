@@ -113,7 +113,7 @@
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 40px;
-  align-items: center;
+  align-items: stretch;
 }
 .vblog-featured-media {
   display: block;
@@ -121,7 +121,9 @@
 }
 .vblog-featured-media img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
   display: block;
 }
 .vblog-featured-body {
@@ -401,6 +403,7 @@
   .vblog-featured {
     grid-template-columns: 1fr;
   }
+  .vblog-featured-media { height: 320px; }
   .vblog-featured-body { padding: 24px; min-height: 0; }
   .vblog-featured-title { font-size: 24px; }
   .vblog-grid { grid-template-columns: 1fr; }
