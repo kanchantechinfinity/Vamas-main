@@ -33,7 +33,15 @@
     {% endif %}
 
     <button class="vamas-prod-card__wishlist" aria-label="Add to wishlist"
-            data-product-id="{{ product.id }}">
+            data-product-id="{{ product.id }}"
+            data-handle="{{ product.handle }}"
+            data-title="{{ product.title | escape }}"
+            data-type="{{ product.type | escape | default: 'Blouse' }}"
+            data-price="{{ first_variant.price | money }}"
+            {% if on_sale %}data-compare="{{ first_variant.compare_at_price | money }}" data-discount="{{ discount_pct }}"{% endif %}
+            data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+            data-url="{{ product.url }}"
+            data-variant="{{ first_variant.id }}">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
   </div>

@@ -25,11 +25,12 @@
       </div>
 
       <div class="vamas-nav__icons">
-        <a href="{{ routes.search_url }}" title="Search" aria-label="Search">
+        <a href="{{ routes.search_url }}" id="vamas-search-toggle" title="Search" aria-label="Search">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </a>
-        <a href="{{ section.settings.wishlist_url | default: '#' }}" title="Wishlist" aria-label="Wishlist">
+        <a href="{{ section.settings.wishlist_url | default: '/pages/wishlist' }}" title="Wishlist" aria-label="Wishlist" style="position:relative;">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="vamas-cart-badge" id="vamas-nav-wish-badge" style="display:none;">0</span>
         </a>
         {% if shop.customer_accounts_enabled %}
         <a href="{{ routes.account_url }}" title="Account" aria-label="Account">
@@ -53,6 +54,15 @@
   </div>
 </div>
 
+<div class="vamas-search-overlay" id="vamas-search-overlay">
+  <form class="vamas-search-box" action="{{ routes.search_url }}" method="get" role="search">
+    <svg class="vamas-search-box__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" name="q" placeholder="Search for blouses, fabrics, occasions…" autocomplete="off" aria-label="Search">
+    <button type="submit" class="vamas-search-box__submit">SEARCH</button>
+    <button type="button" class="vamas-search-box__close" id="vamas-search-close" aria-label="Close search">&times;</button>
+  </form>
+</div>
+
 <script>
 (function(){
   var wrap = document.getElementById('vamas-nav-wrapper');
@@ -62,6 +72,15 @@
       wrap.classList.toggle('vamas-nav-mobile-open');
     });
   }
+  var toggle = document.getElementById('vamas-search-toggle');
+  var overlay = document.getElementById('vamas-search-overlay');
+  var close = document.getElementById('vamas-search-close');
+  function openSearch(e){ if(e) e.preventDefault(); overlay.classList.add('open'); var i = overlay.querySelector('input'); if(i){ setTimeout(function(){ i.focus(); }, 50); } }
+  function closeSearch(){ overlay.classList.remove('open'); }
+  if (toggle && overlay) { toggle.addEventListener('click', openSearch); }
+  if (close) { close.addEventListener('click', closeSearch); }
+  if (overlay) { overlay.addEventListener('click', function(e){ if(e.target === overlay) closeSearch(); }); }
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay) closeSearch(); });
 })();
 </script>
 

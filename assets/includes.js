@@ -126,3 +126,45 @@
   });
 
 })();
+
+/* ── Wishlist (localStorage) ─────────────────────────── */
+(function () {
+  var KEY = 'vamas_wishlist_v1';
+  function read() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
+  function write(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); document.dispatchEvent(new CustomEvent('vamas:wishlist')); updateBadge(); }
+  function has(id) { return read().some(function (i) { return String(i.id) === String(id); }); }
+  function toggle(item) {
+    var arr = read(), idx = -1;
+    for (var i = 0; i < arr.length; i++) { if (String(arr[i].id) === String(item.id)) { idx = i; break; } }
+    if (idx > -1) { arr.splice(idx, 1); } else { arr.push(item); }
+    write(arr);
+    return idx === -1;
+  }
+  function remove(id) { write(read().filter(function (i) { return String(i.id) !== String(id); })); }
+  function count() { return read().length; }
+  function updateBadge() {
+    var b = document.getElementById('vamas-nav-wish-badge');
+    if (b) { var c = count(); b.textContent = c; b.style.display = c > 0 ? 'flex' : 'none'; }
+  }
+  function wireButtons() {
+    document.querySelectorAll('.vamas-prod-card__wishlist').forEach(function (btn) {
+      var id = btn.getAttribute('data-product-id');
+      if (has(id)) btn.classList.add('active');
+      if (btn.dataset.wlWired) return;
+      btn.dataset.wlWired = '1';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+        var item = {
+          id: id, handle: btn.dataset.handle, title: btn.dataset.title,
+          type: btn.dataset.type, price: btn.dataset.price, compare: btn.dataset.compare || '',
+          discount: btn.dataset.discount || '', image: btn.dataset.image, url: btn.dataset.url,
+          variant: btn.dataset.variant
+        };
+        btn.classList.toggle('active', toggle(item));
+      });
+    });
+  }
+  window.VamasWishlist = { get: read, has: has, toggle: toggle, remove: remove, count: count };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { updateBadge(); wireButtons(); });
+  else { updateBadge(); wireButtons(); }
+})();

@@ -1,0 +1,87 @@
+{{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
+
+<section class="vamas-section">
+  <div class="vamas-section__header">
+    <div>
+      <h2 class="vamas-section__title">{{ section.settings.heading | default: 'My' }} <span>{{ section.settings.heading_accent | default: 'Wishlist' }}</span></h2>
+      <p class="vamas-section__subtitle" id="vamas-wl-count">Your saved pieces</p>
+    </div>
+    <a href="{{ routes.all_products_collection_url }}" class="vamas-view-all">CONTINUE SHOPPING</a>
+  </div>
+
+  <div class="empty-cart" id="vamas-wl-empty" style="display:none;text-align:center;padding:40px 20px;">
+    <div class="empty-icon" style="font-size:44px;">&#9825;</div>
+    <div class="empty-title" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--color-maroon);margin:16px 0 8px;">Your wishlist is empty</div>
+    <div class="empty-sub" style="color:rgba(66,0,1,0.55);font-size:14px;margin-bottom:24px;">Tap the &#9825; on any product to save it here.</div>
+    <a href="{{ routes.all_products_collection_url }}" class="btn-primary">SHOP NOW</a>
+  </div>
+
+  <div class="vamas-prod-grid" id="vamas-wl-grid"></div>
+</section>
+
+<script>
+(function(){
+  var grid  = document.getElementById('vamas-wl-grid');
+  var empty = document.getElementById('vamas-wl-empty');
+  var countEl = document.getElementById('vamas-wl-count');
+
+  function esc(s){ return (s == null ? '' : String(s)).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  function render(){
+    var items = (window.VamasWishlist ? window.VamasWishlist.get() : []);
+    if (!items.length){
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      countEl.textContent = '0 items saved';
+      return;
+    }
+    empty.style.display = 'none';
+    countEl.textContent = items.length + (items.length === 1 ? ' item saved' : ' items saved');
+    grid.innerHTML = items.map(function(it){
+      var img = it.image ? '<img src="' + esc(it.image) + '" alt="' + esc(it.title) + '" loading="lazy">' : '';
+      var priceExtra = it.compare ? ('<span class="original">' + esc(it.compare) + '</span>' + (it.discount ? '<span class="discount">' + esc(it.discount) + '% off</span>' : '')) : '';
+      var atc = it.variant
+        ? ('<form method="post" action="/cart/add"><input type="hidden" name="id" value="' + esc(it.variant) + '"><input type="hidden" name="quantity" value="1"><button type="submit" class="vamas-atc">ADD TO CART</button></form>')
+        : '';
+      return '' +
+      '<div class="vamas-prod-card" data-id="' + esc(it.id) + '">' +
+        '<div class="vamas-prod-card__img">' +
+          '<a href="' + esc(it.url) + '">' + img + '</a>' +
+          '<button class="vamas-prod-card__wishlist active" type="button" aria-label="Remove from wishlist" data-remove="' + esc(it.id) + '">' +
+            '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="vamas-prod-card__body">' +
+          '<a href="' + esc(it.url) + '" style="text-decoration:none;"><div class="vamas-prod-card__name">' + esc(it.title) + '</div></a>' +
+          '<div class="vamas-prod-card__type">' + esc(it.type) + '</div>' +
+          '<div class="vamas-prod-card__price"><span class="price">' + esc(it.price) + '</span>' + priceExtra + '</div>' +
+          atc +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    grid.querySelectorAll('[data-remove]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        window.VamasWishlist.remove(this.getAttribute('data-remove'));
+        render();
+      });
+    });
+  }
+
+  document.addEventListener('vamas:wishlist', render);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
+  else render();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Vamas Wishlist",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "My" },
+    { "type": "text", "id": "heading_accent", "label": "Heading Accent", "default": "Wishlist" }
+  ],
+  "presets": [{ "name": "Vamas Wishlist" }]
+}
+{% endschema %}
