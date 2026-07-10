@@ -53,9 +53,9 @@
   .about-tl::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); top: 0; bottom: 0; width: 1px; background: rgba(231,209,166,0.15); }
   .about-tl__item { display: flex; align-items: flex-start; gap: 40px; margin-bottom: 52px; position: relative; }
   .about-tl__item:last-child { margin-bottom: 0; }
-  .about-tl__item.right { flex-direction: row-reverse; }
   .about-tl__content { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(231,209,166,0.12); border-radius: 12px; padding: 24px 28px; }
-  .about-tl__item.right .about-tl__content { text-align: right; }
+  .about-tl__item:not(.right) .about-tl__content { text-align: right; }
+  .about-tl__item.right .about-tl__content { text-align: left; }
   .about-tl__year { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; font-weight: 700; color: var(--color-gold); margin-bottom: 8px; }
   .about-tl__desc { font-size: 13px; font-weight: 300; color: rgba(231,209,166,0.55); line-height: 1.7; }
   .about-tl__dot { position: absolute; left: 50%; transform: translateX(-50%); top: 20px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-gold); border: 3px solid var(--color-maroon); box-shadow: 0 0 0 4px rgba(231,209,166,0.15); z-index: 2; }
