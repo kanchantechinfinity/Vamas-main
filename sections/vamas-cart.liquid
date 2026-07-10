@@ -94,7 +94,10 @@
       </script>
 
     <div class="os-row"><span>MRP Total (<span id="os-item-count">{{ cart.item_count }} items</span>)</span><span id="os-mrp">{{ cart.original_total_price | money }}</span></div>
-    {% if cart.total_discount > 0 %}
+    {% for discount in cart.cart_level_discount_applications %}
+    <div class="os-row green"><span>Discount ({{ discount.title }})</span><span>− {{ discount.total_allocated_amount | money }}</span></div>
+    {% endfor %}
+    {% if cart.total_discount > 0 and cart.cart_level_discount_applications.size == 0 %}
     <div class="os-row green"><span>Discount</span><span id="os-discount">− {{ cart.total_discount | money }}</span></div>
     {% endif %}
     <div class="os-row"><span>Delivery Charges</span><span id="os-delivery">{% if free_threshold_cents > 0 and cart.total_price >= free_threshold_cents %}FREE{% else %}Calculated at checkout{% endif %}</span></div>

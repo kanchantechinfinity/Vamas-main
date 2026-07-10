@@ -13,9 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
 
   {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
-  {% if settings.body_font %}{{ settings.body_font | font_face: font_display: 'swap' }}{% endif %}
-  {% if settings.heading_font %}{{ settings.heading_font | font_face: font_display: 'swap' }}{% endif %}
   <style>
+    {% if settings.body_font %}{{ settings.body_font | font_face: font_display: 'swap' }}{% endif %}
+    {% if settings.heading_font %}{{ settings.heading_font | font_face: font_display: 'swap' }}{% endif %}
     :root {
       --color-maroon: {{ settings.color_maroon | default: '#420001' }};
       --color-maroon-light: {{ settings.color_maroon_light | default: '#6a0002' }};
