@@ -93,6 +93,16 @@
     .about-tl__content { margin-left: 40px; }
     .about-tl__year { font-size: 24px; }
   }
+
+  /* Timeline scroll reveal (enabled by JS; items stay visible if JS is off) */
+  .about-tl.reveal-on .about-tl__item { opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; will-change: opacity, transform; }
+  .about-tl.reveal-on .about-tl__item:not(.right) { transform: translate(-48px, 24px); }
+  .about-tl.reveal-on .about-tl__item.right { transform: translate(48px, 24px); }
+  .about-tl.reveal-on .about-tl__item.revealed { opacity: 1; transform: none; }
+  @media (max-width: 768px) {
+    .about-tl.reveal-on .about-tl__item:not(.right),
+    .about-tl.reveal-on .about-tl__item.right { transform: translate(0, 24px); }
+  }
 </style>
 
 {% comment %} ── 1. Hero ─────────────────────────── {% endcomment %}
@@ -222,6 +232,20 @@
   </div>
 </section>
 {% endif %}
+
+<script>
+(function(){
+  var tl = document.querySelector('.about-tl');
+  if (!tl || !('IntersectionObserver' in window)) return;
+  tl.classList.add('reveal-on');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+  tl.querySelectorAll('.about-tl__item').forEach(function(item){ io.observe(item); });
+})();
+</script>
 
 {% schema %}
 {
