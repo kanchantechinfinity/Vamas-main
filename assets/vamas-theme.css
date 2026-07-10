@@ -318,6 +318,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-prod-card__wishlist.active svg { fill: var(--color-gold); stroke: var(--color-gold); }
 
 /* ── Search Overlay ───────────────────── */
+.vamas-sizeguide-overlay { opacity: 0; visibility: hidden; }
 .vamas-search-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(42,0,1,0.55); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
 .vamas-search-overlay.open { opacity: 1; visibility: visible; }
 .vamas-search-box { display: flex; align-items: center; gap: 12px; width: min(680px, 92vw); margin-top: 14vh; background: #fff; border-radius: 100px; padding: 8px 8px 8px 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: translateY(-16px); transition: transform 0.25s; }
