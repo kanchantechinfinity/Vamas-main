@@ -1,5 +1,51 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "current": "Default",
+  "current": {
+    "color_maroon": "#420001",
+    "color_maroon_light": "#6a0002",
+    "color_gold": "#e7d1a6",
+    "color_gold_dark": "#c9a96e",
+    "color_bg": "#fff9f2",
+    "whatsapp_number": "919876543210",
+    "whatsapp_message": "Hi! I am interested in your products.",
+    "sections": {
+      "vamas-header": {
+        "type": "vamas-header",
+        "settings": {
+          "logo_asset": "vamas-logo.avif",
+          "main_menu": "main-menu",
+          "contact_label": "Contact Us",
+          "contact_url": "",
+          "wishlist_url": "shopify://pages/wishlist",
+          "show_announce": true,
+          "announce_text": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦"
+        }
+      },
+      "vamas-footer": {
+        "type": "vamas-footer",
+        "settings": {
+          "show_newsletter": true,
+          "brand_name": "VAMAS",
+          "brand_desc": "Premium handcrafted blouses celebrating Indian artistry and elegance. Every piece tells a story.",
+          "instagram": "",
+          "facebook": "",
+          "whatsapp": "",
+          "contact_email": "",
+          "contact_phone": "",
+          "contact_hours": "Mon–Sat: 10am – 6pm"
+        }
+      }
+    },
+    "content_for_index": []
+  },
   "presets": {
     "Default": {
       "color_maroon": "#420001",
