@@ -1,6 +1,6 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     :root{--m:#420001;--ml:#6a0002;--g:#e7d1a6;--gd:#c9a96e;--bg:#fff9f2;}
-    body{font-family:'Poppins',sans-serif;background:var(--bg);color:#333;}
+    body{font-family:var(--font-body);background:var(--bg);color:#333;}
 
     .breadcrumb{padding:14px 80px;font-size:11px;color:#888;display:flex;align-items:center;gap:6px;}
     .breadcrumb a{color:#888;text-decoration:none;}
@@ -37,7 +37,7 @@
     .ci-attrs{display:flex;gap:8px;flex-wrap:wrap;}
     .ci-attr{font-size:10px;background:rgba(66,0,1,.06);color:#555;padding:3px 8px;border-radius:4px;font-weight:500;}
     .ci-actions{display:flex;gap:10px;margin-top:8px;}
-    .ci-action-btn{font-size:10px;color:#aaa;background:none;border:none;cursor:pointer;font-family:'Poppins',sans-serif;padding:0;display:flex;align-items:center;gap:3px;transition:color .15s;}
+    .ci-action-btn{font-size:10px;color:#aaa;background:none;border:none;cursor:pointer;font-family:var(--font-body);padding:0;display:flex;align-items:center;gap:3px;transition:color .15s;}
     .ci-action-btn:hover{color:var(--m);}
 
     .ci-price{font-size:13px;font-weight:700;color:var(--m);}
@@ -59,12 +59,12 @@
     .empty-icon{font-size:60px;margin-bottom:16px;}
     .empty-title{font-size:22px;font-weight:800;color:var(--m);margin-bottom:8px;}
     .empty-sub{font-size:13px;color:#888;margin-bottom:28px;line-height:1.7;}
-    .btn-shop{background:var(--m);color:var(--g);border:none;border-radius:8px;padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:'Poppins',sans-serif;text-decoration:none;display:inline-block;}
+    .btn-shop{background:var(--m);color:var(--g);border:none;border-radius:8px;padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;font-family:var(--font-body);text-decoration:none;display:inline-block;}
     .btn-shop:hover{background:var(--ml);}
 
     .undo-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;font-size:12px;font-weight:600;padding:12px 20px;border-radius:8px;display:flex;align-items:center;gap:12px;z-index:900;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap;}
     .undo-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;}
-    .undo-btn{background:var(--g);color:var(--m);border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;}
+    .undo-btn{background:var(--g);color:var(--m);border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-body);}
 
     .order-summary{background:#fff;border-radius:14px;box-shadow:0 2px 16px rgba(66,0,1,.06);padding:22px;position:sticky;top:90px;}
     .os-title{font-size:13px;font-weight:800;letter-spacing:1.5px;color:var(--m);margin-bottom:18px;}
@@ -76,9 +76,9 @@
     .os-saving{background:#e8f5e9;color:#2e7d32;font-size:11px;font-weight:600;padding:7px 12px;border-radius:6px;text-align:center;margin-bottom:16px;}
 
     .coupon-form{display:flex;gap:8px;margin-bottom:8px;}
-    .coupon-input{flex:1;border:1.5px solid #e0e0e0;border-radius:7px;padding:10px 12px;font-size:12px;font-family:'Poppins',sans-serif;outline:none;transition:border-color .2s;}
+    .coupon-input{flex:1;border:1.5px solid #e0e0e0;border-radius:7px;padding:10px 12px;font-size:12px;font-family:var(--font-body);outline:none;transition:border-color .2s;}
     .coupon-input:focus{border-color:var(--m);}
-    .coupon-btn{background:var(--m);color:var(--g);border:none;border-radius:7px;padding:10px 16px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;}
+    .coupon-btn{background:var(--m);color:var(--g);border:none;border-radius:7px;padding:10px 16px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;}
     .coupon-btn:hover{background:var(--ml);}
     .coupon-result{font-size:11px;padding:7px 10px;border-radius:5px;margin-bottom:10px;display:none;}
     .coupon-result.ok{background:#e8f5e9;color:#2e7d32;display:block;}
@@ -86,11 +86,11 @@
     .applied-coupon{display:none;align-items:center;justify-content:space-between;background:#e8f5e9;padding:8px 12px;border-radius:6px;margin-bottom:10px;}
     .applied-coupon.show{display:flex;}
     .applied-tag{font-size:11px;font-weight:700;color:#2e7d32;}
-    .remove-coupon{font-size:11px;color:#888;cursor:pointer;background:none;border:none;font-family:'Poppins',sans-serif;text-decoration:underline;}
+    .remove-coupon{font-size:11px;color:#888;cursor:pointer;background:none;border:none;font-family:var(--font-body);text-decoration:underline;}
 
-    .btn-checkout{width:100%;height:50px;background:var(--m);color:var(--g);font-size:14px;font-weight:800;letter-spacing:2px;font-family:'Poppins',sans-serif;border:none;border-radius:9px;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;}
+    .btn-checkout{width:100%;height:50px;background:var(--m);color:var(--g);font-size:14px;font-weight:800;letter-spacing:2px;font-family:var(--font-body);border:none;border-radius:9px;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;}
     .btn-checkout:hover{background:var(--ml);}
-    .btn-continue{width:100%;height:44px;background:transparent;border:1.5px solid rgba(66,0,1,.25);color:var(--m);font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;border-radius:9px;cursor:pointer;transition:all .2s;margin-bottom:16px;}
+    .btn-continue{width:100%;height:44px;background:transparent;border:1.5px solid rgba(66,0,1,.25);color:var(--m);font-size:13px;font-weight:600;font-family:var(--font-body);border-radius:9px;cursor:pointer;transition:all .2s;margin-bottom:16px;}
     .btn-continue:hover{border-color:var(--m);background:rgba(66,0,1,.03);}
 
     .trust-mini{display:flex;flex-direction:column;gap:8px;border-top:1px solid rgba(66,0,1,.07);padding-top:14px;}
@@ -113,7 +113,7 @@
     .rs-price{font-size:13px;font-weight:700;color:var(--m);}
     .rs-old{font-size:11px;color:#bbb;text-decoration:line-through;}
     .rs-off{background:#e8f5e9;color:#2e7d32;font-size:9px;padding:2px 6px;border-radius:8px;font-weight:600;}
-    .rs-add{width:100%;background:transparent;border:1.5px solid var(--m);color:var(--m);padding:7px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:9px;font-family:'Poppins',sans-serif;transition:all .2s;}
+    .rs-add{width:100%;background:transparent;border:1.5px solid var(--m);color:var(--m);padding:7px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:9px;font-family:var(--font-body);transition:all .2s;}
     .rs-add:hover{background:var(--m);color:var(--g);}
 
     .wp-float{display:none;}

@@ -7,7 +7,19 @@
     {% for block in section.blocks %}
       {% if block.type == 'slide' %}
         <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
-          {% if block.settings.slide_image != blank %}
+          {% if block.settings.video != blank %}
+            <video class="vamas-slide__bg" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"{% endif %}>
+              {% for source in block.settings.video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
+            </video>
+          {% elsif block.settings.video_url != blank %}
+            <div class="vamas-slide__bg vamas-video-embed">
+              {% if block.settings.video_url.type == 'youtube' %}
+                <iframe src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=1&mute=1&loop=1&playlist={{ block.settings.video_url.id }}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1" title="{{ block.settings.line1 | escape }}" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+              {% elsif block.settings.video_url.type == 'vimeo' %}
+                <iframe src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=1&muted=1&loop=1&background=1" title="{{ block.settings.line1 | escape }}" allow="autoplay" frameborder="0"></iframe>
+              {% endif %}
+            </div>
+          {% elsif block.settings.slide_image != blank %}
             <img class="vamas-slide__bg" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
                  alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
@@ -152,7 +164,19 @@
 {% comment %} ── Full Look Banner ─────────────────── {% endcomment %}
 {% if section.settings.show_banner %}
 <div class="vamas-full-banner">
-  {% if section.settings.banner_image != blank %}
+  {% if section.settings.banner_video != blank %}
+    <video class="vamas-full-banner__media" autoplay muted loop playsinline preload="metadata"{% if section.settings.banner_image != blank %} poster="{{ section.settings.banner_image | img_url: '1600x560', crop: 'center' }}"{% endif %}>
+      {% for source in section.settings.banner_video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
+    </video>
+  {% elsif section.settings.banner_video_url != blank %}
+    <div class="vamas-full-banner__media vamas-video-embed">
+      {% if section.settings.banner_video_url.type == 'youtube' %}
+        <iframe src="https://www.youtube.com/embed/{{ section.settings.banner_video_url.id }}?autoplay=1&mute=1&loop=1&playlist={{ section.settings.banner_video_url.id }}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1" title="{{ section.settings.banner_title | escape | default: 'Vamas' }}" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+      {% elsif section.settings.banner_video_url.type == 'vimeo' %}
+        <iframe src="https://player.vimeo.com/video/{{ section.settings.banner_video_url.id }}?autoplay=1&muted=1&loop=1&background=1" title="{{ section.settings.banner_title | escape | default: 'Vamas' }}" allow="autoplay" frameborder="0"></iframe>
+      {% endif %}
+    </div>
+  {% elsif section.settings.banner_image != blank %}
     <img src="{{ section.settings.banner_image | img_url: '1600x560', crop: 'center' }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
   {% elsif section.settings.banner_image_asset != blank %}
     <img src="{{ section.settings.banner_image_asset | asset_url }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
@@ -374,6 +398,8 @@
     { "type": "checkbox", "id": "show_banner", "label": "Show Full Look Banner", "default": true },
     { "type": "image_picker", "id": "banner_image", "label": "Banner Image" },
     { "type": "text", "id": "banner_image_asset", "label": "Or theme asset filename", "info": "e.g. fulllook.webp", "default": "fulllook.webp" },
+    { "type": "video", "id": "banner_video", "label": "Banner Video (uploaded)", "info": "Shows instead of the image. Autoplays muted & looped." },
+    { "type": "video_url", "id": "banner_video_url", "label": "Or Banner Video URL (YouTube / Vimeo)", "accept": ["youtube", "vimeo"] },
     { "type": "text", "id": "banner_tag", "label": "Overlay Eyebrow (optional)" },
     { "type": "text", "id": "banner_title", "label": "Overlay Title (leave blank for image-only)" },
     { "type": "textarea", "id": "banner_sub", "label": "Overlay Subtext" },
@@ -390,8 +416,10 @@
       "name": "Hero Slide",
       "settings": [
         { "type": "color", "id": "slide_bg", "label": "Background Color", "default": "#420001" },
-        { "type": "image_picker", "id": "slide_image", "label": "Blouse Image" },
+        { "type": "image_picker", "id": "slide_image", "label": "Background Image" },
         { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. slide-pink.jpg (used if no image uploaded above)" },
+        { "type": "video", "id": "video", "label": "Background Video (uploaded)", "info": "Shows instead of the image. Autoplays muted & looped." },
+        { "type": "video_url", "id": "video_url", "label": "Or Video URL (YouTube / Vimeo)", "accept": ["youtube", "vimeo"] },
         { "type": "select", "id": "text_align", "label": "Text Alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "NEW COLLECTION 2026" },
         { "type": "text", "id": "line1", "label": "Heading Line 1", "default": "Craft Your" },

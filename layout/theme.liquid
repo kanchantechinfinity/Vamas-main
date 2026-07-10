@@ -13,14 +13,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&display=swap" rel="stylesheet">
 
   {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
+  {% if settings.body_font %}{{ settings.body_font | font_face: font_display: 'swap' }}{% endif %}
+  {% if settings.heading_font %}{{ settings.heading_font | font_face: font_display: 'swap' }}{% endif %}
   <style>
     :root {
-      --color-maroon: {{ settings.color_maroon }};
-      --color-maroon-light: {{ settings.color_maroon_light }};
-      --color-gold: {{ settings.color_gold }};
-      --color-gold-dark: {{ settings.color_gold_dark }};
-      --color-bg: {{ settings.color_bg }};
+      --color-maroon: {{ settings.color_maroon | default: '#420001' }};
+      --color-maroon-light: {{ settings.color_maroon_light | default: '#6a0002' }};
+      --color-gold: {{ settings.color_gold | default: '#e7d1a6' }};
+      --color-gold-dark: {{ settings.color_gold_dark | default: '#c9a96e' }};
+      --color-bg: {{ settings.color_bg | default: '#fff9f2' }};
+      --font-heading: {% if settings.heading_font %}{{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }}{% else %}'Playfair Display', Georgia, serif{% endif %};
+      --font-body: {% if settings.body_font %}{{ settings.body_font.family }}, {{ settings.body_font.fallback_families }}{% else %}'Poppins', sans-serif{% endif %};
     }
+    body { font-family: var(--font-body); }
   </style>
 </head>
 <body data-shop-name="{{ shop.name }}"{% if settings.whatsapp_number != blank %} data-wa-number="{{ settings.whatsapp_number }}" data-wa-message="{{ settings.whatsapp_message | default: 'Hi! I am interested in your products.' }}"{% endif %}>
