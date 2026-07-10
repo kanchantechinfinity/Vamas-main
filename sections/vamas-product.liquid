@@ -266,6 +266,7 @@
 {% comment %} ── Related Products ── {% endcomment %}
 {% assign related_blocks = section.blocks | where: 'type', 'related_product' %}
 {% assign rel_col = collections[section.settings.related_collection] %}
+{% if rel_col == blank or rel_col.products.size == 0 %}{% assign rel_col = collections.all %}{% endif %}
 {% if related_blocks.size > 0 or rel_col.products.size > 0 %}
 <section class="related-section">
   <div class="rel-eyebrow">YOU MAY ALSO LIKE</div>
