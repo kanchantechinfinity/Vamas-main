@@ -10,6 +10,15 @@
   {% assign discount_pct = diff | times: 100 | divided_by: first_variant.compare_at_price | round %}
 {% endif %}
 
+{% assign is_new = false %}
+{% if product.tags contains 'new' %}
+  {% assign is_new = true %}
+{% else %}
+  {% assign new_cutoff = 'now' | date: '%s' | minus: 2592000 | plus: 0 %}
+  {% assign created_ts = product.created_at | date: '%s' | plus: 0 %}
+  {% if created_ts > new_cutoff %}{% assign is_new = true %}{% endif %}
+{% endif %}
+
 <div class="vamas-prod-card">
   <div class="vamas-prod-card__img">
     <a href="{{ product.url }}">
@@ -22,7 +31,7 @@
       {% endif %}
     </a>
 
-    {% if product.tags contains 'new' or product.created_at > 'now' | date: '%s' | minus: 2592000 | date: '%Y-%m-%d' %}
+    {% if is_new %}
       <span class="vamas-prod-card__badge">NEW</span>
     {% elsif on_sale %}
       <span class="vamas-prod-card__badge">SALE</span>
