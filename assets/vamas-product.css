@@ -285,8 +285,18 @@
     @media(min-width:769px)and(max-width:1024px){
       .product-section{flex-direction:column;padding:24px 32px 48px;gap:32px;}
       .prod-gallery{width:100%;position:static;}
+      .gallery-main{height:520px;}
       .related-grid{grid-template-columns:repeat(2,1fr);padding:32px 32px 0;}
       .reviews-grid{grid-template-columns:1fr;}
       .breadcrumb{padding:12px 32px;}
       .reviews-section{padding:48px 32px;}
+    }
+    @media(max-width:480px){
+      .gallery-main{height:420px;}
+      .related-grid{grid-template-columns:1fr;}
+      .trust-grid{grid-template-columns:1fr;}
+      .prod-name{font-size:20px;}
+      .qty-row{gap:12px;flex-wrap:wrap;}
+      .sticky-atc{padding:8px 12px;gap:10px;}
+      .sticky-btn{padding:10px 14px;font-size:11px;letter-spacing:1px;}
     }

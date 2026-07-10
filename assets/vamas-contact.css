@@ -409,7 +409,7 @@
       .contact-hero { padding: 64px 48px 56px; }
       .hero-title { font-size: 44px; }
       .contact-sec { padding: 56px 48px; }
-      .contact-grid { gap: 32px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 32px; }
       .faq-sec { padding: 56px 48px; }
       .map-sec { padding: 56px 48px; }
       .dark-nl { padding: 64px 48px 48px; }
@@ -433,4 +433,13 @@
       .dark-nl-h3 { font-size: 32px; }
       .dark-footer { padding: 40px 24px 24px; }
       .dark-footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .dark-nl-form { flex-direction: column; border-radius: 12px; padding: 12px; }
+      .dark-nl-btn { width: 100%; padding: 12px; text-align: center; }
+      .dark-footer-bot { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: 30px; }
+      .info-cards { grid-template-columns: 1fr; }
+      .form-wrap { padding: 22px 16px; }
+      .dark-nl-h3 { font-size: 26px; }
     }

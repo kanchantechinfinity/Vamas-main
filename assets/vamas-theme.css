@@ -587,8 +587,20 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-tags { padding: 16px 24px; }
   .vamas-footer { padding: 44px 24px 24px; }
   .vamas-footer__grid { grid-template-columns: 1fr; }
-  .vamas-prod-grid { grid-template-columns: 1fr; }
+  .vamas-prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .vamas-cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .vamas-slide__coupon { flex-wrap: wrap; }
+  .vamas-slide__btns { flex-wrap: wrap; }
+  .vamas-newsletter__heading { font-size: 26px; }
+  .vamas-footer__bottom { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .vamas-prod-grid { grid-template-columns: 1fr; }
+  .vamas-slide__heading { font-size: 28px; }
+  .vamas-slide__offer { font-size: 22px; }
+  .vamas-brand__stats { flex-wrap: wrap; gap: 18px; }
+  .vamas-newsletter__heading { font-size: 22px; }
 }
 
 /* ============================================================

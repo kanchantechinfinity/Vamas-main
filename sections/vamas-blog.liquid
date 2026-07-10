@@ -1,0 +1,252 @@
+{{ 'vamas-blog.css' | asset_url | stylesheet_tag }}
+
+<div class="vblog-container">
+
+  {%- comment -%} 1. Header {%- endcomment -%}
+  <header class="vblog-header">
+    <p class="vblog-eyebrow"><span class="dash"></span>Journal<span class="dash"></span></p>
+    <h1 class="vblog-title">{{ section.settings.blog_title | default: blog.title | default: 'The Blouse Journal' }}</h1>
+    {%- if section.settings.blog_tagline != blank -%}
+      <p class="vblog-subtitle">{{ section.settings.blog_tagline }}</p>
+    {%- endif -%}
+    {%- if section.settings.blog_desc != blank -%}
+      <p class="vblog-desc">{{ section.settings.blog_desc }}</p>
+    {%- endif -%}
+  </header>
+
+  {%- comment -%} 2. Topic filter tabs {%- endcomment -%}
+  <nav class="vblog-tabs">
+    <a href="{{ blog.url }}" class="vblog-pill{% if current_tags == blank %} active{% endif %}">All Stories ({{ blog.articles_count }})</a>
+    {%- for tag in blog.all_tags -%}
+      <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="vblog-pill{% if current_tags contains tag %} active{% endif %}">{{ tag }}</a>
+    {%- endfor -%}
+  </nav>
+
+  {%- comment -%} 3. Two-column layout {%- endcomment -%}
+  <div class="vblog-layout">
+
+    {%- comment -%} LEFT MAIN {%- endcomment -%}
+    <main class="vblog-main">
+      {%- paginate blog.articles by 13 -%}
+
+        {%- comment -%} a. Featured article {%- endcomment -%}
+        {%- assign featured = blog.articles.first -%}
+        {%- if featured -%}
+          {%- assign f_words = featured.content | strip_html | number_of_words -%}
+          {%- assign f_read = f_words | divided_by: 200.0 | ceil -%}
+          {%- if f_read < 1 -%}{%- assign f_read = 1 -%}{%- endif -%}
+          <article class="vblog-featured">
+            <a href="{{ featured.url }}" class="vblog-featured-media">
+              {%- if featured.image -%}
+                <img src="{{ featured.image | image_url: width: 800 }}" alt="{{ featured.title | escape }}" loading="lazy" width="800" height="600">
+              {%- else -%}
+                <span class="vblog-noimg"></span>
+              {%- endif -%}
+            </a>
+            <div class="vblog-featured-body">
+              {%- if featured.tags.first -%}
+                <span class="vblog-cat">{{ featured.tags.first }}</span>
+              {%- endif -%}
+              <h2 class="vblog-featured-title"><a href="{{ featured.url }}">{{ featured.title }}</a></h2>
+              <p class="vblog-read">{{ f_read }} min read</p>
+              <p class="vblog-excerpt">{{ featured.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+              <a href="{{ featured.url }}" class="vblog-readmore">Read More &rarr;</a>
+            </div>
+          </article>
+        {%- endif -%}
+
+        {%- comment -%} b. Divider + Latest Stories heading {%- endcomment -%}
+        <div class="vblog-divider"></div>
+        <div class="vblog-section-head">
+          <h2 class="vblog-h2">Latest Stories</h2>
+          <p class="vblog-subtitle">Fresh from the design desk</p>
+        </div>
+
+        {%- comment -%} c. Grid of remaining articles {%- endcomment -%}
+        <div class="vblog-grid">
+          {%- for article in blog.articles offset: 1 -%}
+            {%- assign a_words = article.content | strip_html | number_of_words -%}
+            {%- assign a_read = a_words | divided_by: 200.0 | ceil -%}
+            {%- if a_read < 1 -%}{%- assign a_read = 1 -%}{%- endif -%}
+            <article class="vblog-card">
+              <a href="{{ article.url }}" class="vblog-card-media">
+                {%- if article.image -%}
+                  <img src="{{ article.image | image_url: width: 500 }}" alt="{{ article.title | escape }}" loading="lazy" width="500" height="375">
+                {%- else -%}
+                  <span class="vblog-noimg"></span>
+                {%- endif -%}
+              </a>
+              <div class="vblog-card-body">
+                {%- if article.tags.first -%}
+                  <span class="vblog-cat">{{ article.tags.first }}</span>
+                {%- endif -%}
+                <h3 class="vblog-card-title"><a href="{{ article.url }}">{{ article.title }}</a></h3>
+                <p class="vblog-read">{{ a_read }} min read</p>
+                <a href="{{ article.url }}" class="vblog-readmore">Read More &rarr;</a>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="vblog-pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="vblog-page-link">&larr; Previous</a>
+            {%- endif -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="vblog-page-link">Next &rarr;</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+
+      {%- endpaginate -%}
+    </main>
+
+    {%- comment -%} RIGHT SIDEBAR {%- endcomment -%}
+    <aside class="vblog-sidebar">
+
+      {%- comment -%} Instagram card {%- endcomment -%}
+      <div class="vblog-widget">
+        <h3 class="vblog-widget-title">Follow @{{ section.settings.instagram_handle | default: 'vamas.official' }}</h3>
+        <div class="vblog-ig-grid">
+          {%- assign ig_blocks = section.blocks | where: 'type', 'ig_image' -%}
+          {%- if ig_blocks.size > 0 -%}
+            {%- for block in ig_blocks limit: 4 -%}
+              <div class="vblog-ig-item" {{ block.shopify_attributes }}>
+                {%- if block.settings.image -%}
+                  <img src="{{ block.settings.image | image_url: width: 200 }}" alt="Instagram" loading="lazy" width="200" height="200">
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for article in blog.articles limit: 4 -%}
+              <div class="vblog-ig-item">
+                {%- if article.image -%}
+                  <img src="{{ article.image | image_url: width: 200 }}" alt="{{ article.title | escape }}" loading="lazy" width="200" height="200">
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        <p class="vblog-widget-caption">Behind the seams, styling notes and atelier moments.</p>
+        {%- if section.settings.instagram_url != blank -%}
+          <a href="{{ section.settings.instagram_url }}" class="vblog-btn" target="_blank" rel="noopener">Follow on Instagram</a>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} About card {%- endcomment -%}
+      <div class="vblog-widget">
+        <h3 class="vblog-widget-title">About the Journal</h3>
+        <p class="vblog-widget-text">{{ section.settings.about_text }}</p>
+        <p class="vblog-widget-sign">&mdash; Team Vamas</p>
+      </div>
+
+      {%- comment -%} Most Popular card {%- endcomment -%}
+      <div class="vblog-widget">
+        <h3 class="vblog-widget-title">Most Popular</h3>
+        <ol class="vblog-popular">
+          {%- for article in blog.articles limit: 5 -%}
+            {%- assign p_words = article.content | strip_html | number_of_words -%}
+            {%- assign p_read = p_words | divided_by: 200.0 | ceil -%}
+            {%- if p_read < 1 -%}{%- assign p_read = 1 -%}{%- endif -%}
+            <li class="vblog-popular-item">
+              <span class="vblog-num">{{ forloop.index }}</span>
+              <div class="vblog-popular-body">
+                <a href="{{ article.url }}" class="vblog-popular-title">{{ article.title }}</a>
+                <p class="vblog-popular-meta">{% if article.tags.first %}{{ article.tags.first }} &middot; {% endif %}{{ p_read }} min</p>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
+
+      {%- comment -%} Browse by Topic card {%- endcomment -%}
+      {%- if blog.all_tags.size > 0 -%}
+        <div class="vblog-widget">
+          <h3 class="vblog-widget-title">Browse by Topic</h3>
+          <ul class="vblog-topics">
+            {%- for tag in blog.all_tags -%}
+              <li class="vblog-topic-row">
+                <a href="{{ blog.url }}/tagged/{{ tag | handle }}">
+                  <span class="vblog-topic-name">{{ tag }}</span>
+                  <span class="vblog-topic-dots"></span>
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+
+        {%- comment -%} Popular Tags card {%- endcomment -%}
+        <div class="vblog-widget">
+          <h3 class="vblog-widget-title">Popular Tags</h3>
+          <div class="vblog-tagpills">
+            {%- for tag in blog.all_tags -%}
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="vblog-pill small">{{ tag }}</a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+    </aside>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Vamas Blog",
+  "settings": [
+    {
+      "type": "text",
+      "id": "blog_title",
+      "label": "Blog title"
+    },
+    {
+      "type": "text",
+      "id": "blog_tagline",
+      "label": "Tagline",
+      "default": "Stories from the Vamas atelier"
+    },
+    {
+      "type": "textarea",
+      "id": "blog_desc",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "instagram_handle",
+      "label": "Instagram handle"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "textarea",
+      "id": "about_text",
+      "label": "About the Journal text",
+      "default": "The Vamas Journal is where our design team shares the thinking behind every blouse — fit notes, fabric choices and styling ideas, straight from our Mumbai atelier."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ig_image",
+      "name": "Instagram image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Vamas Blog"
+    }
+  ]
+}
+{% endschema %}
