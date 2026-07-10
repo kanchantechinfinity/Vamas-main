@@ -1,0 +1,8 @@
+{
+  "sections": {
+    "main": {
+      "type": "vamas-article"
+    }
+  },
+  "order": ["main"]
+}

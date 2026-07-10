@@ -1,0 +1,85 @@
+{{ 'vamas-blog.css' | asset_url | stylesheet_tag }}
+
+{% assign words = article.content | strip_html | number_of_words %}
+{% assign read_min = words | divided_by: 200 | plus: 1 %}
+
+<article class="vart">
+  <div class="vart-head">
+    <div class="vart-breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span>›</span>
+      <a href="{{ blog.url }}">{{ blog.title }}</a>
+    </div>
+    {% if article.tags.size > 0 %}
+      <div class="vart-eyebrow">{{ article.tags.first }}</div>
+    {% endif %}
+    <h1 class="vart-title">{{ article.title }}</h1>
+    <div class="vart-meta">
+      {% if article.author != blank %}<span>By {{ article.author }}</span><span class="vart-dot">·</span>{% endif %}
+      <span>{{ article.published_at | date: '%b %d, %Y' }}</span>
+      <span class="vart-dot">·</span>
+      <span>{{ read_min }} min read</span>
+    </div>
+  </div>
+
+  {% if article.image %}
+    <div class="vart-media">
+      <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.title | escape }}" loading="eager">
+    </div>
+  {% endif %}
+
+  <div class="vart-body rte">
+    {{ article.content }}
+  </div>
+
+  {% if article.tags.size > 0 %}
+    <div class="vart-tags">
+      {% for tag in article.tags %}
+        <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="vart-tag">{{ tag }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="vart-nav">
+    {% if blog.previous_article %}
+      <a href="{{ blog.previous_article }}" class="vart-nav-link vart-nav-prev">← Previous</a>
+    {% else %}<span></span>{% endif %}
+    <a href="{{ blog.url }}" class="vart-nav-link vart-nav-all">All Stories</a>
+    {% if blog.next_article %}
+      <a href="{{ blog.next_article }}" class="vart-nav-link vart-nav-next">Next →</a>
+    {% else %}<span></span>{% endif %}
+  </div>
+
+  {% if article.comments_enabled? %}
+    <div class="vart-comments">
+      {% if article.comments_count > 0 %}
+        <h2 class="vart-comments-title">{{ article.comments_count }} Comment{% if article.comments_count != 1 %}s{% endif %}</h2>
+        {% for comment in article.comments %}
+          <div class="vart-comment">
+            <div class="vart-comment-author">{{ comment.author }}</div>
+            <div class="vart-comment-body">{{ comment.content }}</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% form 'new_comment', article %}
+        {% if form.errors %}<div class="vart-comment-error">{{ form.errors | default_errors }}</div>{% endif %}
+        {% if form.posted_successfully? %}<div class="vart-comment-ok">Thanks! Your comment is awaiting review.</div>{% endif %}
+        <h3 class="vart-comments-sub">Leave a comment</h3>
+        <div class="vart-comment-row">
+          <input type="text" name="comment[author]" placeholder="Your name" required>
+          <input type="email" name="comment[email]" placeholder="Your email" required>
+        </div>
+        <textarea name="comment[body]" rows="4" placeholder="Your comment" required></textarea>
+        <button type="submit" class="vart-comment-btn">POST COMMENT</button>
+      {% endform %}
+    </div>
+  {% endif %}
+</article>
+
+{% schema %}
+{
+  "name": "Vamas Article",
+  "settings": [],
+  "presets": [{ "name": "Vamas Article" }]
+}
+{% endschema %}
