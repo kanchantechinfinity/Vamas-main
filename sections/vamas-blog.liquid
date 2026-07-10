@@ -18,7 +18,9 @@
   <nav class="vblog-tabs">
     <a href="{{ blog.url }}" class="vblog-pill{% if current_tags == blank %} active{% endif %}">All Stories ({{ blog.articles_count }})</a>
     {%- for tag in blog.all_tags -%}
-      <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="vblog-pill{% if current_tags contains tag %} active{% endif %}">{{ tag }}</a>
+      {%- assign t_count = 0 -%}
+      {%- for a in blog.articles -%}{%- if a.tags contains tag -%}{%- assign t_count = t_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+      <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="vblog-pill{% if current_tags contains tag %} active{% endif %}">{{ tag }} ({{ t_count }})</a>
     {%- endfor -%}
   </nav>
 

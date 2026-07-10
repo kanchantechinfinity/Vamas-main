@@ -1,85 +1,483 @@
-{{ 'vamas-blog.css' | asset_url | stylesheet_tag }}
-
 {% assign words = article.content | strip_html | number_of_words %}
 {% assign read_min = words | divided_by: 200 | plus: 1 %}
 
-<article class="vart">
-  <div class="vart-head">
-    <div class="vart-breadcrumb">
-      <a href="{{ routes.root_url }}">Home</a>
-      <span>›</span>
-      <a href="{{ blog.url }}">{{ blog.title }}</a>
-    </div>
-    {% if article.tags.size > 0 %}
-      <div class="vart-eyebrow">{{ article.tags.first }}</div>
-    {% endif %}
-    <h1 class="vart-title">{{ article.title }}</h1>
-    <div class="vart-meta">
-      {% if article.author != blank %}<span>By {{ article.author }}</span><span class="vart-dot">·</span>{% endif %}
-      <span>{{ article.published_at | date: '%b %d, %Y' }}</span>
-      <span class="vart-dot">·</span>
-      <span>{{ read_min }} min read</span>
-    </div>
-  </div>
+{%- comment -%} Pull-quote source {%- endcomment -%}
+{%- if section.settings.pull_quote != blank -%}
+  {%- assign pull_quote = section.settings.pull_quote -%}
+{%- elsif article.excerpt != blank -%}
+  {%- assign pull_quote = article.excerpt | strip_html -%}
+{%- else -%}
+  {%- assign pull_quote = article.content | strip_html | truncatewords: 24 -%}
+{%- endif -%}
 
-  {% if article.image %}
-    <div class="vart-media">
-      <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.title | escape }}" loading="eager">
-    </div>
-  {% endif %}
+{%- comment -%} Featured collection {%- endcomment -%}
+{%- if section.settings.featured_collection != blank and collections[section.settings.featured_collection] != empty -%}
+  {%- assign feat_collection = collections[section.settings.featured_collection] -%}
+{%- else -%}
+  {%- assign feat_collection = collections.all -%}
+{%- endif -%}
 
-  <div class="vart-body rte">
-    {{ article.content }}
-  </div>
+<style>
+  .va-wrap {
+    background: var(--color-bg, #fff9f2);
+    padding: 40px var(--page-gutter, 48px) 80px;
+  }
+  .varticle {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 56px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .va-main { flex: 1; min-width: 0; }
+  .va-side {
+    width: 320px;
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
 
-  {% if article.tags.size > 0 %}
-    <div class="vart-tags">
-      {% for tag in article.tags %}
-        <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="vart-tag">{{ tag }}</a>
-      {% endfor %}
-    </div>
-  {% endif %}
+  /* Hero */
+  .va-hero {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+    margin-bottom: 32px;
+  }
 
-  <div class="vart-nav">
-    {% if blog.previous_article %}
-      <a href="{{ blog.previous_article }}" class="vart-nav-link vart-nav-prev">← Previous</a>
-    {% else %}<span></span>{% endif %}
-    <a href="{{ blog.url }}" class="vart-nav-link vart-nav-all">All Stories</a>
-    {% if blog.next_article %}
-      <a href="{{ blog.next_article }}" class="vart-nav-link vart-nav-next">Next →</a>
-    {% else %}<span></span>{% endif %}
-  </div>
+  /* Title / meta */
+  .va-title {
+    font-family: var(--font-heading);
+    color: var(--color-maroon, #420001);
+    font-size: 40px;
+    line-height: 1.12;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .va-meta {
+    font-family: var(--font-body);
+    color: var(--color-maroon-light, #6b2b26);
+    font-size: 14px;
+    letter-spacing: .4px;
+    margin-bottom: 34px;
+    opacity: .9;
+  }
 
-  {% if article.comments_enabled? %}
-    <div class="vart-comments">
-      {% if article.comments_count > 0 %}
-        <h2 class="vart-comments-title">{{ article.comments_count }} Comment{% if article.comments_count != 1 %}s{% endif %}</h2>
-        {% for comment in article.comments %}
-          <div class="vart-comment">
-            <div class="vart-comment-author">{{ comment.author }}</div>
-            <div class="vart-comment-body">{{ comment.content }}</div>
-          </div>
-        {% endfor %}
+  /* Pull quote */
+  .va-quote {
+    position: relative;
+    font-family: var(--font-heading);
+    font-style: italic;
+    text-align: center;
+    color: var(--color-maroon, #420001);
+    font-size: 26px;
+    line-height: 1.4;
+    max-width: 760px;
+    margin: 0 auto 40px;
+    padding: 24px 48px;
+  }
+  .va-quote::before,
+  .va-quote::after {
+    font-family: Georgia, serif;
+    color: var(--color-gold-dark, #c9a96e);
+    font-size: 72px;
+    line-height: 0;
+    position: absolute;
+  }
+  .va-quote::before { content: "\201C"; left: 0; top: 30px; }
+  .va-quote::after { content: "\201D"; right: 0; bottom: -8px; }
+
+  /* Body columns */
+  .va-body {
+    font-family: var(--font-body);
+    color: #3a2c26;
+    font-size: 16px;
+    line-height: 1.75;
+    column-count: 2;
+    column-gap: 40px;
+  }
+  .va-body > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-heading);
+    font-size: 56px;
+    line-height: .8;
+    padding: 6px 10px 0 0;
+    color: var(--color-maroon, #420001);
+  }
+  .va-body p { margin: 0 0 18px; }
+  .va-body h2,
+  .va-body h3 {
+    font-family: var(--font-heading);
+    color: var(--color-maroon, #420001);
+    break-inside: avoid;
+    line-height: 1.2;
+  }
+  .va-body h2 { font-size: 24px; margin: 26px 0 12px; }
+  .va-body h3 { font-size: 19px; margin: 22px 0 10px; }
+  .va-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    break-inside: avoid;
+    margin: 14px 0;
+  }
+  .va-body ul,
+  .va-body ol { margin: 0 0 18px; padding-left: 22px; }
+  .va-body li { margin-bottom: 8px; }
+  .va-body a {
+    color: var(--color-maroon, #420001);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .va-body a:hover { color: var(--color-gold-dark, #c9a96e); }
+
+  /* Share + tags */
+  .va-share-tags {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-gold, #e7d1a6);
+  }
+  .va-share {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-body);
+  }
+  .va-share-label {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+    color: var(--color-maroon, #420001);
+    font-weight: 600;
+  }
+  .va-share a {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid var(--color-gold-dark, #c9a96e);
+    border-radius: 20px;
+    color: var(--color-maroon, #420001);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all .2s;
+  }
+  .va-share a:hover {
+    background: var(--color-maroon, #420001);
+    color: var(--color-gold, #e7d1a6);
+    border-color: var(--color-maroon, #420001);
+  }
+  .va-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .va-tag {
+    background: var(--color-gold, #e7d1a6);
+    color: var(--color-maroon, #420001);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    text-decoration: none;
+    font-family: var(--font-body);
+    transition: all .2s;
+  }
+  .va-tag:hover { background: var(--color-gold-dark, #c9a96e); }
+
+  /* Sidebar cards */
+  .va-card {
+    background: #fff;
+    border: 1px solid var(--color-gold, #e7d1a6);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 24px;
+  }
+  .va-card-title {
+    font-family: var(--font-heading);
+    color: var(--color-maroon, #420001);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-gold, #e7d1a6);
+  }
+
+  /* Designer */
+  .va-designer { text-align: center; }
+  .va-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 12px;
+    display: block;
+    border: 2px solid var(--color-gold-dark, #c9a96e);
+  }
+  .va-avatar-ph {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    background: var(--color-gold, #e7d1a6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    color: var(--color-maroon, #420001);
+    font-size: 30px;
+    border: 2px solid var(--color-gold-dark, #c9a96e);
+  }
+  .va-designer-name {
+    font-family: var(--font-heading);
+    color: var(--color-maroon, #420001);
+    font-size: 17px;
+    margin: 0 0 8px;
+  }
+  .va-designer-text {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #5a4a42;
+    margin: 0;
+  }
+
+  /* Featured products */
+  .va-prod {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0e6d8;
+    text-decoration: none;
+  }
+  .va-prod:last-child { border-bottom: 0; }
+  .va-prod img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .va-prod-info { min-width: 0; }
+  .va-prod-title {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    color: var(--color-maroon, #420001);
+    line-height: 1.3;
+    margin: 0 0 4px;
+  }
+  .va-prod-price {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-gold-dark, #c9a96e);
+    font-weight: 600;
+  }
+
+  /* Related reads */
+  .va-related { list-style: none; margin: 0; padding: 0; }
+  .va-related li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0e6d8;
+  }
+  .va-related li:last-child { border-bottom: 0; }
+  .va-rel-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-maroon, #420001);
+    color: var(--color-gold, #e7d1a6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 13px;
+  }
+  .va-related a {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-maroon, #420001);
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .va-related a:hover { color: var(--color-gold-dark, #c9a96e); }
+
+  /* You might also like */
+  .va-alike { display: flex; flex-direction: column; gap: 14px; }
+  .va-alike-card { text-decoration: none; display: block; }
+  .va-alike-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .va-alike-ph {
+    width: 100%;
+    height: 130px;
+    border-radius: 8px;
+    background: var(--color-gold, #e7d1a6);
+    margin-bottom: 8px;
+  }
+  .va-alike-title {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--color-maroon, #420001);
+    line-height: 1.35;
+  }
+
+  @media (max-width: 1024px) {
+    .varticle { grid-template-columns: 1fr; }
+    .va-side { width: 100%; position: static; margin-top: 24px; }
+  }
+  @media (max-width: 768px) {
+    .va-body { column-count: 1; }
+    .va-title { font-size: 28px; }
+    .va-hero { height: 260px; }
+    .va-quote { font-size: 21px; padding: 20px 32px; }
+    .va-share-tags { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<div class="va-wrap">
+  <div class="varticle">
+
+    <main class="va-main">
+      {% if article.image %}
+        <img class="va-hero" src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.title | escape }}" loading="eager">
       {% endif %}
-      {% form 'new_comment', article %}
-        {% if form.errors %}<div class="vart-comment-error">{{ form.errors | default_errors }}</div>{% endif %}
-        {% if form.posted_successfully? %}<div class="vart-comment-ok">Thanks! Your comment is awaiting review.</div>{% endif %}
-        <h3 class="vart-comments-sub">Leave a comment</h3>
-        <div class="vart-comment-row">
-          <input type="text" name="comment[author]" placeholder="Your name" required>
-          <input type="email" name="comment[email]" placeholder="Your email" required>
+
+      <h1 class="va-title">{{ article.title }}</h1>
+
+      <div class="va-meta">
+        by {{ article.author | default: 'the Vamas Design Team' }} &nbsp;|&nbsp; {{ article.published_at | date: '%B %d, %Y' }} &nbsp;|&nbsp; {{ read_min }} min read
+      </div>
+
+      {% if pull_quote != blank %}
+        <blockquote class="va-quote">{{ pull_quote }}</blockquote>
+      {% endif %}
+
+      <div class="va-body rte">
+        {{ article.content }}
+      </div>
+
+      <div class="va-share-tags">
+        <div class="va-share">
+          <span class="va-share-label">Share</span>
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener">Twitter</a>
+          <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&media={{ article.image | image_url: width: 800 }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener">Pinterest</a>
         </div>
-        <textarea name="comment[body]" rows="4" placeholder="Your comment" required></textarea>
-        <button type="submit" class="vart-comment-btn">POST COMMENT</button>
-      {% endform %}
-    </div>
-  {% endif %}
-</article>
+        {% if article.tags.size > 0 %}
+          <div class="va-tags">
+            {% for tag in article.tags %}
+              <a class="va-tag" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <aside class="va-side">
+
+      {% comment %} Meet the designer {% endcomment %}
+      <div class="va-card va-designer">
+        <div class="va-card-title">Meet the Designer</div>
+        {% if section.settings.designer_image != blank %}
+          <img class="va-avatar" src="{{ section.settings.designer_image | image_url: width: 200 }}" alt="{{ section.settings.designer_name | escape }}">
+        {% else %}
+          <div class="va-avatar-ph">V</div>
+        {% endif %}
+        <div class="va-designer-name">{{ section.settings.designer_name | default: 'The Vamas Design Team' }}</div>
+        <p class="va-designer-text">{{ section.settings.designer_text }}</p>
+      </div>
+
+      {% comment %} Featured products {% endcomment %}
+      {% if feat_collection.products.size > 0 %}
+        <div class="va-card">
+          <div class="va-card-title">{{ section.settings.featured_heading | default: 'Featured Products' }}</div>
+          {% for p in feat_collection.products limit: 3 %}
+            <a class="va-prod" href="{{ p.url }}">
+              {% if p.featured_image %}
+                <img src="{{ p.featured_image | image_url: width: 120 }}" alt="{{ p.title | escape }}">
+              {% endif %}
+              <div class="va-prod-info">
+                <div class="va-prod-title">{{ p.title }}</div>
+                <div class="va-prod-price">{{ p.price | money }}</div>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% comment %} Related reads {% endcomment %}
+      {% assign rel_count = 0 %}
+      {% capture related_html %}
+        {% for a in blog.articles %}
+          {% if a.id != article.id and rel_count < 4 %}
+            {% assign rel_count = rel_count | plus: 1 %}
+            <li>
+              <span class="va-rel-num">{{ rel_count }}</span>
+              <a href="{{ a.url }}">{{ a.title }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endcapture %}
+      {% if rel_count > 0 %}
+        <div class="va-card">
+          <div class="va-card-title">{{ section.settings.related_heading | default: 'Related Reads' }}</div>
+          <ol class="va-related">{{ related_html }}</ol>
+        </div>
+      {% endif %}
+
+      {% comment %} You might also like {% endcomment %}
+      {% assign alike_count = 0 %}
+      {% capture alike_html %}
+        {% for a in blog.articles %}
+          {% if a.id != article.id and alike_count < 3 %}
+            {% assign alike_count = alike_count | plus: 1 %}
+            <a class="va-alike-card" href="{{ a.url }}">
+              {% if a.image %}
+                <img src="{{ a.image | image_url: width: 400 }}" alt="{{ a.title | escape }}">
+              {% else %}
+                <div class="va-alike-ph"></div>
+              {% endif %}
+              <div class="va-alike-title">{{ a.title }}</div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endcapture %}
+      {% if alike_count > 0 %}
+        <div class="va-card">
+          <div class="va-card-title">You Might Also Like</div>
+          <div class="va-alike">{{ alike_html }}</div>
+        </div>
+      {% endif %}
+
+    </aside>
+
+  </div>
+</div>
 
 {% schema %}
 {
   "name": "Vamas Article",
-  "settings": [],
+  "settings": [
+    { "type": "textarea", "id": "pull_quote", "label": "Pull quote" },
+    { "type": "text", "id": "designer_name", "label": "Designer name", "default": "The Vamas Design Team" },
+    { "type": "image_picker", "id": "designer_image", "label": "Designer image" },
+    { "type": "textarea", "id": "designer_text", "label": "Designer text", "default": "The Vamas Design Team shares the thinking behind every blouse — fabric, fit and drape — from our Mumbai atelier." },
+    { "type": "collection", "id": "featured_collection", "label": "Featured collection" },
+    { "type": "text", "id": "featured_heading", "label": "Featured heading", "default": "Featured Products" },
+    { "type": "text", "id": "related_heading", "label": "Related heading", "default": "Related Reads" }
+  ],
   "presets": [{ "name": "Vamas Article" }]
 }
 {% endschema %}
