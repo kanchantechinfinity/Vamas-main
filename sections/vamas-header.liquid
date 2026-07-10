@@ -2,7 +2,16 @@
 
 {% comment %} ── Announcement Bar ─────────────────── {% endcomment %}
 {% if section.settings.show_announce %}
+{% if section.settings.announce_marquee %}
+<div class="vamas-announce vamas-announce--marquee">
+  <div class="vamas-announce__track" style="animation-duration: {{ section.settings.announce_speed | default: 22 }}s;">
+    <span>{{ section.settings.announce_text }}</span>
+    <span aria-hidden="true">{{ section.settings.announce_text }}</span>
+  </div>
+</div>
+{% else %}
 <div class="vamas-announce">{{ section.settings.announce_text }}</div>
+{% endif %}
 {% endif %}
 
 <div class="vamas-nav-wrapper" id="vamas-nav-wrapper">
@@ -97,6 +106,8 @@
     { "type": "url", "id": "wishlist_url", "label": "Wishlist URL" },
     { "type": "header", "content": "Announcement Bar" },
     { "type": "checkbox", "id": "show_announce", "label": "Show Announcement Bar", "default": true },
+    { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = text scrolls in a loop. Off = static.", "default": false },
+    { "type": "range", "id": "announce_speed", "min": 8, "max": 40, "step": 2, "unit": "s", "label": "Marquee Speed (seconds per loop)", "default": 22 },
     { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
   ],
   "presets": [{ "name": "Vamas Header" }]

@@ -8,6 +8,8 @@
   --color-white: #ffffff;
   --color-bg: #fff9f2;
   --font-primary: var(--font-body, 'Poppins', sans-serif);
+  --page-max: 1200px;
+  --page-gutter: max(80px, calc((100% - var(--page-max)) / 2));
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,6 +26,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   letter-spacing: 2px;
   border-bottom: 1px solid var(--color-gold-dark);
 }
+.vamas-announce--marquee { padding: 10px 0; overflow: hidden; white-space: nowrap; }
+.vamas-announce__track { display: inline-flex; will-change: transform; animation: vamas-marquee 22s linear infinite; }
+.vamas-announce__track span { padding: 0 40px; }
+.vamas-announce--marquee:hover .vamas-announce__track { animation-play-state: paused; }
+@keyframes vamas-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ── HERO SLIDER ──────────────────────── */
 .vamas-slider { position: relative; overflow: hidden; }
@@ -49,7 +56,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-slide--right .vamas-slide__scrim { background: linear-gradient(270deg, rgba(42,0,1,0.74) 0%, rgba(42,0,1,0.42) 42%, rgba(42,0,1,0.10) 100%); }
 .vamas-slide--center .vamas-slide__scrim { background: linear-gradient(0deg, rgba(42,0,1,0.55) 0%, rgba(42,0,1,0.35) 100%); }
 
-.vamas-slide__inner { position: relative; z-index: 2; width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 80px; }
+.vamas-slide__inner { position: relative; z-index: 2; width: 100%; max-width: var(--page-max); margin: 0 auto; padding: 0 80px; }
 .vamas-slide--right .vamas-slide__inner { display: flex; justify-content: flex-end; }
 .vamas-slide--center .vamas-slide__inner { display: flex; justify-content: center; text-align: center; }
 
@@ -64,8 +71,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-slide__coupon span { border: 1px solid var(--color-gold); color: var(--color-gold); padding: 4px 12px; border-radius: 4px; letter-spacing: 3px; }
 .vamas-slide__sub { color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.8; margin-bottom: 30px; max-width: 400px; }
 .vamas-slide--center .vamas-slide__sub { max-width: 520px; margin-left: auto; margin-right: auto; }
-.vamas-slide__btns { display: flex; gap: 14px; }
-.vamas-slide--center .vamas-slide__btns { justify-content: center; }
+.vamas-slide__btns { display: flex; gap: 14px; justify-content: center; }
 
 /* Slider controls */
 .vamas-slider__dots {
@@ -155,13 +161,15 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 .btn-outline:hover { background: var(--color-gold); color: var(--color-maroon); }
+.btn-primary, .btn-outline, .vamas-atc, .btn-shop { text-align: center; }
+.vamas-brand__text .btn-outline, .vamas-brand__text .btn-primary { display: block; width: fit-content; margin-left: auto; margin-right: auto; }
 
 /* ── Trust Bar ────────────────────────── */
 .vamas-trust {
   background: var(--color-bg);
   border-top: 1px solid rgba(231, 209, 166, 0.4);
   border-bottom: 1px solid rgba(231, 209, 166, 0.4);
-  padding: 0 80px;
+  padding: 0 var(--page-gutter);
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -187,7 +195,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-trust__sub { font-size: 10px; color: rgba(66, 0, 1, 0.5); }
 
 /* ── Section ──────────────────────────── */
-.vamas-section { padding: 64px 80px; }
+.vamas-section { padding: 64px var(--page-gutter); }
 .vamas-section--alt { background: var(--color-bg); }
 
 .vamas-section__header {
@@ -393,7 +401,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 20px 80px;
+  padding: 20px var(--page-gutter);
   background: var(--color-bg);
   border-top: 1px solid rgba(231, 209, 166, 0.35);
   border-bottom: 1px solid rgba(231, 209, 166, 0.35);
@@ -449,7 +457,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-card__info { font-size: 10px; color: rgba(66,0,1,0.4); }
 
 /* ── Newsletter ───────────────────────── */
-.vamas-newsletter { background: var(--color-gold); padding: 64px 80px; text-align: center; }
+.vamas-newsletter { background: var(--color-gold); padding: 64px var(--page-gutter); text-align: center; }
 .vamas-newsletter__eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; color: rgba(66,0,1,0.55); margin-bottom: 12px; }
 .vamas-newsletter__heading { font-size: 34px; font-weight: 800; color: var(--color-maroon); margin-bottom: 8px; }
 .vamas-newsletter__sub { font-size: 13px; color: rgba(66,0,1,0.55); margin-bottom: 32px; }
@@ -483,7 +491,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-newsletter__btn:hover { background: var(--color-maroon-light); }
 
 /* ── Footer ───────────────────────────── */
-.vamas-footer { background: var(--color-maroon); padding: 64px 80px 32px; }
+.vamas-footer { background: var(--color-maroon); padding: 64px var(--page-gutter) 32px; }
 .vamas-footer__newsletter { text-align: center; padding: 16px 0 56px; margin-bottom: 48px; border-bottom: 1px solid rgba(231,209,166,0.08); }
 .vamas-footer__nl-eye { font-size: 10px; font-weight: 700; letter-spacing: 3.5px; color: rgba(231,209,166,0.4); margin-bottom: 18px; }
 .vamas-footer__nl-heading { font-family: var(--font-heading); font-size: 44px; font-weight: 700; color: var(--color-gold); line-height: 1.2; margin-bottom: 10px; }
@@ -669,7 +677,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-full-banner__btn:hover { background: #fff; }
 
 /* ── Instagram Reels ──────────────────── */
-.vamas-reels { padding: 64px 80px; background: #fff; }
+.vamas-reels { padding: 64px var(--page-gutter); background: #fff; }
 .vamas-reels__grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
 .vamas-reel { position: relative; border-radius: 14px; overflow: hidden; aspect-ratio: 9/16; cursor: pointer; background: #0a0a0a; transition: transform 0.25s, box-shadow 0.25s; display: block; }
 .vamas-reel:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(66,0,1,0.2); }

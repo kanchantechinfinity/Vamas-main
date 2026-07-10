@@ -3,13 +3,13 @@
     body{font-family:var(--font-body);background:var(--bg);color:#333;}
 
     /* ── Breadcrumb ── */
-    .breadcrumb{padding:14px 80px;font-size:11px;color:#888;display:flex;align-items:center;gap:6px;}
+    .breadcrumb{padding:14px var(--page-gutter);font-size:11px;color:#888;display:flex;align-items:center;gap:6px;}
     .breadcrumb a{color:#888;text-decoration:none;}
     .breadcrumb a:hover{color:var(--m);}
     .breadcrumb span{color:#aaa;}
 
     /* ── Product layout ── */
-    .product-section{display:flex;gap:56px;padding:24px 80px 64px;align-items:flex-start;max-width:1400px;margin:0 auto;}
+    .product-section{display:flex;gap:56px;padding:24px 80px 64px;align-items:flex-start;max-width:var(--page-max);margin:0 auto;}
 
     /* ── Gallery ── */
     .prod-gallery{width:560px;flex-shrink:0;position:sticky;top:90px;}
@@ -166,7 +166,7 @@
     .related-section{padding:56px 0;background:var(--w);}
     .rel-eyebrow{text-align:center;font-size:10px;letter-spacing:3px;font-weight:700;color:var(--gd);margin-bottom:10px;}
     .rel-heading{text-align:center;font-family:var(--font-heading);font-size:30px;color:var(--m);margin-bottom:0;}
-    .related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:36px 80px 0;}
+    .related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:36px var(--page-gutter) 0;}
     .rel-card{border-radius:12px;overflow:hidden;background:white;box-shadow:0 4px 18px rgba(66,0,1,0.08);transition:transform 0.3s,box-shadow 0.3s;cursor:pointer;}
     .rel-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(66,0,1,0.15);}
     .rel-img-wrap{position:relative;overflow:hidden;height:260px;}
@@ -183,7 +183,7 @@
     .rel-add-btn:hover{background:var(--m);color:var(--g);}
 
     /* ── Reviews ── */
-    .reviews-section{background:var(--bg);padding:60px 80px;}
+    .reviews-section{background:var(--bg);padding:60px var(--page-gutter);}
     .rev-heading{font-size:26px;font-weight:800;color:var(--m);margin-bottom:40px;}
     .reviews-grid{display:grid;grid-template-columns:1fr 2fr;gap:48px;}
     .rev-big-score{font-size:68px;font-family:var(--font-heading);font-weight:700;color:var(--m);line-height:1;}

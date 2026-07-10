@@ -79,7 +79,7 @@
     /* -- Hero --- */
     .contact-hero {
       background: var(--m);
-      padding: 80px 80px 72px;
+      padding: 80px var(--page-gutter) 72px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -107,7 +107,7 @@
 
     /* -- Contact Section --- */
     .contact-sec {
-      padding: 72px 80px;
+      padding: 72px var(--page-gutter);
       background: var(--bg);
     }
     .contact-grid {
@@ -238,7 +238,7 @@
 
     /* -- FAQ --- */
     .faq-sec {
-      padding: 72px 80px;
+      padding: 72px var(--page-gutter);
       background: var(--w);
     }
     .sec-hdr-c { text-align: center; margin-bottom: 44px; }
@@ -290,7 +290,7 @@
 
     /* -- Map --- */
     .map-sec {
-      padding: 72px 80px;
+      padding: 72px var(--page-gutter);
       background: var(--bg);
     }
     .map-inner { max-width: 1100px; margin: 0 auto; }
