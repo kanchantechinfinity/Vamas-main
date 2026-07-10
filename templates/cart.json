@@ -1,10 +1,27 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "vamas-cart",
-      "blocks": {},
-      "block_order": []
+      "settings": {
+        "continue_shopping_url": "",
+        "free_delivery_threshold": "999",
+        "empty_cart_text": "Looks like you haven't added anything yet. Explore our handcrafted collection!",
+        "show_trust_mini": true,
+        "related_heading": "Related products",
+        "related_collection": "new-arrival"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
