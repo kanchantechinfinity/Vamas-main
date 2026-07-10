@@ -72,7 +72,7 @@
 
 {% assign faq_blocks = section.blocks | where: 'type', 'faq' %}
 {% if faq_blocks.size > 0 %}
-<section class="faq-sec">
+<section class="faq-sec" id="faq">
   <div class="sec-hdr-c">
     <div class="sec-eye">{{ section.settings.faq_eyebrow | default: 'GOT QUESTIONS?' }}</div>
     <div class="sec-title-c">{{ section.settings.faq_heading | default: 'Frequently Asked Questions' }}</div>

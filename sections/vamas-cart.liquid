@@ -77,13 +77,21 @@
   <div class="order-summary" id="order-summary-panel" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>
     <div class="os-title">ORDER SUMMARY</div>
 
-    {% form 'cart', cart %}
       <div class="coupon-form">
-        <input class="coupon-input" type="text" name="discount" placeholder="Enter coupon code" autocomplete="off">
-        <button class="coupon-btn" type="submit">APPLY</button>
+        <input class="coupon-input" id="vamas-coupon-input" type="text" placeholder="Enter coupon code" autocomplete="off">
+        <button class="coupon-btn" type="button" id="vamas-coupon-apply">APPLY</button>
       </div>
-      <div class="coupon-result" style="color:#888;font-size:11px;margin-top:4px;">Discount codes are validated at checkout.</div>
-    {% endform %}
+      <div class="coupon-result" style="color:#888;font-size:11px;margin-top:4px;">Applied at checkout — enter a code and click Apply.</div>
+      <script>
+        (function(){
+          var b = document.getElementById('vamas-coupon-apply');
+          var i = document.getElementById('vamas-coupon-input');
+          if(!b || !i) return;
+          function apply(){ var c = i.value.trim(); if(c){ window.location.href = '/discount/' + encodeURIComponent(c) + '?redirect=/cart'; } }
+          b.addEventListener('click', apply);
+          i.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); apply(); } });
+        })();
+      </script>
 
     <div class="os-row"><span>MRP Total (<span id="os-item-count">{{ cart.item_count }} items</span>)</span><span id="os-mrp">{{ cart.original_total_price | money }}</span></div>
     {% if cart.total_discount > 0 %}

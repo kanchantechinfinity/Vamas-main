@@ -60,11 +60,11 @@
     <div>
       <div class="vamas-footer__col-title">CUSTOMER CARE</div>
       <div class="vamas-footer__links">
-        <a href="/pages/size-guide">Size Guide</a>
-        <a href="/pages/track-order">Track Order</a>
-        <a href="/policies/refund-policy">Returns & Exchange</a>
-        <a href="/pages/faq">FAQ</a>
-        <a href="/pages/shipping">Shipping Policy</a>
+        <a href="#" id="vamas-size-guide-link">Size Guide</a>
+        <a href="{{ routes.account_url }}">Track Order</a>
+        <a href="{{ shop.refund_policy.url | default: '/pages/contact' }}">Returns &amp; Exchange</a>
+        <a href="/pages/contact#faq">FAQ</a>
+        <a href="{{ shop.shipping_policy.url | default: '/pages/contact' }}">Shipping Policy</a>
       </div>
     </div>
 
@@ -92,6 +92,61 @@
     </div>
   </div>
 </footer>
+
+<div class="vamas-sizeguide-overlay" id="vamas-sizeguide">
+  <div class="vamas-sizeguide">
+    <button type="button" class="vamas-sizeguide__close" id="vamas-sizeguide-close" aria-label="Close">&times;</button>
+    <div class="vamas-sizeguide__title">Size Guide</div>
+    <div class="vamas-sizeguide__sub">All measurements in inches. For a custom fit, add your measurements in the order notes at checkout.</div>
+    <div class="vamas-sizeguide__scroll">
+      <table class="vamas-sizeguide__table">
+        <thead>
+          <tr><th>Size</th><th>Bust</th><th>Waist</th><th>Shoulder</th><th>Length</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>32</td><td>32</td><td>26</td><td>13</td><td>14.5</td></tr>
+          <tr><td>34</td><td>34</td><td>28</td><td>13.5</td><td>15</td></tr>
+          <tr><td>36</td><td>36</td><td>30</td><td>14</td><td>15.5</td></tr>
+          <tr><td>38</td><td>38</td><td>32</td><td>14.5</td><td>15.5</td></tr>
+          <tr><td>40</td><td>40</td><td>34</td><td>15</td><td>16</td></tr>
+          <tr><td>42</td><td>42</td><td>36</td><td>15.5</td><td>16</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="vamas-sizeguide__note">Tip: Measure a well-fitting blouse and match it to the chart. When between sizes, choose the larger.</div>
+  </div>
+</div>
+
+<style>
+  .vamas-sizeguide-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(42,0,1,0.6); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+  .vamas-sizeguide-overlay.open { opacity: 1; visibility: visible; }
+  .vamas-sizeguide { position: relative; background: #fff; border-radius: 16px; padding: 32px; width: min(520px, 94vw); box-shadow: 0 24px 64px rgba(0,0,0,0.3); transform: translateY(-12px); transition: transform 0.25s; }
+  .vamas-sizeguide-overlay.open .vamas-sizeguide { transform: translateY(0); }
+  .vamas-sizeguide__close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 26px; line-height: 1; color: rgba(66,0,1,0.5); cursor: pointer; }
+  .vamas-sizeguide__close:hover { color: var(--color-maroon); }
+  .vamas-sizeguide__title { font-family: 'Playfair Display', Georgia, serif; font-size: 26px; font-weight: 700; color: var(--color-maroon); margin-bottom: 6px; }
+  .vamas-sizeguide__sub { font-size: 12px; color: rgba(66,0,1,0.55); margin-bottom: 20px; line-height: 1.6; }
+  .vamas-sizeguide__scroll { overflow-x: auto; }
+  .vamas-sizeguide__table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .vamas-sizeguide__table th { background: var(--color-maroon); color: var(--color-gold); padding: 10px; font-weight: 700; text-align: center; }
+  .vamas-sizeguide__table th:first-child { border-top-left-radius: 8px; }
+  .vamas-sizeguide__table th:last-child { border-top-right-radius: 8px; }
+  .vamas-sizeguide__table td { padding: 9px 10px; text-align: center; border-bottom: 1px solid rgba(66,0,1,0.08); color: rgba(66,0,1,0.75); }
+  .vamas-sizeguide__table tbody tr:nth-child(even) { background: var(--color-bg); }
+  .vamas-sizeguide__note { margin-top: 16px; font-size: 12px; color: rgba(66,0,1,0.6); line-height: 1.6; }
+</style>
+
+<script>
+(function(){
+  var overlay = document.getElementById('vamas-sizeguide');
+  var open = document.getElementById('vamas-size-guide-link');
+  var close = document.getElementById('vamas-sizeguide-close');
+  if (open && overlay) { open.addEventListener('click', function(e){ e.preventDefault(); overlay.classList.add('open'); }); }
+  if (close) { close.addEventListener('click', function(){ overlay.classList.remove('open'); }); }
+  if (overlay) { overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('open'); }); }
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay) overlay.classList.remove('open'); });
+})();
+</script>
 
 {% schema %}
 {

@@ -96,7 +96,7 @@
                   {% if sw.type == 'color_swatch' and sw.settings.name == value %}{% assign swatch_hex = sw.settings.hex %}{% endif %}
                 {% endfor %}
                 <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
-                     style="background:{{ swatch_hex | default: value | handleize | replace: '-', '' }};"
+                     style="background:{% if swatch_hex != blank %}{{ swatch_hex }}{% else %}{{ value | handleize | replace: '-', '' }}{% endif %};"
                      data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
               {% endfor %}
             </div>
@@ -179,7 +179,15 @@
     </div>
     {% endif %}
 
-    <a href="#" class="wishlist-link" id="wishlist-btn">&#9825; Add to Wishlist</a>
+    <a href="#" class="wishlist-link" id="wishlist-btn"
+       data-id="{{ product.id }}"
+       data-handle="{{ product.handle }}"
+       data-title="{{ product.title | escape }}"
+       data-type="{{ product.type | escape | default: 'Blouse' }}"
+       data-price="{{ product.selected_or_first_available_variant.price | money }}"
+       data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+       data-url="{{ product.url }}"
+       data-variant="{{ product.selected_or_first_available_variant.id }}">&#9825; Add to Wishlist</a>
 
     <div class="share-row">
       <span class="share-label">Share:</span>
@@ -521,15 +529,28 @@
     });
   }
 
-  /* Wishlist (decorative) */
-  var wished = false;
+  /* Wishlist */
   var wishBtn = document.getElementById('wishlist-btn');
   if (wishBtn) {
+    var wid = wishBtn.dataset.id;
+    function syncWish(){
+      if (!window.VamasWishlist) return;
+      var saved = window.VamasWishlist.has(wid);
+      wishBtn.innerHTML = saved ? '♥ Saved to Wishlist' : '♡ Add to Wishlist';
+      wishBtn.classList.toggle('active', saved);
+    }
     wishBtn.addEventListener('click', function(e){
       e.preventDefault();
-      wished = !wished;
-      this.textContent = wished ? '♥ Saved to Wishlist' : '♡ Add to Wishlist';
+      if (!window.VamasWishlist) return;
+      window.VamasWishlist.toggle({
+        id: wid, handle: wishBtn.dataset.handle, title: wishBtn.dataset.title,
+        type: wishBtn.dataset.type, price: wishBtn.dataset.price,
+        image: wishBtn.dataset.image, url: wishBtn.dataset.url, variant: wishBtn.dataset.variant
+      });
+      syncWish();
     });
+    window.addEventListener('load', syncWish);
+    syncWish();
   }
 
   /* Share */
