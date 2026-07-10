@@ -291,7 +291,7 @@
   gap: 8px;
 }
 .vblog-ig-item {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 8px;
   background: var(--color-bg, #fff9f2);
