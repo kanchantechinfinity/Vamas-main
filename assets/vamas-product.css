@@ -9,7 +9,7 @@
     .breadcrumb span{color:#aaa;}
 
     /* ── Product layout ── */
-    .product-section{display:flex;gap:56px;padding:24px 80px 64px;align-items:flex-start;max-width:var(--page-max);margin:0 auto;}
+    .product-section{display:flex;gap:56px;padding:24px var(--page-gutter) 64px;align-items:flex-start;max-width:none;margin:0 auto;}
 
     /* ── Gallery ── */
     .prod-gallery{width:560px;flex-shrink:0;position:sticky;top:90px;}

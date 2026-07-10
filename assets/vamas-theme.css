@@ -9,7 +9,7 @@
   --color-bg: #fff9f2;
   --font-primary: var(--font-body, 'Poppins', sans-serif);
   --page-max: 1200px;
-  --page-gutter: max(80px, calc((100% - var(--page-max)) / 2));
+  --page-gutter: max(48px, calc((100% - var(--page-max)) / 2));
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

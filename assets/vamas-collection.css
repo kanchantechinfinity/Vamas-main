@@ -121,8 +121,8 @@ a{text-decoration:none;color:inherit;}
 .col-body{
   display:flex;
   gap:0;
-  padding:40px 80px 64px;
-  max-width:var(--page-max);
+  padding:40px var(--page-gutter) 64px;
+  max-width:none;
   margin:0 auto;
   align-items:flex-start;
 }
