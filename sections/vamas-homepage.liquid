@@ -380,7 +380,7 @@
   var dotsWrap = carousel.querySelector('[data-test-dots]');
   var page = 0, perView = 1, pages = 1;
 
-  function perViewNow() { return window.innerWidth >= 768 ? 2 : 1; }
+  function perViewNow() { var w = window.innerWidth; return w >= 1024 ? 3 : (w >= 768 ? 2 : 1); }
 
   function render() {
     track.style.transform = 'translateX(-' + (page * 100) + '%)';
@@ -410,6 +410,7 @@
     perView = perViewNow();
     pages = Math.max(1, Math.ceil(cards.length / perView));
     if (page > pages - 1) page = pages - 1;
+    if (pages <= 1) { carousel.setAttribute('data-single', ''); } else { carousel.removeAttribute('data-single'); }
     buildDots();
     render();
   }

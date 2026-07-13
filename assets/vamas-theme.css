@@ -464,11 +464,16 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-viewport { overflow: hidden; }
 .vamas-test-track { display: flex; transition: transform 0.5s ease; }
 .vamas-test-carousel .vamas-test-card {
-  flex: 0 0 calc(50% - 12px);
+  flex: 0 0 calc(33.333% - 16px);
   margin-right: 24px;
   box-sizing: border-box;
 }
 .vamas-test-carousel .vamas-test-card:last-child { margin-right: 0; }
+.vamas-test-carousel[data-single] .vamas-test-arrow,
+.vamas-test-carousel[data-single] .vamas-test-dots { display: none; }
+@media (max-width: 1024px) {
+  .vamas-test-carousel .vamas-test-card { flex: 0 0 calc(50% - 12px); }
+}
 
 .vamas-test-arrow {
   position: absolute;
