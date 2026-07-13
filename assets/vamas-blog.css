@@ -99,8 +99,8 @@
   position: -webkit-sticky;
   position: sticky;
   top: 100px;
-  height: -moz-fit-content;
-  height: fit-content;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -395,6 +395,8 @@
     position: static;
     top: auto;
     width: 100%;
+    max-height: none;
+    overflow: visible;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;

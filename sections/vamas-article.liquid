@@ -36,8 +36,8 @@
     position: -webkit-sticky;
     position: sticky;
     top: 100px;
-    height: -moz-fit-content;
-    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
   }
 
   /* Hero */
@@ -333,7 +333,7 @@
 
   @media (max-width: 1024px) {
     .varticle { flex-direction: column; }
-    .va-side { width: 100%; position: static; margin-top: 24px; }
+    .va-side { width: 100%; position: static; margin-top: 24px; max-height: none; overflow: visible; }
   }
   @media (max-width: 768px) {
     .va-body { column-count: 1; }
