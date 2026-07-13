@@ -139,6 +139,15 @@
             "product_type": "Silk Zari Blouse"
           }
         },
+        "testimonial_j98Y6P": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding. Will definitely buy again!",
+            "reviewer_name": "Priya Sharma",
+            "product_type": "Silk Zari Blouse"
+          }
+        },
         "test-2": {
           "type": "testimonial",
           "settings": {
@@ -220,6 +229,7 @@
         "stat-2",
         "stat-3",
         "test-1",
+        "testimonial_j98Y6P",
         "test-2",
         "test-3",
         "reel-1",
