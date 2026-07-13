@@ -47,6 +47,8 @@
     border-radius: 14px;
     overflow: hidden;
     margin-bottom: 32px;
+    background-size: cover;
+    background-position: center;
   }
   .va-hero {
     width: 100%;
@@ -353,7 +355,7 @@
 
     <main class="va-main">
       {% if article.image %}
-        <div class="va-hero-wrap" style="background:{{ section.settings.hero_bg_color | default: '#f0d9be' }};">
+        <div class="va-hero-wrap" style="background-image:url({{ article.image | image_url: width: 1200 }});">
           <img class="va-hero" src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.title | escape }}" loading="eager">
         </div>
       {% endif %}
