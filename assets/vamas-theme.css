@@ -568,7 +568,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-footer__nl-btn { width: 100%; padding: 12px; text-align: center; }
 }
 
-.vamas-footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+.vamas-footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; padding-top: 48px; }
 
 .vamas-footer__logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .vamas-footer__logo-img { height: 44px; width: auto; object-fit: contain; display: block; }
