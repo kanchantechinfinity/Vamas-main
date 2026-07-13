@@ -459,6 +459,62 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-card__name { font-size: 13px; font-weight: 700; color: var(--color-maroon); }
 .vamas-test-card__info { font-size: 10px; color: rgba(66,0,1,0.4); }
 
+/* ── Testimonials carousel ────────────── */
+.vamas-test-carousel { position: relative; }
+.vamas-test-viewport { overflow: hidden; }
+.vamas-test-track { display: flex; transition: transform 0.5s ease; }
+.vamas-test-carousel .vamas-test-card {
+  flex: 0 0 calc(50% - 12px);
+  margin-right: 24px;
+  box-sizing: border-box;
+}
+.vamas-test-carousel .vamas-test-card:last-child { margin-right: 0; }
+
+.vamas-test-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--color-maroon);
+  border: 1px solid rgba(231, 209, 166, 0.4);
+  color: var(--color-gold);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.vamas-test-arrow:hover { background: var(--color-gold); color: var(--color-maroon); }
+.vamas-test-arrow--prev { left: -8px; }
+.vamas-test-arrow--next { right: -8px; }
+
+.vamas-test-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.vamas-test-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(66, 0, 1, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 0;
+}
+.vamas-test-dot.active {
+  background: var(--color-gold);
+  width: 24px;
+  border-radius: 4px;
+}
+
 /* ── Newsletter ───────────────────────── */
 .vamas-newsletter { background: var(--color-gold); padding: 64px var(--page-gutter); text-align: center; }
 .vamas-newsletter__eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3px; color: rgba(66,0,1,0.55); margin-bottom: 12px; }
@@ -584,6 +640,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__image { width: 100%; height: 280px; }
   .vamas-brand__stats { gap: 24px; }
   .vamas-test-grid { grid-template-columns: 1fr; }
+  .vamas-test-carousel .vamas-test-card { flex: 0 0 100%; margin-right: 0; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
   .vamas-trust { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 0; }

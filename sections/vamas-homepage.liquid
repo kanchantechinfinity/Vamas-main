@@ -341,26 +341,94 @@
       <p class="vamas-section__subtitle">Over 10,000 happy customers</p>
     </div>
   </div>
-  <div class="vamas-test-grid">
-    {% for block in section.blocks %}
-      {% if block.type == 'testimonial' %}
-        <div class="vamas-test-card">
-          <div class="vamas-test-card__stars">
-            {% for i in (1..block.settings.rating) %}★{% endfor %}
-          </div>
-          <p class="vamas-test-card__text">"{{ block.settings.review_text }}"</p>
-          <div class="vamas-test-card__author">
-            <div class="vamas-test-card__avatar">{{ block.settings.reviewer_name | slice: 0 | upcase }}</div>
-            <div>
-              <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
-              <div class="vamas-test-card__info">Verified Buyer · {{ block.settings.product_type | default: 'Blouse Collection' }}</div>
+  <div class="vamas-test-carousel" data-test-carousel>
+    <div class="vamas-test-viewport">
+      <div class="vamas-test-track" data-test-track>
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            <div class="vamas-test-card">
+              <div class="vamas-test-card__stars">
+                {% for i in (1..block.settings.rating) %}★{% endfor %}
+              </div>
+              <p class="vamas-test-card__text">"{{ block.settings.review_text }}"</p>
+              <div class="vamas-test-card__author">
+                <div class="vamas-test-card__avatar">{{ block.settings.reviewer_name | slice: 0 | upcase }}</div>
+                <div>
+                  <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
+                  <div class="vamas-test-card__info">Verified Buyer · {{ block.settings.product_type | default: 'Blouse Collection' }}</div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      {% endif %}
-    {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <button class="vamas-test-arrow vamas-test-arrow--prev" data-test-prev aria-label="Previous reviews">‹</button>
+    <button class="vamas-test-arrow vamas-test-arrow--next" data-test-next aria-label="Next reviews">›</button>
+    <div class="vamas-test-dots" data-test-dots></div>
   </div>
 </section>
+<script>
+(function () {
+  var carousel = document.querySelector('[data-test-carousel]');
+  if (!carousel) return;
+  var track = carousel.querySelector('[data-test-track]');
+  if (!track) return;
+  var cards = track.querySelectorAll('.vamas-test-card');
+  var prevBtn = carousel.querySelector('[data-test-prev]');
+  var nextBtn = carousel.querySelector('[data-test-next]');
+  var dotsWrap = carousel.querySelector('[data-test-dots]');
+  var page = 0, perView = 1, pages = 1;
+
+  function perViewNow() { return window.innerWidth >= 768 ? 2 : 1; }
+
+  function render() {
+    track.style.transform = 'translateX(-' + (page * 100) + '%)';
+    if (dotsWrap) {
+      var dots = dotsWrap.querySelectorAll('.vamas-test-dot');
+      for (var i = 0; i < dots.length; i++) {
+        dots[i].classList.toggle('active', i === page);
+      }
+    }
+  }
+
+  function buildDots() {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    for (var i = 0; i < pages; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'vamas-test-dot';
+      dot.setAttribute('aria-label', 'Go to review page ' + (i + 1));
+      (function (idx) {
+        dot.addEventListener('click', function () { page = idx; render(); });
+      })(i);
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function recompute() {
+    perView = perViewNow();
+    pages = Math.max(1, Math.ceil(cards.length / perView));
+    if (page > pages - 1) page = pages - 1;
+    buildDots();
+    render();
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', function () {
+    page = (page - 1 + pages) % pages; render();
+  });
+  if (nextBtn) nextBtn.addEventListener('click', function () {
+    page = (page + 1) % pages; render();
+  });
+
+  var t;
+  window.addEventListener('resize', function () {
+    clearTimeout(t); t = setTimeout(recompute, 150);
+  });
+
+  recompute();
+})();
+</script>
 {% endif %}
 
 {% comment %} Newsletter moved to footer (vamas-footer) so it appears on all pages {% endcomment %}

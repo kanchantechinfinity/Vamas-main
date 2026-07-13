@@ -148,6 +148,15 @@
             "product_type": "Kanjeevaram Blouse"
           }
         },
+        "test-3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "review_text": "The Chikankari work is delicate and elegant, exactly what I wanted. Stitching is neat and the fit was spot on. Highly recommend Vamas!",
+            "reviewer_name": "Ritu Desai",
+            "product_type": "Chikankari Blouse"
+          }
+        },
         "reel-1": {
           "type": "reel",
           "settings": {
@@ -212,6 +221,7 @@
         "stat-3",
         "test-1",
         "test-2",
+        "test-3",
         "reel-1",
         "reel-2",
         "reel-3",

@@ -1,5 +1,36 @@
 {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
 
+{% if section.settings.show_faq %}
+<section class="vamas-faq">
+  <div class="vamas-faq__inner">
+    <div class="vamas-faq__eye">GOT QUESTIONS?</div>
+    <h2 class="vamas-faq__heading">Frequently Asked <span>Questions</span></h2>
+    <div class="vamas-faq__list">
+      <div class="vamas-faq__item">
+        <button type="button" class="vamas-faq__q">How long does delivery take?<span class="vamas-faq__chev" aria-hidden="true">&#8250;</span></button>
+        <div class="vamas-faq__a"><p>We deliver pan-India within 3-5 business days. For remote areas, 7-10 business days.</p></div>
+      </div>
+      <div class="vamas-faq__item">
+        <button type="button" class="vamas-faq__q">Do you offer custom sizing?<span class="vamas-faq__chev" aria-hidden="true">&#8250;</span></button>
+        <div class="vamas-faq__a"><p>Yes! Custom sizing at no extra charge — share measurements in order notes at checkout.</p></div>
+      </div>
+      <div class="vamas-faq__item">
+        <button type="button" class="vamas-faq__q">What is your return policy?<span class="vamas-faq__chev" aria-hidden="true">&#8250;</span></button>
+        <div class="vamas-faq__a"><p>7-day hassle-free returns on unworn items in original condition with tags intact.</p></div>
+      </div>
+      <div class="vamas-faq__item">
+        <button type="button" class="vamas-faq__q">How can I track my order?<span class="vamas-faq__chev" aria-hidden="true">&#8250;</span></button>
+        <div class="vamas-faq__a"><p>A tracking link is sent via SMS and email once your order is dispatched.</p></div>
+      </div>
+      <div class="vamas-faq__item">
+        <button type="button" class="vamas-faq__q">Do you offer wholesale?<span class="vamas-faq__chev" aria-hidden="true">&#8250;</span></button>
+        <div class="vamas-faq__a"><p>Yes, for orders above 50 pieces. Write to wholesale@vamas.in for our bulk pricing catalog.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <footer class="vamas-footer">
 
   {% if section.settings.show_newsletter %}
@@ -17,6 +48,42 @@
         <p class="vamas-footer__nl-success">Thank you for subscribing! ✦</p>
       {% endif %}
     {% endform %}
+  </div>
+  {% endif %}
+
+  {% if section.settings.show_shop_links %}
+  <div class="vamas-shopby">
+    {% assign shopby_cat = "Sarees | Kurtas for Women | Short Kurtas for Women | Blouse | Kurta Sets for Women | Co-Ord Sets | Dress Materials | Suits for Women | Tunics | Dresses for Women | Kaftans | Shrugs | Ethnic Gowns | Jumpsuits | Lehenga | Chudidars | Dupatta | Petticoats | Pants | Palazzos | Sharara Suits | Anarkali Suits | Kurta Pant Sets | Palazzo Kurta Sets | Dhoti Sets | Collar Kurtas and Sets | Punjabi Suits | Sleeveless Kurta Sets | Indo-Western Wear for Women | Lehenga Choli for Women | Crop Top Lehenga | Long Dresses" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Shop By Category</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_cat %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
+
+    {% assign shopby_fest = "Diwali | Karwa Chauth | Bhai Dooj Special | Onam | Rakhi Collection | Navratri | Dussehra | Durga Pujo | The Festival of Lohri and Sankranti | Pongal | Holi | Ugadi and Gudi Padwa | Christmas | Ramadan & Eid | Ganesh Chaturthi" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Shop By Festival</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_fest %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
+
+    {% assign shopby_occ = "Wedding Dresses for Women | Wedding Guest Outfits | Bridesmaid Dresses | Mehendi Outfits | Sangeet Dresses | Haldi Ready Dresses | Reception Outfits | Party Wear Dresses for Women | Engagement Dresses | Autumn Outfits | Festive Edit | Bridal Lehenga | Kasavu Sarees | Colors of Freedom | Valentine Day | Women's Day Special | Summer Outfits | Black Friday | Office Work Wear | Monsoon Edit | Winter Outfits" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Shop By Occasion</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_occ %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
+
+    {% assign shopby_trend = "Purple and Lavender Collection | Embroidered Outfits | Fendi Suits | Black Ethnic Dresses | Fendi Sarees | Red Ethnic Dresses | Green Ethnic Wear | Vivid Blooms | Tales of Tissue | Simply Solids | Linen Loom | Gypsy Ink - Bohemian Inspired Collection | Bandhej Treasures | Print Perfection | Pastel Harmony | Kalamkari Chronicles | Baroque Collection | Ivory Elegance | Floral Drifts | Glimmer Glam | Muse of Mirror | Black Sarees | Our Top Picks | Evergreen Anarkali | Chikankari Collection | Kota Couture" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Top Trendsetter's Collection</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_trend %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
   </div>
   {% endif %}
 
@@ -134,6 +201,30 @@
   .vamas-sizeguide__table td { padding: 9px 10px; text-align: center; border-bottom: 1px solid rgba(66,0,1,0.08); color: rgba(66,0,1,0.75); }
   .vamas-sizeguide__table tbody tr:nth-child(even) { background: var(--color-bg); }
   .vamas-sizeguide__note { margin-top: 16px; font-size: 12px; color: rgba(66,0,1,0.6); line-height: 1.6; }
+
+  /* Shop By mega links */
+  .vamas-shopby { max-width: 1280px; margin: 0 auto; padding: 8px var(--page-gutter) 32px; border-bottom: 1px solid rgba(231,209,166,0.18); }
+  .vamas-shopby__group { padding: 16px 0; border-top: 1px solid rgba(231,209,166,0.12); }
+  .vamas-shopby__group:first-child { border-top: none; }
+  .vamas-shopby__title { font-family: var(--font-heading); color: var(--color-gold); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+  .vamas-shopby__links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; }
+  .vamas-shopby__links a { font-family: var(--font-body); font-size: 12px; color: rgba(231,209,166,0.6); text-decoration: none; padding: 2px 10px; line-height: 1.4; border-left: 1px solid rgba(231,209,166,0.22); transition: color 0.2s; }
+  .vamas-shopby__links a:first-child { border-left: none; padding-left: 0; }
+  .vamas-shopby__links a:hover { color: var(--color-gold); }
+
+  /* FAQ accordion */
+  .vamas-faq { background: var(--color-bg); }
+  .vamas-faq__inner { max-width: 820px; margin: 0 auto; padding: 56px var(--page-gutter); }
+  .vamas-faq__eye { font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--color-gold-dark); text-align: center; margin-bottom: 10px; }
+  .vamas-faq__heading { font-family: var(--font-heading); font-size: clamp(26px, 4vw, 38px); font-weight: 700; color: var(--color-maroon); text-align: center; margin: 0 0 32px; }
+  .vamas-faq__heading span { color: var(--color-gold-dark); }
+  .vamas-faq__item { border-bottom: 1px solid rgba(66,0,1,0.1); }
+  .vamas-faq__q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: none; border: none; cursor: pointer; text-align: left; padding: 20px 4px; font-family: var(--font-heading); font-size: 17px; font-weight: 600; color: var(--color-maroon); }
+  .vamas-faq__chev { font-size: 24px; line-height: 1; color: var(--color-gold-dark); transition: transform 0.3s; transform: rotate(90deg); flex-shrink: 0; }
+  .vamas-faq__item.open .vamas-faq__chev { transform: rotate(-90deg); }
+  .vamas-faq__a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .vamas-faq__item.open .vamas-faq__a { max-height: 240px; }
+  .vamas-faq__a p { margin: 0; padding: 0 4px 20px; font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: rgba(66,0,1,0.7); }
 </style>
 
 <script>
@@ -146,6 +237,19 @@
   if (overlay) { overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('open'); }); }
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay) overlay.classList.remove('open'); });
 })();
+
+(function(){
+  var items = document.querySelectorAll('.vamas-faq__item');
+  items.forEach(function(item){
+    var btn = item.querySelector('.vamas-faq__q');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      items.forEach(function(o){ o.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+})();
 </script>
 
 {% schema %}
@@ -153,6 +257,8 @@
   "name": "Vamas Footer",
   "settings": [
     { "type": "checkbox", "id": "show_newsletter", "label": "Show Newsletter", "default": true },
+    { "type": "checkbox", "id": "show_shop_links", "label": "Show Shop By Links", "default": true },
+    { "type": "checkbox", "id": "show_faq", "label": "Show FAQ Accordion", "default": true },
     { "type": "text", "id": "brand_name", "label": "Brand Name", "default": "VAMAS" },
     { "type": "textarea", "id": "brand_desc", "label": "Brand Description", "default": "Premium handcrafted blouses celebrating Indian artistry and elegance. Every piece tells a story." },
     { "type": "header", "content": "Social Links" },
