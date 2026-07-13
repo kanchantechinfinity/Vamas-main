@@ -496,10 +496,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-arrow:hover { background: var(--color-gold); color: var(--color-maroon); }
 
 .vamas-test-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 24px;
+  display: none;
 }
 .vamas-test-dot {
   width: 7px;
