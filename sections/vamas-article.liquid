@@ -47,22 +47,8 @@
     border-radius: 14px;
     overflow: hidden;
     margin-bottom: 32px;
-    background-size: cover;
-    background-position: center;
-  }
-  .va-hero-wrap::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: inherit;
-    background-size: cover;
-    background-position: center;
-    filter: blur(30px) saturate(1.1);
-    transform: scale(1.2);
   }
   .va-hero {
-    position: relative;
-    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -367,7 +353,7 @@
 
     <main class="va-main">
       {% if article.image %}
-        <div class="va-hero-wrap" style="background-image:url({{ article.image | image_url: width: 1200 }});">
+        <div class="va-hero-wrap" style="background:{{ section.settings.hero_bg_color | default: '#f0d9be' }};">
           <img class="va-hero" src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.title | escape }}" loading="eager">
         </div>
       {% endif %}
@@ -488,6 +474,7 @@
 {
   "name": "Vamas Article",
   "settings": [
+    { "type": "color", "id": "hero_bg_color", "label": "Hero Background Color", "default": "#f0d9be" },
     { "type": "textarea", "id": "pull_quote", "label": "Pull quote" },
     { "type": "text", "id": "designer_name", "label": "Designer name", "default": "The Vamas Design Team" },
     { "type": "image_picker", "id": "designer_image", "label": "Designer image" },
