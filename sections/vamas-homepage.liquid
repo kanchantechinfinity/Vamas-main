@@ -363,9 +363,11 @@
         {% endfor %}
       </div>
     </div>
-    <button class="vamas-test-arrow vamas-test-arrow--prev" data-test-prev aria-label="Previous reviews">‹</button>
-    <button class="vamas-test-arrow vamas-test-arrow--next" data-test-next aria-label="Next reviews">›</button>
-    <div class="vamas-test-dots" data-test-dots></div>
+    <div class="vamas-test-controls">
+      <button class="vamas-test-arrow vamas-test-arrow--prev" data-test-prev aria-label="Previous reviews">‹</button>
+      <div class="vamas-test-dots" data-test-dots></div>
+      <button class="vamas-test-arrow vamas-test-arrow--next" data-test-next aria-label="Next reviews">›</button>
+    </div>
   </div>
 </section>
 <script>
@@ -389,7 +391,7 @@
     if (dotsWrap) {
       var dots = dotsWrap.querySelectorAll('.vamas-test-dot');
       for (var i = 0; i < dots.length; i++) {
-        dots[i].classList.toggle('active', i === page);
+        dots[i].classList.toggle('active', i >= page && i < page + perView);
       }
     }
   }
@@ -397,12 +399,12 @@
   function buildDots() {
     if (!dotsWrap) return;
     dotsWrap.innerHTML = '';
-    for (var i = 0; i < pages; i++) {
+    for (var i = 0; i < cards.length; i++) {
       var dot = document.createElement('button');
       dot.className = 'vamas-test-dot';
-      dot.setAttribute('aria-label', 'Go to review ' + (i + 1));
+      dot.setAttribute('aria-label', 'Show review ' + (i + 1));
       (function (idx) {
-        dot.addEventListener('click', function () { page = idx; render(); reset(); });
+        dot.addEventListener('click', function () { page = Math.min(idx, pages - 1); render(); reset(); });
       })(i);
       dotsWrap.appendChild(dot);
     }

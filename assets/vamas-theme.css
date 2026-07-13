@@ -475,28 +475,24 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-test-carousel .vamas-test-card { flex: 0 0 calc(50% - 12px); }
 }
 
+.vamas-test-controls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 28px; }
 .vamas-test-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: var(--color-maroon);
   border: 1px solid rgba(231, 209, 166, 0.4);
   color: var(--color-gold);
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
   transition: all 0.2s;
   line-height: 1;
+  flex-shrink: 0;
 }
 .vamas-test-arrow:hover { background: var(--color-gold); color: var(--color-maroon); }
-.vamas-test-arrow--prev { left: -8px; }
-.vamas-test-arrow--next { right: -8px; }
 
 .vamas-test-dots {
   display: flex;
