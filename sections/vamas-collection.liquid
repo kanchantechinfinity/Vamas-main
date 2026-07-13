@@ -1,5 +1,10 @@
 {{ 'vamas-collection.css' | asset_url | stylesheet_tag }}
 
+{%- comment -%} On the /collections list page there is no single collection — show all products {%- endcomment -%}
+{%- unless collection and collection.products_count > 0 -%}
+  {%- assign collection = collections.all -%}
+{%- endunless -%}
+
 <section class="col-hero">
   <div class="col-hero-left">
     <div class="col-hero-breadcrumb">

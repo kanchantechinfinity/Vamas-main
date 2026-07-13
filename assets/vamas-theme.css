@@ -162,7 +162,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .btn-outline:hover { background: var(--color-gold); color: var(--color-maroon); }
 .btn-primary, .btn-outline, .vamas-atc, .btn-shop { text-align: center; }
-.vamas-brand__text .btn-outline, .vamas-brand__text .btn-primary { display: block; width: fit-content; margin-left: auto; margin-right: auto; }
+.vamas-brand__text .btn-outline, .vamas-brand__text .btn-primary { display: inline-block; width: auto; margin: 0; }
 
 /* ── Trust Bar ────────────────────────── */
 .vamas-trust {
