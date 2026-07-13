@@ -46,7 +46,43 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-head">
       <h3>FILTERS</h3>
-      {% if collection.filters.size > 0 %}<a href="{{ collection.url }}" class="clear-all">Clear All</a>{% endif %}
+      <a href="/collections/{{ collection.handle | default: 'all' }}" class="clear-all">Clear All</a>
+    </div>
+
+    {% comment %} Tag-based filters (Occasion / Fabric / Color) — filter natively via the collection URL {% endcomment %}
+    {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
+    {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
+    <div class="acc-item">
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-body open">
+        {% for t in vtag_occasion %}
+          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-body open">
+        {% for t in vtag_fabric %}
+          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-body open">
+        <div class="color-dots">
+          <label><input type="checkbox" class="vtag-filter" value="Maroon" {% if collection.current_tags contains 'Maroon' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#420001;" title="Maroon" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Gold" {% if collection.current_tags contains 'Gold' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#c9a96e;" title="Gold" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Green" {% if collection.current_tags contains 'Green' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#2e7d32;" title="Green" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Navy" {% if collection.current_tags contains 'Navy' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#1a237e;" title="Navy" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="White" {% if collection.current_tags contains 'White' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#f5f5f5;border:1.5px solid #ccc;" title="White" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Pink" {% if collection.current_tags contains 'Pink' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#e91e8c;" title="Pink" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-apply">
+      <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply">APPLY FILTERS</button>
     </div>
 
     <form method="get">
@@ -161,6 +197,16 @@ function toggleAcc(head){
 document.getElementById('mob-filter-open') && document.getElementById('mob-filter-open').addEventListener('click', function(){
   document.getElementById('sidebar').classList.toggle('mob-open');
 });
+(function(){
+  var apply = document.getElementById('vtag-apply');
+  if(!apply) return;
+  apply.addEventListener('click', function(){
+    var tags = [];
+    document.querySelectorAll('.vtag-filter:checked').forEach(function(cb){ tags.push(cb.value.trim().toLowerCase().replace(/\s+/g,'-')); });
+    var base = '/collections/{{ collection.handle | default: "all" }}';
+    window.location.href = tags.length ? (base + '/' + tags.join('+')) : base;
+  });
+})();
 </script>
 
 {% schema %}
