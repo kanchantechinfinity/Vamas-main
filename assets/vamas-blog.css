@@ -88,16 +88,19 @@
 
 /* ---- Layout ---- */
 .vblog-layout {
-  display: grid;
-  grid-template-columns: 1fr 320px;
+  display: flex;
   gap: 40px;
-  align-items: start;
+  align-items: flex-start;
 }
-.vblog-main { min-width: 0; }
+.vblog-main { flex: 1; min-width: 0; }
 .vblog-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  position: -webkit-sticky;
   position: sticky;
   top: 100px;
-  align-self: flex-start;
+  height: -moz-fit-content;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -387,7 +390,7 @@
 
 /* ============ Responsive ============ */
 @media (max-width: 1024px) {
-  .vblog-layout { grid-template-columns: 1fr; }
+  .vblog-layout { flex-direction: column; }
   .vblog-sidebar {
     position: static;
     top: auto;
