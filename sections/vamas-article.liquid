@@ -472,32 +472,6 @@
   </div>
 </div>
 
-<script>
-(function(){
-  var wrap = document.querySelector('.va-hero-wrap');
-  var img = wrap && wrap.querySelector('.va-hero');
-  if (!wrap || !img) return;
-  var probe = new Image();
-  probe.crossOrigin = 'anonymous';
-  probe.onload = function(){
-    try {
-      var c = document.createElement('canvas');
-      c.width = probe.naturalWidth; c.height = probe.naturalHeight;
-      var ctx = c.getContext('2d');
-      ctx.drawImage(probe, 0, 0);
-      // average the four corners so a stray edge pixel doesn't skew it
-      var pts = [[2,2],[c.width-3,2],[2,c.height-3],[c.width-3,c.height-3]];
-      var r=0,g=0,b=0;
-      pts.forEach(function(p){ var d = ctx.getImageData(p[0],p[1],1,1).data; r+=d[0]; g+=d[1]; b+=d[2]; });
-      r=Math.round(r/4); g=Math.round(g/4); b=Math.round(b/4);
-      wrap.style.backgroundImage = 'none';
-      wrap.style.backgroundColor = 'rgb('+r+','+g+','+b+')';
-    } catch(e){ /* cross-origin blocked — keep image-fill background */ }
-  };
-  probe.src = img.currentSrc || img.src;
-})();
-</script>
-
 {% schema %}
 {
   "name": "Vamas Article",
