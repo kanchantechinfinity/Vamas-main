@@ -88,6 +88,7 @@
     <form method="get">
     {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
     {% for filter in collection.filters %}
+      {% if filter.label contains 'olor' %}{% continue %}{% endif %}
       <div class="acc-item">
         <div class="acc-head open" onclick="toggleAcc(this)">
           <span>{{ filter.label | upcase }}</span>
@@ -105,8 +106,8 @@
                 <div class="price-thumb price-thumb-l" id="thumbL"></div>
                 <div class="price-thumb price-thumb-r" id="thumbR"></div>
               </div>
-              <input type="range" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}">
-              <input type="range" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}">
+              <input type="range" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
+              <input type="range" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
             </div>
           {% elsif filter.type == 'list' and filter.label contains 'olor' %}
             <div class="color-dots">
@@ -128,9 +129,6 @@
         </div>
       </div>
     {% endfor %}
-    <div class="sidebar-apply">
-      <button type="submit" class="btn-primary" style="width:100%;">APPLY FILTERS</button>
-    </div>
     </form>
   </aside>
 
