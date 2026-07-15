@@ -126,6 +126,8 @@
   display: block;
   overflow: hidden;
   position: static;
+  padding: 24px;
+  box-sizing: border-box;
 }
 .vblog-featured-media img {
   position: static;

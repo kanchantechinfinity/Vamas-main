@@ -351,6 +351,42 @@
     .va-quote { font-size: 21px; padding: 20px 32px; }
     .va-share-tags { flex-direction: column; align-items: flex-start; }
   }
+
+  /* Table of contents */
+  .va-toc {
+    background: #fff;
+    border: 1px solid var(--color-gold, #e7d1a6);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 0 0 32px;
+    max-width: 760px;
+  }
+  .va-toc-title {
+    font-family: var(--font-heading);
+    color: var(--color-maroon, #420001);
+    font-size: 15px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+  .va-toc-list {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .va-toc-list li { color: var(--color-maroon-light, #6b2b26); }
+  .va-toc-list a {
+    color: #3a2c26;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    transition: color .2s;
+  }
+  .va-toc-list a:hover { color: var(--color-maroon, #420001); text-decoration: underline; }
+  .va-toc-list .va-toc-sub { list-style: circle; margin-left: 8px; }
 </style>
 
 <div class="va-wrap">
@@ -372,6 +408,12 @@
       {% if pull_quote != blank %}
         <blockquote class="va-quote">{{ pull_quote }}</blockquote>
       {% endif %}
+
+      {% comment %} Table of contents — auto-built from the article headings {% endcomment %}
+      <nav class="va-toc" id="vaToc" hidden aria-label="Table of contents">
+        <p class="va-toc-title">Table of Contents</p>
+        <ol class="va-toc-list"></ol>
+      </nav>
 
       <div class="va-body rte">
         {{ article.content }}
@@ -474,6 +516,35 @@
 
   </div>
 </div>
+
+<script>
+  (function () {
+    var body = document.querySelector('.va-body');
+    var toc = document.getElementById('vaToc');
+    if (!body || !toc) return;
+    var heads = body.querySelectorAll('h2, h3');
+    if (heads.length < 2) return; // not worth a TOC
+    var list = toc.querySelector('.va-toc-list');
+    heads.forEach(function (h, i) {
+      if (!h.id) {
+        h.id = 'sec-' + (i + 1) + '-' + (h.textContent || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+      }
+      var li = document.createElement('li');
+      if (h.tagName.toLowerCase() === 'h3') li.className = 'va-toc-sub';
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.textContent = h.textContent;
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var t = document.getElementById(h.id);
+        if (t) { window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 90, behavior: 'smooth' }); }
+      });
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    toc.hidden = false;
+  })();
+</script>
 
 {% schema %}
 {
