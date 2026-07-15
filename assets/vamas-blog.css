@@ -120,10 +120,12 @@
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 40px;
-  align-items: center;
+  align-items: stretch;
 }
 .vblog-featured-media {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   position: static;
   padding: 24px;
