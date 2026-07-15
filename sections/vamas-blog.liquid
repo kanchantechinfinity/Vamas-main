@@ -24,38 +24,38 @@
     {%- endfor -%}
   </nav>
 
-  {%- comment -%} a. Featured article — full width, above the two-column layout {%- endcomment -%}
-  {%- assign featured = blog.articles.first -%}
-  {%- if featured -%}
-    {%- assign f_words = featured.content | strip_html | number_of_words -%}
-    {%- assign f_read = f_words | divided_by: 200.0 | ceil -%}
-    {%- if f_read < 1 -%}{%- assign f_read = 1 -%}{%- endif -%}
-    <article class="vblog-featured">
-      <a href="{{ featured.url }}" class="vblog-featured-media">
-        {%- if featured.image -%}
-          <img src="{{ featured.image | image_url: width: 1200 }}" alt="{{ featured.title | escape }}" loading="lazy" width="1200" height="800">
-        {%- else -%}
-          <span class="vblog-noimg"></span>
-        {%- endif -%}
-      </a>
-      <div class="vblog-featured-body">
-        {%- if featured.tags.first -%}
-          <span class="vblog-cat">{{ featured.tags.first }}</span>
-        {%- endif -%}
-        <h2 class="vblog-featured-title"><a href="{{ featured.url }}">{{ featured.title }}</a></h2>
-        <p class="vblog-read">{{ f_read }} min read</p>
-        <p class="vblog-excerpt">{{ featured.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
-        <a href="{{ featured.url }}" class="vblog-readmore">Read More &rarr;</a>
-      </div>
-    </article>
-  {%- endif -%}
-
   {%- comment -%} 3. Two-column layout {%- endcomment -%}
   <div class="vblog-layout">
 
     {%- comment -%} LEFT MAIN {%- endcomment -%}
     <main class="vblog-main">
       {%- paginate blog.articles by 13 -%}
+
+        {%- comment -%} a. Featured article — beside the sidebar {%- endcomment -%}
+        {%- assign featured = blog.articles.first -%}
+        {%- if featured -%}
+          {%- assign f_words = featured.content | strip_html | number_of_words -%}
+          {%- assign f_read = f_words | divided_by: 200.0 | ceil -%}
+          {%- if f_read < 1 -%}{%- assign f_read = 1 -%}{%- endif -%}
+          <article class="vblog-featured">
+            <a href="{{ featured.url }}" class="vblog-featured-media">
+              {%- if featured.image -%}
+                <img src="{{ featured.image | image_url: width: 1200 }}" alt="{{ featured.title | escape }}" loading="lazy" width="1200" height="800">
+              {%- else -%}
+                <span class="vblog-noimg"></span>
+              {%- endif -%}
+            </a>
+            <div class="vblog-featured-body">
+              {%- if featured.tags.first -%}
+                <span class="vblog-cat">{{ featured.tags.first }}</span>
+              {%- endif -%}
+              <h2 class="vblog-featured-title"><a href="{{ featured.url }}">{{ featured.title }}</a></h2>
+              <p class="vblog-read">{{ f_read }} min read</p>
+              <p class="vblog-excerpt">{{ featured.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+              <a href="{{ featured.url }}" class="vblog-readmore">Read More &rarr;</a>
+            </div>
+          </article>
+        {%- endif -%}
 
         {%- comment -%} b. Divider + Latest Stories heading {%- endcomment -%}
         <div class="vblog-divider"></div>
