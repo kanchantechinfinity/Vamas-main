@@ -181,6 +181,11 @@ a{text-decoration:none;color:inherit;}
   display:none;
 }
 .acc-body.open{display:block;}
+/* keep long filter lists (e.g. TAGS) from stretching the sticky sidebar and
+   leaving a large blank gap beside the products after filtering */
+.acc-body{max-height:220px;overflow-y:auto;}
+.acc-body::-webkit-scrollbar{width:6px;}
+.acc-body::-webkit-scrollbar-thumb{background:rgba(66,0,1,.18);border-radius:3px;}
 .filter-check-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;color:rgba(66,0,1,.7);cursor:pointer;}
 .filter-check-row:last-child{margin-bottom:0;}
 .filter-check-row input{flex-shrink:0;margin:0;}

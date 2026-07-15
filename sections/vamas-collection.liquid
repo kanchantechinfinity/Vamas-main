@@ -87,7 +87,36 @@
 
     <form method="get">
     {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
+
+    {% comment %} Price range first — shown above Tags / Availability {% endcomment %}
     {% for filter in collection.filters %}
+      {% if filter.type != 'price_range' %}{% continue %}{% endif %}
+      <div class="acc-item">
+        <div class="acc-head open" onclick="toggleAcc(this)">
+          <span>{{ filter.label | upcase }}</span>
+          <span class="acc-arrow">&#9660;</span>
+        </div>
+        <div class="acc-body open">
+          <div class="price-range">
+            <div class="price-labels">
+              <span id="priceMin">{{ filter.min_value.value | default: filter.range_min | money }}</span>
+              <span id="priceMax">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+            </div>
+            <div class="price-track">
+              <div class="price-fill" id="priceFill"></div>
+              <div class="price-thumb price-thumb-l" id="thumbL"></div>
+              <div class="price-thumb price-thumb-r" id="thumbR"></div>
+            </div>
+            <input type="range" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
+            <input type="range" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    {% comment %} Then the remaining filters (Tags, Availability, …) — Color and Price already handled above {% endcomment %}
+    {% for filter in collection.filters %}
+      {% if filter.type == 'price_range' %}{% continue %}{% endif %}
       {% if filter.label contains 'olor' %}{% continue %}{% endif %}
       <div class="acc-item">
         <div class="acc-head open" onclick="toggleAcc(this)">
@@ -95,37 +124,12 @@
           <span class="acc-arrow">&#9660;</span>
         </div>
         <div class="acc-body open">
-          {% if filter.type == 'price_range' %}
-            <div class="price-range">
-              <div class="price-labels">
-                <span id="priceMin">{{ filter.min_value.value | default: filter.range_min | money }}</span>
-                <span id="priceMax">{{ filter.max_value.value | default: filter.range_max | money }}</span>
-              </div>
-              <div class="price-track">
-                <div class="price-fill" id="priceFill"></div>
-                <div class="price-thumb price-thumb-l" id="thumbL"></div>
-                <div class="price-thumb price-thumb-r" id="thumbR"></div>
-              </div>
-              <input type="range" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
-              <input type="range" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
-            </div>
-          {% elsif filter.type == 'list' and filter.label contains 'olor' %}
-            <div class="color-dots">
-              {% for value in filter.values %}
-                <label>
-                  <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} style="display:none;" class="c-dot-input">
-                  <div class="c-dot{% if value.active %} active{% endif %}" style="background:{{ value.label | handleize | replace: '-', '' }};" title="{{ value.label }}" onclick="this.previousElementSibling.click(); this.classList.toggle('active');"></div>
-                </label>
-              {% endfor %}
-            </div>
-          {% else %}
-            {% for value in filter.values %}
-              <label class="filter-check-row">
-                <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()">
-                {{ value.label }} ({{ value.count }})
-              </label>
-            {% endfor %}
-          {% endif %}
+          {% for value in filter.values %}
+            <label class="filter-check-row">
+              <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()">
+              {{ value.label }} ({{ value.count }})
+            </label>
+          {% endfor %}
         </div>
       </div>
     {% endfor %}
