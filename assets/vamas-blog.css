@@ -104,7 +104,11 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  /* hide scrollbar (still scrollable) */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.vblog-sidebar::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 /* ---- Featured ---- */
 .vblog-featured {

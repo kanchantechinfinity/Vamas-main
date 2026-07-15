@@ -24,38 +24,38 @@
     {%- endfor -%}
   </nav>
 
+  {%- comment -%} a. Featured article — full width, above the two-column layout {%- endcomment -%}
+  {%- assign featured = blog.articles.first -%}
+  {%- if featured -%}
+    {%- assign f_words = featured.content | strip_html | number_of_words -%}
+    {%- assign f_read = f_words | divided_by: 200.0 | ceil -%}
+    {%- if f_read < 1 -%}{%- assign f_read = 1 -%}{%- endif -%}
+    <article class="vblog-featured">
+      <a href="{{ featured.url }}" class="vblog-featured-media">
+        {%- if featured.image -%}
+          <img src="{{ featured.image | image_url: width: 1200 }}" alt="{{ featured.title | escape }}" loading="lazy" width="1200" height="800">
+        {%- else -%}
+          <span class="vblog-noimg"></span>
+        {%- endif -%}
+      </a>
+      <div class="vblog-featured-body">
+        {%- if featured.tags.first -%}
+          <span class="vblog-cat">{{ featured.tags.first }}</span>
+        {%- endif -%}
+        <h2 class="vblog-featured-title"><a href="{{ featured.url }}">{{ featured.title }}</a></h2>
+        <p class="vblog-read">{{ f_read }} min read</p>
+        <p class="vblog-excerpt">{{ featured.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
+        <a href="{{ featured.url }}" class="vblog-readmore">Read More &rarr;</a>
+      </div>
+    </article>
+  {%- endif -%}
+
   {%- comment -%} 3. Two-column layout {%- endcomment -%}
   <div class="vblog-layout">
 
     {%- comment -%} LEFT MAIN {%- endcomment -%}
     <main class="vblog-main">
       {%- paginate blog.articles by 13 -%}
-
-        {%- comment -%} a. Featured article {%- endcomment -%}
-        {%- assign featured = blog.articles.first -%}
-        {%- if featured -%}
-          {%- assign f_words = featured.content | strip_html | number_of_words -%}
-          {%- assign f_read = f_words | divided_by: 200.0 | ceil -%}
-          {%- if f_read < 1 -%}{%- assign f_read = 1 -%}{%- endif -%}
-          <article class="vblog-featured">
-            <a href="{{ featured.url }}" class="vblog-featured-media">
-              {%- if featured.image -%}
-                <img src="{{ featured.image | image_url: width: 800 }}" alt="{{ featured.title | escape }}" loading="lazy" width="800" height="600">
-              {%- else -%}
-                <span class="vblog-noimg"></span>
-              {%- endif -%}
-            </a>
-            <div class="vblog-featured-body">
-              {%- if featured.tags.first -%}
-                <span class="vblog-cat">{{ featured.tags.first }}</span>
-              {%- endif -%}
-              <h2 class="vblog-featured-title"><a href="{{ featured.url }}">{{ featured.title }}</a></h2>
-              <p class="vblog-read">{{ f_read }} min read</p>
-              <p class="vblog-excerpt">{{ featured.excerpt_or_content | strip_html | truncatewords: 30 }}</p>
-              <a href="{{ featured.url }}" class="vblog-readmore">Read More &rarr;</a>
-            </div>
-          </article>
-        {%- endif -%}
 
         {%- comment -%} b. Divider + Latest Stories heading {%- endcomment -%}
         <div class="vblog-divider"></div>
@@ -113,20 +113,21 @@
         <div class="vblog-ig-grid">
           {%- assign ig_blocks = section.blocks | where: 'type', 'ig_image' -%}
           {%- if ig_blocks.size > 0 -%}
-            {%- for block in ig_blocks limit: 4 -%}
-              <div class="vblog-ig-item" {{ block.shopify_attributes }}>
+            {%- for block in ig_blocks limit: 2 -%}
+              {%- assign ig_link = block.settings.link | default: section.settings.instagram_url -%}
+              <a class="vblog-ig-item" href="{{ ig_link | default: '#' }}" target="_blank" rel="noopener" {{ block.shopify_attributes }}>
                 {%- if block.settings.image -%}
-                  <img src="{{ block.settings.image | image_url: width: 200 }}" alt="Instagram" loading="lazy" width="200" height="200">
+                  <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Instagram" loading="lazy" width="400" height="400">
                 {%- endif -%}
-              </div>
+              </a>
             {%- endfor -%}
           {%- else -%}
-            {%- for article in blog.articles limit: 4 -%}
-              <div class="vblog-ig-item">
+            {%- for article in blog.articles limit: 2 -%}
+              <a class="vblog-ig-item" href="{{ section.settings.instagram_url | default: article.url }}" target="_blank" rel="noopener">
                 {%- if article.image -%}
-                  <img src="{{ article.image | image_url: width: 200 }}" alt="{{ article.title | escape }}" loading="lazy" width="200" height="200">
+                  <img src="{{ article.image | image_url: width: 400 }}" alt="{{ article.title | escape }}" loading="lazy" width="400" height="400">
                 {%- endif -%}
-              </div>
+              </a>
             {%- endfor -%}
           {%- endif -%}
         </div>
@@ -240,11 +241,16 @@
           "type": "image_picker",
           "id": "image",
           "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Instagram post link"
         }
       ]
     }
   ],
-  "max_blocks": 4,
+  "max_blocks": 2,
   "presets": [
     {
       "name": "Vamas Blog"
