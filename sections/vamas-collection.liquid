@@ -81,9 +81,6 @@
         </div>
       </div>
     </div>
-    <div class="sidebar-apply">
-      <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply">APPLY FILTERS</button>
-    </div>
 
     <form method="get">
     {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
@@ -134,6 +131,10 @@
       </div>
     {% endfor %}
     </form>
+
+    <div class="sidebar-apply">
+      <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply">APPLY FILTERS</button>
+    </div>
   </aside>
 
   <div class="prod-area">
