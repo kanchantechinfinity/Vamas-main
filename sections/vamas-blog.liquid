@@ -108,29 +108,43 @@
     <aside class="vblog-sidebar">
 
       {%- comment -%} Instagram card {%- endcomment -%}
+      {%- comment -%} Detect an Instagram-feed app block (Instafeed etc.) added to this section {%- endcomment -%}
+      {%- assign has_ig_app = false -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == '@app' -%}{%- assign has_ig_app = true -%}{%- endif -%}
+      {%- endfor -%}
       <div class="vblog-widget">
         <h3 class="vblog-widget-title">Follow @{{ section.settings.instagram_handle | default: 'vamas.official' }}</h3>
-        <div class="vblog-ig-grid">
-          {%- assign ig_blocks = section.blocks | where: 'type', 'ig_image' -%}
-          {%- if ig_blocks.size > 0 -%}
-            {%- for block in ig_blocks limit: 2 -%}
-              {%- assign ig_link = block.settings.link | default: section.settings.instagram_url -%}
-              <a class="vblog-ig-item" href="{{ ig_link | default: '#' }}" target="_blank" rel="noopener" {{ block.shopify_attributes }}>
-                {%- if block.settings.image -%}
-                  <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Instagram" loading="lazy" width="400" height="400">
-                {%- endif -%}
-              </a>
+        {%- if has_ig_app -%}
+          {%- comment -%} Live feed from the installed Instagram app (set its post limit to 2 in the app) {%- endcomment -%}
+          <div class="vblog-ig-app">
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}{% render block %}{%- endif -%}
             {%- endfor -%}
-          {%- else -%}
-            {%- for article in blog.articles limit: 2 -%}
-              <a class="vblog-ig-item" href="{{ section.settings.instagram_url | default: article.url }}" target="_blank" rel="noopener">
-                {%- if article.image -%}
-                  <img src="{{ article.image | image_url: width: 400 }}" alt="{{ article.title | escape }}" loading="lazy" width="400" height="400">
-                {%- endif -%}
-              </a>
-            {%- endfor -%}
-          {%- endif -%}
-        </div>
+          </div>
+        {%- else -%}
+          <div class="vblog-ig-grid">
+            {%- assign ig_blocks = section.blocks | where: 'type', 'ig_image' -%}
+            {%- if ig_blocks.size > 0 -%}
+              {%- for block in ig_blocks limit: 2 -%}
+                {%- assign ig_link = block.settings.link | default: section.settings.instagram_url -%}
+                <a class="vblog-ig-item" href="{{ ig_link | default: '#' }}" target="_blank" rel="noopener" {{ block.shopify_attributes }}>
+                  {%- if block.settings.image -%}
+                    <img src="{{ block.settings.image | image_url: width: 400 }}" alt="Instagram" loading="lazy" width="400" height="400">
+                  {%- endif -%}
+                </a>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for article in blog.articles limit: 2 -%}
+                <a class="vblog-ig-item" href="{{ section.settings.instagram_url | default: article.url }}" target="_blank" rel="noopener">
+                  {%- if article.image -%}
+                    <img src="{{ article.image | image_url: width: 400 }}" alt="{{ article.title | escape }}" loading="lazy" width="400" height="400">
+                  {%- endif -%}
+                </a>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
         <p class="vblog-widget-caption">Behind the seams, styling notes and atelier moments.</p>
         {%- if section.settings.instagram_url != blank -%}
           <a href="{{ section.settings.instagram_url }}" class="vblog-btn" target="_blank" rel="noopener">Follow on Instagram</a>
@@ -248,9 +262,10 @@
           "label": "Instagram post link"
         }
       ]
-    }
+    },
+    { "type": "@app" }
   ],
-  "max_blocks": 2,
+  "max_blocks": 3,
   "presets": [
     {
       "name": "Vamas Blog"
