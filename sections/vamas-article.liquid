@@ -561,7 +561,14 @@
         var li = document.createElement('li');
         var a = document.createElement('a');
         a.href = '#' + h.id; a.textContent = h.textContent;
-        a.addEventListener('click', function (e) { e.preventDefault(); scrollToEl(h.id); });
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (h === faqHead && li.classList.contains('va-toc-faq')) {
+            li.classList.toggle('collapsed');
+          } else {
+            scrollToEl(h.id);
+          }
+        });
         li.appendChild(a);
 
         if (h === faqHead) {
