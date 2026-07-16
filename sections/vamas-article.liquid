@@ -389,6 +389,23 @@
   }
   .va-toc-list a:hover { color: var(--color-maroon, #420001); text-decoration: underline; }
   .va-toc-list .va-toc-sub { list-style: circle; margin-left: 8px; }
+
+  /* FAQ dropdown in TOC */
+  .va-toc-caret { cursor: pointer; margin-left: 6px; font-size: 11px; color: var(--color-gold-dark, #c9a96e); display: inline-block; transition: transform .2s; }
+  .va-toc-faq.collapsed .va-toc-caret { transform: rotate(-90deg); }
+  .va-toc-sublist { list-style: disc; margin: 8px 0 0 18px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .va-toc-faq.collapsed .va-toc-sublist { display: none; }
+  .va-toc-sublist a { color: #6a5b53; font-size: 14px; text-decoration: none; }
+  .va-toc-sublist a:hover { color: var(--color-maroon, #420001); text-decoration: underline; }
+
+  /* FAQ dropdowns in the article body */
+  .va-faq { border: 1px solid var(--color-gold, #e7d1a6); border-radius: 10px; margin: 0 0 12px; background: #fff; overflow: hidden; }
+  .va-faq summary { cursor: pointer; padding: 14px 44px 14px 18px; font-family: var(--font-heading); color: var(--color-maroon, #420001); font-size: 17px; list-style: none; position: relative; }
+  .va-faq summary::-webkit-details-marker { display: none; }
+  .va-faq summary::after { content: '+'; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 22px; color: var(--color-gold-dark, #c9a96e); }
+  .va-faq[open] summary::after { content: '\2013'; }
+  .va-faq > *:not(summary) { padding: 0 18px; margin: 6px 0; }
+  .va-faq > *:not(summary):last-child { padding-bottom: 14px; }
 </style>
 
 <div class="va-wrap">
@@ -524,29 +541,76 @@
 <script>
   (function () {
     var body = document.querySelector('.va-body');
+    if (!body) return;
     var toc = document.getElementById('vaToc');
-    if (!body || !toc) return;
-    var heads = body.querySelectorAll('h2, h3');
-    if (heads.length < 2) return; // not worth a TOC
-    var list = toc.querySelector('.va-toc-list');
-    heads.forEach(function (h, i) {
-      if (!h.id) {
-        h.id = 'sec-' + (i + 1) + '-' + (h.textContent || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-      }
-      var li = document.createElement('li');
-      if (h.tagName.toLowerCase() === 'h3') li.className = 'va-toc-sub';
-      var a = document.createElement('a');
-      a.href = '#' + h.id;
-      a.textContent = h.textContent;
-      a.addEventListener('click', function (e) {
-        e.preventDefault();
-        var t = document.getElementById(h.id);
-        if (t) { window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 90, behavior: 'smooth' }); }
+    var h2s = body.querySelectorAll('h2');
+
+    function scrollToEl(id) {
+      var t = document.getElementById(id);
+      if (t) { window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - 90, behavior: 'smooth' }); }
+    }
+
+    var faqHead = null;
+    h2s.forEach(function (h) { if (!faqHead && /faq/i.test(h.textContent)) faqHead = h; });
+
+    /* Build TOC from H2 only; FAQ heading gets an expandable sub-list */
+    if (toc && h2s.length > 1) {
+      var list = toc.querySelector('.va-toc-list');
+      h2s.forEach(function (h, i) {
+        if (!h.id) { h.id = 'sec-' + (i + 1) + '-' + (h.textContent || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        a.href = '#' + h.id; a.textContent = h.textContent;
+        a.addEventListener('click', function (e) { e.preventDefault(); scrollToEl(h.id); });
+        li.appendChild(a);
+
+        if (h === faqHead) {
+          var caret = document.createElement('span');
+          caret.className = 'va-toc-caret'; caret.textContent = '▾';
+          li.appendChild(caret);
+          var sub = document.createElement('ul'); sub.className = 'va-toc-sublist';
+          var n = faqHead.nextElementSibling, qi = 0;
+          while (n && n.tagName !== 'H2') {
+            if (n.tagName === 'H3') {
+              qi++;
+              if (!n.id) { n.id = 'faq-' + qi + '-' + (n.textContent || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
+              var sli = document.createElement('li');
+              var sa = document.createElement('a');
+              sa.href = '#' + n.id; sa.textContent = n.textContent;
+              (function (id) { sa.addEventListener('click', function (e) { e.preventDefault(); var d = document.getElementById(id); if (d && d.tagName === 'DETAILS') d.open = true; scrollToEl(id); }); })(n.id);
+              sli.appendChild(sa); sub.appendChild(sli);
+            }
+            n = n.nextElementSibling;
+          }
+          if (sub.children.length) {
+            li.classList.add('va-toc-faq', 'collapsed');
+            li.appendChild(sub);
+            caret.addEventListener('click', function () { li.classList.toggle('collapsed'); });
+          }
+        }
+        list.appendChild(li);
       });
-      li.appendChild(a);
-      list.appendChild(li);
-    });
-    toc.hidden = false;
+      toc.hidden = false;
+    }
+
+    /* Turn each FAQ question (H3) into a dropdown in the body */
+    if (faqHead) {
+      var node = faqHead.nextElementSibling;
+      while (node && node.tagName !== 'H2') {
+        if (node.tagName === 'H3') {
+          var details = document.createElement('details');
+          details.className = 'va-faq';
+          if (node.id) details.id = node.id;
+          var summary = document.createElement('summary');
+          summary.textContent = node.textContent;
+          details.appendChild(summary);
+          var ans = node.nextElementSibling;
+          while (ans && ans.tagName !== 'H3' && ans.tagName !== 'H2') { var after = ans.nextElementSibling; details.appendChild(ans); ans = after; }
+          node.parentNode.replaceChild(details, node);
+          node = ans;
+        } else { node = node.nextElementSibling; }
+      }
+    }
   })();
 </script>
 
