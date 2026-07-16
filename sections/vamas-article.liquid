@@ -211,6 +211,8 @@
 
   /* Designer */
   .va-designer { text-align: center; }
+  .va-avatar-link { display: inline-block; cursor: pointer; text-decoration: none; transition: transform .2s, box-shadow .2s; border-radius: 50%; }
+  .va-avatar-link:hover { transform: scale(1.05); }
   .va-avatar {
     width: 88px;
     height: 88px;
@@ -441,11 +443,13 @@
       {% comment %} Meet the designer {% endcomment %}
       <div class="va-card va-designer">
         <div class="va-card-title">Meet the Designer</div>
+        <a class="va-avatar-link" href="{{ pages.contact.url | default: '/pages/contact' }}" aria-label="Contact us">
         {% if section.settings.designer_image != blank %}
           <img class="va-avatar" src="{{ section.settings.designer_image | image_url: width: 200 }}" alt="{{ section.settings.designer_name | escape }}">
         {% else %}
           <div class="va-avatar-ph">V</div>
         {% endif %}
+        </a>
         <div class="va-designer-name">{{ section.settings.designer_name | default: 'The Vamas Design Team' }}</div>
         <p class="va-designer-text">{{ section.settings.designer_text }}</p>
       </div>
