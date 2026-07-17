@@ -59,7 +59,7 @@
   justify-content: center;
   gap: 10px;
   margin: 0 auto 48px;
-  max-width: 900px;
+  max-width: 100%;
 }
 .vblog-pill {
   display: inline-block;
