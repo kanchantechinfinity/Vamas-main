@@ -1,0 +1,330 @@
+{{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .ritual {
+    --ritual-ink: var(--color-maroon, #420001);
+    --ritual-ink-soft: rgba(66, 0, 1, 0.62);
+    --ritual-accent: var(--color-gold, #e7d1a6);
+    --ritual-accent-dark: var(--color-gold-dark, #c9a96e);
+    --ritual-bg: var(--color-bg, #fff9f2);
+    --ritual-card: #ffffff;
+    --ritual-card-alt: var(--color-bg, #fff9f2);
+    --ritual-line: rgba(66, 0, 1, 0.12);
+    --ritual-dark: var(--color-maroon, #420001);
+    --ritual-pad-x: var(--page-gutter, max(24px, 5vw));
+    --ritual-ff-display: var(--font-heading, 'Playfair Display', Georgia, serif);
+    --ritual-ff-body: var(--font-body, 'Poppins', sans-serif);
+    background: var(--ritual-bg);
+    position: relative;
+    font-family: var(--ritual-ff-body);
+  }
+
+  .ritual__intro {
+    padding: clamp(48px, 6vw, 80px) var(--ritual-pad-x) 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .ritual__intro > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ritual__intro.is-in > *:nth-child(1) { transition-delay: 0s; }
+  .ritual__intro.is-in > *:nth-child(2) { transition-delay: 0.1s; }
+  .ritual__intro.is-in > *:nth-child(3) { transition-delay: 0.2s; }
+  .ritual__intro.is-in > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .ritual .eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--ritual-accent-dark);
+    margin-bottom: 18px;
+  }
+  .ritual .display-h {
+    font-family: var(--ritual-ff-display);
+    font-weight: 700;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ritual-ink);
+    margin: 0;
+  }
+  .ritual .display-h em {
+    font-style: italic;
+    color: var(--ritual-accent-dark);
+  }
+  .ritual__intro p {
+    margin: 28px 0 0;
+    max-width: 50ch;
+    color: var(--ritual-ink-soft);
+    font-size: 16px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .ritual__pin {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .ritual__track {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    gap: clamp(24px, 4vw, 48px);
+    padding: 0 var(--ritual-pad-x);
+    will-change: transform;
+  }
+  .ritual-step {
+    flex: 0 0 clamp(320px, 36vw, 480px);
+    height: clamp(400px, 58vh, 560px);
+    background: var(--ritual-card);
+    border: 1px solid var(--ritual-line);
+    border-radius: 24px;
+    padding: clamp(28px, 3.2vw, 48px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 30px 50px -30px rgba(66, 0, 1, 0.18);
+    position: relative;
+  }
+  .ritual-step:nth-child(odd) { background: var(--ritual-card-alt); }
+  .ritual-step:nth-child(3n) { background: var(--ritual-dark); color: #fff9f2; }
+  .ritual-step:nth-child(3n) .ritual-step__num,
+  .ritual-step:nth-child(3n) h3,
+  .ritual-step:nth-child(3n) .ritual-step__time { color: var(--ritual-accent); }
+  .ritual-step:nth-child(3n) .ritual-step__chip {
+    background: rgba(249, 244, 237, 0.1);
+    color: var(--ritual-accent);
+    border-color: rgba(249, 244, 237, 0.2);
+  }
+  .ritual-step:nth-child(3n) p { color: rgba(249, 244, 237, 0.78); }
+
+  .ritual-step__num {
+    font-family: var(--ritual-ff-display);
+    font-style: italic;
+    font-size: clamp(52px, 5.5vw, 76px);
+    line-height: 1;
+    color: var(--ritual-accent-dark);
+    margin-bottom: 28px;
+  }
+  .ritual-step h3 {
+    font-family: var(--ritual-ff-display);
+    font-weight: 700;
+    font-size: clamp(32px, 3.6vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--ritual-ink);
+    margin: 0 0 8px;
+  }
+  .ritual-step__time {
+    font-family: var(--ritual-ff-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ritual-accent-dark);
+    margin: 0 0 22px;
+  }
+  .ritual-step p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--ritual-ink-soft);
+    margin: 0;
+    max-width: 36ch;
+  }
+  .ritual-step__chip {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 9px 16px;
+    border: 1px solid var(--ritual-line);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--ritual-ink);
+    background: var(--ritual-bg);
+  }
+
+  @media (max-width: 900px) {
+    .ritual__pin { height: auto; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; padding: 0 0 32px; }
+    .ritual__track { position: static; height: auto; transform: none !important; padding: 0 var(--ritual-pad-x); gap: 16px; }
+    .ritual-step { flex: 0 0 84vw; height: auto; min-height: 400px; scroll-snap-align: start; padding: 32px 24px; }
+    .ritual-step__num { font-size: 48px; margin-bottom: 18px; }
+    .ritual-step h3 { font-size: 34px; }
+  }
+  @media (max-width: 380px) {
+    .ritual-step { flex: 0 0 90vw; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ritual__intro > * { transition: none; opacity: 1; transform: none; }
+  }
+</style>
+
+<!-- ───── The Ritual — horizontal ───── -->
+<section class="ritual" id="ritual" data-screen-label="08 Ritual">
+  <div class="ritual__intro">
+    <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+    <h2 class="display-h">{{ section.settings.heading }}</h2>
+    <p>{{ section.settings.lede }}</p>
+  </div>
+
+  <div class="ritual__pin">
+    <div class="ritual__track" id="ritualTrack">
+      {%- for block in section.blocks -%}
+        <div class="ritual-step" {{ block.shopify_attributes }}>
+          <span class="ritual-step__num">{{ block.settings.num }}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <p class="ritual-step__time">{{ block.settings.time }}</p>
+          <p>{{ block.settings.body }}</p>
+          <div class="ritual-step__chip">{{ block.settings.chip }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var section = document.getElementById('ritual');
+  if (!section) return;
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Intro reveal ── */
+  var intro = section.querySelector('.ritual__intro');
+  if (intro) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      intro.classList.add('is-in');
+    } else {
+      var introIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            intro.classList.add('is-in');
+            introIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      introIO.observe(intro);
+    }
+  }
+
+  /* ── Pinned horizontal scroll ── */
+  var pin = section.querySelector('.ritual__pin');
+  var track = document.getElementById('ritualTrack');
+  if (!pin || !track) return;
+
+  var mq = window.matchMedia('(max-width: 900px)');
+  var scrollDistance = 0;
+  var progress = 0;
+  var renderedProgress = 0;
+  var ticking = false;
+
+  function measure() {
+    if (mq.matches) {
+      pin.style.height = '';
+      scrollDistance = 0;
+      return;
+    }
+    scrollDistance = Math.max(0, track.scrollWidth - window.innerWidth + 80);
+    pin.style.height = (window.innerHeight + scrollDistance) + 'px';
+  }
+
+  function updateProgress() {
+    if (mq.matches) { progress = 0; ticking = false; return; }
+    var rect = pin.getBoundingClientRect();
+    var start = rect.top + window.scrollY;
+    var raw = (window.scrollY - start) / (scrollDistance || 1);
+    progress = Math.min(1, Math.max(0, raw));
+    ticking = false;
+  }
+
+  function render() {
+    if (mq.matches) {
+      track.style.transform = '';
+      renderedProgress = 0;
+    } else {
+      var ease = reduceMotion ? 1 : 0.16;
+      renderedProgress += (progress - renderedProgress) * ease;
+      if (Math.abs(progress - renderedProgress) < 0.0005) renderedProgress = progress;
+      track.style.transform = 'translate3d(' + (-renderedProgress * scrollDistance) + 'px,0,0)';
+    }
+    requestAnimationFrame(render);
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateProgress);
+    }
+  }
+
+  var resizeTimer;
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      measure();
+      updateProgress();
+    }, 150);
+  }
+
+  function init() {
+    measure();
+    updateProgress();
+    requestAnimationFrame(render);
+  }
+
+  if (document.readyState === 'complete') {
+    requestAnimationFrame(init);
+  } else {
+    window.addEventListener('load', init, { once: true });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onResize);
+  if (mq.addEventListener) mq.addEventListener('change', onResize);
+  else if (mq.addListener) mq.addListener(onResize);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Ritual",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "— The Ritual —" },
+    { "type": "html", "id": "heading", "label": "Heading", "default": "Four<br/><em>quiet</em> steps." },
+    { "type": "textarea", "id": "lede", "label": "Lede", "default": "The Chemistrie ritual was written on a prescription pad, then engraved on a brass card. Slow it down. Layer thin. Wait for the skin to ask." }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Ritual step",
+      "settings": [
+        { "type": "text", "id": "num", "label": "Numeral", "default": "i." },
+        { "type": "text", "id": "title", "label": "Title", "default": "Cleanse" },
+        { "type": "text", "id": "time", "label": "Time", "default": "90 seconds" },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "A foaming cleanser that lifts without stripping. Worked into dry skin with both hands, eyes closed, breath slow." },
+        { "type": "text", "id": "chip", "label": "Chip", "default": "Velvet · No. 01" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ritual",
+      "blocks": [
+        { "type": "step", "settings": { "num": "i.",   "title": "Cleanse", "time": "90 seconds", "body": "A foaming cleanser that lifts without stripping. Worked into dry skin with both hands, eyes closed, breath slow.", "chip": "Velvet · No. 01" } },
+        { "type": "step", "settings": { "num": "ii.",  "title": "Treat", "time": "2 drops", "body": "Lumina in the morning for brightness, Veil at night for hydration. Press, do not rub. The face is not a counter to be wiped down.", "chip": "Lumina + Veil · No. 02 / 03" } },
+        { "type": "step", "settings": { "num": "iii.", "title": "Hydrate", "time": "One pearl", "body": "Cashmere, warmed between the palms. Pressed upward along the jaw, the cheekbones, the brow. The sealing step.", "chip": "Cashmere · No. 04" } },
+        { "type": "step", "settings": { "num": "iv.",  "title": "Restore", "time": "A small ceremony", "body": "Peptide Cream in the evening — the most important step. A small ceremony, every night.", "chip": "Peptide Cream · No. 06 · Hero" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,484 @@
+{{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .story {
+    --story-ink: var(--color-maroon, #420001);
+    --story-ink-soft: rgba(66, 0, 1, 0.62);
+    --story-accent: var(--color-gold, #e7d1a6);
+    --story-accent-dark: var(--color-gold-dark, #c9a96e);
+    --story-bg: var(--color-bg, #fff9f2);
+    --story-line-soft: rgba(66, 0, 1, 0.08);
+    --story-pad-x: var(--page-gutter, max(24px, 5vw));
+    --story-ff-display: var(--font-heading, 'Playfair Display', Georgia, serif);
+    --story-ff-body: var(--font-body, 'Poppins', sans-serif);
+    --story-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --story-ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: clamp(64px, 8vw, 120px) var(--story-pad-x);
+    background: var(--story-bg);
+    position: relative;
+    overflow: hidden;
+    font-family: var(--story-ff-body);
+  }
+
+  .story__intro {
+    max-width: 720px;
+    margin: 0 0 clamp(48px, 7vw, 88px);
+  }
+  .story__intro > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s var(--story-ease), transform 0.9s var(--story-ease);
+  }
+  .story__intro.is-in > *:nth-child(1) { transition-delay: 0s; }
+  .story__intro.is-in > *:nth-child(2) { transition-delay: 0.1s; }
+  .story__intro.is-in > *:nth-child(3) { transition-delay: 0.2s; }
+  .story__intro.is-in > * { opacity: 1; transform: translateY(0); }
+
+  .story .eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--story-accent-dark);
+    margin-bottom: 18px;
+  }
+  .story .display-h {
+    font-family: var(--story-ff-display);
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--story-ink);
+    margin: 0;
+  }
+  .story .display-h em { font-style: italic; color: var(--story-accent-dark); }
+  .story__lede {
+    max-width: 56ch;
+    margin: 28px 0 0;
+    color: var(--story-ink-soft);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .story__chapters {
+    max-width: none;
+    margin: 0;
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(56px, 8vw, 100px);
+    position: relative;
+  }
+  .story__chapters::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--story-line-soft);
+    transform: translateX(-0.5px);
+  }
+  .story__chapters::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--story-accent-dark) 0%, var(--story-accent-dark) 60%, transparent 100%);
+    transform: translateX(-1px) scaleY(var(--p, 0));
+    transform-origin: top;
+    pointer-events: none;
+    transition: transform 1.1s var(--story-ease);
+  }
+  .story__rail-dot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 14px; height: 14px;
+    background: var(--story-accent-dark);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 6px var(--story-bg), 0 0 0 7px var(--story-accent-dark), 0 0 16px rgba(201, 169, 110, 0.4);
+    pointer-events: none;
+    z-index: 1;
+    transition: top 1.1s var(--story-ease);
+  }
+
+  .story__chapter { position: relative; z-index: 2; }
+  .story__chapter {
+    display: grid;
+    grid-template-columns: 1fr 100px 1fr;
+    gap: clamp(20px, 3vw, 48px);
+    align-items: center;
+  }
+  .story__chapter > .story__chapter-body { order: 1; padding-right: clamp(0px, 2vw, 24px); text-align: right; }
+  .story__chapter > .story__chapter-meta { order: 2; }
+  .story__chapter > .story__chapter-photo { order: 3; padding-left: clamp(0px, 2vw, 24px); }
+  .story__chapter--reverse > .story__chapter-body { order: 3; padding-right: 0; padding-left: clamp(0px, 2vw, 24px); text-align: left; }
+  .story__chapter--reverse > .story__chapter-photo { order: 1; padding-left: 0; padding-right: clamp(0px, 2vw, 24px); }
+
+  .story__chapter-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+  }
+  .story__chapter-meta::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 18px; height: 18px;
+    background: var(--story-bg);
+    border: 1px solid var(--story-accent-dark);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+  .story__year {
+    font-family: var(--story-ff-display);
+    font-weight: 700;
+    font-size: clamp(34px, 4.2vw, 52px);
+    line-height: 1;
+    color: var(--story-ink);
+    letter-spacing: -0.02em;
+    background: var(--story-bg);
+    padding: 8px 0;
+  }
+  .story__roman {
+    font-family: var(--story-ff-display);
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--story-accent-dark);
+    background: var(--story-bg);
+    padding: 2px 0;
+  }
+
+  .story__chapter-body { display: flex; flex-direction: column; gap: 14px; }
+  .story__chapter--reverse .story__chapter-body { align-items: flex-start; }
+  .story__chapter:not(.story__chapter--reverse) .story__chapter-body { align-items: flex-end; }
+  .story__chapter-body h3 {
+    font-family: var(--story-ff-display);
+    font-weight: 700;
+    font-size: clamp(24px, 2.8vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--story-ink);
+    max-width: 16ch;
+  }
+  .story__chapter-body p {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--story-ink-soft);
+    max-width: 42ch;
+  }
+  .story__chapter-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+    padding: 14px 24px;
+    background: var(--story-ink);
+    color: var(--story-bg);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: transform 0.3s var(--story-ease), background 0.3s var(--story-ease);
+  }
+  .story__chapter-cta:hover { background: var(--color-maroon-light, var(--story-ink)); transform: translateY(-2px); }
+
+  .story__chapter-photo {
+    aspect-ratio: 4 / 5;
+    max-width: 380px;
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 50px -22px rgba(66, 0, 1, 0.24);
+    position: relative;
+    background: linear-gradient(135deg, var(--story-accent) 0%, var(--story-accent-dark) 100%);
+  }
+  .story__chapter:not(.story__chapter--reverse) .story__chapter-photo { justify-self: start; }
+  .story__chapter--reverse .story__chapter-photo { justify-self: end; }
+  .story__chapter-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
+  }
+  .story__chapter-photo--placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--story-ff-display);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--story-ink);
+    opacity: 0.55;
+    text-align: center;
+    padding: 24px;
+  }
+
+  /* ── Reveal — initial hidden state, alternating slide direction ── */
+  .story__chapter-body,
+  .story__chapter-photo,
+  .story__chapter-meta {
+    opacity: 0;
+    transition: opacity 1s var(--story-ease), transform 1s var(--story-ease);
+  }
+  .story__chapter:not(.story__chapter--reverse) .story__chapter-body { transform: translateX(-60px); }
+  .story__chapter:not(.story__chapter--reverse) .story__chapter-photo { transform: translateX(60px) scale(0.92); }
+  .story__chapter--reverse .story__chapter-body { transform: translateX(60px); }
+  .story__chapter--reverse .story__chapter-photo { transform: translateX(-60px) scale(0.92); }
+  .story__chapter-meta {
+    transform: scale(0.4) rotate(-8deg);
+    transition: opacity 0.9s var(--story-ease-back), transform 0.9s var(--story-ease-back) 0.15s;
+  }
+  .story__chapter.is-in > .story__chapter-body,
+  .story__chapter.is-in > .story__chapter-photo {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  .story__chapter.is-in > .story__chapter-meta {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  @media (max-width: 900px) {
+    .story__chapters::before { left: 24px; }
+    .story__chapters::after { left: 24px; }
+    .story__rail-dot { left: 24px; }
+    .story__chapter,
+    .story__chapter--reverse {
+      grid-template-columns: 48px 1fr;
+      gap: 24px;
+    }
+    .story__chapter > .story__chapter-body,
+    .story__chapter--reverse > .story__chapter-body { order: 3; grid-column: 2; padding: 0; text-align: left; align-items: flex-start; }
+    .story__chapter > .story__chapter-meta,
+    .story__chapter--reverse > .story__chapter-meta { order: 1; grid-row: span 2; align-items: flex-start; padding-top: 12px; }
+    .story__chapter > .story__chapter-photo,
+    .story__chapter--reverse > .story__chapter-photo { order: 2; grid-column: 2; padding: 0; justify-self: start; max-width: 100%; }
+    .story__chapter:not(.story__chapter--reverse) .story__chapter-body,
+    .story__chapter--reverse .story__chapter-body { transform: translateY(20px); }
+    .story__chapter:not(.story__chapter--reverse) .story__chapter-photo,
+    .story__chapter--reverse .story__chapter-photo { transform: translateY(20px) scale(0.96); }
+    .story__chapter.is-in > .story__chapter-body,
+    .story__chapter.is-in > .story__chapter-photo { transform: translateY(0) scale(1); }
+    .story__year { font-size: 30px; padding-left: 2px; }
+    .story__roman { font-size: 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .story__intro > *,
+    .story__chapter-body,
+    .story__chapter-photo,
+    .story__chapter-meta { transition: none; opacity: 1; transform: none; }
+    .story__chapters::after { transition: none; }
+    .story__rail-dot { transition: none; }
+  }
+</style>
+
+<section class="story" id="story-{{ section.id }}" data-screen-label="Brand Story">
+  <div class="story__intro">
+    <span class="eyebrow">{{ section.settings.eyebrow }}</span>
+    <h2 class="display-h">{{ section.settings.heading }}</h2>
+    <p class="story__lede">{{ section.settings.lede }}</p>
+  </div>
+
+  <ol class="story__chapters" id="storyChapters-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      <li class="story__chapter{% if forloop.index0 % 2 == 1 %} story__chapter--reverse{% endif %}" {{ block.shopify_attributes }}>
+        <div class="story__chapter-meta">
+          <span class="story__year">{{ block.settings.year }}</span>
+          <span class="story__roman">{{ block.settings.roman }}</span>
+        </div>
+        <div class="story__chapter-body">
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.body }}</p>
+          {%- if block.settings.cta_text != blank -%}
+            <a href="{{ block.settings.cta_link | default: '#' }}" class="story__chapter-cta">
+              <span>{{ block.settings.cta_text }}</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+        <div class="story__chapter-photo">
+          {%- if block.settings.image -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 800 }}"
+              srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 800 }} 800w"
+              sizes="(max-width: 900px) 90vw, 380px"
+              alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            <div class="story__chapter-photo--placeholder">{{ block.settings.title }}</div>
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ol>
+</section>
+
+<script>
+(function () {
+  var section = document.getElementById('story-{{ section.id }}');
+  if (!section) return;
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Intro reveal ── */
+  var intro = section.querySelector('.story__intro');
+  if (intro) {
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      intro.classList.add('is-in');
+    } else {
+      var introIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            intro.classList.add('is-in');
+            introIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      introIO.observe(intro);
+    }
+  }
+
+  /* ── Chapter reveal (one-time) ── */
+  var chapters = Array.prototype.slice.call(section.querySelectorAll('.story__chapter'));
+  if (!chapters.length) return;
+
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    chapters.forEach(function (ch) { ch.classList.add('is-in'); });
+  } else {
+    var chapterIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          chapterIO.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+    chapters.forEach(function (ch) { chapterIO.observe(ch); });
+  }
+
+  /* ── Traveling rail dot + progress line ── */
+  var chaptersEl = section.querySelector('.story__chapters');
+  if (!chaptersEl || reduceMotion) return;
+
+  var dot = document.createElement('span');
+  dot.className = 'story__rail-dot';
+  chaptersEl.appendChild(dot);
+
+  var metas = chapters.map(function (ch) { return ch.querySelector('.story__chapter-meta'); });
+  var photos = chapters.map(function (ch) { return ch.querySelector('.story__chapter-photo img'); });
+  var ticking = false;
+
+  function updateRail() {
+    var containerRect = chaptersEl.getBoundingClientRect();
+    var viewportCenter = window.innerHeight / 2;
+    var closestIdx = 0;
+    var minDist = Infinity;
+    var closestRect = null;
+
+    metas.forEach(function (meta, i) {
+      if (!meta) return;
+      var r = meta.getBoundingClientRect();
+      var center = r.top + r.height / 2;
+      var dist = Math.abs(center - viewportCenter);
+      if (dist < minDist) {
+        minDist = dist;
+        closestIdx = i;
+        closestRect = r;
+      }
+    });
+
+    if (closestRect) {
+      var top = closestRect.top - containerRect.top + closestRect.height / 2;
+      dot.style.top = top + 'px';
+      var p = metas.length > 1 ? closestIdx / (metas.length - 1) : 0;
+      chaptersEl.style.setProperty('--p', p);
+    }
+
+    photos.forEach(function (img, i) {
+      if (!img) return;
+      var ch = chapters[i];
+      var r = ch.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var total = vh + r.height;
+      var raw = (vh - r.top) / total;
+      var progress = Math.min(1, Math.max(0, raw));
+      img.style.transform = 'translateY(' + ((progress - 0.5) * -14) + '%)';
+    });
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateRail);
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  requestAnimationFrame(updateRail);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "— Our Journey —" },
+    { "type": "html", "id": "heading", "label": "Heading", "default": "Five quiet chapters.<br/><em>One thread.</em>" },
+    { "type": "textarea", "id": "lede", "label": "Lede", "default": "Every collection begins the same way it always has — one stitch, one story, one hand at a time." }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter",
+      "settings": [
+        { "type": "text", "id": "year", "label": "Year", "default": "2014" },
+        { "type": "text", "id": "roman", "label": "Roman numeral", "default": "— I —" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Where it began" },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "A small workshop, a handful of looms, and a promise to never rush the craft." },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "cta_text", "label": "Button text (optional)" },
+        { "type": "url", "id": "cta_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story",
+      "blocks": [
+        { "type": "chapter", "settings": { "year": "2014", "roman": "— I —", "title": "Where it began", "body": "A small workshop, a handful of looms, and a promise to never rush the craft." } },
+        { "type": "chapter", "settings": { "year": "2017", "roman": "— II —", "title": "The first collection", "body": "Word travelled faster than the fabric could be woven. Friends asked friends where the pieces came from." } },
+        { "type": "chapter", "settings": { "year": "2020", "roman": "— III —", "title": "A growing house", "body": "What started on one bench became a small family of artisans, each trained by hand, each trusted with the details." } },
+        { "type": "chapter", "settings": { "year": "2023", "roman": "— IV —", "title": "A name of our own", "body": "Vamas was chosen for what it means to us — presence, warmth, belonging. The house finally had a name to match the work." } },
+        { "type": "chapter", "settings": { "year": "2026", "roman": "— V —", "title": "Today, and still growing", "body": "The same care, now reaching further. Still slow where it matters, still made to be kept.", "cta_text": "Explore the collection", "cta_link": "/collections/all" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
