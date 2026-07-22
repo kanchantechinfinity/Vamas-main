@@ -10,13 +10,16 @@
         "size-1": { "type": "size_row", "settings": { "size": "32", "bust": "32", "waist": "26", "hip": "34", "length": "14.5" } },
         "size-2": { "type": "size_row", "settings": { "size": "34", "bust": "34", "waist": "28", "hip": "36", "length": "15" } },
         "size-3": { "type": "size_row", "settings": { "size": "36", "bust": "36", "waist": "30", "hip": "38", "length": "15.5" } },
+        "size-4": { "type": "size_row", "settings": { "size": "38", "bust": "38", "waist": "32", "hip": "40", "length": "15.5" } },
+        "size-5": { "type": "size_row", "settings": { "size": "40", "bust": "40", "waist": "34", "hip": "42", "length": "16" } },
+        "size-6": { "type": "size_row", "settings": { "size": "42", "bust": "42", "waist": "36", "hip": "44", "length": "16" } },
         "care-1": { "type": "care_item", "settings": { "icon": "🚫", "label": "No Machine Wash" } },
         "care-2": { "type": "care_item", "settings": { "icon": "🧴", "label": "Dry Clean Only" } },
         "care-3": { "type": "care_item", "settings": { "icon": "✨", "label": "Handle Gently" } },
         "rev-1": { "type": "review", "settings": { "name": "Priya Sharma", "rating": 5, "title": "Absolutely Stunning!", "text": "The quality of this blouse is beyond my expectations. The mirror work is so delicate and the silk feels incredibly luxurious.", "date": "Dec 2025" } },
         "rev-2": { "type": "review", "settings": { "name": "Meera Krishnan", "rating": 5, "title": "Perfect for my wedding!", "text": "Ordered a custom size and it fit like a dream. Highly recommended!", "date": "Nov 2025" } }
       },
-      "block_order": ["sw-1", "sw-2", "sw-3", "sw-4", "size-1", "size-2", "size-3", "care-1", "care-2", "care-3", "rev-1", "rev-2"]
+      "block_order": ["sw-1", "sw-2", "sw-3", "sw-4", "size-1", "size-2", "size-3", "size-4", "size-5", "size-6", "care-1", "care-2", "care-3", "rev-1", "rev-2"]
     }
   },
   "order": ["main"]
