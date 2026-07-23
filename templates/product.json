@@ -7,6 +7,19 @@
         "sw-2": { "type": "color_swatch", "settings": { "name": "Navy", "hex": "#1a1a2e" } },
         "sw-3": { "type": "color_swatch", "settings": { "name": "Forest Green", "hex": "#1a4a1a" } },
         "sw-4": { "type": "color_swatch", "settings": { "name": "Gold", "hex": "#c9a96e" } },
+        "det-1": { "type": "detail_row", "settings": { "label": "Fabric", "value": "100% Banarasi Silk" } },
+        "det-2": { "type": "detail_row", "settings": { "label": "Work", "value": "Hand Mirror Embroidery (Shisha Work)" } },
+        "det-3": { "type": "detail_row", "settings": { "label": "Blouse Type", "value": "Readymade / Pre-Stitched" } },
+        "det-4": { "type": "detail_row", "settings": { "label": "Neck Style", "value": "Boat Neck (Front)" } },
+        "det-5": { "type": "detail_row", "settings": { "label": "Back Design", "value": "Deep V Back with Tie-Up Strings" } },
+        "det-6": { "type": "detail_row", "settings": { "label": "Sleeve Length", "value": "3/4 Sleeve (Elbow Length)" } },
+        "det-7": { "type": "detail_row", "settings": { "label": "Lining", "value": "Soft Cotton Inner Lining" } },
+        "det-8": { "type": "detail_row", "settings": { "label": "Closure", "value": "Hook & Eye (5 Hooks)" } },
+        "det-9": { "type": "detail_row", "settings": { "label": "Blouse Length", "value": "14.5 - 16 inches (size dependent)" } },
+        "det-10": { "type": "detail_row", "settings": { "label": "Fabric Weight", "value": "110 GSM" } },
+        "det-11": { "type": "detail_row", "settings": { "label": "Occasion", "value": "Bridal / Festive / Wedding" } },
+        "det-12": { "type": "detail_row", "settings": { "label": "Care", "value": "Dry Clean Only" } },
+        "det-13": { "type": "detail_row", "settings": { "label": "Origin", "value": "Handcrafted in India" } },
         "size-1": { "type": "size_row", "settings": { "size": "32", "bust": "32", "waist": "26", "hip": "34", "length": "14.5" } },
         "size-2": { "type": "size_row", "settings": { "size": "34", "bust": "34", "waist": "28", "hip": "36", "length": "15" } },
         "size-3": { "type": "size_row", "settings": { "size": "36", "bust": "36", "waist": "30", "hip": "38", "length": "15.5" } },
@@ -19,7 +32,7 @@
         "rev-1": { "type": "review", "settings": { "name": "Priya Sharma", "rating": 5, "title": "Absolutely Stunning!", "text": "The quality of this blouse is beyond my expectations. The mirror work is so delicate and the silk feels incredibly luxurious.", "date": "Dec 2025" } },
         "rev-2": { "type": "review", "settings": { "name": "Meera Krishnan", "rating": 5, "title": "Perfect for my wedding!", "text": "Ordered a custom size and it fit like a dream. Highly recommended!", "date": "Nov 2025" } }
       },
-      "block_order": ["sw-1", "sw-2", "sw-3", "sw-4", "size-1", "size-2", "size-3", "size-4", "size-5", "size-6", "care-1", "care-2", "care-3", "rev-1", "rev-2"]
+      "block_order": ["sw-1", "sw-2", "sw-3", "sw-4", "det-1", "det-2", "det-3", "det-4", "det-5", "det-6", "det-7", "det-8", "det-9", "det-10", "det-11", "det-12", "det-13", "size-1", "size-2", "size-3", "size-4", "size-5", "size-6", "care-1", "care-2", "care-3", "rev-1", "rev-2"]
     }
   },
   "order": ["main"]
