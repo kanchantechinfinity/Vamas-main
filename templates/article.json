@@ -11,18 +11,6 @@
   "sections": {
     "main": {
       "type": "vamas-article",
-      "blocks": {
-        "shoppable_product_aP4ArT": {
-          "type": "shoppable_product",
-          "settings": {
-            "product": "bandhani-printed-blouse",
-            "badge": ""
-          }
-        }
-      },
-      "block_order": [
-        "shoppable_product_aP4ArT"
-      ],
       "settings": {
         "hero_bg_color": "#f0d9be",
         "pull_quote": "",
