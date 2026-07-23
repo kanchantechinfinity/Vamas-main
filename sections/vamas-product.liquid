@@ -353,6 +353,19 @@
       <div class="rev-big-score">{{ section.settings.rating }}</div>
       <div class="rev-stars-big">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
       <div class="rev-count">Based on {{ section.settings.review_count }} reviews</div>
+      <div class="rev-bars" id="rev-bars">
+        {% assign star_pcts = "5,pct_5star|4,pct_4star|3,pct_3star|2,pct_2star|1,pct_1star" | split: "|" %}
+        {% for row in star_pcts %}
+          {% assign parts = row | split: "," %}
+          {% assign star_n = parts[0] %}
+          {% assign pct = section.settings[parts[1]] %}
+          <div class="rev-bar-row">
+            <span class="rev-bar-label">{{ star_n }}★</span>
+            <div class="rev-bar-track" style="--bar-w:{{ pct }}%;"><div class="rev-bar-fill"></div></div>
+            <span class="rev-bar-pct">{{ pct }}%</span>
+          </div>
+        {% endfor %}
+      </div>
     </div>
     <div class="rev-cards">
       {% for block in review_blocks %}
@@ -363,6 +376,7 @@
         </div>
         <div class="rev-title">{{ block.settings.title }}</div>
         <div class="rev-text">{{ block.settings.text }}</div>
+        <div class="rev-helpful">Helpful? Yes ({{ block.settings.helpful_yes }}) &middot; No ({{ block.settings.helpful_no }})</div>
       </div>
       {% endfor %}
       <div class="write-rev-wrap"><button class="write-rev-btn">Write a Review</button></div>
@@ -647,6 +661,19 @@
     window.VamasCart.add({ id: variantInput.value, quantity: parseInt(qtyHidden.value,10)||1 });
   });
 
+  var revBars = document.getElementById('rev-bars');
+  if (revBars && 'IntersectionObserver' in window) {
+    var barObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.rev-bar-track').forEach(function(track){ track.classList.add('animated'); });
+          barObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    barObserver.observe(revBars);
+  }
+
 })();
 </script>
 
@@ -662,6 +689,11 @@
     { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 0.1, "label": "Rating Value", "default": 4.9 },
     { "type": "text", "id": "review_count", "label": "Review Count", "default": "124" },
     { "type": "text", "id": "sold_count", "label": "Sold Count", "default": "847" },
+    { "type": "range", "id": "pct_5star", "min": 0, "max": 100, "step": 1, "label": "5 Star %", "default": 78 },
+    { "type": "range", "id": "pct_4star", "min": 0, "max": 100, "step": 1, "label": "4 Star %", "default": 15 },
+    { "type": "range", "id": "pct_3star", "min": 0, "max": 100, "step": 1, "label": "3 Star %", "default": 5 },
+    { "type": "range", "id": "pct_2star", "min": 0, "max": 100, "step": 1, "label": "2 Star %", "default": 1 },
+    { "type": "range", "id": "pct_1star", "min": 0, "max": 100, "step": 1, "label": "1 Star %", "default": 1 },
     { "type": "header", "content": "Offer Strip" },
     { "type": "text", "id": "offer_code", "label": "Coupon Code", "default": "FIRST10" },
     { "type": "text", "id": "offer_detail", "label": "Offer Detail", "default": "10% off on your first order" },
@@ -746,7 +778,9 @@
         { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 1, "label": "Rating", "default": 5 },
         { "type": "text", "id": "title", "label": "Review Title", "default": "Absolutely Stunning!" },
         { "type": "textarea", "id": "text", "label": "Review Text" },
-        { "type": "text", "id": "date", "label": "Date", "default": "Dec 2025" }
+        { "type": "text", "id": "date", "label": "Date", "default": "Dec 2025" },
+        { "type": "text", "id": "helpful_yes", "label": "Helpful - Yes count", "default": "12" },
+        { "type": "text", "id": "helpful_no", "label": "Helpful - No count", "default": "1" }
       ]
     }
   ],
