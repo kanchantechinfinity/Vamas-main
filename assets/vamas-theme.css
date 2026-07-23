@@ -4,7 +4,7 @@
   --color-gold: #e7d1a6;
   --color-gold-dark: #c9a96e;
   --color-white: #ffffff;
-  --color-bg: #fff9f2;
+  --color-bg: #FEF9F2;
   --font-primary: var(--font-body, 'Poppins', sans-serif);
   --page-max: 1200px;
   --page-gutter: max(48px, calc((100% - var(--page-max)) / 2));

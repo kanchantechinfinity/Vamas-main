@@ -14,7 +14,7 @@
       { "type": "color", "id": "color_maroon_light", "label": "Primary Hover (Maroon Light)", "default": "#6a0002" },
       { "type": "color", "id": "color_gold", "label": "Accent (Gold)", "default": "#e7d1a6" },
       { "type": "color", "id": "color_gold_dark", "label": "Accent Dark (Gold Dark)", "default": "#c9a96e" },
-      { "type": "color", "id": "color_bg", "label": "Section Background (Cream)", "default": "#fff9f2" }
+      { "type": "color", "id": "color_bg", "label": "Section Background (Cream)", "default": "#FEF9F2" }
     ]
   },
   {

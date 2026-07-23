@@ -4,7 +4,7 @@
   padding-right: var(--page-gutter);
   padding-top: 48px;
   padding-bottom: 72px;
-  background: var(--color-bg, #fff9f2);
+  background: var(--color-bg, #FEF9F2);
   font-family: var(--font-body);
   color: #2a1414;
 }
@@ -185,7 +185,7 @@
   display: block;
   width: 100%;
   min-height: 220px;
-  background: linear-gradient(135deg, var(--color-gold, #e7d1a6), var(--color-bg, #fff9f2));
+  background: linear-gradient(135deg, var(--color-gold, #e7d1a6), var(--color-bg, #FEF9F2));
 }
 
 /* ---- Divider + section head ---- */
@@ -308,7 +308,7 @@
   aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: 8px;
-  background: var(--color-bg, #fff9f2);
+  background: var(--color-bg, #FEF9F2);
 }
 .vblog-ig-item img {
   width: 100%;
@@ -462,7 +462,7 @@
 .vart-nav-all:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #e7d1a6); }
 .vart-comments { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(66,0,1,0.08); }
 .vart-comments-title { font-family: var(--font-heading); color: var(--color-maroon, #420001); font-size: 22px; margin-bottom: 20px; }
-.vart-comment { background: var(--color-bg, #fff9f2); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
+.vart-comment { background: var(--color-bg, #FEF9F2); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
 .vart-comment-author { font-weight: 700; color: var(--color-maroon, #420001); font-size: 13px; margin-bottom: 6px; }
 .vart-comment-body { font-size: 14px; color: #444; line-height: 1.7; }
 .vart-comments-sub { font-family: var(--font-heading); color: var(--color-maroon, #420001); font-size: 18px; margin: 24px 0 14px; }

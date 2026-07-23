@@ -4,7 +4,7 @@
   --g: var(--color-gold, #e7d1a6);
   --gd: var(--color-gold-dark, #c9a96e);
   --w:#ffffff;
-  --bg: var(--color-bg, #fff9f2);
+  --bg: var(--color-bg, #FEF9F2);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
