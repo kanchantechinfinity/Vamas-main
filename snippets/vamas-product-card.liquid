@@ -65,18 +65,21 @@
     </a>
     <div class="vamas-prod-card__type">{{ product.type | default: 'Blouse' }}</div>
 
+    {% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
+    {% assign color_values = blank %}
+    {% for option in product.options_with_values %}
+      {% if option.name | downcase | contains: 'colo' %}
+        {% assign color_values = option.values %}
+      {% endif %}
+    {% endfor %}
+
     <div class="vamas-prod-card__meta-row">
-      {% if product.variants.size > 1 %}
+      {% if color_values.size > 0 %}
         <div class="vamas-prod-card__colors">
-          {% assign shown_options = 0 %}
-          {% for variant in product.variants limit: 4 %}
-            {% if variant.option1 != blank and shown_options < 4 %}
-              {% assign swatch_color = variant.metafields.color.swatch | default: variant.option1 | handleize | replace: '-', '' %}
-              <div class="vamas-prod-card__color"
-                   style="background:{{ swatch_color }};"
-                   title="{{ variant.option1 }}"></div>
-              {% assign shown_options = shown_options | plus: 1 %}
-            {% endif %}
+          {% for value in color_values limit: 4 %}
+            <div class="vamas-prod-card__color"
+                 style="background:{{ value | handleize | replace: '-', '' }};"
+                 title="{{ value }}"></div>
           {% endfor %}
         </div>
       {% else %}
