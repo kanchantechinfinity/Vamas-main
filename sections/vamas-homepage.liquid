@@ -6,13 +6,15 @@
 
     {% for block in section.blocks %}
       {% if block.type == 'slide' %}
-        <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
+        {% assign has_mobile_bg = false %}
+        {% if block.settings.mobile_slide_image != blank or block.settings.mobile_image_asset != blank %}{% assign has_mobile_bg = true %}{% endif %}
+        <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}{% if has_mobile_bg %} vamas-slide--has-mobile-bg{% endif %}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
           {% if block.settings.video != blank %}
-            <video class="vamas-slide__bg" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"{% endif %}>
+            <video class="vamas-slide__bg vamas-slide__bg--desktop" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"{% endif %}>
               {% for source in block.settings.video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
             </video>
           {% elsif block.settings.video_url != blank %}
-            <div class="vamas-slide__bg vamas-video-embed">
+            <div class="vamas-slide__bg vamas-slide__bg--desktop vamas-video-embed">
               {% if block.settings.video_url.type == 'youtube' %}
                 <iframe src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?autoplay=1&mute=1&loop=1&playlist={{ block.settings.video_url.id }}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1" title="{{ block.settings.line1 | escape }}" allow="autoplay; encrypted-media" frameborder="0"></iframe>
               {% elsif block.settings.video_url.type == 'vimeo' %}
@@ -20,11 +22,20 @@
               {% endif %}
             </div>
           {% elsif block.settings.slide_image != blank %}
-            <img class="vamas-slide__bg" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
+            <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
                  alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% elsif block.settings.image_asset != blank %}
-            <img class="vamas-slide__bg" src="{{ block.settings.image_asset | asset_url }}"
+            <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.image_asset | asset_url }}"
+                 alt="{{ block.settings.line1 | escape }}"
+                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+          {% endif %}
+          {% if block.settings.mobile_slide_image != blank %}
+            <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_slide_image | img_url: '900x1200', crop: 'center' }}"
+                 alt="{{ block.settings.mobile_slide_image.alt | escape | default: block.settings.line1 }}"
+                 loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+          {% elsif block.settings.mobile_image_asset != blank %}
+            <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_image_asset | asset_url }}"
                  alt="{{ block.settings.line1 | escape }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% endif %}
@@ -504,6 +515,9 @@
         { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. slide-pink.jpg (used if no image uploaded above)" },
         { "type": "video", "id": "video", "label": "Background Video (uploaded)", "info": "Shows instead of the image. Autoplays muted & looped." },
         { "type": "video_url", "id": "video_url", "label": "Or Video URL (YouTube / Vimeo)", "accept": ["youtube", "vimeo"] },
+        { "type": "header", "content": "Mobile / Responsive Banner (optional)" },
+        { "type": "image_picker", "id": "mobile_slide_image", "label": "Mobile Image", "info": "Shown instead of the desktop image/video on phones & tablets (≤768px). Leave blank to reuse the desktop banner on mobile." },
+        { "type": "text", "id": "mobile_image_asset", "label": "Or theme asset filename (mobile)", "info": "e.g. mobile-banner.jpg" },
         { "type": "select", "id": "text_align", "label": "Text Alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "NEW COLLECTION 2026" },
         { "type": "text", "id": "line1", "label": "Heading Line 1", "default": "Craft Your" },
