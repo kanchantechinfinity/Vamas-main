@@ -1,5 +1,5 @@
     *{margin:0;padding:0;box-sizing:border-box;}
-    :root{--m:#420001;--ml:#6a0002;--g:#e7d1a6;--gd:#c9a96e;--bg:#fff9f2;}
+    :root{--m: var(--color-maroon, #420001);--ml: var(--color-maroon-light, #6a0002);--g: var(--color-gold, #e7d1a6);--gd: var(--color-gold-dark, #c9a96e);--bg: var(--color-bg, #fff9f2);}
     body{font-family:var(--font-body);background:var(--bg);color:#333;}
 
     .breadcrumb{padding:14px var(--page-gutter);font-size:11px;color:#888;display:flex;align-items:center;gap:6px;}

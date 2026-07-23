@@ -4,14 +4,14 @@
   .about-hero { background: var(--color-maroon); padding: 100px var(--page-gutter) 90px; text-align: center; position: relative; overflow: hidden; }
   .about-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(231,209,166,0.08) 0%, transparent 70%); }
   .about-hero__eye { font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(231,209,166,0.45); margin-bottom: 22px; position: relative; z-index: 1; }
-  .about-hero__h1 { font-family: 'Playfair Display', Georgia, serif; font-size: 72px; font-weight: 700; color: var(--color-gold); line-height: 1.1; margin-bottom: 22px; position: relative; z-index: 1; }
+  .about-hero__h1 { font-family: var(--font-heading); font-size: 72px; font-weight: 700; color: var(--color-gold); line-height: 1.1; margin-bottom: 22px; position: relative; z-index: 1; }
   .about-hero__sub { font-size: 15px; font-weight: 300; color: rgba(231,209,166,0.6); max-width: 520px; margin: 0 auto 36px; line-height: 1.7; position: relative; z-index: 1; }
   .about-hero__line { width: 80px; height: 2px; background: linear-gradient(90deg, transparent, var(--color-gold), transparent); margin: 0 auto; position: relative; z-index: 1; }
 
   .about-story { display: flex; align-items: center; gap: 80px; padding: 96px var(--page-gutter); background: var(--color-bg); }
   .about-story__text { flex: 1; }
   .about-story__eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3.5px; color: var(--color-gold-dark); margin-bottom: 18px; }
-  .about-story__h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 42px; font-weight: 700; color: var(--color-maroon); line-height: 1.25; margin-bottom: 28px; }
+  .about-story__h2 { font-family: var(--font-heading); font-size: 42px; font-weight: 700; color: var(--color-maroon); line-height: 1.25; margin-bottom: 28px; }
   .about-story__h2 em { font-style: italic; color: var(--color-maroon-light); }
   .about-story__p { font-size: 14px; font-weight: 300; color: rgba(66,0,1,0.65); line-height: 1.9; margin-bottom: 18px; }
   .about-story__img-wrap { flex: 1; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 64px rgba(66,0,1,0.18); max-width: 480px; }
@@ -20,27 +20,27 @@
   .about-stats { background: var(--color-maroon); display: flex; align-items: center; justify-content: center; gap: 0; }
   .about-stats__item { flex: 1; text-align: center; padding: 52px 40px; border-right: 1px solid rgba(231,209,166,0.12); }
   .about-stats__item:last-child { border-right: none; }
-  .about-stats__num { font-family: 'Playfair Display', Georgia, serif; font-size: 44px; font-weight: 700; color: var(--color-gold); line-height: 1; margin-bottom: 10px; }
+  .about-stats__num { font-family: var(--font-heading); font-size: 44px; font-weight: 700; color: var(--color-gold); line-height: 1; margin-bottom: 10px; }
   .about-stats__label { font-size: 11px; font-weight: 600; letter-spacing: 2px; color: rgba(231,209,166,0.45); text-transform: uppercase; }
 
   .about-values { padding: 96px var(--page-gutter); background: #fff; text-align: center; }
   .about-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 3.5px; color: var(--color-gold-dark); margin-bottom: 14px; }
-  .about-h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 42px; font-weight: 700; color: var(--color-maroon); line-height: 1.25; margin-bottom: 16px; }
+  .about-h2 { font-family: var(--font-heading); font-size: 42px; font-weight: 700; color: var(--color-maroon); line-height: 1.25; margin-bottom: 16px; }
   .about-sub { font-size: 14px; font-weight: 300; color: rgba(66,0,1,0.55); max-width: 520px; margin: 0 auto 60px; line-height: 1.8; }
   .about-values__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1040px; margin: 0 auto; }
   .about-val { background: var(--color-bg); border-radius: 16px; padding: 48px 36px; border: 1px solid rgba(231,209,166,0.35); transition: transform 0.25s, box-shadow 0.25s; }
   .about-val:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(66,0,1,0.10); }
   .about-val__icon { width: 64px; height: 64px; border-radius: 50%; background: var(--color-maroon); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
   .about-val__icon svg { width: 28px; height: 28px; }
-  .about-val__title { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; font-weight: 700; color: var(--color-maroon); margin-bottom: 14px; }
+  .about-val__title { font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: var(--color-maroon); margin-bottom: 14px; }
   .about-val__desc { font-size: 13px; font-weight: 300; color: rgba(66,0,1,0.6); line-height: 1.8; }
 
   .about-team { padding: 96px var(--page-gutter); background: var(--color-bg); text-align: center; }
   .about-team__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 960px; margin: 0 auto; }
   .about-team__card { background: #fff; border-radius: 16px; padding: 40px 28px; border: 1px solid rgba(231,209,166,0.3); transition: transform 0.25s, box-shadow 0.25s; }
   .about-team__card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(66,0,1,0.10); }
-  .about-team__avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--color-maroon); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-family: 'Playfair Display', Georgia, serif; font-size: 28px; font-weight: 700; color: var(--color-gold); letter-spacing: 1px; }
-  .about-team__name { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; font-weight: 700; color: var(--color-maroon); margin-bottom: 6px; }
+  .about-team__avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--color-maroon); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--color-gold); letter-spacing: 1px; }
+  .about-team__name { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--color-maroon); margin-bottom: 6px; }
   .about-team__role { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; color: var(--color-gold-dark); margin-bottom: 14px; text-transform: uppercase; }
   .about-team__bio { font-size: 12px; font-weight: 300; color: rgba(66,0,1,0.6); line-height: 1.8; }
 
@@ -56,7 +56,7 @@
   .about-tl__content { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(231,209,166,0.12); border-radius: 12px; padding: 24px 28px; }
   .about-tl__item:not(.right) .about-tl__content { text-align: right; }
   .about-tl__item.right .about-tl__content { text-align: left; }
-  .about-tl__year { font-family: 'Playfair Display', Georgia, serif; font-size: 32px; font-weight: 700; color: var(--color-gold); margin-bottom: 8px; }
+  .about-tl__year { font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--color-gold); margin-bottom: 8px; }
   .about-tl__desc { font-size: 13px; font-weight: 300; color: rgba(231,209,166,0.55); line-height: 1.7; }
   .about-tl__dot { position: absolute; left: 50%; transform: translateX(-50%); top: 20px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-gold); border: 3px solid var(--color-maroon); box-shadow: 0 0 0 4px rgba(231,209,166,0.15); z-index: 2; }
   .about-tl__spacer { flex: 1; }

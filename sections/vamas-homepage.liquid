@@ -315,22 +315,6 @@
 </section>
 {% endif %}
 
-{% comment %} ── Browse Tags ──────────────────────── {% endcomment %}
-<div class="vamas-tags">
-  <a href="/collections/zari-work" class="vamas-tag">ZARI WORK</a>
-  <a href="/collections/mirror-work" class="vamas-tag">MIRROR WORK</a>
-  <a href="/collections/embroidery" class="vamas-tag">EMBROIDERY</a>
-  <a href="/collections/velvet" class="vamas-tag">VELVET</a>
-  <a href="/collections/printed" class="vamas-tag">PRINTED</a>
-  <a href="/collections/bridal" class="vamas-tag">BRIDAL</a>
-  <a href="/collections/backless" class="vamas-tag">BACKLESS</a>
-  <a href="/collections/cotton" class="vamas-tag">COTTON</a>
-  <a href="/collections/pure-silk" class="vamas-tag">PURE SILK</a>
-  <a href="/collections/chikankari" class="vamas-tag">CHIKANKARI</a>
-  <a href="/collections/phulkari" class="vamas-tag">PHULKARI</a>
-  <a href="/collections/gota-patti" class="vamas-tag">GOTA PATTI</a>
-</div>
-
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
 {% assign test_blocks = section.blocks | where: 'type', 'testimonial' %}
 {% if test_blocks.size > 0 and section.settings.show_testimonials %}
@@ -444,6 +428,22 @@
 })();
 </script>
 {% endif %}
+
+{% comment %} ── Browse Tags ──────────────────────── {% endcomment %}
+<div class="vamas-tags">
+  <a href="/collections/zari-work" class="vamas-tag">ZARI WORK</a>
+  <a href="/collections/mirror-work" class="vamas-tag">MIRROR WORK</a>
+  <a href="/collections/embroidery" class="vamas-tag">EMBROIDERY</a>
+  <a href="/collections/velvet" class="vamas-tag">VELVET</a>
+  <a href="/collections/printed" class="vamas-tag">PRINTED</a>
+  <a href="/collections/bridal" class="vamas-tag">BRIDAL</a>
+  <a href="/collections/backless" class="vamas-tag">BACKLESS</a>
+  <a href="/collections/cotton" class="vamas-tag">COTTON</a>
+  <a href="/collections/pure-silk" class="vamas-tag">PURE SILK</a>
+  <a href="/collections/chikankari" class="vamas-tag">CHIKANKARI</a>
+  <a href="/collections/phulkari" class="vamas-tag">PHULKARI</a>
+  <a href="/collections/gota-patti" class="vamas-tag">GOTA PATTI</a>
+</div>
 
 {% comment %} Newsletter moved to footer (vamas-footer) so it appears on all pages {% endcomment %}
 

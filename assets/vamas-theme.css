@@ -256,7 +256,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-cat-card__count { color: rgba(231,209,166,0.65); font-size: 10px; margin-top: 3px; }
 
 /* ── Product Grid ─────────────────────── */
-.vamas-prod-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.vamas-prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
 
 .vamas-prod-card {
   border: 1px solid rgba(231, 209, 166, 0.5);
@@ -341,10 +341,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-prod-card__name { font-size: 13px; font-weight: 700; color: var(--color-maroon); margin-bottom: 3px; }
 .vamas-prod-card__type { font-size: 11px; color: rgba(66,0,1,0.45); margin-bottom: 10px; }
 
-.vamas-prod-card__colors { display: flex; gap: 6px; margin-bottom: 10px; }
-.vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; }
+.vamas-prod-card__meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.vamas-prod-card__colors { display: flex; gap: 6px; }
+.vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; }
 
-.vamas-prod-card__stars { color: var(--color-gold-dark); font-size: 12px; margin-bottom: 10px; }
+.vamas-prod-card__stars { color: var(--color-gold-dark); font-size: 12px; margin-left: auto; }
 .vamas-prod-card__review-count { color: rgba(66,0,1,0.4); font-size: 10px; }
 
 .vamas-prod-card__price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
@@ -438,7 +439,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 .vamas-test-card__stars { color: var(--color-gold-dark); font-size: 15px; margin-bottom: 12px; }
-.vamas-test-card__text { font-size: 13px; color: rgba(66,0,1,0.72); line-height: 1.75; margin-bottom: 16px; font-style: italic; }
+.vamas-test-card__text { font-size: 13px; color: rgba(66,0,1,0.72); line-height: 1.75; margin-bottom: 16px; font-style: italic; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 
 .vamas-test-card__author { display: flex; align-items: center; gap: 12px; }
 
