@@ -1,19 +1,23 @@
 {% comment %}
-  Renders one "Handpicked for this story" vertical product card.
+  Renders one compact vertical product card (image on top, like the
+  collection page cards), used inside the "Handpicked for this story" list.
   Usage: {% render 'vamas-shop-product', product: p, badge: badge %}
 {% endcomment %}
 {% assign pv = product.selected_or_first_available_variant %}
 <div class="va-shop__item">
   <a href="{{ product.url }}" class="va-shop__img">
     {% if product.featured_image %}
-      <img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.title | escape }}" loading="lazy" width="90" height="110">
+      <img src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy" width="300" height="360">
     {% else %}
       {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {% endif %}
+    {% if badge != blank %}
+      <span class="va-shop__badge">{{ badge }}</span>
+    {% elsif pv.compare_at_price > pv.price %}
+      <span class="va-shop__badge">SALE</span>
+    {% endif %}
   </a>
   <div class="va-shop__body">
-    {% if badge != blank %}<div class="va-shop__badge">{{ badge }}</div>
-    {% elsif product.type != blank %}<div class="va-shop__badge">{{ product.type | upcase }}</div>{% endif %}
     <a href="{{ product.url }}" class="va-shop__title">{{ product.title }}</a>
     <div class="va-shop__price-row">
       <span class="va-shop__price">{{ pv.price | money }}</span>
