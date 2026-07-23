@@ -49,6 +49,7 @@
       <a href="/collections/{{ collection.handle | default: 'all' }}" class="clear-all">Clear All</a>
     </div>
 
+    <div class="sidebar-scroll">
     {% comment %} Tag-based filters (Occasion / Fabric / Color) — filter natively via the collection URL {% endcomment %}
     {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
     {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
@@ -99,13 +100,12 @@
               <span id="priceMin">{{ filter.min_value.value | default: filter.range_min | money }}</span>
               <span id="priceMax">{{ filter.max_value.value | default: filter.range_max | money }}</span>
             </div>
-            <div class="price-track">
-              <div class="price-fill" id="priceFill"></div>
-              <div class="price-thumb price-thumb-l" id="thumbL"></div>
-              <div class="price-thumb price-thumb-r" id="thumbR"></div>
+            <div class="price-slider" id="priceSlider">
+              <div class="price-slider__track"></div>
+              <div class="price-slider__fill" id="priceFill"></div>
+              <input type="range" class="price-slider__input" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
+              <input type="range" class="price-slider__input" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
             </div>
-            <input type="range" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
-            <input type="range" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
           </div>
         </div>
       </div>
@@ -131,6 +131,7 @@
       </div>
     {% endfor %}
     </form>
+    </div>
 
     <div class="sidebar-apply">
       <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply">APPLY FILTERS</button>
@@ -209,6 +210,31 @@ document.getElementById('mob-filter-open') && document.getElementById('mob-filte
     var base = '/collections/{{ collection.handle | default: "all" }}';
     window.location.href = tags.length ? (base + '/' + tags.join('+')) : base;
   });
+})();
+(function(){
+  var minInput = document.getElementById('rangeMin');
+  var maxInput = document.getElementById('rangeMax');
+  var fill = document.getElementById('priceFill');
+  var minLabel = document.getElementById('priceMin');
+  var maxLabel = document.getElementById('priceMax');
+  if (!minInput || !maxInput || !fill) return;
+
+  function update(){
+    var lo = parseFloat(minInput.value);
+    var hi = parseFloat(maxInput.value);
+    if (lo > hi) { var t = lo; lo = hi; hi = t; }
+    var min = parseFloat(minInput.min);
+    var max = parseFloat(minInput.max);
+    var pctLo = ((lo - min) / (max - min)) * 100;
+    var pctHi = ((hi - min) / (max - min)) * 100;
+    fill.style.left = pctLo + '%';
+    fill.style.width = (pctHi - pctLo) + '%';
+    if (minLabel) minLabel.textContent = 'Rs. ' + parseFloat(minInput.value).toFixed(2);
+    if (maxLabel) maxLabel.textContent = 'Rs. ' + parseFloat(maxInput.value).toFixed(2);
+  }
+  minInput.addEventListener('input', update);
+  maxInput.addEventListener('input', update);
+  update();
 })();
 </script>
 
