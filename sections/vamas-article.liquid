@@ -482,23 +482,51 @@
           article's HTML source (Content editor > </> Show HTML) and it's replaced
           with a vertical product card at that exact spot.
         {% endcomment %}
-        {% assign content_parts = article.content | split: '[[product:' %}
-        {{ content_parts | first }}
-        {% for part in content_parts %}
-          {% unless forloop.first %}
-            {% assign inline_handle = part | split: ']]' | first | strip %}
-            {% assign inline_rest = part | remove_first: inline_handle | remove_first: ']]' %}
-            {% assign inline_product = all_products[inline_handle] %}
-            {% if inline_product != blank %}
-              <div class="va-shop va-shop--inline">
-                <div class="va-shop__list">
-                  {% render 'vamas-shop-product', product: inline_product %}
-                </div>
-              </div>
+
+        {% comment %}
+          Featured Products metafield (custom.featured_products, list of products):
+          pick products from the blog post's Metafields panel in the admin, no
+          theme editor / HTML needed. Renders as a vertical list roughly mid-article
+          (after the first heading or, failing that, the first paragraph); hidden
+          entirely when the metafield is empty.
+        {% endcomment %}
+        {% assign featured_products = article.metafields.custom.featured_products.value %}
+
+        {% if featured_products.size > 0 %}
+          {% assign h2_parts = article.content | split: '</h2>' %}
+          {% if h2_parts.size > 1 %}
+            {% assign content_before = h2_parts | first | append: '</h2>' %}
+          {% else %}
+            {% assign p_parts = article.content | split: '</p>' %}
+            {% if p_parts.size > 1 %}
+              {% assign content_before = p_parts | first | append: '</p>' %}
+            {% else %}
+              {% assign content_before = article.content %}
             {% endif %}
-            {{ inline_rest }}
-          {% endunless %}
-        {% endfor %}
+          {% endif %}
+          {% assign content_after = article.content | remove_first: content_before %}
+        {% else %}
+          {% assign content_before = article.content %}
+          {% assign content_after = '' %}
+        {% endif %}
+
+        {% render 'vamas-render-content-with-shortcodes', content: content_before %}
+
+        {% if featured_products.size > 0 %}
+          <div class="va-shop va-shop--featured">
+            <div class="va-shop__head">
+              <span class="va-shop__eyebrow">Handpicked for this story</span>
+              <span class="va-shop__count">{{ featured_products.size }} piece{% if featured_products.size != 1 %}s{% endif %}</span>
+            </div>
+            <div class="va-shop__list">
+              {% for fp in featured_products %}
+                {% render 'vamas-shop-product', product: fp %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% render 'vamas-render-content-with-shortcodes', content: content_after %}
       </div>
 
       <div class="va-share-tags">

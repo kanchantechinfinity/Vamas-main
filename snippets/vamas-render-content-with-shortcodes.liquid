@@ -1,0 +1,22 @@
+{% comment %}
+  Renders an HTML string, replacing any [[product:handle]] shortcode with a
+  vertical shoppable product card at that exact spot.
+  Usage: {% render 'vamas-render-content-with-shortcodes', content: some_html %}
+{% endcomment %}
+{% assign shortcode_parts = content | split: '[[product:' %}
+{{ shortcode_parts | first }}
+{% for part in shortcode_parts %}
+  {% unless forloop.first %}
+    {% assign inline_handle = part | split: ']]' | first | strip %}
+    {% assign inline_rest = part | remove_first: inline_handle | remove_first: ']]' %}
+    {% assign inline_product = all_products[inline_handle] %}
+    {% if inline_product != blank %}
+      <div class="va-shop va-shop--inline">
+        <div class="va-shop__list">
+          {% render 'vamas-shop-product', product: inline_product %}
+        </div>
+      </div>
+    {% endif %}
+    {{ inline_rest }}
+  {% endunless %}
+{% endfor %}
