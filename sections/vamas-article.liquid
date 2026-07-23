@@ -116,7 +116,7 @@
   .va-shop__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .va-shop__badge { position: absolute; top: 8px; left: 8px; background: var(--color-maroon, #420001); color: var(--color-gold, #e7d1a6); font-family: var(--font-body); font-size: 9px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; }
   .va-shop__body { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 10px 12px 12px; }
-  .va-shop__title { font-family: var(--font-heading); font-size: 14px; line-height: 1.3; color: var(--color-maroon, #420001); text-decoration: none; margin-bottom: 6px; }
+  .va-shop__title { font-family: var(--font-heading); font-size: 14px; line-height: 1.3; color: var(--color-maroon, #420001); text-decoration: none; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: calc(1.3em * 2); }
   .va-shop__title:hover { color: var(--color-maroon-light, #6a0002); }
   .va-shop__price-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
   .va-shop__price { font-family: var(--font-body); font-size: 13px; font-weight: 700; color: var(--color-maroon, #420001); }
