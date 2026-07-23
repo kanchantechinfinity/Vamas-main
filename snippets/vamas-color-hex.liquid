@@ -1,0 +1,43 @@
+{% comment %}
+  Resolves a color/variant option value (e.g. "Mustard", "Rani Pink") to a
+  real CSS color for swatches. Many fashion color names aren't valid CSS
+  keywords (only basics like red/green/navy/pink work as literal CSS colors),
+  so this maps the common ones to real hex values and falls back to the
+  handleized name for anything already a valid CSS color word.
+  Usage: {% render 'vamas-color-hex', name: value %}
+{% endcomment %}
+{%- assign _key = name | downcase | strip | replace: ' ', '' | replace: '-', '' -%}
+{%- case _key -%}
+  {%- when 'mustard' -%}#d4a017
+  {%- when 'ranipink' -%}#d6006d
+  {%- when 'wine' -%}#722f37
+  {%- when 'rust' -%}#b7410e
+  {%- when 'bottlegreen' -%}#006a4e
+  {%- when 'peacockblue' -%}#005f6a
+  {%- when 'onionpink' -%}#f7c8c8
+  {%- when 'seagreen' -%}#2e8b57
+  {%- when 'royalblue' -%}#4169e1
+  {%- when 'skyblue' -%}#87ceeb
+  {%- when 'babypink' -%}#f4c2c2
+  {%- when 'hotpink' -%}#ff69b4
+  {%- when 'dustypink' -%}#d8a1a1
+  {%- when 'blush' -%}#de5d83
+  {%- when 'champagne' -%}#f7e7ce
+  {%- when 'copper' -%}#b87333
+  {%- when 'bronze' -%}#cd7f32
+  {%- when 'charcoal' -%}#36454f
+  {%- when 'mint' -%}#98ff98
+  {%- when 'cream' -%}#fffdd0
+  {%- when 'beige' -%}#f5f5dc
+  {%- when 'ivory' -%}#fffff0
+  {%- when 'offwhite' -%}#faf9f6
+  {%- when 'coffee' -%}#6f4e37
+  {%- when 'peach' -%}#ffdab9
+  {%- when 'lemonyellow' -%}#fff44f
+  {%- when 'wineberry' -%}#5c2331
+  {%- when 'winered' -%}#722f37
+  {%- when 'brick' -%}#b22222
+  {%- when 'sand' -%}#c2b280
+  {%- when 'khakigreen' -%}#8a865d
+  {%- else -%}{{ _key }}
+{%- endcase -%}

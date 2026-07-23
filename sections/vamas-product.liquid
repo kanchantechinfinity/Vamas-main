@@ -96,7 +96,7 @@
                   {% if sw.type == 'color_swatch' and sw.settings.name == value %}{% assign swatch_hex = sw.settings.hex %}{% endif %}
                 {% endfor %}
                 <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
-                     style="background:{% if swatch_hex != blank %}{{ swatch_hex }}{% else %}{{ value | handleize | replace: '-', '' }}{% endif %};"
+                     style="background:{% if swatch_hex != blank %}{{ swatch_hex }}{% else %}{% render 'vamas-color-hex', name: value %}{% endif %};"
                      data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
               {% endfor %}
             </div>

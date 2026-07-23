@@ -78,7 +78,7 @@
         <div class="vamas-prod-card__colors">
           {% for value in color_values limit: 4 %}
             <div class="vamas-prod-card__color"
-                 style="background:{{ value | handleize | replace: '-', '' }};"
+                 style="background:{% render 'vamas-color-hex', name: value %};"
                  title="{{ value }}"></div>
           {% endfor %}
         </div>
