@@ -68,7 +68,7 @@
     {% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
     {% assign color_values = blank %}
     {% for option in product.options_with_values %}
-      {% if option.name | downcase | contains: 'colo' %}
+      {% if option.name | downcase contains 'colo' %}
         {% assign color_values = option.values %}
       {% endif %}
     {% endfor %}
