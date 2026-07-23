@@ -103,6 +103,31 @@
   .va-quote::before { content: "\201C"; left: 0; top: 30px; }
   .va-quote::after { content: "\201D"; right: 0; bottom: -8px; }
 
+  /* Shoppable products — vertical list */
+  .va-shop { background: var(--color-bg, #fff9f2); border: 1px solid var(--color-gold, #e7d1a6); border-radius: 12px; padding: 20px; margin: 0 0 32px; }
+  .va-shop__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .va-shop__eyebrow { font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-gold-dark, #c9a96e); }
+  .va-shop__count { font-family: var(--font-body); font-size: 12px; color: rgba(66,0,1,0.5); }
+  .va-shop__list { display: flex; flex-direction: column; gap: 14px; }
+  .va-shop__item { display: flex; gap: 14px; background: #fff; border: 1px solid rgba(231,209,166,0.4); border-radius: 10px; padding: 12px; }
+  .va-shop__img { flex-shrink: 0; width: 90px; height: 110px; border-radius: 8px; overflow: hidden; display: block; }
+  .va-shop__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .va-shop__body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .va-shop__badge { font-family: var(--font-body); font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--color-gold-dark, #c9a96e); margin-bottom: 4px; }
+  .va-shop__title { font-family: var(--font-heading); font-size: 16px; color: var(--color-maroon, #420001); text-decoration: none; margin-bottom: 6px; }
+  .va-shop__title:hover { color: var(--color-maroon-light, #6b2b26); }
+  .va-shop__price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .va-shop__price { font-family: var(--font-body); font-size: 15px; font-weight: 700; color: var(--color-maroon, #420001); }
+  .va-shop__compare { font-family: var(--font-body); font-size: 12px; color: rgba(66,0,1,0.4); text-decoration: line-through; }
+  .va-shop__off { font-family: var(--font-body); font-size: 11px; font-weight: 700; color: #2e7d32; background: #e8f5e9; padding: 2px 8px; border-radius: 10px; }
+  .va-shop__atc { margin-top: auto; align-self: flex-start; width: 100%; background: var(--color-maroon, #420001); color: var(--color-gold, #e7d1a6); border: none; border-radius: 6px; padding: 10px 16px; font-family: var(--font-body); font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: background 0.2s; }
+  .va-shop__atc:hover { background: var(--color-maroon-light, #6b2b26); }
+  .va-shop__atc:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media (max-width: 480px) {
+    .va-shop__item { flex-direction: column; }
+    .va-shop__img { width: 100%; height: 160px; }
+  }
+
   /* Body columns */
   .va-body {
     font-family: var(--font-body);
@@ -431,6 +456,52 @@
         <ol class="va-toc-list"></ol>
       </nav>
 
+      {% comment %} Shoppable products — merchant-picked, shown as a vertical list {% endcomment %}
+      {% assign shop_blocks = section.blocks | where: 'type', 'shoppable_product' %}
+      {% if shop_blocks.size > 0 %}
+        <div class="va-shop">
+          <div class="va-shop__head">
+            <span class="va-shop__eyebrow">Handpicked for this story</span>
+            <span class="va-shop__count">{{ shop_blocks.size }} piece{% if shop_blocks.size != 1 %}s{% endif %}</span>
+          </div>
+          <div class="va-shop__list">
+            {% for block in shop_blocks %}
+              {% assign p = block.settings.product %}
+              {% if p != blank %}
+                {% assign pv = p.selected_or_first_available_variant %}
+                <div class="va-shop__item" {{ block.shopify_attributes }}>
+                  <a href="{{ p.url }}" class="va-shop__img">
+                    {% if p.featured_image %}
+                      <img src="{{ p.featured_image | image_url: width: 200 }}" alt="{{ p.title | escape }}" loading="lazy" width="90" height="110">
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {% endif %}
+                  </a>
+                  <div class="va-shop__body">
+                    {% if block.settings.badge != blank %}<div class="va-shop__badge">{{ block.settings.badge }}</div>
+                    {% elsif p.type != blank %}<div class="va-shop__badge">{{ p.type | upcase }}</div>{% endif %}
+                    <a href="{{ p.url }}" class="va-shop__title">{{ p.title }}</a>
+                    <div class="va-shop__price-row">
+                      <span class="va-shop__price">{{ pv.price | money }}</span>
+                      {% if pv.compare_at_price > pv.price %}
+                        <span class="va-shop__compare">{{ pv.compare_at_price | money }}</span>
+                        <span class="va-shop__off">{{ pv.compare_at_price | minus: pv.price | times: 100.0 | divided_by: pv.compare_at_price | round }}% off</span>
+                      {% endif %}
+                    </div>
+                    {% form 'product', p %}
+                      <input type="hidden" name="id" value="{{ pv.id }}">
+                      <button type="submit" class="va-shop__atc"{% unless pv.available %} disabled{% endunless %}>
+                        {% if pv.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+                      </button>
+                    {% endform %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
       <div class="va-body rte">
         {{ article.content }}
       </div>
@@ -630,6 +701,16 @@
     { "type": "collection", "id": "featured_collection", "label": "Featured collection" },
     { "type": "text", "id": "featured_heading", "label": "Featured heading", "default": "Featured Products" },
     { "type": "text", "id": "related_heading", "label": "Related heading", "default": "Related Reads" }
+  ],
+  "blocks": [
+    {
+      "type": "shoppable_product",
+      "name": "Shoppable Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "badge", "label": "Badge (optional)", "info": "e.g. DHANTERAS, DIWALI — defaults to the product type if left blank" }
+      ]
+    }
   ],
   "presets": [{ "name": "Vamas Article" }]
 }
