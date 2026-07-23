@@ -1,8 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
-      "type": "vamas-article"
+      "type": "vamas-article",
+      "blocks": {
+        "shoppable_product_aP4ArT": {
+          "type": "shoppable_product",
+          "settings": {
+            "product": "bandhani-printed-blouse",
+            "badge": ""
+          }
+        }
+      },
+      "block_order": [
+        "shoppable_product_aP4ArT"
+      ],
+      "settings": {
+        "hero_bg_color": "#f0d9be",
+        "pull_quote": "",
+        "designer_name": "The Vamas Design Team",
+        "designer_text": "The Vamas Design Team shares the thinking behind every blouse — fabric, fit and drape — from our Mumbai atelier.",
+        "featured_collection": "",
+        "featured_heading": "Featured Products",
+        "related_heading": "Related Reads"
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
