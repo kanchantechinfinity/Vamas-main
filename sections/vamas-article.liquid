@@ -105,6 +105,8 @@
 
   /* Shoppable products — vertical list */
   .va-shop { background: var(--color-bg, #fff9f2); border: 1px solid var(--color-gold, #e7d1a6); border-radius: 12px; padding: 20px; margin: 0 0 32px; }
+  .va-shop--inline { margin: 24px 0; }
+  .va-shop--inline .va-shop__list { gap: 0; }
   .va-shop__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .va-shop__eyebrow { font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-gold-dark, #c9a96e); }
   .va-shop__count { font-family: var(--font-body); font-size: 12px; color: rgba(66,0,1,0.5); }
@@ -466,36 +468,8 @@
           </div>
           <div class="va-shop__list">
             {% for block in shop_blocks %}
-              {% assign p = block.settings.product %}
-              {% if p != blank %}
-                {% assign pv = p.selected_or_first_available_variant %}
-                <div class="va-shop__item" {{ block.shopify_attributes }}>
-                  <a href="{{ p.url }}" class="va-shop__img">
-                    {% if p.featured_image %}
-                      <img src="{{ p.featured_image | image_url: width: 200 }}" alt="{{ p.title | escape }}" loading="lazy" width="90" height="110">
-                    {% else %}
-                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-                    {% endif %}
-                  </a>
-                  <div class="va-shop__body">
-                    {% if block.settings.badge != blank %}<div class="va-shop__badge">{{ block.settings.badge }}</div>
-                    {% elsif p.type != blank %}<div class="va-shop__badge">{{ p.type | upcase }}</div>{% endif %}
-                    <a href="{{ p.url }}" class="va-shop__title">{{ p.title }}</a>
-                    <div class="va-shop__price-row">
-                      <span class="va-shop__price">{{ pv.price | money }}</span>
-                      {% if pv.compare_at_price > pv.price %}
-                        <span class="va-shop__compare">{{ pv.compare_at_price | money }}</span>
-                        <span class="va-shop__off">{{ pv.compare_at_price | minus: pv.price | times: 100.0 | divided_by: pv.compare_at_price | round }}% off</span>
-                      {% endif %}
-                    </div>
-                    {% form 'product', p %}
-                      <input type="hidden" name="id" value="{{ pv.id }}">
-                      <button type="submit" class="va-shop__atc"{% unless pv.available %} disabled{% endunless %}>
-                        {% if pv.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
-                      </button>
-                    {% endform %}
-                  </div>
-                </div>
+              {% if block.settings.product != blank %}
+                {% render 'vamas-shop-product', product: block.settings.product, badge: block.settings.badge %}
               {% endif %}
             {% endfor %}
           </div>
@@ -503,7 +477,28 @@
       {% endif %}
 
       <div class="va-body rte">
-        {{ article.content }}
+        {% comment %}
+          Inline shoppable products: type [[product:product-handle]] anywhere in the
+          article's HTML source (Content editor > </> Show HTML) and it's replaced
+          with a vertical product card at that exact spot.
+        {% endcomment %}
+        {% assign content_parts = article.content | split: '[[product:' %}
+        {{ content_parts | first }}
+        {% for part in content_parts %}
+          {% unless forloop.first %}
+            {% assign inline_handle = part | split: ']]' | first | strip %}
+            {% assign inline_rest = part | remove_first: inline_handle | remove_first: ']]' %}
+            {% assign inline_product = all_products[inline_handle] %}
+            {% if inline_product != blank %}
+              <div class="va-shop va-shop--inline">
+                <div class="va-shop__list">
+                  {% render 'vamas-shop-product', product: inline_product %}
+                </div>
+              </div>
+            {% endif %}
+            {{ inline_rest }}
+          {% endunless %}
+        {% endfor %}
       </div>
 
       <div class="va-share-tags">

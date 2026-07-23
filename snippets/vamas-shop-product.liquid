@@ -1,0 +1,32 @@
+{% comment %}
+  Renders one "Handpicked for this story" vertical product card.
+  Usage: {% render 'vamas-shop-product', product: p, badge: badge %}
+{% endcomment %}
+{% assign pv = product.selected_or_first_available_variant %}
+<div class="va-shop__item">
+  <a href="{{ product.url }}" class="va-shop__img">
+    {% if product.featured_image %}
+      <img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.title | escape }}" loading="lazy" width="90" height="110">
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </a>
+  <div class="va-shop__body">
+    {% if badge != blank %}<div class="va-shop__badge">{{ badge }}</div>
+    {% elsif product.type != blank %}<div class="va-shop__badge">{{ product.type | upcase }}</div>{% endif %}
+    <a href="{{ product.url }}" class="va-shop__title">{{ product.title }}</a>
+    <div class="va-shop__price-row">
+      <span class="va-shop__price">{{ pv.price | money }}</span>
+      {% if pv.compare_at_price > pv.price %}
+        <span class="va-shop__compare">{{ pv.compare_at_price | money }}</span>
+        <span class="va-shop__off">{{ pv.compare_at_price | minus: pv.price | times: 100.0 | divided_by: pv.compare_at_price | round }}% off</span>
+      {% endif %}
+    </div>
+    {% form 'product', product %}
+      <input type="hidden" name="id" value="{{ pv.id }}">
+      <button type="submit" class="va-shop__atc"{% unless pv.available %} disabled{% endunless %}>
+        {% if pv.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+      </button>
+    {% endform %}
+  </div>
+</div>
