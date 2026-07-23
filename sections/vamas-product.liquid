@@ -209,9 +209,27 @@
     {% endif %}
 
     <div class="accordion">
+      {% assign detail_rows = section.blocks | where: 'type', 'detail_row' %}
       <div class="acc-item open">
         <div class="acc-header">PRODUCT DETAILS <span class="acc-icon">&#8722;</span></div>
-        <div class="acc-body"><div class="acc-content">{{ product.description }}</div></div>
+        <div class="acc-body">
+          <div class="acc-content">
+            {% if detail_rows.size > 0 %}
+            <table class="detail-table">
+              <tbody>
+                {% for block in detail_rows %}
+                <tr class="detail-row">
+                  <td class="detail-label">{{ block.settings.label }}</td>
+                  <td class="detail-value">{{ block.settings.value }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+              {{ product.description }}
+            {% endif %}
+          </div>
+        </div>
       </div>
 
       {% assign size_rows = section.blocks | where: 'type', 'size_row' %}
@@ -697,6 +715,14 @@
       ]
     },
     {
+      "type": "detail_row",
+      "name": "Product Detail Row",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Fabric" },
+        { "type": "text", "id": "value", "label": "Value", "default": "100% Banarasi Silk" }
+      ]
+    },
+    {
       "type": "care_item",
       "name": "Care Instruction",
       "settings": [
@@ -728,6 +754,19 @@
     {
       "name": "Vamas Product",
       "blocks": [
+        { "type": "detail_row", "settings": { "label": "Fabric", "value": "100% Banarasi Silk" } },
+        { "type": "detail_row", "settings": { "label": "Work", "value": "Hand Mirror Embroidery (Shisha Work)" } },
+        { "type": "detail_row", "settings": { "label": "Blouse Type", "value": "Readymade / Pre-Stitched" } },
+        { "type": "detail_row", "settings": { "label": "Neck Style", "value": "Boat Neck (Front)" } },
+        { "type": "detail_row", "settings": { "label": "Back Design", "value": "Deep V Back with Tie-Up Strings" } },
+        { "type": "detail_row", "settings": { "label": "Sleeve Length", "value": "3/4 Sleeve (Elbow Length)" } },
+        { "type": "detail_row", "settings": { "label": "Lining", "value": "Soft Cotton Inner Lining" } },
+        { "type": "detail_row", "settings": { "label": "Closure", "value": "Hook & Eye (5 Hooks)" } },
+        { "type": "detail_row", "settings": { "label": "Blouse Length", "value": "14.5 - 15.5 inches (size dependent)" } },
+        { "type": "detail_row", "settings": { "label": "Fabric Weight", "value": "110 GSM" } },
+        { "type": "detail_row", "settings": { "label": "Occasion", "value": "Bridal / Festive / Wedding" } },
+        { "type": "detail_row", "settings": { "label": "Care", "value": "Dry Clean Only" } },
+        { "type": "detail_row", "settings": { "label": "Origin", "value": "Handcrafted in India" } },
         { "type": "size_row", "settings": { "size": "32", "bust": "32", "waist": "26", "hip": "34", "length": "14.5" } },
         { "type": "size_row", "settings": { "size": "34", "bust": "34", "waist": "28", "hip": "36", "length": "15" } },
         { "type": "size_row", "settings": { "size": "36", "bust": "36", "waist": "30", "hip": "38", "length": "15.5" } },

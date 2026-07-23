@@ -143,10 +143,10 @@
     .acc-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
     .acc-item.open .acc-body{max-height:600px;}
     .acc-content{padding:0 0 16px;}
-    .detail-row{display:flex;gap:12px;padding:7px 10px;border-radius:4px;font-size:12px;}
-    .detail-row:nth-child(even){background:rgba(66,0,1,0.03);}
-    .detail-key{font-weight:600;color:#555;min-width:130px;flex-shrink:0;}
-    .detail-val{color:#333;}
+    .detail-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+    .detail-table .detail-row:nth-child(odd) td{background:rgba(66,0,1,0.035);}
+    .detail-label{padding:10px 14px;font-weight:600;color:#666;width:150px;white-space:nowrap;border-radius:4px 0 0 4px;}
+    .detail-value{padding:10px 14px;color:#333;border-radius:0 4px 4px 0;}
     .size-table{width:100%;border-collapse:collapse;font-size:12px;}
     .size-table th{background:var(--m);color:var(--g);padding:8px 12px;text-align:left;font-size:10px;letter-spacing:1px;}
     .size-table td{padding:8px 12px;border-bottom:1px solid rgba(66,0,1,0.06);}
