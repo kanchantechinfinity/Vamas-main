@@ -54,26 +54,6 @@
             "btn2_url": "/collections/all"
           }
         },
-        "slide-3": {
-          "type": "slide",
-          "settings": {
-            "slide_bg": "#2d0001",
-            "image_asset": "slide-green.jpg",
-            "video_url": "",
-            "text_align": "left",
-            "eyebrow": "FESTIVE SEASON EDIT",
-            "line1": "Celebrate in",
-            "line2_accent": "Colour",
-            "line3": "& Style",
-            "offer": "",
-            "coupon": "",
-            "subtext": "Vibrant festive blouses with traditional embroidery to make every celebration unforgettable.",
-            "btn1_text": "SHOP FESTIVE",
-            "btn1_url": "/collections/all",
-            "btn2_text": "VIEW OFFERS",
-            "btn2_url": "/collections/all"
-          }
-        },
         "cat-1": {
           "type": "category",
           "settings": {
@@ -221,7 +201,6 @@
       "block_order": [
         "slide-1",
         "slide-2",
-        "slide-3",
         "cat-1",
         "cat-2",
         "cat-3",
