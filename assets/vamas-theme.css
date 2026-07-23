@@ -76,7 +76,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-slide--center .vamas-slide__sub { max-width: 520px; margin-left: auto; margin-right: auto; }
 .vamas-slide__btns { display: flex; gap: 14px; justify-content: flex-start; }
 .vamas-slide--center .vamas-slide__btns { justify-content: center; }
-.vamas-slide--right .vamas-slide__btns { justify-content: flex-end; }
 
 /* Slider controls */
 .vamas-slider__dots {
