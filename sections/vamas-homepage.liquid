@@ -207,7 +207,7 @@
   <div class="vamas-prod-grid">
     {% assign na_col = collections[section.settings.new_arrivals_collection] %}
     {% if na_col == blank or na_col.products.size == 0 %}{% assign na_col = collections.all %}{% endif %}
-    {% for product in na_col.products limit: 6 %}
+    {% for product in na_col.products limit: 8 %}
       {% render 'vamas-product-card', product: product %}
     {% else %}
       {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
@@ -264,7 +264,7 @@
   <div class="vamas-prod-grid">
     {% assign bs_col = collections[section.settings.bestsellers_collection] %}
     {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% assign bs_reversed = true %}{% endif %}
-    {% for product in bs_col.products reversed limit: 6 %}
+    {% for product in bs_col.products reversed limit: 8 %}
       {% render 'vamas-product-card', product: product %}
     {% else %}
       {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
