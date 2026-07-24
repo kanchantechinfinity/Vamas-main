@@ -698,15 +698,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-nav__icon-label{font-size:10px;letter-spacing:.3px;color:rgba(66,0,1,.75);text-align:center;line-height:1.3;}
 .vamas-nav__icon-item:hover .vamas-nav__icon-label{color:var(--color-maroon);}
 .vamas-nav__icon-item:hover .vamas-nav__icon-thumb{border-color:var(--color-gold);transform:translateY(-3px) scale(1.04);}
-.vamas-nav__mega-cards{display:flex;flex-direction:column;gap:6px;}
-.vamas-nav__card-item-wrap{position:relative;}
-.vamas-nav__card-item{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:10px;text-decoration:none;transition:background .15s;}
-.vamas-nav__card-item:hover{background:rgba(231,209,166,.22);}
-.vamas-nav__card-thumb{width:44px;height:44px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#f2e9df;box-shadow:0 2px 8px rgba(66,0,1,.08);}
-.vamas-nav__card-thumb img{width:100%;height:100%;object-fit:cover;}
-.vamas-nav__card-label{font-size:11px;letter-spacing:.3px;color:rgba(66,0,1,.8);white-space:nowrap;transition:color .15s;flex:1;}
-.vamas-nav__card-item:hover .vamas-nav__card-label{color:var(--color-maroon);font-weight:600;}
+.vamas-nav__mega-textlist{display:flex;flex-direction:column;gap:2px;}
+.vamas-nav__textlist-link{font-size:11px;letter-spacing:.3px;color:rgba(66,0,1,.78);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .15s,color .15s;}
+.vamas-nav__textlist-link:hover{background:rgba(231,209,166,.22);color:var(--color-maroon);}
 .vamas-nav__card-sublist{display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 66px;}
+.vamas-nav__card-sublist--flat{padding:0 0 4px 20px;}
 .vamas-nav__card-subitem{padding:5px 10px;white-space:nowrap;font-size:10px;letter-spacing:.3px;color:rgba(66,0,1,.6);text-decoration:none;border-radius:8px;transition:background .15s,color .15s;}
 .vamas-nav__card-subitem:hover{background:rgba(231,209,166,.18);color:var(--color-maroon);}
 .vamas-nav__mega-swatches-grid{display:flex;flex-wrap:wrap;gap:16px;}

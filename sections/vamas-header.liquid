@@ -29,23 +29,21 @@
         {% for link in section.settings.main_menu.links %}
           {% if link.links != blank %}
             {% assign group_categories = nil %}
-            {% assign group_collections = nil %}
-            {% assign group_type = nil %}
             {% assign group_looks = nil %}
             {% assign group_colours = nil %}
-            {% assign plain_links = link.links %}
+            {% assign has_leaf = false %}
             {% for childlink in link.links %}
               {% case childlink.title %}
                 {% when 'Categories' %}
                   {% assign group_categories = childlink %}
-                {% when 'Collections' %}
-                  {% assign group_collections = childlink %}
-                {% when 'Type' %}
-                  {% assign group_type = childlink %}
                 {% when 'Shop by Look' %}
                   {% assign group_looks = childlink %}
                 {% when 'Shop by Colour' or 'Shop by Color' %}
                   {% assign group_colours = childlink %}
+                {% else %}
+                  {% if childlink.links == blank %}
+                    {% assign has_leaf = true %}
+                  {% endif %}
               {% endcase %}
             {% endfor %}
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
@@ -66,28 +64,27 @@
                       </div>
                     </div>
                   {% endif %}
-                  {% if group_collections %}
-                    <div class="vamas-nav__mega-section">
-                      <span class="vamas-nav__mega-section-title">Collections</span>
-                      <div class="vamas-nav__mega-cards">
-                        {% for l in group_collections.links %}
-                          {% capture col_img %}{% cycle 'nav-collections': 'prod-darkmaroon.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg' %}{% endcapture %}
-                          {% render 'vamas-mega-card', item: l, img: col_img | asset_url %}
-                        {% endfor %}
-                      </div>
-                    </div>
-                  {% endif %}
-                  {% if group_type %}
-                    <div class="vamas-nav__mega-section">
-                      <span class="vamas-nav__mega-section-title">Type</span>
-                      <div class="vamas-nav__mega-cards">
-                        {% for l in group_type.links %}
-                          {% capture type_img %}{% cycle 'nav-type': 'prod-indigo.jpg', 'prod-blue.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg' %}{% endcapture %}
-                          {% render 'vamas-mega-card', item: l, img: type_img | asset_url %}
-                        {% endfor %}
-                      </div>
-                    </div>
-                  {% endif %}
+                  {% for childlink in link.links %}
+                    {% unless childlink.title == 'Categories' or childlink.title == 'Shop by Look' or childlink.title == 'Shop by Colour' or childlink.title == 'Shop by Color' %}
+                      {% if childlink.links != blank %}
+                        <div class="vamas-nav__mega-section">
+                          <span class="vamas-nav__mega-section-title">{{ childlink.title }}</span>
+                          <div class="vamas-nav__mega-textlist">
+                            {% for l in childlink.links %}
+                              <a href="{{ l.url }}" class="vamas-nav__textlist-link">{{ l.title }}</a>
+                              {% if l.links != blank %}
+                                <div class="vamas-nav__card-sublist vamas-nav__card-sublist--flat">
+                                  {% for sub in l.links %}
+                                    <a href="{{ sub.url }}" class="vamas-nav__card-subitem">{{ sub.title }}</a>
+                                  {% endfor %}
+                                </div>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endunless %}
+                  {% endfor %}
                   {% if group_colours %}
                     <div class="vamas-nav__mega-section">
                       <span class="vamas-nav__mega-section-title">Shop by Colour</span>
@@ -102,12 +99,15 @@
                       </div>
                     </div>
                   {% endif %}
-                  {% if group_categories == nil and group_collections == nil and group_type == nil %}
-                    <div class="vamas-nav__mega-cards">
-                      {% for l in plain_links %}
-                        {% capture plain_img %}{% cycle 'nav-plain': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg' %}{% endcapture %}
-                        {% render 'vamas-mega-card', item: l, img: plain_img | asset_url %}
-                      {% endfor %}
+                  {% if has_leaf %}
+                    <div class="vamas-nav__mega-section">
+                      <div class="vamas-nav__mega-textlist">
+                        {% for childlink in link.links %}
+                          {% if childlink.links == blank and childlink.title != 'Categories' and childlink.title != 'Shop by Look' and childlink.title != 'Shop by Colour' and childlink.title != 'Shop by Color' %}
+                            <a href="{{ childlink.url }}" class="vamas-nav__textlist-link">{{ childlink.title }}</a>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
                     </div>
                   {% endif %}
                 </div>
