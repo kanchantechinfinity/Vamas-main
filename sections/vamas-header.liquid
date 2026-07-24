@@ -28,42 +28,95 @@
       <div class="vamas-nav__links">
         {% for link in section.settings.main_menu.links %}
           {% if link.links != blank %}
+            {% assign group_categories = nil %}
+            {% assign group_collections = nil %}
+            {% assign group_looks = nil %}
+            {% assign plain_links = link.links %}
+            {% for childlink in link.links %}
+              {% case childlink.title %}
+                {% when 'Categories' %}
+                  {% assign group_categories = childlink %}
+                {% when 'Collections' %}
+                  {% assign group_collections = childlink %}
+                {% when 'Shop by Look' %}
+                  {% assign group_looks = childlink %}
+              {% endcase %}
+            {% endfor %}
+            {% assign banner_block = nil %}
+            {% for block in section.blocks %}
+              {% if block.type == 'mega_banner' and block.settings.menu_title == link.title %}
+                {% assign banner_block = block %}
+              {% endif %}
+            {% endfor %}
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
-              <div class="vamas-nav__dropdown" data-mega>
-                <div class="vamas-nav__dropdown-col vamas-nav__dropdown-col--main">
-                  {% for childlink in link.links %}
-                    {% if childlink.links != blank %}
-                      <div class="vamas-nav__row vamas-nav__row--has-sub" data-row data-target="panel-{{ link.title | handle }}-{{ forloop.index }}">
-                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>
-                          <img class="vamas-nav__thumb" src="{{ 'prod-1.jpg' | asset_url }}" width="32" height="32" alt="" loading="lazy">
-                          <span>{{ childlink.title }}</span>
-                          <span class="vamas-nav__arrow">›</span>
+              <div class="vamas-nav__dropdown vamas-nav__dropdown--rich" data-mega>
+                <div class="vamas-nav__mega-main">
+                  {% if group_categories %}
+                    <div class="vamas-nav__mega-icons">
+                      {% for cat in group_categories.links %}
+                        {% capture icon_img %}{% cycle 'nav-icons': 'prod-1.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                        <a href="{{ cat.url }}" class="vamas-nav__icon-item">
+                          <span class="vamas-nav__icon-thumb"><img src="{{ icon_img | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
+                          <span class="vamas-nav__icon-label">{{ cat.title }}</span>
                         </a>
-                      </div>
-                    {% else %}
-                      <div class="vamas-nav__row">
-                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>
-                          <img class="vamas-nav__thumb" src="{{ 'prod-1.jpg' | asset_url }}" width="32" height="32" alt="" loading="lazy">
-                          <span>{{ childlink.title }}</span>
-                        </a>
-                      </div>
-                    {% endif %}
-                  {% endfor %}
-                </div>
-                <div class="vamas-nav__dropdown-col vamas-nav__dropdown-col--sub">
-                  {% for childlink in link.links %}
-                    {% if childlink.links != blank %}
-                      <div class="vamas-nav__subpanel" data-panel="panel-{{ link.title | handle }}-{{ forloop.index }}">
-                        {% for grandchildlink in childlink.links %}
-                          <a href="{{ grandchildlink.url }}"{% if grandchildlink.active %} class="active"{% endif %}>
-                            <img class="vamas-nav__thumb" src="{{ 'prod-1.jpg' | asset_url }}" width="32" height="32" alt="" loading="lazy">
-                            <span>{{ grandchildlink.title }}</span>
-                          </a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  {% if group_collections %}
+                    <div class="vamas-nav__mega-columns">
+                      {% assign col_links = group_collections.links %}
+                      {% assign half = col_links.size | divided_by: 2 | ceil %}
+                      <div class="vamas-nav__mega-col">
+                        {% for l in col_links limit: half %}
+                          <a href="{{ l.url }}">{{ l.title }}</a>
                         {% endfor %}
                       </div>
-                    {% endif %}
-                  {% endfor %}
+                      <div class="vamas-nav__mega-col">
+                        {% for l in col_links offset: half %}
+                          <a href="{{ l.url }}">{{ l.title }}</a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if group_categories == nil and group_collections == nil %}
+                    <div class="vamas-nav__mega-columns">
+                      <div class="vamas-nav__mega-col">
+                        {% for l in plain_links %}
+                          <a href="{{ l.url }}">{{ l.title }}</a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+                {% if group_looks %}
+                  <div class="vamas-nav__mega-looks">
+                    <span class="vamas-nav__mega-looks-title">Shop by Look</span>
+                    <div class="vamas-nav__mega-looks-grid">
+                      {% for look in group_looks.links %}
+                        {% capture look_img %}{% cycle 'nav-looks': 'slide-1.jpg', 'slide-green.jpg', 'slide-maroon.jpg', 'slide-pink.jpg', 'banner-corset.jpg' %}{% endcapture %}
+                        <a href="{{ look.url }}" class="vamas-nav__look-item">
+                          <span class="vamas-nav__look-thumb"><img src="{{ look_img | asset_url }}" width="72" height="72" alt="" loading="lazy"></span>
+                          <span class="vamas-nav__look-label">{{ look.title }}</span>
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
+                <div class="vamas-nav__mega-banner">
+                  {% if banner_block %}
+                    <a href="{{ banner_block.settings.link | default: link.url }}" {{ banner_block.shopify_attributes }}>
+                      {% if banner_block.settings.image != blank %}
+                        <img src="{{ banner_block.settings.image | img_url: '500x' }}" alt="{{ banner_block.settings.cta_text }}" loading="lazy">
+                      {% else %}
+                        <img src="{{ 'banner-corset.jpg' | asset_url }}" alt="" loading="lazy">
+                      {% endif %}
+                    </a>
+                  {% else %}
+                    <a href="{{ link.url }}">
+                      <img src="{{ 'banner-corset.jpg' | asset_url }}" alt="" loading="lazy">
+                    </a>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -127,23 +180,6 @@
   if (toggle && overlay) { toggle.addEventListener('click', openSearch); }
   if (close) { close.addEventListener('click', closeSearch); }
   if (overlay) { overlay.addEventListener('click', function(e){ if(e.target === overlay) closeSearch(); }); }
-
-  document.querySelectorAll('[data-mega]').forEach(function(mega){
-    var rows = mega.querySelectorAll('[data-row]');
-    if (!rows.length) return;
-    function activate(row){
-      rows.forEach(function(r){ r.classList.remove('is-active'); });
-      mega.querySelectorAll('.vamas-nav__subpanel').forEach(function(p){ p.classList.remove('is-active'); });
-      row.classList.add('is-active');
-      var panel = mega.querySelector('[data-panel="' + row.getAttribute('data-target') + '"]');
-      if (panel) panel.classList.add('is-active');
-    }
-    activate(rows[0]);
-    rows.forEach(function(row){
-      row.addEventListener('mouseenter', function(){ activate(row); });
-    });
-    mega.closest('.vamas-nav__item').addEventListener('mouseleave', function(){ activate(rows[0]); });
-  });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay) closeSearch(); });
 })();
 </script>
@@ -164,6 +200,18 @@
     { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = text scrolls in a loop. Off = static.", "default": false },
     { "type": "range", "id": "announce_speed", "min": 8, "max": 40, "step": 2, "unit": "s", "label": "Marquee Speed (seconds per loop)", "default": 22 },
     { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
+  ],
+  "blocks": [
+    {
+      "type": "mega_banner",
+      "name": "Mega Menu Banner",
+      "settings": [
+        { "type": "text", "id": "menu_title", "label": "Matches Menu Item Title", "info": "Must exactly match a top-level nav item title, e.g. Shop Blouses" },
+        { "type": "image_picker", "id": "image", "label": "Banner Image" },
+        { "type": "url", "id": "link", "label": "Banner Link" },
+        { "type": "text", "id": "cta_text", "label": "Banner Alt Text" }
+      ]
+    }
   ],
   "presets": [{ "name": "Vamas Header" }]
 }
