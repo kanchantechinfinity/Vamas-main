@@ -78,10 +78,7 @@
                       <div class="vamas-nav__mega-cards">
                         {% for l in group_collections.links %}
                           {% capture col_img %}{% cycle 'nav-collections': 'slide-maroon.jpg', 'slide-pink.jpg', 'prod-darkmaroon.jpg', 'prod-maroon2.jpg', 'slide-green.jpg', 'prod-green2.jpg' %}{% endcapture %}
-                          <a href="{{ l.url }}" class="vamas-nav__card-item">
-                            <span class="vamas-nav__card-thumb"><img src="{{ col_img | asset_url }}" width="44" height="44" alt="" loading="lazy"></span>
-                            <span class="vamas-nav__card-label">{{ l.title }}</span>
-                          </a>
+                          {% render 'vamas-mega-card', item: l, img: col_img | asset_url %}
                         {% endfor %}
                       </div>
                     </div>
@@ -92,10 +89,7 @@
                       <div class="vamas-nav__mega-cards">
                         {% for l in group_type.links %}
                           {% capture type_img %}{% cycle 'nav-type': 'prod-indigo.jpg', 'prod-blue.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg' %}{% endcapture %}
-                          <a href="{{ l.url }}" class="vamas-nav__card-item">
-                            <span class="vamas-nav__card-thumb"><img src="{{ type_img | asset_url }}" width="44" height="44" alt="" loading="lazy"></span>
-                            <span class="vamas-nav__card-label">{{ l.title }}</span>
-                          </a>
+                          {% render 'vamas-mega-card', item: l, img: type_img | asset_url %}
                         {% endfor %}
                       </div>
                     </div>
@@ -118,10 +112,7 @@
                     <div class="vamas-nav__mega-cards">
                       {% for l in plain_links %}
                         {% capture plain_img %}{% cycle 'nav-plain': 'prod-1.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg' %}{% endcapture %}
-                        <a href="{{ l.url }}" class="vamas-nav__card-item">
-                          <span class="vamas-nav__card-thumb"><img src="{{ plain_img | asset_url }}" width="44" height="44" alt="" loading="lazy"></span>
-                          <span class="vamas-nav__card-label">{{ l.title }}</span>
-                        </a>
+                        {% render 'vamas-mega-card', item: l, img: plain_img | asset_url %}
                       {% endfor %}
                     </div>
                   {% endif %}
