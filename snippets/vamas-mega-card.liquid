@@ -1,17 +1,17 @@
 {% comment %}
-  Renders one mega-menu card link, with a hover flyout for its nested sub-links if any.
+  Renders one mega-menu card link. If it has nested sub-links, they render
+  as an always-visible indented list directly beneath it (no floating popup).
   Usage: {% render 'vamas-mega-card', item: some_link, img: 'filename.jpg' | asset_url %}
 {% endcomment %}
-<div class="vamas-nav__card-item-wrap{% if item.links != blank %} vamas-nav__card-item-wrap--has-kids{% endif %}">
+<div class="vamas-nav__card-item-wrap">
   <a href="{{ item.url }}" class="vamas-nav__card-item">
     <span class="vamas-nav__card-thumb"><img src="{{ img }}" width="44" height="44" alt="" loading="lazy"></span>
     <span class="vamas-nav__card-label">{{ item.title }}</span>
-    {% if item.links != blank %}<span class="vamas-nav__card-arrow">›</span>{% endif %}
   </a>
   {% if item.links != blank %}
-    <div class="vamas-nav__card-flyout">
+    <div class="vamas-nav__card-sublist">
       {% for sub in item.links %}
-        <a href="{{ sub.url }}">{{ sub.title }}</a>
+        <a href="{{ sub.url }}" class="vamas-nav__card-subitem">{{ sub.title }}</a>
       {% endfor %}
     </div>
   {% endif %}

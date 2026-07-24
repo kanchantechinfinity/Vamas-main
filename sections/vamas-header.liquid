@@ -48,12 +48,6 @@
                   {% assign group_colours = childlink %}
               {% endcase %}
             {% endfor %}
-            {% assign banner_block = nil %}
-            {% for block in section.blocks %}
-              {% if block.type == 'mega_banner' and block.settings.menu_title == link.title %}
-                {% assign banner_block = block %}
-              {% endif %}
-            {% endfor %}
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
               <div class="vamas-nav__dropdown vamas-nav__dropdown--rich" data-mega>
@@ -63,7 +57,7 @@
                       <span class="vamas-nav__mega-section-title">Categories</span>
                       <div class="vamas-nav__mega-icons">
                         {% for cat in group_categories.links %}
-                          {% capture icon_img %}{% cycle 'nav-icons': 'prod-1.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                          {% capture icon_img %}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
                           <a href="{{ cat.url }}" class="vamas-nav__icon-item">
                             <span class="vamas-nav__icon-thumb"><img src="{{ icon_img | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
                             <span class="vamas-nav__icon-label">{{ cat.title }}</span>
@@ -77,7 +71,7 @@
                       <span class="vamas-nav__mega-section-title">Collections</span>
                       <div class="vamas-nav__mega-cards">
                         {% for l in group_collections.links %}
-                          {% capture col_img %}{% cycle 'nav-collections': 'slide-maroon.jpg', 'slide-pink.jpg', 'prod-darkmaroon.jpg', 'prod-maroon2.jpg', 'slide-green.jpg', 'prod-green2.jpg' %}{% endcapture %}
+                          {% capture col_img %}{% cycle 'nav-collections': 'prod-darkmaroon.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg' %}{% endcapture %}
                           {% render 'vamas-mega-card', item: l, img: col_img | asset_url %}
                         {% endfor %}
                       </div>
@@ -99,7 +93,7 @@
                       <span class="vamas-nav__mega-section-title">Shop by Colour</span>
                       <div class="vamas-nav__mega-swatches-grid">
                         {% for colour in group_colours.links %}
-                          {% capture swatch_img %}{% cycle 'nav-swatches': 'prod-1.jpg', 'prod-cobalt.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-indigo.jpg' %}{% endcapture %}
+                          {% capture swatch_img %}{% cycle 'nav-swatches': 'prod-cobalt.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-blue.jpg' %}{% endcapture %}
                           <a href="{{ colour.url }}" class="vamas-nav__swatch-item">
                             <span class="vamas-nav__swatch-thumb"><img src="{{ swatch_img | asset_url }}" width="64" height="64" alt="" loading="lazy"></span>
                             <span class="vamas-nav__swatch-label">{{ colour.title }}</span>
@@ -111,7 +105,7 @@
                   {% if group_categories == nil and group_collections == nil and group_type == nil %}
                     <div class="vamas-nav__mega-cards">
                       {% for l in plain_links %}
-                        {% capture plain_img %}{% cycle 'nav-plain': 'prod-1.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg' %}{% endcapture %}
+                        {% capture plain_img %}{% cycle 'nav-plain': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg' %}{% endcapture %}
                         {% render 'vamas-mega-card', item: l, img: plain_img | asset_url %}
                       {% endfor %}
                     </div>
@@ -122,7 +116,7 @@
                     <span class="vamas-nav__mega-looks-title">Shop by Look</span>
                     <div class="vamas-nav__mega-looks-grid">
                       {% for look in group_looks.links %}
-                        {% capture look_img %}{% cycle 'nav-looks': 'slide-1.jpg', 'slide-green.jpg', 'slide-maroon.jpg', 'slide-pink.jpg', 'banner-corset.jpg' %}{% endcapture %}
+                        {% capture look_img %}{% cycle 'nav-looks': 'prod-indigo.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg' %}{% endcapture %}
                         <a href="{{ look.url }}" class="vamas-nav__look-item">
                           <span class="vamas-nav__look-thumb"><img src="{{ look_img | asset_url }}" width="72" height="72" alt="" loading="lazy"></span>
                           <span class="vamas-nav__look-label">{{ look.title }}</span>
@@ -131,21 +125,6 @@
                     </div>
                   </div>
                 {% endif %}
-                <div class="vamas-nav__mega-banner">
-                  {% if banner_block %}
-                    <a href="{{ banner_block.settings.link | default: link.url }}" {{ banner_block.shopify_attributes }}>
-                      {% if banner_block.settings.image != blank %}
-                        <img src="{{ banner_block.settings.image | img_url: '500x' }}" alt="{{ banner_block.settings.cta_text }}" loading="lazy">
-                      {% else %}
-                        <img src="{{ 'banner-corset.jpg' | asset_url }}" alt="" loading="lazy">
-                      {% endif %}
-                    </a>
-                  {% else %}
-                    <a href="{{ link.url }}">
-                      <img src="{{ 'banner-corset.jpg' | asset_url }}" alt="" loading="lazy">
-                    </a>
-                  {% endif %}
-                </div>
               </div>
             </div>
           {% else %}
@@ -228,18 +207,6 @@
     { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = text scrolls in a loop. Off = static.", "default": false },
     { "type": "range", "id": "announce_speed", "min": 8, "max": 40, "step": 2, "unit": "s", "label": "Marquee Speed (seconds per loop)", "default": 22 },
     { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
-  ],
-  "blocks": [
-    {
-      "type": "mega_banner",
-      "name": "Mega Menu Banner",
-      "settings": [
-        { "type": "text", "id": "menu_title", "label": "Matches Menu Item Title", "info": "Must exactly match a top-level nav item title, e.g. Shop Blouses" },
-        { "type": "image_picker", "id": "image", "label": "Banner Image" },
-        { "type": "url", "id": "link", "label": "Banner Link" },
-        { "type": "text", "id": "cta_text", "label": "Banner Alt Text" }
-      ]
-    }
   ],
   "presets": [{ "name": "Vamas Header" }]
 }
