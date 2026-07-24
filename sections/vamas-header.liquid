@@ -28,14 +28,17 @@
       <div class="vamas-nav__links">
         {% for link in section.settings.main_menu.links %}
           {% if link.links != blank %}
-            {% assign group_categories = nil %}
+            {% assign group_icons_1 = nil %}
+            {% assign group_icons_2 = nil %}
             {% assign group_looks = nil %}
             {% assign group_colours = nil %}
             {% assign has_leaf = false %}
             {% for childlink in link.links %}
               {% case childlink.title %}
-                {% when 'Categories' %}
-                  {% assign group_categories = childlink %}
+                {% when 'Categories' or 'Featured Collections' %}
+                  {% assign group_icons_1 = childlink %}
+                {% when 'Shop Blouse' %}
+                  {% assign group_icons_2 = childlink %}
                 {% when 'Shop by Look' %}
                   {% assign group_looks = childlink %}
                 {% when 'Shop by Colour' or 'Shop by Color' %}
@@ -50,11 +53,11 @@
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
               <div class="vamas-nav__dropdown vamas-nav__dropdown--rich" data-mega>
                 <div class="vamas-nav__mega-main">
-                  {% if group_categories %}
+                  {% if group_icons_1 %}
                     <div class="vamas-nav__mega-section">
-                      <span class="vamas-nav__mega-section-title">Categories</span>
+                      <span class="vamas-nav__mega-section-title">{{ group_icons_1.title }}</span>
                       <div class="vamas-nav__mega-icons">
-                        {% for cat in group_categories.links %}
+                        {% for cat in group_icons_1.links %}
                           {% capture icon_img %}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
                           <a href="{{ cat.url }}" class="vamas-nav__icon-item">
                             <span class="vamas-nav__icon-thumb"><img src="{{ icon_img | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
@@ -64,8 +67,22 @@
                       </div>
                     </div>
                   {% endif %}
+                  {% if group_icons_2 %}
+                    <div class="vamas-nav__mega-section">
+                      <span class="vamas-nav__mega-section-title">{{ group_icons_2.title }}</span>
+                      <div class="vamas-nav__mega-icons">
+                        {% for cat in group_icons_2.links %}
+                          {% capture icon_img2 %}{% cycle 'nav-icons-2': 'prod-indigo.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-cobalt.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-darkmaroon.jpg' %}{% endcapture %}
+                          <a href="{{ cat.url }}" class="vamas-nav__icon-item">
+                            <span class="vamas-nav__icon-thumb"><img src="{{ icon_img2 | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
+                            <span class="vamas-nav__icon-label">{{ cat.title }}</span>
+                          </a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
                   {% for childlink in link.links %}
-                    {% unless childlink.title == 'Categories' or childlink.title == 'Shop by Look' or childlink.title == 'Shop by Colour' or childlink.title == 'Shop by Color' %}
+                    {% unless childlink.title == 'Categories' or childlink.title == 'Featured Collections' or childlink.title == 'Shop Blouse' or childlink.title == 'Shop by Look' or childlink.title == 'Shop by Colour' or childlink.title == 'Shop by Color' %}
                       {% if childlink.links != blank %}
                         <div class="vamas-nav__mega-section">
                           <span class="vamas-nav__mega-section-title">{{ childlink.title }}</span>
