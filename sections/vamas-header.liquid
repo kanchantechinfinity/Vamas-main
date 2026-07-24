@@ -30,23 +30,31 @@
           {% if link.links != blank %}
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
-              <div class="vamas-nav__dropdown">
-                {% for childlink in link.links %}
-                  {% if childlink.links != blank %}
-                    <div class="vamas-nav__row vamas-nav__row--has-sub">
-                      <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}<span class="vamas-nav__arrow">›</span></a>
-                      <div class="vamas-nav__submenu">
+              <div class="vamas-nav__dropdown" data-mega>
+                <div class="vamas-nav__dropdown-col vamas-nav__dropdown-col--main">
+                  {% for childlink in link.links %}
+                    {% if childlink.links != blank %}
+                      <div class="vamas-nav__row vamas-nav__row--has-sub" data-row data-target="panel-{{ link.title | handle }}-{{ forloop.index }}">
+                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}<span class="vamas-nav__arrow">›</span></a>
+                      </div>
+                    {% else %}
+                      <div class="vamas-nav__row">
+                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}</a>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div class="vamas-nav__dropdown-col vamas-nav__dropdown-col--sub">
+                  {% for childlink in link.links %}
+                    {% if childlink.links != blank %}
+                      <div class="vamas-nav__subpanel" data-panel="panel-{{ link.title | handle }}-{{ forloop.index }}">
                         {% for grandchildlink in childlink.links %}
                           <a href="{{ grandchildlink.url }}"{% if grandchildlink.active %} class="active"{% endif %}>{{ grandchildlink.title }}</a>
                         {% endfor %}
                       </div>
-                    </div>
-                  {% else %}
-                    <div class="vamas-nav__row">
-                      <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}</a>
-                    </div>
-                  {% endif %}
-                {% endfor %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
               </div>
             </div>
           {% else %}
@@ -109,6 +117,23 @@
   if (toggle && overlay) { toggle.addEventListener('click', openSearch); }
   if (close) { close.addEventListener('click', closeSearch); }
   if (overlay) { overlay.addEventListener('click', function(e){ if(e.target === overlay) closeSearch(); }); }
+
+  document.querySelectorAll('[data-mega]').forEach(function(mega){
+    var rows = mega.querySelectorAll('[data-row]');
+    if (!rows.length) return;
+    function activate(row){
+      rows.forEach(function(r){ r.classList.remove('is-active'); });
+      mega.querySelectorAll('.vamas-nav__subpanel').forEach(function(p){ p.classList.remove('is-active'); });
+      row.classList.add('is-active');
+      var panel = mega.querySelector('[data-panel="' + row.getAttribute('data-target') + '"]');
+      if (panel) panel.classList.add('is-active');
+    }
+    activate(rows[0]);
+    rows.forEach(function(row){
+      row.addEventListener('mouseenter', function(){ activate(row); });
+    });
+    mega.closest('.vamas-nav__item').addEventListener('mouseleave', function(){ activate(rows[0]); });
+  });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay) closeSearch(); });
 })();
 </script>
