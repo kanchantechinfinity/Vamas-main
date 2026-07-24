@@ -27,7 +27,18 @@
 
       <div class="vamas-nav__links">
         {% for link in section.settings.main_menu.links %}
-          <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
+          {% if link.links != blank %}
+            <div class="vamas-nav__item vamas-nav__item--has-dropdown">
+              <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
+              <div class="vamas-nav__dropdown">
+                {% for childlink in link.links %}
+                  <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}</a>
+                {% endfor %}
+              </div>
+            </div>
+          {% else %}
+            <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
+          {% endif %}
         {% endfor %}
       </div>
 

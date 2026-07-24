@@ -684,6 +684,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-nav__links{display:flex;gap:24px;}
 .vamas-nav__links a{color:rgba(66,0,1,.65);font-size:10px;font-weight:600;letter-spacing:1.2px;padding:4px 0;transition:color .2s;text-decoration:none;}
 .vamas-nav__links a:hover,.vamas-nav__links a.active{color:var(--color-maroon);}
+.vamas-nav__item{position:relative;display:flex;align-items:center;}
+.vamas-nav__dropdown{position:absolute;top:100%;left:0;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.12);padding:10px 0;min-width:180px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .2s,transform .2s,visibility .2s;z-index:50;}
+.vamas-nav__item--has-dropdown:hover .vamas-nav__dropdown{opacity:1;visibility:visible;transform:translateY(0);}
+.vamas-nav__dropdown a{padding:8px 20px;white-space:nowrap;font-size:10px;}
 .vamas-nav__icons{display:flex;align-items:center;gap:14px;}
 .vamas-nav__icons>a{color:rgba(66,0,1,.6);position:relative;transition:color .2s;display:flex;align-items:center;}
 .vamas-nav__icons>a:hover{color:var(--color-maroon);}
