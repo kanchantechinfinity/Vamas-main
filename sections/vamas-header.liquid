@@ -50,8 +50,16 @@
               {% endcase %}
             {% endfor %}
             {% assign feature_product = nil %}
-            {% if group_looks == nil and link.type == 'collection_link' and link.object.products.size > 0 %}
-              {% assign feature_product = link.object.products.first %}
+            {% assign linked_collection = nil %}
+            {% if link.type == 'collection_link' and link.object %}
+              {% assign linked_collection = link.object %}
+            {% elsif link.url contains '/collections/' %}
+              {% assign url_parts = link.url | split: '/collections/' %}
+              {% assign collection_handle = url_parts[1] | split: '/' | first | split: '?' | first %}
+              {% assign linked_collection = collections[collection_handle] %}
+            {% endif %}
+            {% if group_looks == nil and linked_collection and linked_collection.products.size > 0 %}
+              {% assign feature_product = linked_collection.products.first %}
             {% endif %}
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
