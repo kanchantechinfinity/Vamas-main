@@ -52,7 +52,7 @@
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
               <div class="vamas-nav__dropdown vamas-nav__dropdown--rich" data-mega>
-                <div class="vamas-nav__mega-main">
+                <div class="vamas-nav__mega-main{% if group_looks %} vamas-nav__mega-main--with-looks{% endif %}">
                   {% if group_icons_1 %}
                     <div class="vamas-nav__mega-section">
                       <span class="vamas-nav__mega-section-title">{{ group_icons_1.title }}</span>
