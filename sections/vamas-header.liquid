@@ -35,11 +35,18 @@
                   {% for childlink in link.links %}
                     {% if childlink.links != blank %}
                       <div class="vamas-nav__row vamas-nav__row--has-sub" data-row data-target="panel-{{ link.title | handle }}-{{ forloop.index }}">
-                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}<span class="vamas-nav__arrow">›</span></a>
+                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>
+                          <img class="vamas-nav__thumb" src="{{ 'prod-1.jpg' | asset_url }}" width="32" height="32" alt="" loading="lazy">
+                          <span>{{ childlink.title }}</span>
+                          <span class="vamas-nav__arrow">›</span>
+                        </a>
                       </div>
                     {% else %}
                       <div class="vamas-nav__row">
-                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>{{ childlink.title }}</a>
+                        <a href="{{ childlink.url }}"{% if childlink.active %} class="active"{% endif %}>
+                          <img class="vamas-nav__thumb" src="{{ 'prod-1.jpg' | asset_url }}" width="32" height="32" alt="" loading="lazy">
+                          <span>{{ childlink.title }}</span>
+                        </a>
                       </div>
                     {% endif %}
                   {% endfor %}
@@ -49,7 +56,10 @@
                     {% if childlink.links != blank %}
                       <div class="vamas-nav__subpanel" data-panel="panel-{{ link.title | handle }}-{{ forloop.index }}">
                         {% for grandchildlink in childlink.links %}
-                          <a href="{{ grandchildlink.url }}"{% if grandchildlink.active %} class="active"{% endif %}>{{ grandchildlink.title }}</a>
+                          <a href="{{ grandchildlink.url }}"{% if grandchildlink.active %} class="active"{% endif %}>
+                            <img class="vamas-nav__thumb" src="{{ 'prod-1.jpg' | asset_url }}" width="32" height="32" alt="" loading="lazy">
+                            <span>{{ grandchildlink.title }}</span>
+                          </a>
                         {% endfor %}
                       </div>
                     {% endif %}
