@@ -31,6 +31,7 @@
             {% assign group_categories = nil %}
             {% assign group_collections = nil %}
             {% assign group_looks = nil %}
+            {% assign group_colours = nil %}
             {% assign plain_links = link.links %}
             {% for childlink in link.links %}
               {% case childlink.title %}
@@ -40,6 +41,8 @@
                   {% assign group_collections = childlink %}
                 {% when 'Shop by Look' %}
                   {% assign group_looks = childlink %}
+                {% when 'Shop by Colour' or 'Shop by Color' %}
+                  {% assign group_colours = childlink %}
               {% endcase %}
             {% endfor %}
             {% assign banner_block = nil %}
@@ -75,6 +78,20 @@
                       <div class="vamas-nav__mega-col">
                         {% for l in col_links offset: half %}
                           <a href="{{ l.url }}">{{ l.title }}</a>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {% if group_colours %}
+                    <div class="vamas-nav__mega-swatches">
+                      <span class="vamas-nav__mega-swatches-title">Shop by Colour</span>
+                      <div class="vamas-nav__mega-swatches-grid">
+                        {% for colour in group_colours.links %}
+                          {% capture swatch_img %}{% cycle 'nav-swatches': 'prod-1.jpg', 'prod-cobalt.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-indigo.jpg' %}{% endcapture %}
+                          <a href="{{ colour.url }}" class="vamas-nav__swatch-item">
+                            <span class="vamas-nav__swatch-thumb"><img src="{{ swatch_img | asset_url }}" width="64" height="64" alt="" loading="lazy"></span>
+                            <span class="vamas-nav__swatch-label">{{ colour.title }}</span>
+                          </a>
                         {% endfor %}
                       </div>
                     </div>
