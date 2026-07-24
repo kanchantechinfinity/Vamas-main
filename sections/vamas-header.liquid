@@ -118,10 +118,14 @@
                   {% endif %}
                   {% if has_leaf %}
                     <div class="vamas-nav__mega-section">
-                      <div class="vamas-nav__mega-textlist">
+                      <div class="vamas-nav__mega-icons">
                         {% for childlink in link.links %}
                           {% if childlink.links == blank and childlink.title != 'Categories' and childlink.title != 'Shop by Look' and childlink.title != 'Shop by Colour' and childlink.title != 'Shop by Color' %}
-                            <a href="{{ childlink.url }}" class="vamas-nav__textlist-link">{{ childlink.title }}</a>
+                            {% capture leaf_img %}{% cycle 'nav-leaf': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                            <a href="{{ childlink.url }}" class="vamas-nav__icon-item">
+                              <span class="vamas-nav__icon-thumb"><img src="{{ leaf_img | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
+                              <span class="vamas-nav__icon-label">{{ childlink.title }}</span>
+                            </a>
                           {% endif %}
                         {% endfor %}
                       </div>
