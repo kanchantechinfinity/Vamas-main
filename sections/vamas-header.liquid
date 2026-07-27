@@ -275,6 +275,18 @@
       toggle.closest('.vamas-mobile-item').classList.toggle('is-open');
     });
   });
+
+  document.querySelectorAll('.vamas-nav__item--has-dropdown').forEach(function(item){
+    var dd = item.querySelector('.vamas-nav__dropdown');
+    if (!dd) return;
+    item.addEventListener('mouseenter', function(){
+      dd.classList.remove('vamas-nav__dropdown--align-right');
+      var rect = dd.getBoundingClientRect();
+      if (rect.right > window.innerWidth) {
+        dd.classList.add('vamas-nav__dropdown--align-right');
+      }
+    });
+  });
 })();
 </script>
 
