@@ -151,7 +151,7 @@
         <a href="{{ block.settings.cat_url | default: '/collections/all' }}" class="vamas-cat-circle">
           <div class="vamas-cat-circle__ring">
             {% if block.settings.cat_image != blank %}
-              <img src="{{ block.settings.cat_image | img_url: '300x300', crop: 'center' }}"
+              <img src="{{ block.settings.cat_image | img_url: '300x300', crop: 'top' }}"
                    alt="{{ block.settings.cat_name }}" loading="lazy" width="150" height="150">
             {% elsif block.settings.image_asset != blank %}
               <img src="{{ block.settings.image_asset | asset_url }}"
