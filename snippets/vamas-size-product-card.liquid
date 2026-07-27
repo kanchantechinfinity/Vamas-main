@@ -1,0 +1,71 @@
+{% comment %} Blouses by Size card — render with: product: product {% endcomment %}
+{% assign first_variant = product.variants.first %}
+{% assign on_sale = false %}
+{% if first_variant.compare_at_price > first_variant.price %}
+  {% assign on_sale = true %}
+{% endif %}
+{% assign discount_pct = 0 %}
+{% if on_sale %}
+  {% assign diff = first_variant.compare_at_price | minus: first_variant.price %}
+  {% assign discount_pct = diff | times: 100 | divided_by: first_variant.compare_at_price | round %}
+{% endif %}
+
+{% assign size_values = blank %}
+{% for option in product.options_with_values %}
+  {% assign option_name_lower = option.name | downcase %}
+  {% if option_name_lower contains 'size' %}
+    {% assign size_values = option.values %}
+  {% endif %}
+{% endfor %}
+
+<div class="vamas-prod-card vamas-size-card">
+  <div class="vamas-prod-card__img">
+    <a href="{{ product.url }}">
+      {% if product.featured_image %}
+        <img src="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+             alt="{{ product.featured_image.alt | escape | default: product.title }}"
+             loading="lazy" width="400" height="533">
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </a>
+    {% unless product.available %}
+      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">SOLD OUT</span>
+    {% else %}
+      {% if on_sale %}
+        <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">SALE</span>
+      {% endif %}
+    {% endunless %}
+  </div>
+
+  <div class="vamas-prod-card__body">
+    <a href="{{ product.url }}" style="text-decoration:none;">
+      <div class="vamas-prod-card__name">{{ product.title }}</div>
+    </a>
+    <div class="vamas-prod-card__type">{{ product.type | default: 'Blouse' }}</div>
+
+    <div class="vamas-prod-card__price">
+      <span class="price">{{ first_variant.price | money }}</span>
+      {% if on_sale %}
+        <span class="original">{{ first_variant.compare_at_price | money }}</span>
+        <span class="discount">{{ discount_pct }}% off</span>
+      {% endif %}
+    </div>
+
+    {% if size_values.size > 0 %}
+      <div class="vamas-size-card__sizes">
+        {% for value in size_values %}<span class="vamas-size-card__pill">{{ value }}</span>{% endfor %}
+      </div>
+    {% endif %}
+
+    {% if product.available %}
+      <form method="post" action="/cart/add">
+        <input type="hidden" name="id" value="{{ first_variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="vamas-atc">ADD TO CART</button>
+      </form>
+    {% else %}
+      <button class="vamas-atc" disabled style="opacity:0.5;cursor:not-allowed;">SOLD OUT</button>
+    {% endif %}
+  </div>
+</div>

@@ -227,6 +227,26 @@
 </section>
 {% endif %}
 
+{% comment %} ── Blouses by Size ──────────────────────── {% endcomment %}
+{% if section.settings.show_by_size %}
+<section class="vamas-section">
+  <div class="vamas-section__header">
+    <div>
+      <h2 class="vamas-section__title">Blouses <span>by Size</span></h2>
+      <p class="vamas-section__subtitle">Find your perfect fit, sorted your way</p>
+    </div>
+    <a href="{{ collections[section.settings.by_size_collection].url | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
+  </div>
+  <div class="vamas-size-row">
+    {% assign bs_col = collections[section.settings.by_size_collection] %}
+    {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% endif %}
+    {% for product in bs_col.products limit: 10 %}
+      {% render 'vamas-size-product-card', product: product %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 {% comment %} ── Brand Story ──────────────────────── {% endcomment %}
 {% if section.settings.show_brand %}
 <section class="vamas-brand">
@@ -469,6 +489,9 @@
     { "type": "header", "content": "New Arrivals" },
     { "type": "checkbox", "id": "show_new_arrivals", "label": "Show New Arrivals", "default": true },
     { "type": "collection", "id": "new_arrivals_collection", "label": "New Arrivals Collection" },
+    { "type": "header", "content": "Blouses by Size" },
+    { "type": "checkbox", "id": "show_by_size", "label": "Show Blouses by Size", "default": true },
+    { "type": "collection", "id": "by_size_collection", "label": "Blouses by Size Collection" },
     { "type": "header", "content": "Best Sellers" },
     { "type": "checkbox", "id": "show_bestsellers", "label": "Show Best Sellers", "default": true },
     { "type": "collection", "id": "bestsellers_collection", "label": "Best Sellers Collection" },
