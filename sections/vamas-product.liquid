@@ -138,6 +138,21 @@
         {% endif %}
       {% endfor %}
 
+      <div class="qty-row">
+        <span class="qty-label">QUANTITY</span>
+        <div class="qty-control">
+          <button type="button" class="qty-btn" id="qty-minus">&#8722;</button>
+          <span class="qty-num" id="qty-num">1</span>
+          <button type="button" class="qty-btn" id="qty-plus">&#43;</button>
+          <input type="hidden" name="quantity" id="qty-hidden-input" value="1">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-atc" id="atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
+        {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+      </button>
+      <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} disabled{% endunless %}>&#9889; BUY NOW</button>
+
       {% if section.settings.custom_note != blank %}
       <div class="custom-note">&#9986; {{ section.settings.custom_note }}</div>
       {% endif %}
@@ -154,21 +169,6 @@
         <div class="pincode-result" id="pincode-result"></div>
         {% endif %}
       </div>
-
-      <div class="qty-row">
-        <span class="qty-label">QUANTITY</span>
-        <div class="qty-control">
-          <button type="button" class="qty-btn" id="qty-minus">&#8722;</button>
-          <span class="qty-num" id="qty-num">1</span>
-          <button type="button" class="qty-btn" id="qty-plus">&#43;</button>
-          <input type="hidden" name="quantity" id="qty-hidden-input" value="1">
-        </div>
-      </div>
-
-      <button type="submit" class="btn-atc" id="atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
-        {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
-      </button>
-      <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} disabled{% endunless %}>&#9889; BUY NOW</button>
     {% endform %}
     </product-form>
 
