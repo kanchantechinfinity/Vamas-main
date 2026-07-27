@@ -71,6 +71,33 @@
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
               <div class="vamas-nav__dropdown vamas-nav__dropdown--rich" data-mega>
+                {% if feature_product %}
+                  <div class="vamas-nav__mega-feature">
+                    <span class="vamas-nav__mega-looks-title">Best Seller</span>
+                    <a href="{{ feature_product.url }}" class="vamas-nav__feature-card">
+                      <span class="vamas-nav__feature-thumb">
+                        {% if feature_product.featured_image %}
+                          <img src="{{ feature_product.featured_image | img_url: '300x' }}" width="150" height="150" alt="{{ feature_product.title | escape }}" loading="lazy">
+                        {% endif %}
+                      </span>
+                      <span class="vamas-nav__feature-title">{{ feature_product.title }}</span>
+                      <span class="vamas-nav__feature-price">{{ feature_product.price | money }}</span>
+                    </a>
+                  </div>
+                {% elsif group_looks %}
+                  <div class="vamas-nav__mega-looks">
+                    <span class="vamas-nav__mega-looks-title">Shop by Look</span>
+                    <div class="vamas-nav__mega-looks-grid">
+                      {% for look in group_looks.links %}
+                        {% capture look_img %}{% cycle 'nav-looks': 'prod-indigo.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg' %}{% endcapture %}
+                        <a href="{{ look.url }}" class="vamas-nav__look-item">
+                          <span class="vamas-nav__look-thumb"><img src="{{ look_img | asset_url }}" width="72" height="72" alt="" loading="lazy"></span>
+                          <span class="vamas-nav__look-label">{{ look.title }}</span>
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
                 <div class="vamas-nav__mega-main">
                   {% if group_icons_1 %}
                     <div class="vamas-nav__mega-section">
@@ -151,33 +178,6 @@
                     </div>
                   {% endif %}
                 </div>
-                {% if feature_product %}
-                  <div class="vamas-nav__mega-feature">
-                    <span class="vamas-nav__mega-looks-title">Best Seller</span>
-                    <a href="{{ feature_product.url }}" class="vamas-nav__feature-card">
-                      <span class="vamas-nav__feature-thumb">
-                        {% if feature_product.featured_image %}
-                          <img src="{{ feature_product.featured_image | img_url: '300x' }}" width="150" height="150" alt="{{ feature_product.title | escape }}" loading="lazy">
-                        {% endif %}
-                      </span>
-                      <span class="vamas-nav__feature-title">{{ feature_product.title }}</span>
-                      <span class="vamas-nav__feature-price">{{ feature_product.price | money }}</span>
-                    </a>
-                  </div>
-                {% elsif group_looks %}
-                  <div class="vamas-nav__mega-looks">
-                    <span class="vamas-nav__mega-looks-title">Shop by Look</span>
-                    <div class="vamas-nav__mega-looks-grid">
-                      {% for look in group_looks.links %}
-                        {% capture look_img %}{% cycle 'nav-looks': 'prod-indigo.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg' %}{% endcapture %}
-                        <a href="{{ look.url }}" class="vamas-nav__look-item">
-                          <span class="vamas-nav__look-thumb"><img src="{{ look_img | asset_url }}" width="72" height="72" alt="" loading="lazy"></span>
-                          <span class="vamas-nav__look-label">{{ look.title }}</span>
-                        </a>
-                      {% endfor %}
-                    </div>
-                  </div>
-                {% endif %}
               </div>
             </div>
           {% else %}
