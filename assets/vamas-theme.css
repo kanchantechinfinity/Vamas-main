@@ -227,7 +227,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-cat-circle-row {
   display: flex;
   flex-wrap: nowrap;
-  gap: 28px 20px;
+  justify-content: space-between;
+  gap: 20px;
   overflow-x: auto;
   padding-bottom: 6px;
   -webkit-overflow-scrolling: touch;
