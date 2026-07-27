@@ -276,14 +276,22 @@
     });
   });
 
+  var navLogo = document.querySelector('.vamas-nav__logo');
   document.querySelectorAll('.vamas-nav__item--has-dropdown').forEach(function(item){
     var dd = item.querySelector('.vamas-nav__dropdown');
     if (!dd) return;
     item.addEventListener('mouseenter', function(){
-      dd.classList.remove('vamas-nav__dropdown--align-right');
+      dd.style.left = '';
+      dd.style.right = '';
+      if (navLogo) {
+        var itemRect = item.getBoundingClientRect();
+        var logoRect = navLogo.getBoundingClientRect();
+        var offset = logoRect.left - itemRect.left;
+        dd.style.left = offset + 'px';
+      }
       var rect = dd.getBoundingClientRect();
-      if (rect.right > window.innerWidth) {
-        dd.classList.add('vamas-nav__dropdown--align-right');
+      if (rect.right > window.innerWidth - 16) {
+        dd.style.left = (parseFloat(dd.style.left || 0) - (rect.right - (window.innerWidth - 16))) + 'px';
       }
     });
   });
