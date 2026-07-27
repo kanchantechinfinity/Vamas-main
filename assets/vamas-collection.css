@@ -81,15 +81,16 @@ a{text-decoration:none;color:inherit;}
 
 /* -- COLLECTION HERO -- */
 .col-hero{
-  background:var(--m);
-  min-height:260px;
+  background:var(--m) url('https://images.unsplash.com/photo-1602229235490-d2d76988115a?w=1600&q=80&auto=format&fit=crop') center/cover;
+  min-height:150px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 var(--page-gutter);
+  padding:36px var(--page-gutter);
   position:relative;
   overflow:hidden;
 }
+.col-hero::before{content:'';position:absolute;inset:0;background:rgba(42,0,1,0.68);z-index:1;}
 .col-hero-left{position:relative;z-index:2;}
 .col-hero-breadcrumb{
   font-size:11px;
@@ -103,7 +104,7 @@ a{text-decoration:none;color:inherit;}
 .col-hero-title{
   font-family:var(--font-heading);
   font-weight:700;
-  font-size:46px;
+  font-size:34px;
   color:var(--w);
   line-height:1.1;
   margin-bottom:10px;

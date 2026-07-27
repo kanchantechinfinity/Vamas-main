@@ -78,8 +78,8 @@
 
     /* -- Hero --- */
     .contact-hero {
-      background: var(--m);
-      padding: 80px var(--page-gutter) 72px;
+      background: var(--m) url('https://images.unsplash.com/photo-1640181637089-cce4a3040ed2?w=1600&q=80&auto=format&fit=crop') center/cover;
+      padding: 44px var(--page-gutter) 40px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -87,22 +87,26 @@
     .contact-hero::before {
       content: '';
       position: absolute; inset: 0;
-      background-image: radial-gradient(circle at 20% 50%, rgba(231,209,166,0.06) 0%, transparent 60%),
+      background-image: linear-gradient(rgba(42,0,1,0.7), rgba(42,0,1,0.7)),
+                        radial-gradient(circle at 20% 50%, rgba(231,209,166,0.06) 0%, transparent 60%),
                         radial-gradient(circle at 80% 30%, rgba(231,209,166,0.04) 0%, transparent 50%);
       pointer-events: none;
     }
     .hero-eye {
       font-size: 10px; font-weight: 700; letter-spacing: 4px;
-      color: rgba(231,209,166,0.5); margin-bottom: 18px;
+      color: rgba(231,209,166,0.5); margin-bottom: 14px;
+      position: relative; z-index: 1;
     }
     .hero-title {
       font-family: var(--font-heading);
-      font-size: 56px; font-weight: 700; color: var(--g);
-      line-height: 1.15; margin-bottom: 14px;
+      font-size: 40px; font-weight: 700; color: var(--g);
+      line-height: 1.15; margin-bottom: 10px;
+      position: relative; z-index: 1;
     }
     .hero-sub {
-      font-size: 14px; color: rgba(231,209,166,0.55);
+      font-size: 14px; color: rgba(231,209,166,0.75);
       letter-spacing: 0.5px;
+      position: relative; z-index: 1;
     }
 
     /* -- Contact Section --- */
@@ -406,8 +410,8 @@
     /* -- Responsive --- */
     @media (min-width: 769px) and (max-width: 1024px) {
       .nav-outer { padding: 10px 32px; }
-      .contact-hero { padding: 64px 48px 56px; }
-      .hero-title { font-size: 44px; }
+      .contact-hero { padding: 36px 48px 32px; }
+      .hero-title { font-size: 34px; }
       .contact-sec { padding: 56px 48px; }
       .contact-grid { grid-template-columns: 1fr; gap: 32px; }
       .faq-sec { padding: 56px 48px; }
@@ -420,8 +424,8 @@
       .nav-outer { padding: 10px 16px; }
       .nav { padding: 8px 8px 8px 16px; }
       .nav-links { display: none; }
-      .contact-hero { padding: 48px 24px 40px; }
-      .hero-title { font-size: 36px; }
+      .contact-hero { padding: 30px 24px 26px; }
+      .hero-title { font-size: 28px; }
       .contact-sec { padding: 32px 20px; }
       .contact-grid { grid-template-columns: 1fr; gap: 28px; }
       .info-cards { grid-template-columns: 1fr; }
