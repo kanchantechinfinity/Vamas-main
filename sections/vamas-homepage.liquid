@@ -347,117 +347,70 @@
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
 {% assign test_blocks = section.blocks | where: 'type', 'testimonial' %}
 {% if test_blocks.size > 0 and section.settings.show_testimonials %}
-<section class="vamas-section vamas-section--alt">
+<section class="vamas-section vamas-section--alt vamas-test-section">
   <div class="vamas-section__header">
     <div>
       <h2 class="vamas-section__title">Customer <span>Reviews</span></h2>
       <p class="vamas-section__subtitle">Over 10,000 happy customers</p>
     </div>
   </div>
-  <div class="vamas-test-carousel" data-test-carousel>
-    <div class="vamas-test-viewport">
-      <div class="vamas-test-track" data-test-track>
-        {% for block in section.blocks %}
-          {% if block.type == 'testimonial' %}
+
+  <div class="vamas-test-marquee-row">
+    <div class="vamas-test-marquee-track">
+      {% for dup in (1..2) %}
+        {% for block in test_blocks %}
+          {% assign mod = forloop.index0 | modulo: 2 %}
+          {% if mod == 0 %}
             <div class="vamas-test-card">
-              <div class="vamas-test-card__avatar">{{ block.settings.reviewer_name | slice: 0 | upcase }}</div>
-              <div class="vamas-test-card__stars">
-                {% for i in (1..block.settings.rating) %}★{% endfor %}
+              <div class="vamas-test-card__avatar">
+                {% if block.settings.reviewer_photo != blank %}
+                  <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
+                {% else %}
+                  <span>{{ block.settings.reviewer_name | slice: 0 | upcase }}</span>
+                {% endif %}
               </div>
-              <p class="vamas-test-card__text">"{{ block.settings.review_text }}"</p>
-              {% if block.settings.reviewer_photo != blank %}
-                <div class="vamas-test-card__polaroid">
-                  <img src="{{ block.settings.reviewer_photo | img_url: '400x400', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
-                </div>
-              {% endif %}
-              <div class="vamas-test-card__name">— {{ block.settings.reviewer_name }}</div>
-              <div class="vamas-test-card__info">{{ block.settings.reviewer_location | default: 'India' | upcase }} &middot; {{ block.settings.product_type | default: 'Blouse Collection' | upcase }}</div>
-              <div class="vamas-test-card__badge">Real customer &middot; Not paid</div>
+              <div class="vamas-test-card__body">
+                <div class="vamas-test-card__stars">{% for s in (1..block.settings.rating) %}★{% endfor %}</div>
+                <p class="vamas-test-card__text">{{ block.settings.review_text }}</p>
+                <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
+                <div class="vamas-test-card__verified">&#10003; Verified buyer</div>
+              </div>
             </div>
           {% endif %}
         {% endfor %}
-      </div>
-    </div>
-    <div class="vamas-test-controls">
-      <button class="vamas-test-arrow vamas-test-arrow--prev" data-test-prev aria-label="Previous reviews">‹</button>
-      <div class="vamas-test-dots" data-test-dots></div>
-      <button class="vamas-test-arrow vamas-test-arrow--next" data-test-next aria-label="Next reviews">›</button>
+      {% endfor %}
     </div>
   </div>
+
+  {% if test_blocks.size > 1 %}
+  <div class="vamas-test-marquee-row vamas-test-marquee-row--reverse">
+    <div class="vamas-test-marquee-track">
+      {% for dup in (1..2) %}
+        {% for block in test_blocks %}
+          {% assign mod = forloop.index0 | modulo: 2 %}
+          {% if mod == 1 %}
+            <div class="vamas-test-card">
+              <div class="vamas-test-card__avatar">
+                {% if block.settings.reviewer_photo != blank %}
+                  <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
+                {% else %}
+                  <span>{{ block.settings.reviewer_name | slice: 0 | upcase }}</span>
+                {% endif %}
+              </div>
+              <div class="vamas-test-card__body">
+                <div class="vamas-test-card__stars">{% for s in (1..block.settings.rating) %}★{% endfor %}</div>
+                <p class="vamas-test-card__text">{{ block.settings.review_text }}</p>
+                <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
+                <div class="vamas-test-card__verified">&#10003; Verified buyer</div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </section>
-<script>
-(function () {
-  var carousel = document.querySelector('[data-test-carousel]');
-  if (!carousel) return;
-  var track = carousel.querySelector('[data-test-track]');
-  if (!track) return;
-  var cards = track.querySelectorAll('.vamas-test-card');
-  var prevBtn = carousel.querySelector('[data-test-prev]');
-  var nextBtn = carousel.querySelector('[data-test-next]');
-  var dotsWrap = carousel.querySelector('[data-test-dots]');
-  var page = 0, perView = 1, pages = 1;
-
-  function perViewNow() { var w = window.innerWidth; return w >= 1024 ? 3 : (w >= 768 ? 2 : 1); }
-
-  function render() {
-    // step one card at a time; last position shows a full set (no blank space)
-    var offset = cards.length ? cards[page].offsetLeft : 0;
-    track.style.transform = 'translateX(-' + offset + 'px)';
-    if (dotsWrap) {
-      var dots = dotsWrap.querySelectorAll('.vamas-test-dot');
-      for (var i = 0; i < dots.length; i++) {
-        dots[i].classList.toggle('active', i >= page && i < page + perView);
-      }
-    }
-  }
-
-  function buildDots() {
-    if (!dotsWrap) return;
-    dotsWrap.innerHTML = '';
-    for (var i = 0; i < cards.length; i++) {
-      var dot = document.createElement('button');
-      dot.className = 'vamas-test-dot';
-      dot.setAttribute('aria-label', 'Show review ' + (i + 1));
-      (function (idx) {
-        dot.addEventListener('click', function () { page = Math.min(idx, pages - 1); render(); reset(); });
-      })(i);
-      dotsWrap.appendChild(dot);
-    }
-  }
-
-  function recompute() {
-    perView = perViewNow();
-    pages = Math.max(1, cards.length - perView + 1);
-    if (page > pages - 1) page = pages - 1;
-    if (pages <= 1) { carousel.setAttribute('data-single', ''); } else { carousel.removeAttribute('data-single'); }
-    buildDots();
-    render();
-  }
-
-  if (prevBtn) prevBtn.addEventListener('click', function () {
-    page = (page - 1 + pages) % pages; render(); reset();
-  });
-  if (nextBtn) nextBtn.addEventListener('click', function () {
-    page = (page + 1) % pages; render(); reset();
-  });
-
-  var timer;
-  function reset() {
-    clearInterval(timer);
-    if (pages > 1) { timer = setInterval(function () { page = (page + 1) % pages; render(); }, 4000); }
-  }
-  carousel.addEventListener('mouseenter', function () { clearInterval(timer); });
-  carousel.addEventListener('mouseleave', reset);
-
-  var t;
-  window.addEventListener('resize', function () {
-    clearTimeout(t); t = setTimeout(function () { recompute(); reset(); }, 150);
-  });
-
-  recompute();
-  reset();
-})();
-</script>
 {% endif %}
 
 {% comment %} ── Browse Tags ──────────────────────── {% endcomment %}

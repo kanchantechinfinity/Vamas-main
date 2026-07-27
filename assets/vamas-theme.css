@@ -492,117 +492,61 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-tag:hover { background: var(--color-maroon); color: var(--color-gold); }
 
 /* ── Testimonials ─────────────────────── */
-.vamas-test-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.vamas-test-section { overflow: hidden; }
 
 .vamas-test-card {
-  position: relative;
-  background: var(--color-bg);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #fff;
   border: 1px solid rgba(235, 211, 173, 0.5);
-  border-radius: 18px;
-  padding: 36px 24px 24px;
-  text-align: center;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(66,0,1,0.06);
+  padding: 18px;
+  width: 340px;
+  flex-shrink: 0;
 }
 
 .vamas-test-card__avatar {
-  position: absolute;
-  top: -22px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
   background: var(--color-maroon);
   color: var(--color-gold);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 22px;
   font-weight: 800;
   flex-shrink: 0;
-  border: 2px solid var(--color-gold);
-  box-shadow: 0 4px 12px rgba(66,0,1,0.25);
+  overflow: hidden;
 }
+.vamas-test-card__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.vamas-test-card__stars { color: var(--color-gold-dark); font-size: 15px; margin-bottom: 14px; }
-.vamas-test-card__text { font-size: 14px; color: var(--color-maroon); line-height: 1.7; margin-bottom: 18px; font-style: italic; font-family: var(--font-heading); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+.vamas-test-card__body { min-width: 0; }
+.vamas-test-card__stars { color: var(--color-gold-dark); font-size: 13px; margin-bottom: 6px; letter-spacing: 1px; }
+.vamas-test-card__text { font-size: 12.5px; color: rgba(66,0,1,0.75); line-height: 1.55; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+.vamas-test-card__name { font-size: 12.5px; font-weight: 700; color: var(--color-maroon); }
+.vamas-test-card__verified { font-size: 10px; color: #2e7d32; font-weight: 600; margin-top: 2px; }
 
-.vamas-test-card__polaroid {
-  background: #fff;
-  padding: 8px 8px 16px;
-  border-radius: 4px;
-  box-shadow: 0 6px 16px rgba(66,0,1,0.15);
-  width: 150px;
-  margin: 0 auto 18px;
-  transform: rotate(-2deg);
-}
-.vamas-test-card__polaroid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 2px; display: block; }
-
-.vamas-test-card__name { font-size: 13px; font-weight: 700; color: var(--color-maroon); font-family: var(--font-heading); font-style: italic; }
-.vamas-test-card__info { font-size: 9px; letter-spacing: 1px; color: rgba(66,0,1,0.4); margin: 4px 0 14px; }
-.vamas-test-card__badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 600;
-  color: #2e7d32;
-  border: 1px solid rgba(46,125,50,0.4);
-  background: rgba(46,125,50,0.06);
-  border-radius: 20px;
-  padding: 5px 14px;
-}
-
-/* ── Testimonials carousel ────────────── */
-.vamas-test-carousel { position: relative; }
-.vamas-test-viewport { overflow: hidden; padding-top: 24px; margin-top: -24px; }
-.vamas-test-track { display: flex; transition: transform 0.5s ease; }
-.vamas-test-carousel .vamas-test-card {
-  flex: 0 0 calc(33.333% - 16px);
-  margin-right: 24px;
-  box-sizing: border-box;
-}
-.vamas-test-carousel .vamas-test-card:last-child { margin-right: 0; }
-.vamas-test-carousel[data-single] .vamas-test-arrow,
-.vamas-test-carousel[data-single] .vamas-test-dots { display: none; }
-@media (max-width: 1024px) {
-  .vamas-test-carousel .vamas-test-card { flex: 0 0 calc(50% - 12px); }
-}
-
-.vamas-test-controls { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 28px; }
-.vamas-test-dots { display: none; }
-.vamas-test-arrow {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--color-maroon);
-  border: 1px solid rgba(235, 211, 173, 0.4);
-  color: var(--color-gold);
-  font-size: 16px;
-  cursor: pointer;
+/* ── Testimonials marquee ─────────────── */
+.vamas-test-marquee-row { overflow: hidden; margin-top: 20px; }
+.vamas-test-marquee-row:first-of-type { margin-top: 8px; }
+.vamas-test-marquee-track {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  line-height: 1;
-  flex-shrink: 0;
+  gap: 18px;
+  width: max-content;
+  animation: vamas-test-scroll 50s linear infinite;
 }
-.vamas-test-arrow:hover { background: var(--color-gold); color: var(--color-maroon); }
-
-.vamas-test-dots {
-  display: none;
+.vamas-test-marquee-row--reverse .vamas-test-marquee-track { animation-direction: reverse; }
+.vamas-test-marquee-row:hover .vamas-test-marquee-track { animation-play-state: paused; }
+@keyframes vamas-test-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
-.vamas-test-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(66, 0, 1, 0.2);
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  padding: 0;
-}
-.vamas-test-dot.active {
-  background: var(--color-gold);
-  width: 24px;
-  border-radius: 4px;
+@media (max-width: 768px) {
+  .vamas-test-card { width: 260px; padding: 14px; }
+  .vamas-test-marquee-track { animation-duration: 32s; }
 }
 
 /* ── Newsletter ───────────────────────── */
@@ -731,8 +675,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__heading { font-size: 28px; }
   .vamas-brand__image { width: 100%; height: 220px; }
   .vamas-brand__stats { gap: 24px; }
-  .vamas-test-grid { grid-template-columns: 1fr; }
-  .vamas-test-carousel .vamas-test-card { flex: 0 0 100%; margin-right: 0; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
   .vamas-trust { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 0; }
