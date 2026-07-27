@@ -14,8 +14,8 @@
   .about-story__h2 { font-family: var(--font-heading); font-size: 42px; font-weight: 700; color: var(--color-maroon); line-height: 1.25; margin-bottom: 28px; }
   .about-story__h2 em { font-style: italic; color: var(--color-maroon-light); }
   .about-story__p { font-size: 14px; font-weight: 300; color: rgba(66,0,1,0.65); line-height: 1.9; margin-bottom: 18px; }
-  .about-story__img-wrap { flex: 1; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 64px rgba(66,0,1,0.18); max-width: 480px; }
-  .about-story__img { width: 100%; height: 520px; object-fit: cover; object-position: center; display: block; }
+  .about-story__img-wrap { flex: 1; border-radius: 16px; overflow: hidden; box-shadow: 0 24px 64px rgba(66,0,1,0.18); max-width: 480px; background: var(--color-bg); }
+  .about-story__img { width: 100%; height: auto; max-height: 620px; object-fit: contain; object-position: center; display: block; }
 
   .about-stats { background: var(--color-maroon); display: flex; align-items: center; justify-content: center; gap: 0; }
   .about-stats__item { flex: 1; text-align: center; padding: 52px 40px; border-right: 1px solid rgba(231,209,166,0.12); }
@@ -37,9 +37,10 @@
 
   .about-team { padding: 96px var(--page-gutter); background: var(--color-bg); text-align: center; }
   .about-team__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 960px; margin: 0 auto; }
-  .about-team__card { background: #fff; border-radius: 16px; padding: 40px 28px; border: 1px solid rgba(231,209,166,0.3); transition: transform 0.25s, box-shadow 0.25s; }
+  .about-team__card { background: #fff; border-radius: 16px; padding: 52px 32px; border: 1px solid rgba(231,209,166,0.3); transition: transform 0.25s, box-shadow 0.25s; }
   .about-team__card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(66,0,1,0.10); }
-  .about-team__avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--color-maroon); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-family: var(--font-heading); font-size: 28px; font-weight: 700; color: var(--color-gold); letter-spacing: 1px; }
+  .about-team__avatar { width: 128px; height: 128px; border-radius: 50%; background: var(--color-maroon); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-family: var(--font-heading); font-size: 40px; font-weight: 700; color: var(--color-gold); letter-spacing: 1px; overflow: hidden; }
+  .about-team__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .about-team__name { font-family: var(--font-heading); font-size: 20px; font-weight: 700; color: var(--color-maroon); margin-bottom: 6px; }
   .about-team__role { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; color: var(--color-gold-dark); margin-bottom: 14px; text-transform: uppercase; }
   .about-team__bio { font-size: 12px; font-weight: 300; color: rgba(66,0,1,0.6); line-height: 1.8; }
@@ -122,7 +123,7 @@
   </div>
   <div class="about-story__img-wrap">
     {% if section.settings.story_image != blank %}
-      <img src="{{ section.settings.story_image | img_url: '480x520', crop: 'center' }}" alt="Vamas handcrafted blouse" class="about-story__img" loading="lazy" width="480" height="520">
+      <img src="{{ section.settings.story_image | img_url: '800x' }}" alt="Vamas handcrafted blouse" class="about-story__img" loading="lazy" width="480" height="520">
     {% elsif section.settings.story_image_asset != blank %}
       <img src="{{ section.settings.story_image_asset | asset_url }}" alt="Vamas handcrafted blouse" class="about-story__img" loading="lazy" width="480" height="520">
     {% else %}
@@ -187,7 +188,13 @@
     {% for block in section.blocks %}
       {% if block.type == 'member' %}
         <div class="about-team__card" {{ block.shopify_attributes }}>
-          <div class="about-team__avatar">{{ block.settings.initials }}</div>
+          <div class="about-team__avatar">
+            {% if block.settings.photo != blank %}
+              <img src="{{ block.settings.photo | img_url: '256x256', crop: 'center' }}" alt="{{ block.settings.name | escape }}" loading="lazy" width="128" height="128">
+            {% else %}
+              {{ block.settings.initials }}
+            {% endif %}
+          </div>
           <div class="about-team__name">{{ block.settings.name }}</div>
           <div class="about-team__role">{{ block.settings.role }}</div>
           <div class="about-team__bio">{{ block.settings.bio }}</div>
@@ -306,7 +313,8 @@
       "type": "member",
       "name": "Team Member",
       "settings": [
-        { "type": "text", "id": "initials", "label": "Initials", "default": "MS" },
+        { "type": "image_picker", "id": "photo", "label": "Photo", "info": "If set, shows instead of initials" },
+        { "type": "text", "id": "initials", "label": "Initials (fallback if no photo)", "default": "MS" },
         { "type": "text", "id": "name", "label": "Name", "default": "Meera Sharma" },
         { "type": "text", "id": "role", "label": "Role", "default": "Founder" },
         { "type": "textarea", "id": "bio", "label": "Bio", "default": "Visionary behind Vamas, passionate about preserving Indian textile heritage." }
