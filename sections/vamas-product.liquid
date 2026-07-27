@@ -148,10 +148,12 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-atc" id="atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
-        {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
-      </button>
-      <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} disabled{% endunless %}>&#9889; BUY NOW</button>
+      <div class="atc-buy-row">
+        <button type="submit" class="btn-atc" id="atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
+          {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
+        </button>
+        <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} disabled{% endunless %}>&#9889; BUY NOW</button>
+      </div>
 
       {% if section.settings.custom_note != blank %}
       <div class="custom-note">&#9986; {{ section.settings.custom_note }}</div>
