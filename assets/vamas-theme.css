@@ -204,6 +204,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-section--cats { padding-left: 24px; padding-right: 24px; }
 .vamas-section--cats .vamas-section__header,
 .vamas-section--cats .vamas-cat-circle-row { max-width: 1600px; margin-left: auto; margin-right: auto; }
+.vamas-section--cats .vamas-section__header { flex-direction: column; align-items: center; text-align: center; position: relative; }
+.vamas-section--cats .vamas-view-all { position: absolute; right: 0; bottom: 6px; }
 
 .vamas-section__header {
   display: flex;
