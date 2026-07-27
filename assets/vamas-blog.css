@@ -12,7 +12,6 @@
 /* ---- Header ---- */
 .vblog-header {
   text-align: center;
-  max-width: 720px;
   margin: 0 calc(var(--page-gutter) * -1) 40px;
   padding: 44px 24px 36px;
   position: relative;
