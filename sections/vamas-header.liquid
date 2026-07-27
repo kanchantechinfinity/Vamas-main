@@ -209,7 +209,35 @@
 
   <div class="vamas-nav__mobile-menu" id="vamas-nav-mobile-menu">
     {% for link in section.settings.main_menu.links %}
-      <a href="{{ link.url }}">{{ link.title | upcase }}</a>
+      <div class="vamas-mobile-item">
+        {% if link.links != blank %}
+          <button class="vamas-mobile-toggle" type="button">
+            <span>{{ link.title | upcase }}</span>
+            <span class="vamas-mobile-caret">+</span>
+          </button>
+          <div class="vamas-mobile-submenu">
+            {% for childlink in link.links %}
+              <div class="vamas-mobile-item vamas-mobile-item--sub">
+                {% if childlink.links != blank %}
+                  <button class="vamas-mobile-toggle vamas-mobile-toggle--sub" type="button">
+                    <span>{{ childlink.title }}</span>
+                    <span class="vamas-mobile-caret">+</span>
+                  </button>
+                  <div class="vamas-mobile-submenu vamas-mobile-submenu--grand">
+                    {% for grandchildlink in childlink.links %}
+                      <a href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <a href="{{ childlink.url }}" class="vamas-mobile-link--sub">{{ childlink.title }}</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <a href="{{ link.url }}" class="vamas-mobile-link">{{ link.title | upcase }}</a>
+        {% endif %}
+      </div>
     {% endfor %}
   </div>
 </div>
@@ -241,6 +269,12 @@
   if (close) { close.addEventListener('click', closeSearch); }
   if (overlay) { overlay.addEventListener('click', function(e){ if(e.target === overlay) closeSearch(); }); }
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay) closeSearch(); });
+
+  document.querySelectorAll('.vamas-mobile-toggle').forEach(function(toggle){
+    toggle.addEventListener('click', function(){
+      toggle.closest('.vamas-mobile-item').classList.toggle('is-open');
+    });
+  });
 })();
 </script>
 
