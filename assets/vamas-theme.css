@@ -227,8 +227,14 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-cat-circle-row {
   display: flex;
   flex-wrap: nowrap;
+  justify-content: space-between;
   gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  -webkit-overflow-scrolling: touch;
 }
+.vamas-cat-circle-row::-webkit-scrollbar { height: 6px; }
+.vamas-cat-circle-row::-webkit-scrollbar-thumb { background: rgba(66,0,1,0.15); border-radius: 10px; }
 
 .vamas-cat-circle {
   display: flex;
@@ -236,14 +242,13 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   align-items: center;
   gap: 14px;
   text-decoration: none;
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 165px;
+  flex: 0 0 auto;
+  width: 165px;
 }
 
 .vamas-cat-circle__ring {
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: 165px;
+  height: 165px;
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid var(--color-gold);
@@ -266,10 +271,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-cat-circle__label { color: var(--color-maroon); font-size: 14px; font-weight: 600; font-family: var(--font-heading); text-align: center; }
 
 @media (max-width: 640px) {
-  .vamas-cat-circle-row { gap: 14px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
-  .vamas-cat-circle-row::-webkit-scrollbar { height: 6px; }
-  .vamas-cat-circle-row::-webkit-scrollbar-thumb { background: rgba(66,0,1,0.15); border-radius: 10px; }
-  .vamas-cat-circle { flex: 0 0 110px; max-width: 110px; }
+  .vamas-cat-circle-row { justify-content: flex-start; gap: 14px; }
   .vamas-cat-circle__label { font-size: 12px; }
 }
 
