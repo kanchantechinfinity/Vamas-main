@@ -95,7 +95,7 @@
     .pincode-form{display:flex;gap:8px;margin-top:12px;}
     .pincode-input{flex:1;border:1px solid #ddd;border-radius:6px;padding:9px 12px;font-size:12px;font-family:var(--font-body);outline:none;transition:border-color 0.2s;}
     .pincode-input:focus{border-color:var(--m);}
-    .pincode-btn{background:var(--m);color:var(--g);border:none;border-radius:6px;padding:9px 16px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;}
+    .pincode-btn{background:var(--m);color:var(--g);border:none;border-radius:10px;padding:9px 16px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap;}
     .pincode-result{font-size:11px;margin-top:8px;padding:6px 10px;border-radius:5px;display:none;}
     .pincode-result.ok{background:#e8f5e9;color:#2e7d32;display:block;}
     .pincode-result.err{background:#ffebee;color:#c62828;display:block;}
@@ -112,10 +112,10 @@
 
     /* ── Buttons ── */
     .atc-buy-row{display:flex;gap:12px;}
-    .btn-atc{flex:1;width:100%;height:52px;background:var(--m);color:var(--g);font-size:14px;font-weight:800;letter-spacing:2px;font-family:var(--font-body);border:none;border-radius:8px;cursor:pointer;transition:all 0.3s;margin-bottom:0;}
+    .btn-atc{flex:1;width:100%;height:52px;background:var(--m);color:var(--g);font-size:14px;font-weight:800;letter-spacing:2px;font-family:var(--font-body);border:none;border-radius:12px;cursor:pointer;transition:all 0.3s;margin-bottom:0;}
     .btn-atc:hover{background:var(--ml);}
     .btn-atc.added{background:#2e7d32;color:white;}
-    .btn-buy{flex:1;width:100%;height:52px;background:transparent;border:2px solid var(--m);color:var(--m);font-size:14px;font-weight:700;letter-spacing:1px;font-family:var(--font-body);border-radius:8px;cursor:pointer;margin-top:0;transition:all 0.3s;}
+    .btn-buy{flex:1;width:100%;height:52px;background:transparent;border:2px solid var(--m);color:var(--m);font-size:14px;font-weight:700;letter-spacing:1px;font-family:var(--font-body);border-radius:12px;cursor:pointer;margin-top:0;transition:all 0.3s;}
     .btn-buy:hover{background:var(--m);color:white;}
     @media (max-width: 480px) {
       .atc-buy-row{flex-direction:column;}
@@ -183,7 +183,7 @@
     .rel-price{font-size:14px;font-weight:700;color:var(--m);}
     .rel-old{font-size:12px;color:#bbb;text-decoration:line-through;}
     .rel-off{background:#e8f5e9;color:#2e7d32;font-size:9px;padding:2px 6px;border-radius:10px;font-weight:600;}
-    .rel-add-btn{width:100%;background:transparent;border:1.5px solid var(--m);color:var(--m);padding:8px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:10px;font-family:var(--font-body);transition:all 0.2s;}
+    .rel-add-btn{width:100%;background:transparent;border:1.5px solid var(--m);color:var(--m);padding:8px;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:10px;font-family:var(--font-body);transition:all 0.2s;}
     .rel-add-btn:hover{background:var(--m);color:var(--g);}
 
     /* ── Reviews ── */
