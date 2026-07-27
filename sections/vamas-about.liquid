@@ -16,7 +16,7 @@
   .about-story__p { font-size: 14px; font-weight: 300; color: rgba(66,0,1,0.65); line-height: 1.9; margin-bottom: 18px; }
   .about-story__img-wrap { flex: 1; position: relative; max-width: 480px; display: flex; align-items: center; justify-content: center; }
   .about-story__img-blob { position: absolute; inset: 6%; border-radius: 50%; background: radial-gradient(circle, rgba(235,211,173,0.55) 0%, rgba(235,211,173,0.18) 60%, rgba(235,211,173,0) 78%); z-index: 0; }
-  .about-story__img { position: relative; z-index: 1; width: 86%; height: auto; max-height: 560px; object-fit: contain; object-position: center; display: block; margin: 0 auto; filter: drop-shadow(0 20px 40px rgba(66,0,1,0.22)); }
+  .about-story__img { position: relative; z-index: 1; width: 86%; height: auto; max-height: 560px; object-fit: contain; object-position: center; display: block; margin: 0 auto; border-radius: 20px; filter: drop-shadow(0 20px 40px rgba(66,0,1,0.22)); }
   .about-story__img-badge { position: absolute; z-index: 2; bottom: 8%; left: 4%; background: #fff; border-radius: 14px; padding: 10px 18px; box-shadow: 0 10px 28px rgba(66,0,1,0.16); display: flex; flex-direction: column; gap: 2px; }
   .about-story__img-badge-title { font-size: 12px; font-weight: 700; color: var(--color-maroon); }
   .about-story__img-badge-sub { font-size: 10px; color: rgba(66,0,1,0.5); }
@@ -198,35 +198,7 @@
 </section>
 {% endif %}
 
-{% comment %} ── 5. Meet Our Team ────────────────── {% endcomment %}
-{% assign team_blocks = section.blocks | where: 'type', 'member' %}
-{% if team_blocks.size > 0 %}
-<section class="about-team">
-  <div class="about-eyebrow">{{ section.settings.team_eyebrow }}</div>
-  <h2 class="about-h2">{{ section.settings.team_heading }}</h2>
-  <p class="about-sub">{{ section.settings.team_sub }}</p>
-  <div class="about-team__grid">
-    {% for block in section.blocks %}
-      {% if block.type == 'member' %}
-        <div class="about-team__card" {{ block.shopify_attributes }}>
-          <div class="about-team__avatar">
-            {% if block.settings.photo != blank %}
-              <img src="{{ block.settings.photo | img_url: '256x256', crop: 'center' }}" alt="{{ block.settings.name | escape }}" loading="lazy" width="128" height="128">
-            {% else %}
-              {{ block.settings.initials }}
-            {% endif %}
-          </div>
-          <div class="about-team__name">{{ block.settings.name }}</div>
-          <div class="about-team__role">{{ block.settings.role }}</div>
-          <div class="about-team__bio">{{ block.settings.bio }}</div>
-        </div>
-      {% endif %}
-    {% endfor %}
-  </div>
-</section>
-{% endif %}
-
-{% comment %} ── 6. Timeline ─────────────────────── {% endcomment %}
+{% comment %} ── 5. Timeline ─────────────────────── {% endcomment %}
 {% assign tl_blocks = section.blocks | where: 'type', 'milestone' %}
 {% if tl_blocks.size > 0 %}
 <section class="about-timeline">
@@ -260,6 +232,34 @@
             <div class="about-tl__spacer"></div>
           </div>
         {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% comment %} ── 6. Meet Our Team ────────────────── {% endcomment %}
+{% assign team_blocks = section.blocks | where: 'type', 'member' %}
+{% if team_blocks.size > 0 %}
+<section class="about-team">
+  <div class="about-eyebrow">{{ section.settings.team_eyebrow }}</div>
+  <h2 class="about-h2">{{ section.settings.team_heading }}</h2>
+  <p class="about-sub">{{ section.settings.team_sub }}</p>
+  <div class="about-team__grid">
+    {% for block in section.blocks %}
+      {% if block.type == 'member' %}
+        <div class="about-team__card" {{ block.shopify_attributes }}>
+          <div class="about-team__avatar">
+            {% if block.settings.photo != blank %}
+              <img src="{{ block.settings.photo | img_url: '256x256', crop: 'center' }}" alt="{{ block.settings.name | escape }}" loading="lazy" width="128" height="128">
+            {% else %}
+              {{ block.settings.initials }}
+            {% endif %}
+          </div>
+          <div class="about-team__name">{{ block.settings.name }}</div>
+          <div class="about-team__role">{{ block.settings.role }}</div>
+          <div class="about-team__bio">{{ block.settings.bio }}</div>
+        </div>
       {% endif %}
     {% endfor %}
   </div>
