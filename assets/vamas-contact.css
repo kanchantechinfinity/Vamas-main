@@ -87,7 +87,7 @@
     .contact-hero::before {
       content: '';
       position: absolute; inset: 0;
-      background-image: linear-gradient(rgba(42,0,1,0.7), rgba(42,0,1,0.7)),
+      background-image: linear-gradient(rgba(42,0,1,0.45), rgba(42,0,1,0.45)),
                         radial-gradient(circle at 20% 50%, rgba(235,211,173,0.06) 0%, transparent 60%),
                         radial-gradient(circle at 80% 30%, rgba(235,211,173,0.04) 0%, transparent 50%);
       pointer-events: none;

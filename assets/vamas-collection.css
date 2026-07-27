@@ -90,7 +90,7 @@ a{text-decoration:none;color:inherit;}
   position:relative;
   overflow:hidden;
 }
-.col-hero::before{content:'';position:absolute;inset:0;background:rgba(42,0,1,0.68);z-index:1;}
+.col-hero::before{content:'';position:absolute;inset:0;background:rgba(42,0,1,0.45);z-index:1;}
 .col-hero-left{position:relative;z-index:2;}
 .col-hero-breadcrumb{
   font-size:11px;
