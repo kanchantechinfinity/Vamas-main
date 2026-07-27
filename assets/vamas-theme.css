@@ -466,12 +466,14 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 /* ── Tags ─────────────────────────────── */
 .vamas-tags {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 10px;
   padding: 20px var(--page-gutter);
   background: var(--color-bg);
   border-top: 1px solid rgba(235, 211, 173, 0.35);
   border-bottom: 1px solid rgba(235, 211, 173, 0.35);
+  scrollbar-width: thin;
 }
 
 .vamas-tag {
@@ -487,6 +489,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   text-decoration: none;
   transition: all 0.2s;
   display: inline-block;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .vamas-tag:hover { background: var(--color-maroon); color: var(--color-gold); }
