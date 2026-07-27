@@ -14,15 +14,6 @@
 
   <!-- ═══ LEFT: Gallery ═══ -->
   <div class="prod-gallery">
-    <div class="gallery-main" id="gallery-main">
-      <img id="main-img" src="{{ current_variant.featured_image | default: product.featured_image | img_url: '1000x' }}" alt="{{ product.title | escape }}">
-      {% if section.settings.badge_text != blank %}<div class="gallery-badge">{{ section.settings.badge_text }}</div>{% endif %}
-      {% if product.images.size > 1 %}
-        <button class="gal-arrow gal-arrow-l" id="gal-prev">&#8249;</button>
-        <button class="gal-arrow gal-arrow-r" id="gal-next">&#8250;</button>
-      {% endif %}
-      <div class="zoom-hint">&#128269; Click to zoom</div>
-    </div>
     {% if product.images.size > 1 %}
     <div class="thumb-strip" id="thumb-strip">
       {% for image in product.images %}
@@ -32,6 +23,15 @@
       {% endfor %}
     </div>
     {% endif %}
+    <div class="gallery-main" id="gallery-main">
+      <img id="main-img" src="{{ current_variant.featured_image | default: product.featured_image | img_url: '1000x' }}" alt="{{ product.title | escape }}">
+      {% if section.settings.badge_text != blank %}<div class="gallery-badge">{{ section.settings.badge_text }}</div>{% endif %}
+      {% if product.images.size > 1 %}
+        <button class="gal-arrow gal-arrow-l" id="gal-prev">&#8249;</button>
+        <button class="gal-arrow gal-arrow-r" id="gal-next">&#8250;</button>
+      {% endif %}
+      <div class="zoom-hint">&#128269; Click to zoom</div>
+    </div>
   </div>
 
   <!-- ═══ RIGHT: Product Info ═══ -->
