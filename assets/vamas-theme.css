@@ -492,25 +492,26 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-tag:hover { background: var(--color-maroon); color: var(--color-gold); }
 
 /* ── Testimonials ─────────────────────── */
-.vamas-test-section { overflow: hidden; }
+.vamas-test-section { overflow: hidden; padding-left: 0; padding-right: 0; }
+.vamas-test-section .vamas-section__header { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
 
 .vamas-test-card {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
   background: #fff;
   border: 1px solid rgba(235, 211, 173, 0.5);
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(66,0,1,0.06);
-  padding: 18px;
-  width: 340px;
+  padding: 16px;
+  width: 320px;
   flex-shrink: 0;
 }
 
 .vamas-test-card__avatar {
   width: 64px;
   height: 64px;
-  border-radius: 12px;
+  border-radius: 50%;
   background: var(--color-maroon);
   color: var(--color-gold);
   display: flex;
@@ -530,13 +531,13 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-card__verified { font-size: 10px; color: #2e7d32; font-weight: 600; margin-top: 2px; }
 
 /* ── Testimonials marquee ─────────────── */
-.vamas-test-marquee-row { overflow: hidden; margin-top: 20px; }
+.vamas-test-marquee-row { overflow: hidden; margin-top: 16px; width: 100%; }
 .vamas-test-marquee-row:first-of-type { margin-top: 8px; }
 .vamas-test-marquee-track {
   display: flex;
-  gap: 18px;
+  gap: 14px;
   width: max-content;
-  animation: vamas-test-scroll 50s linear infinite;
+  animation: vamas-test-scroll 22s linear infinite;
 }
 .vamas-test-marquee-row--reverse .vamas-test-marquee-track { animation-direction: reverse; }
 .vamas-test-marquee-row:hover .vamas-test-marquee-track { animation-play-state: paused; }
@@ -545,8 +546,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   to { transform: translateX(-50%); }
 }
 @media (max-width: 768px) {
-  .vamas-test-card { width: 260px; padding: 14px; }
-  .vamas-test-marquee-track { animation-duration: 32s; }
+  .vamas-test-card { width: 250px; padding: 12px; }
+  .vamas-test-marquee-track { animation-duration: 16s; }
 }
 
 /* ── Newsletter ───────────────────────── */

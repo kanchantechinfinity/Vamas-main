@@ -366,7 +366,8 @@
                 {% if block.settings.reviewer_photo != blank %}
                   <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
                 {% else %}
-                  <span>{{ block.settings.reviewer_name | slice: 0 | upcase }}</span>
+                  {% capture av_img %}{% cycle 'test-av-1': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                  <img src="{{ av_img | asset_url }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
                 {% endif %}
               </div>
               <div class="vamas-test-card__body">
@@ -394,7 +395,8 @@
                 {% if block.settings.reviewer_photo != blank %}
                   <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
                 {% else %}
-                  <span>{{ block.settings.reviewer_name | slice: 0 | upcase }}</span>
+                  {% capture av_img2 %}{% cycle 'test-av-2': 'prod-maroon2.jpg', 'prod-indigo.jpg', 'prod-green2.jpg', 'prod-darkmaroon.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg', 'prod-blue.jpg' %}{% endcapture %}
+                  <img src="{{ av_img2 | asset_url }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
                 {% endif %}
               </div>
               <div class="vamas-test-card__body">
