@@ -157,6 +157,7 @@
             "rating": 5,
             "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding. Will definitely buy again!",
             "reviewer_name": "Priya Sharma",
+            "reviewer_location": "Mumbai",
             "product_type": "Silk Zari Blouse"
           }
         },
@@ -166,6 +167,7 @@
             "rating": 5,
             "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding. Will definitely buy again!",
             "reviewer_name": "Priya Sharma",
+            "reviewer_location": "Mumbai",
             "product_type": "Silk Zari Blouse"
           }
         },
@@ -175,6 +177,7 @@
             "rating": 5,
             "review_text": "Fast delivery and beautiful packaging. The fabric quality is exactly as shown. My order arrived in 3 days and the blouse fit perfectly. Love Vamas!",
             "reviewer_name": "Anita Menon",
+            "reviewer_location": "Mumbai",
             "product_type": "Kanjeevaram Blouse"
           }
         },
@@ -184,6 +187,7 @@
             "rating": 5,
             "review_text": "The Chikankari work is delicate and elegant, exactly what I wanted. Stitching is neat and the fit was spot on. Highly recommend Vamas!",
             "reviewer_name": "Ritu Desai",
+            "reviewer_location": "Mumbai",
             "product_type": "Chikankari Blouse"
           }
         },
@@ -267,12 +271,15 @@
         "cat_view_all": "/collections/all",
         "show_new_arrivals": true,
         "new_arrivals_collection": "jackets",
+        "show_by_size": true,
+        "by_size_collection": "",
         "show_bestsellers": true,
         "bestsellers_collection": "demo-collection",
         "show_brand": true,
         "brand_eyebrow": "OUR STORY",
         "brand_heading": "A Fabric Symphony for Your Saree",
         "brand_text": "Since the 1960s in Mumbai, Vamas has believed a saree deserves a partner in crime, not just any old blouse. Our blouses are a symphony of fabrics — silk, brocade, cotton, velvet — meticulously crafted by artisans who pour their heritage into every stitch.",
+        "brand_image": "shopify://shop_images/portrait-young-woman-wearing-tradition-sari-garment_52683-90225.avif",
         "brand_image_asset": "",
         "brand_btn_text": "EXPLORE OUR STORY",
         "brand_btn_url": "",
