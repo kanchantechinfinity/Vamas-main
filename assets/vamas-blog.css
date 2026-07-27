@@ -32,18 +32,18 @@
   text-transform: uppercase;
   letter-spacing: 0.25em;
   font-size: 12px;
-  color: rgba(231,209,166,0.7);
+  color: rgba(235,211,173,0.7);
   margin: 0 0 16px;
 }
 .vblog-eyebrow .dash {
   width: 32px;
   height: 1px;
-  background: rgba(231,209,166,0.7);
+  background: rgba(235,211,173,0.7);
   display: inline-block;
 }
 .vblog-title {
   font-family: var(--font-heading);
-  color: var(--color-gold, #e7d1a6);
+  color: var(--color-gold, #EBD3AD);
   font-size: 36px;
   line-height: 1.1;
   margin: 0 0 10px;
@@ -51,11 +51,11 @@
 .vblog-subtitle {
   font-style: italic;
   font-size: 17px;
-  color: rgba(231,209,166,0.85);
+  color: rgba(235,211,173,0.85);
   margin: 0 0 10px;
 }
 .vblog-desc {
-  color: rgba(231,209,166,0.65);
+  color: rgba(235,211,173,0.65);
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
@@ -73,7 +73,7 @@
 .vblog-pill {
   display: inline-block;
   padding: 8px 18px;
-  border: 1px solid var(--color-gold, #e7d1a6);
+  border: 1px solid var(--color-gold, #EBD3AD);
   border-radius: 999px;
   font-size: 14px;
   color: var(--color-maroon, #420001);
@@ -83,7 +83,7 @@
   white-space: nowrap;
 }
 .vblog-pill:hover {
-  background: var(--color-gold, #e7d1a6);
+  background: var(--color-gold, #EBD3AD);
 }
 .vblog-pill.active {
   background: var(--color-maroon, #420001);
@@ -125,7 +125,7 @@
   grid-template-columns: 1.1fr 1fr;
   gap: 28px;
   background: #fff;
-  border: 1px solid var(--color-gold, #e7d1a6);
+  border: 1px solid var(--color-gold, #EBD3AD);
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 40px;
@@ -194,13 +194,13 @@
   display: block;
   width: 100%;
   min-height: 220px;
-  background: linear-gradient(135deg, var(--color-gold, #e7d1a6), var(--color-bg, #FEF9F2));
+  background: linear-gradient(135deg, var(--color-gold, #EBD3AD), var(--color-bg, #FEF9F2));
 }
 
 /* ---- Divider + section head ---- */
 .vblog-divider {
   height: 1px;
-  background: var(--color-gold, #e7d1a6);
+  background: var(--color-gold, #EBD3AD);
   margin: 8px 0 28px;
 }
 .vblog-section-head { text-align: center; margin-bottom: 28px; }
@@ -219,7 +219,7 @@
 }
 .vblog-card {
   background: #fff;
-  border: 1px solid var(--color-gold, #e7d1a6);
+  border: 1px solid var(--color-gold, #EBD3AD);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
@@ -279,7 +279,7 @@
 /* ---- Sidebar widgets ---- */
 .vblog-widget {
   background: #fff;
-  border: 1px solid var(--color-gold, #e7d1a6);
+  border: 1px solid var(--color-gold, #EBD3AD);
   border-radius: 12px;
   padding: 22px;
 }
@@ -357,7 +357,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--color-gold, #e7d1a6);
+  background: var(--color-gold, #EBD3AD);
   color: var(--color-maroon, #420001);
   font-weight: 700;
   font-size: 13px;
@@ -382,7 +382,7 @@
 
 /* Browse by topic */
 .vblog-topics { list-style: none; margin: 0; padding: 0; }
-.vblog-topic-row { border-bottom: 1px dashed var(--color-gold, #e7d1a6); }
+.vblog-topic-row { border-bottom: 1px dashed var(--color-gold, #EBD3AD); }
 .vblog-topic-row:last-child { border-bottom: none; }
 .vblog-topic-row a {
   display: flex;
@@ -462,14 +462,14 @@
 .vart-body a { color: var(--color-maroon, #420001); text-decoration: underline; }
 .vart-body ul, .vart-body ol { margin: 0 0 20px 22px; }
 .vart-body li { margin-bottom: 8px; }
-.vart-body blockquote { border-left: 3px solid var(--color-gold, #e7d1a6); padding-left: 18px; margin: 24px 0; font-style: italic; color: rgba(66,0,1,0.7); }
+.vart-body blockquote { border-left: 3px solid var(--color-gold, #EBD3AD); padding-left: 18px; margin: 24px 0; font-style: italic; color: rgba(66,0,1,0.7); }
 .vart-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 36px; padding-top: 24px; border-top: 1px solid rgba(66,0,1,0.08); }
-.vart-tag { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--color-maroon, #420001); background: rgba(231,209,166,0.2); border: 1px solid var(--color-gold, #e7d1a6); border-radius: 100px; padding: 6px 14px; text-decoration: none; transition: all 0.2s; }
-.vart-tag:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #e7d1a6); }
+.vart-tag { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--color-maroon, #420001); background: rgba(235,211,173,0.2); border: 1px solid var(--color-gold, #EBD3AD); border-radius: 100px; padding: 6px 14px; text-decoration: none; transition: all 0.2s; }
+.vart-tag:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); }
 .vart-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 36px; }
 .vart-nav-link { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--color-maroon, #420001); text-decoration: none; }
 .vart-nav-all { border: 1.5px solid var(--color-maroon, #420001); border-radius: 100px; padding: 9px 22px; }
-.vart-nav-all:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #e7d1a6); }
+.vart-nav-all:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); }
 .vart-comments { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(66,0,1,0.08); }
 .vart-comments-title { font-family: var(--font-heading); color: var(--color-maroon, #420001); font-size: 22px; margin-bottom: 20px; }
 .vart-comment { background: var(--color-bg, #FEF9F2); border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; }
@@ -479,7 +479,7 @@
 .vart-comment-row { display: flex; gap: 12px; margin-bottom: 12px; }
 .vart-comment-row input, .vart-comments textarea { flex: 1; width: 100%; border: 1.5px solid rgba(66,0,1,0.15); border-radius: 8px; padding: 11px 14px; font-family: var(--font-body); font-size: 13px; outline: none; }
 .vart-comments textarea { margin-bottom: 12px; }
-.vart-comment-btn { background: var(--color-maroon, #420001); color: var(--color-gold, #e7d1a6); border: none; border-radius: 100px; padding: 12px 28px; font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); }
+.vart-comment-btn { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); border: none; border-radius: 100px; padding: 12px 28px; font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); }
 .vart-comment-ok { background: #e8f5e9; color: #2e7d32; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; }
 .vart-comment-error { background: #ffebee; color: #c62828; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; }
 @media (max-width: 768px) {

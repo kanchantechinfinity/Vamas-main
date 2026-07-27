@@ -10,7 +10,7 @@
     <div class="col-hero-breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>
       <span>&gt;</span>
-      <span style="color:rgba(231,209,166,.75);">{{ collection.title }}</span>
+      <span style="color:rgba(235,211,173,.75);">{{ collection.title }}</span>
     </div>
     <h1 class="col-hero-title">{{ collection.title }}</h1>
     <p class="col-hero-sub">{{ section.settings.hero_subtitle | default: collection.description | strip_html | default: 'Handcrafted designs celebrating Indian artistry' }}</p>
@@ -18,16 +18,16 @@
   {% if section.settings.show_hero_motif %}
   <div class="col-hero-right">
     <svg width="320" height="200" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="80" cy="100" rx="40" ry="60" stroke="#e7d1a6" stroke-width="1.5" fill="none" transform="rotate(-20 80 100)"/>
-      <ellipse cx="80" cy="100" rx="24" ry="40" stroke="#e7d1a6" stroke-width="1" fill="none" transform="rotate(-20 80 100)"/>
-      <circle cx="80" cy="68" r="8" stroke="#e7d1a6" stroke-width="1.2" fill="none"/>
-      <circle cx="80" cy="68" r="3" fill="#e7d1a6" opacity=".4"/>
-      <ellipse cx="200" cy="80" rx="35" ry="52" stroke="#e7d1a6" stroke-width="1.5" fill="none" transform="rotate(15 200 80)"/>
-      <ellipse cx="200" cy="80" rx="20" ry="34" stroke="#e7d1a6" stroke-width="1" fill="none" transform="rotate(15 200 80)"/>
-      <circle cx="215" cy="50" r="7" stroke="#e7d1a6" stroke-width="1.2" fill="none"/>
-      <circle cx="160" cy="110" r="18" stroke="#e7d1a6" stroke-width="1.2" fill="none" opacity=".5"/>
+      <ellipse cx="80" cy="100" rx="40" ry="60" stroke="#EBD3AD" stroke-width="1.5" fill="none" transform="rotate(-20 80 100)"/>
+      <ellipse cx="80" cy="100" rx="24" ry="40" stroke="#EBD3AD" stroke-width="1" fill="none" transform="rotate(-20 80 100)"/>
+      <circle cx="80" cy="68" r="8" stroke="#EBD3AD" stroke-width="1.2" fill="none"/>
+      <circle cx="80" cy="68" r="3" fill="#EBD3AD" opacity=".4"/>
+      <ellipse cx="200" cy="80" rx="35" ry="52" stroke="#EBD3AD" stroke-width="1.5" fill="none" transform="rotate(15 200 80)"/>
+      <ellipse cx="200" cy="80" rx="20" ry="34" stroke="#EBD3AD" stroke-width="1" fill="none" transform="rotate(15 200 80)"/>
+      <circle cx="215" cy="50" r="7" stroke="#EBD3AD" stroke-width="1.2" fill="none"/>
+      <circle cx="160" cy="110" r="18" stroke="#EBD3AD" stroke-width="1.2" fill="none" opacity=".5"/>
       <circle cx="160" cy="110" r="8" stroke="#c9a96e" stroke-width="1" fill="none" opacity=".5"/>
-      <circle cx="160" cy="110" r="3" fill="#e7d1a6" opacity=".4"/>
+      <circle cx="160" cy="110" r="3" fill="#EBD3AD" opacity=".4"/>
     </svg>
   </div>
   {% endif %}
