@@ -362,17 +362,19 @@
         {% for block in section.blocks %}
           {% if block.type == 'testimonial' %}
             <div class="vamas-test-card">
+              <div class="vamas-test-card__avatar">{{ block.settings.reviewer_name | slice: 0 | upcase }}</div>
               <div class="vamas-test-card__stars">
                 {% for i in (1..block.settings.rating) %}★{% endfor %}
               </div>
               <p class="vamas-test-card__text">"{{ block.settings.review_text }}"</p>
-              <div class="vamas-test-card__author">
-                <div class="vamas-test-card__avatar">{{ block.settings.reviewer_name | slice: 0 | upcase }}</div>
-                <div>
-                  <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
-                  <div class="vamas-test-card__info">Verified Buyer · {{ block.settings.product_type | default: 'Blouse Collection' }}</div>
+              {% if block.settings.reviewer_photo != blank %}
+                <div class="vamas-test-card__polaroid">
+                  <img src="{{ block.settings.reviewer_photo | img_url: '400x400', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
                 </div>
-              </div>
+              {% endif %}
+              <div class="vamas-test-card__name">— {{ block.settings.reviewer_name }}</div>
+              <div class="vamas-test-card__info">{{ block.settings.reviewer_location | default: 'India' | upcase }} &middot; {{ block.settings.product_type | default: 'Blouse Collection' | upcase }}</div>
+              <div class="vamas-test-card__badge">Real customer &middot; Not paid</div>
             </div>
           {% endif %}
         {% endfor %}
@@ -581,7 +583,9 @@
         { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 1, "label": "Star Rating", "default": 5 },
         { "type": "textarea", "id": "review_text", "label": "Review Text" },
         { "type": "text", "id": "reviewer_name", "label": "Customer Name" },
-        { "type": "text", "id": "product_type", "label": "Product Bought", "default": "Blouse Collection" }
+        { "type": "text", "id": "reviewer_location", "label": "Customer City", "default": "Mumbai" },
+        { "type": "text", "id": "product_type", "label": "Product Bought", "default": "Blouse Collection" },
+        { "type": "image_picker", "id": "reviewer_photo", "label": "Customer Photo (optional)" }
       ]
     }
     ,{

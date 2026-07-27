@@ -466,33 +466,59 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 
 .vamas-test-card {
-  background: var(--color-white);
+  position: relative;
+  background: var(--color-bg);
   border: 1px solid rgba(231, 209, 166, 0.5);
-  border-radius: 10px;
-  padding: 24px;
+  border-radius: 18px;
+  padding: 36px 24px 24px;
+  text-align: center;
 }
 
-.vamas-test-card__stars { color: var(--color-gold-dark); font-size: 15px; margin-bottom: 12px; }
-.vamas-test-card__text { font-size: 13px; color: rgba(66,0,1,0.72); line-height: 1.75; margin-bottom: 16px; font-style: italic; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-
-.vamas-test-card__author { display: flex; align-items: center; gap: 12px; }
-
 .vamas-test-card__avatar {
-  width: 40px;
-  height: 40px;
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--color-maroon);
   color: var(--color-gold);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(66,0,1,0.25);
 }
 
-.vamas-test-card__name { font-size: 13px; font-weight: 700; color: var(--color-maroon); }
-.vamas-test-card__info { font-size: 10px; color: rgba(66,0,1,0.4); }
+.vamas-test-card__stars { color: var(--color-gold-dark); font-size: 15px; margin-bottom: 14px; }
+.vamas-test-card__text { font-size: 14px; color: var(--color-maroon); line-height: 1.7; margin-bottom: 18px; font-style: italic; font-family: var(--font-heading); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+
+.vamas-test-card__polaroid {
+  background: #fff;
+  padding: 8px 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 6px 16px rgba(66,0,1,0.15);
+  width: 150px;
+  margin: 0 auto 18px;
+  transform: rotate(-2deg);
+}
+.vamas-test-card__polaroid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 2px; display: block; }
+
+.vamas-test-card__name { font-size: 13px; font-weight: 700; color: var(--color-maroon); font-family: var(--font-heading); font-style: italic; }
+.vamas-test-card__info { font-size: 9px; letter-spacing: 1px; color: rgba(66,0,1,0.4); margin: 4px 0 14px; }
+.vamas-test-card__badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #2e7d32;
+  border: 1px solid rgba(46,125,50,0.4);
+  background: rgba(46,125,50,0.06);
+  border-radius: 20px;
+  padding: 5px 14px;
+}
 
 /* ── Testimonials carousel ────────────── */
 .vamas-test-carousel { position: relative; }
