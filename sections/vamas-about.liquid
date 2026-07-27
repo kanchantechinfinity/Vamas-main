@@ -51,7 +51,16 @@
   .about-timeline .about-h2 { color: var(--color-gold); }
   .about-timeline .about-sub { color: rgba(235,211,173,0.45); margin-bottom: 72px; }
   .about-tl { position: relative; max-width: 800px; margin: 0 auto; }
-  .about-tl::before { content: ''; position: absolute; left: 50%; transform: translateX(-50%); top: 0; bottom: 0; width: 1px; background: rgba(235,211,173,0.15); }
+  .about-tl::before,
+  .about-tl::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); }
+  .about-tl::before { background: rgba(235,211,173,0.15); }
+  .about-tl::after {
+    background: linear-gradient(var(--color-gold-dark), var(--color-gold));
+    transform-origin: top center;
+    transform: translateX(-50%) scaleY(var(--progress, 0));
+    box-shadow: 0 0 16px rgba(235,211,173,0.5);
+    transition: transform 0.1s linear;
+  }
   .about-tl__item { display: flex; align-items: flex-start; gap: 40px; margin-bottom: 52px; position: relative; }
   .about-tl__item:last-child { margin-bottom: 0; }
   .about-tl__content { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(235,211,173,0.12); border-radius: 12px; padding: 24px 28px; }
@@ -59,7 +68,8 @@
   .about-tl__item.right .about-tl__content { text-align: left; }
   .about-tl__year { font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--color-gold); margin-bottom: 8px; }
   .about-tl__desc { font-size: 13px; font-weight: 300; color: rgba(235,211,173,0.55); line-height: 1.7; }
-  .about-tl__dot { position: absolute; left: 50%; transform: translateX(-50%); top: 40px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-gold); border: 3px solid var(--color-maroon); box-shadow: 0 0 0 4px rgba(235,211,173,0.15); z-index: 2; }
+  .about-tl__dot { position: absolute; left: 50%; transform: translateX(-50%) scale(0.4); top: 40px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-gold); border: 3px solid var(--color-maroon); box-shadow: 0 0 0 4px rgba(235,211,173,0.15); z-index: 2; transition: transform 0.5s cubic-bezier(.2,.8,.2,1), box-shadow 0.5s; }
+  .about-tl__item.revealed .about-tl__dot { transform: translateX(-50%) scale(1); box-shadow: 0 0 0 6px rgba(235,211,173,0.22), 0 0 16px rgba(235,211,173,0.6); }
   .about-tl__spacer { flex: 1; }
 
   @media (max-width: 1024px) {
@@ -87,9 +97,11 @@
     .about-values__grid { grid-template-columns: 1fr; }
     .about-team__grid { grid-template-columns: 1fr; }
     .about-tl::before { left: 20px; transform: none; }
+    .about-tl::after { left: 20px; transform: scaleY(var(--progress, 0)); }
     .about-tl__item, .about-tl__item.right { flex-direction: row; gap: 20px; }
     .about-tl__item.right .about-tl__content { text-align: left; }
-    .about-tl__dot { left: 20px; transform: translateX(-50%); top: 34px; }
+    .about-tl__dot { left: 20px; top: 34px; }
+    .about-tl__item.revealed .about-tl__dot { transform: translateX(-50%) scale(1); }
     .about-tl__spacer { display: none; }
     .about-tl__content { margin-left: 40px; }
     .about-tl__year { font-size: 24px; }
@@ -248,14 +260,45 @@
 <script>
 (function(){
   var tl = document.querySelector('.about-tl');
-  if (!tl || !('IntersectionObserver' in window)) return;
+  if (!tl) return;
+  var items = Array.prototype.slice.call(tl.querySelectorAll('.about-tl__item'));
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduced || !('IntersectionObserver' in window)) {
+    items.forEach(function(item){ item.classList.add('revealed'); });
+    tl.style.setProperty('--progress', '1');
+    return;
+  }
+
   tl.classList.add('reveal-on');
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        var i = items.indexOf(e.target);
+        e.target.style.transitionDelay = (i % 2 === 0 ? 0 : 90) + 'ms';
+        e.target.classList.add('revealed');
+        io.unobserve(e.target);
+      }
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
-  tl.querySelectorAll('.about-tl__item').forEach(function(item){ io.observe(item); });
+  items.forEach(function(item){ io.observe(item); });
+
+  var ticking = false;
+  function updateProgress(){
+    ticking = false;
+    var rect = tl.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var start = vh * 0.5;
+    var total = rect.height;
+    var filled = Math.min(Math.max(start - rect.top, 0), total);
+    tl.style.setProperty('--progress', (total ? filled / total : 0).toFixed(4));
+  }
+  function onScroll(){
+    if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  updateProgress();
 })();
 </script>
 
