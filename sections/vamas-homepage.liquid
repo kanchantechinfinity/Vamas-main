@@ -359,25 +359,22 @@
     <div class="vamas-test-marquee-track">
       {% for dup in (1..2) %}
         {% for block in test_blocks %}
-          {% assign mod = forloop.index0 | modulo: 2 %}
-          {% if mod == 0 %}
-            <div class="vamas-test-card">
-              <div class="vamas-test-card__avatar">
-                {% if block.settings.reviewer_photo != blank %}
-                  <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
-                {% else %}
-                  {% capture av_img %}{% cycle 'test-av-1': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
-                  <img src="{{ av_img | asset_url }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
-                {% endif %}
-              </div>
-              <div class="vamas-test-card__body">
-                <div class="vamas-test-card__stars">{% for s in (1..block.settings.rating) %}★{% endfor %}</div>
-                <p class="vamas-test-card__text">{{ block.settings.review_text }}</p>
-                <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
-                <div class="vamas-test-card__verified">&#10003; Verified buyer</div>
-              </div>
+          <div class="vamas-test-card">
+            <div class="vamas-test-card__avatar">
+              {% if block.settings.reviewer_photo != blank %}
+                <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
+              {% else %}
+                {% capture av_img %}{% cycle 'test-av-1': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                <img src="{{ av_img | asset_url }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
+              {% endif %}
             </div>
-          {% endif %}
+            <div class="vamas-test-card__body">
+              <div class="vamas-test-card__stars">{% for s in (1..block.settings.rating) %}★{% endfor %}</div>
+              <p class="vamas-test-card__text">{{ block.settings.review_text }}</p>
+              <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
+              <div class="vamas-test-card__verified">&#10003; Verified buyer</div>
+            </div>
+          </div>
         {% endfor %}
       {% endfor %}
     </div>
@@ -388,25 +385,22 @@
     <div class="vamas-test-marquee-track">
       {% for dup in (1..2) %}
         {% for block in test_blocks %}
-          {% assign mod = forloop.index0 | modulo: 2 %}
-          {% if mod == 1 %}
-            <div class="vamas-test-card">
-              <div class="vamas-test-card__avatar">
-                {% if block.settings.reviewer_photo != blank %}
-                  <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
-                {% else %}
-                  {% capture av_img2 %}{% cycle 'test-av-2': 'prod-maroon2.jpg', 'prod-indigo.jpg', 'prod-green2.jpg', 'prod-darkmaroon.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg', 'prod-blue.jpg' %}{% endcapture %}
-                  <img src="{{ av_img2 | asset_url }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
-                {% endif %}
-              </div>
-              <div class="vamas-test-card__body">
-                <div class="vamas-test-card__stars">{% for s in (1..block.settings.rating) %}★{% endfor %}</div>
-                <p class="vamas-test-card__text">{{ block.settings.review_text }}</p>
-                <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
-                <div class="vamas-test-card__verified">&#10003; Verified buyer</div>
-              </div>
+          <div class="vamas-test-card">
+            <div class="vamas-test-card__avatar">
+              {% if block.settings.reviewer_photo != blank %}
+                <img src="{{ block.settings.reviewer_photo | img_url: '160x160', crop: 'center' }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
+              {% else %}
+                {% capture av_img2 %}{% cycle 'test-av-2': 'prod-maroon2.jpg', 'prod-indigo.jpg', 'prod-green2.jpg', 'prod-darkmaroon.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg', 'prod-blue.jpg' %}{% endcapture %}
+                <img src="{{ av_img2 | asset_url }}" alt="{{ block.settings.reviewer_name | escape }}" loading="lazy">
+              {% endif %}
             </div>
-          {% endif %}
+            <div class="vamas-test-card__body">
+              <div class="vamas-test-card__stars">{% for s in (1..block.settings.rating) %}★{% endfor %}</div>
+              <p class="vamas-test-card__text">{{ block.settings.review_text }}</p>
+              <div class="vamas-test-card__name">{{ block.settings.reviewer_name }}</div>
+              <div class="vamas-test-card__verified">&#10003; Verified buyer</div>
+            </div>
+          </div>
         {% endfor %}
       {% endfor %}
     </div>
