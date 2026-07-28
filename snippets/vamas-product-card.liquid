@@ -19,15 +19,53 @@
   {% if created_ts > new_cutoff %}{% assign is_new = true %}{% endif %}
 {% endif %}
 
-<div class="vamas-prod-card">
+{% comment %} Second/third image for the hover swap {% endcomment %}
+{% assign hover_image = product.images[1] %}
+{% if hover_image == blank %}{% assign hover_image = product.images[2] %}{% endif %}
+
+{% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
+{% assign color_values = blank %}
+{% assign color_option_position = 0 %}
+{% for option in product.options_with_values %}
+  {% assign option_name_lower = option.name | downcase %}
+  {% if option_name_lower contains 'colo' %}
+    {% assign color_values = option.values %}
+    {% assign color_option_position = option.position %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
+{% capture variants_json %}[
+  {% for v in product.variants %}
+    {
+      "id": {{ v.id | json }},
+      "available": {{ v.available | json }},
+      "priceHtml": {{ v.price | money | json }},
+      "comparePriceHtml": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %},
+      "discountPct": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price | round }}{% else %}0{% endif %},
+      "image": {% if v.featured_image %}{{ v.featured_image | img_url: '400x533', crop: 'center' | json }}{% else %}null{% endif %},
+      "option1": {{ v.option1 | json }},
+      "option2": {{ v.option2 | json }},
+      "option3": {{ v.option3 | json }}
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]{% endcapture %}
+
+<div class="vamas-prod-card" data-color-option="{{ color_option_position }}">
   <div class="vamas-prod-card__img">
     <a href="{{ product.url }}">
       {% if product.featured_image %}
-        <img src="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+        <img class="vamas-prod-card__img-primary" data-primary-img
+             src="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
              alt="{{ product.featured_image.alt | escape | default: product.title }}"
              loading="lazy" width="400" height="533">
       {% else %}
-        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg vamas-prod-card__img-primary' }}
+      {% endif %}
+      {% if hover_image != blank %}
+        <img class="vamas-prod-card__img-hover"
+             src="{{ hover_image | img_url: '400x533', crop: 'center' }}"
+             alt="" loading="lazy" aria-hidden="true">
       {% endif %}
     </a>
 
@@ -65,22 +103,18 @@
     </a>
     <div class="vamas-prod-card__type">{{ product.type | default: 'Blouse' }}</div>
 
-    {% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
-    {% assign color_values = blank %}
-    {% for option in product.options_with_values %}
-      {% assign option_name_lower = option.name | downcase %}
-      {% if option_name_lower contains 'colo' %}
-        {% assign color_values = option.values %}
-      {% endif %}
-    {% endfor %}
-
     <div class="vamas-prod-card__meta-row">
       {% if color_values.size > 0 %}
         <div class="vamas-prod-card__colors">
           {% for value in color_values limit: 4 %}
-            <div class="vamas-prod-card__color"
-                 style="background:{% render 'vamas-color-hex', name: value %};"
-                 title="{{ value }}"></div>
+            {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
+            {% assign swatch_hex = swatch_hex | strip %}
+            {% unless swatch_hex == 'SKIP' %}
+              <div class="vamas-prod-card__color{% if forloop.first %} active{% endif %}"
+                   style="background:{{ swatch_hex }};"
+                   data-color="{{ value | escape }}"
+                   title="{{ value }}"></div>
+            {% endunless %}
           {% endfor %}
         </div>
       {% else %}
@@ -101,16 +135,14 @@
     </div>
 
     <div class="vamas-prod-card__price">
-      <span class="price">{{ first_variant.price | money }}</span>
-      {% if on_sale %}
-        <span class="original">{{ first_variant.compare_at_price | money }}</span>
-        <span class="discount">{{ discount_pct }}% off</span>
-      {% endif %}
+      <span class="price" data-price>{{ first_variant.price | money }}</span>
+      <span class="original" data-compare{% unless on_sale %} style="display:none;"{% endunless %}>{{ first_variant.compare_at_price | money }}</span>
+      <span class="discount" data-discount{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}% off</span>
     </div>
 
     {% if product.available %}
       <form method="post" action="/cart/add">
-        <input type="hidden" name="id" value="{{ first_variant.id }}">
+        <input type="hidden" name="id" value="{{ first_variant.id }}" data-variant-input>
         <input type="hidden" name="quantity" value="1">
         <button type="submit" class="vamas-atc">ADD TO CART</button>
       </form>
@@ -118,4 +150,74 @@
       <button class="vamas-atc" disabled style="opacity:0.5;cursor:not-allowed;">SOLD OUT</button>
     {% endif %}
   </div>
+  <script type="application/json" class="vamas-prod-card__vdata">{{ variants_json }}</script>
 </div>
+
+<script>
+(function(){
+  if (window.__vamasCardSwatchInit) return;
+  window.__vamasCardSwatchInit = true;
+  document.addEventListener('click', function(e){
+    var swatch = e.target.closest('.vamas-prod-card__color');
+    if (!swatch) return;
+    var card = swatch.closest('.vamas-prod-card');
+    if (!card) return;
+    var colorOptionIdx = parseInt(card.getAttribute('data-color-option'), 10);
+    if (!colorOptionIdx) return;
+    var dataEl = card.querySelector('.vamas-prod-card__vdata');
+    if (!dataEl) return;
+    var variants;
+    try { variants = JSON.parse(dataEl.textContent); } catch (err) { return; }
+
+    var colorValue = swatch.getAttribute('data-color');
+    var match = null;
+    for (var i = 0; i < variants.length; i++) {
+      var v = variants[i];
+      if (v['option' + colorOptionIdx] === colorValue) {
+        match = v;
+        if (v.available) break;
+      }
+    }
+    if (!match) return;
+
+    card.querySelectorAll('.vamas-prod-card__color').forEach(function(s){ s.classList.remove('active'); });
+    swatch.classList.add('active');
+
+    if (match.image) {
+      var img = card.querySelector('[data-primary-img]');
+      if (img) img.src = match.image;
+    }
+
+    var priceEl = card.querySelector('[data-price]');
+    var compareEl = card.querySelector('[data-compare]');
+    var discountEl = card.querySelector('[data-discount]');
+    if (priceEl) priceEl.textContent = match.priceHtml;
+    if (compareEl) {
+      if (match.comparePriceHtml) { compareEl.textContent = match.comparePriceHtml; compareEl.style.display = ''; }
+      else { compareEl.style.display = 'none'; }
+    }
+    if (discountEl) {
+      if (match.comparePriceHtml) { discountEl.textContent = match.discountPct + '% off'; discountEl.style.display = ''; }
+      else { discountEl.style.display = 'none'; }
+    }
+
+    var variantInput = card.querySelector('[data-variant-input]');
+    if (variantInput) variantInput.value = match.id;
+
+    var atcBtn = card.querySelector('.vamas-atc');
+    if (atcBtn) {
+      if (match.available) {
+        atcBtn.disabled = false;
+        atcBtn.style.opacity = '';
+        atcBtn.style.cursor = '';
+        atcBtn.textContent = 'ADD TO CART';
+      } else {
+        atcBtn.disabled = true;
+        atcBtn.style.opacity = '0.5';
+        atcBtn.style.cursor = 'not-allowed';
+        atcBtn.textContent = 'SOLD OUT';
+      }
+    }
+  });
+})();
+</script>

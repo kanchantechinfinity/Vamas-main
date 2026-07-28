@@ -315,13 +315,18 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 .vamas-prod-card__img img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, opacity 0.35s ease;
 }
 
 .vamas-prod-card:hover .vamas-prod-card__img img { transform: scale(1.05); }
+
+.vamas-prod-card__img-hover { opacity: 0; }
+.vamas-prod-card:hover .vamas-prod-card__img-hover { opacity: 1; }
 
 .vamas-prod-card__badge {
   position: absolute;
@@ -411,7 +416,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-prod-card__meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .vamas-prod-card__colors { display: flex; gap: 6px; }
-.vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; }
+.vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: box-shadow 0.15s, transform 0.15s; }
+.vamas-prod-card__color.active { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--color-maroon); transform: scale(1.05); }
 
 .vamas-prod-card__stars { color: var(--color-gold-dark); font-size: 12px; margin-left: auto; }
 .vamas-prod-card__review-count { color: rgba(66,0,1,0.4); font-size: 10px; }
