@@ -283,7 +283,7 @@
   </div>
 </section>
 
-{% comment %} ── Related Products (uses this product's own collection first, so items shown are actually related) ── {% endcomment %}
+{% comment %} ── Related Products: this product's own collection first (genuinely related), falling back to a random spread of 4 from the full catalog ── {% endcomment %}
 {% assign related_blocks = section.blocks | where: 'type', 'related_product' %}
 {% assign rel_col = product.collections.first %}
 {% if rel_col == blank or rel_col.products.size < 2 %}{% assign rel_col = collections[section.settings.related_collection] %}{% endif %}
@@ -292,54 +292,28 @@
 <section class="related-section">
   <div class="rel-eyebrow">YOU MAY ALSO LIKE</div>
   <h2 class="rel-heading">{{ section.settings.related_heading | default: 'More Handcrafted Beauties' }}</h2>
-  <div class="related-grid">
+  <div class="vamas-prod-grid">
     {% if related_blocks.size > 0 %}
       {% for block in related_blocks %}
         {% assign rp = block.settings.product %}
         {% if rp != blank %}
-        <div class="rel-card">
-          <a href="{{ rp.url }}" class="rel-img-wrap">
-            <img src="{{ rp.featured_image | img_url: '500x' }}" alt="{{ rp.title | escape }}">
-            {% if block.settings.badge != blank %}<div class="rel-badge">{{ block.settings.badge }}</div>{% endif %}
-          </a>
-          <div class="rel-info">
-            <a href="{{ rp.url }}" class="rel-name">{{ rp.title }}</a>
-            <div class="rel-type">{{ rp.type }}</div>
-            <div class="rel-price-row">
-              <span class="rel-price">{{ rp.price | money }}</span>
-              {% if rp.compare_at_price > rp.price %}<span class="rel-old">{{ rp.compare_at_price | money }}</span>{% endif %}
-            </div>
-            {% form 'product', rp %}
-              <input type="hidden" name="id" value="{{ rp.selected_or_first_available_variant.id }}">
-              <button type="submit" class="rel-add-btn"{% unless rp.selected_or_first_available_variant.available %} disabled{% endunless %}>ADD TO CART</button>
-            {% endform %}
-          </div>
-        </div>
+          {% render 'vamas-product-card', product: rp %}
         {% endif %}
       {% endfor %}
     {% else %}
+      {% assign rel_total = rel_col.products.size %}
+      {% assign rel_offset = 0 %}
+      {% if rel_total > 4 %}{% assign rel_offset = product.id | modulo: rel_total %}{% endif %}
       {% assign rel_shown = 0 %}
-      {% for rp in rel_col.products %}
-        {% if rp.id != product.id and rel_shown < 4 %}
+      {% for i in (0..49) %}
+        {% if rel_shown >= 4 %}{% break %}{% endif %}
+        {% assign rel_idx = i | plus: rel_offset | modulo: rel_total %}
+        {% assign rp = rel_col.products[rel_idx] %}
+        {% if rp != blank and rp.id != product.id %}
           {% assign rel_shown = rel_shown | plus: 1 %}
-          <div class="rel-card">
-            <a href="{{ rp.url }}" class="rel-img-wrap">
-              <img src="{{ rp.featured_image | img_url: '500x' }}" alt="{{ rp.title | escape }}">
-            </a>
-            <div class="rel-info">
-              <a href="{{ rp.url }}" class="rel-name">{{ rp.title }}</a>
-              <div class="rel-type">{{ rp.type }}</div>
-              <div class="rel-price-row">
-                <span class="rel-price">{{ rp.price | money }}</span>
-                {% if rp.compare_at_price > rp.price %}<span class="rel-old">{{ rp.compare_at_price | money }}</span>{% endif %}
-              </div>
-              {% form 'product', rp %}
-                <input type="hidden" name="id" value="{{ rp.selected_or_first_available_variant.id }}">
-                <button type="submit" class="rel-add-btn"{% unless rp.selected_or_first_available_variant.available %} disabled{% endunless %}>ADD TO CART</button>
-              {% endform %}
-            </div>
-          </div>
+          {% render 'vamas-product-card', product: rp %}
         {% endif %}
+        {% if i >= rel_total %}{% break %}{% endif %}
       {% endfor %}
     {% endif %}
   </div>

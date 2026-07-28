@@ -378,11 +378,11 @@
     <p class="vamas-brand__eyebrow">{{ section.settings.brand_eyebrow | default: 'OUR STORY' }}</p>
     <h2 class="vamas-brand__heading">{{ section.settings.brand_heading }}</h2>
     <p class="vamas-brand__text-body">{{ section.settings.brand_text }}</p>
-    <div class="vamas-brand__stats">
+    <div class="vamas-brand__stats" data-stats-counter>
       {% for block in section.blocks %}
         {% if block.type == 'stat' %}
           <div>
-            <div class="vamas-brand__stat-num">{{ block.settings.stat_num }}</div>
+            <div class="vamas-brand__stat-num" data-count-target="{{ block.settings.stat_num }}">0</div>
             <div class="vamas-brand__stat-lbl">{{ block.settings.stat_lbl }}</div>
           </div>
         {% endif %}
@@ -406,6 +406,54 @@
   </div>
 </section>
 {% endif %}
+<script>
+(function(){
+  var wrap = document.querySelector('[data-stats-counter]');
+  if (!wrap) return;
+  var nums = wrap.querySelectorAll('[data-count-target]');
+  var duration = 1500;
+
+  function animateOne(el){
+    var raw = el.getAttribute('data-count-target') || '';
+    var match = raw.match(/^([\d,]*\.?\d+)/);
+    if (!match) { el.textContent = raw; return; }
+    var numStr = match[1];
+    var suffix = raw.slice(numStr.length);
+    var target = parseFloat(numStr.replace(/,/g, ''));
+    if (isNaN(target)) { el.textContent = raw; return; }
+    var decimals = (numStr.split('.')[1] || '').length;
+    var hasCommas = numStr.indexOf(',') > -1;
+    var start = null;
+    function frame(ts){
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = target * eased;
+      var text = decimals > 0 ? current.toFixed(decimals) : Math.round(current).toString();
+      if (hasCommas) {
+        var parts = text.split('.');
+        parts[0] = parseInt(parts[0], 10).toLocaleString('en-IN');
+        text = parts.join('.');
+      }
+      el.textContent = text + suffix;
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  var done = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting && !done) {
+        done = true;
+        nums.forEach(animateOne);
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  io.observe(wrap);
+})();
+</script>
 
 {% comment %} ── Best Sellers ─────────────────────── {% endcomment %}
 {% if section.settings.show_bestsellers %}
