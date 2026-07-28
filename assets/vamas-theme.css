@@ -857,8 +857,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-full-banner__btn:hover { background: #fff; }
 
 /* ── Instagram Reels ──────────────────── */
-.vamas-reels { padding: 64px var(--page-gutter); background: #fff; }
-.vamas-reels__grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; }
+.vamas-reels { padding: 64px var(--page-gutter) 84px; background: #fff; }
+.vamas-reels__grid { display: flex; gap: 18px; }
+.vamas-reel-card { position: relative; flex: 0 0 220px; padding-bottom: 34px; }
 .vamas-reel { position: relative; border-radius: 14px; overflow: hidden; aspect-ratio: 9/16; cursor: pointer; background: #0a0a0a; transition: transform 0.25s, box-shadow 0.25s; display: block; }
 .vamas-reel:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(66,0,1,0.2); }
 .vamas-reel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -874,17 +875,33 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-reel__badge { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #fd5949 0%, #d6249f 50%, #285AEB 100%); display: flex; align-items: center; justify-content: center; }
 .vamas-reel__badge svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 1.8; }
 
+/* ── Reel floating product card ──────── */
+.vamas-reel-product {
+  position: absolute; left: 10px; right: 10px; bottom: 0;
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(66,0,1,0.18);
+  padding: 8px 10px; text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.vamas-reel-product:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(66,0,1,0.24); }
+.vamas-reel-product__img { width: 40px; height: 40px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #f2e9df; }
+.vamas-reel-product__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vamas-reel-product__body { min-width: 0; flex: 1; display: flex; flex-direction: column; }
+.vamas-reel-product__name { font-size: 10.5px; font-weight: 700; color: var(--color-maroon); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vamas-reel-product__price { font-size: 10.5px; font-weight: 800; color: var(--color-gold-dark); }
+.vamas-reel-product__cta { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; color: var(--color-maroon); background: rgba(235,211,173,0.3); border-radius: 8px; padding: 5px 9px; flex-shrink: 0; }
+
 @media (max-width: 768px) {
   .vamas-full-banner { height: 300px; }
   .vamas-full-banner__overlay { padding: 0 24px; }
   .vamas-full-banner__title { font-size: 26px; }
   .vamas-full-banner__sub { display: none; }
   .vamas-full-banner__btn { padding: 10px 18px; font-size: 9px; }
-  .vamas-reels { padding: 32px 16px; }
-  .vamas-reels__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .vamas-reels { padding: 32px 16px 56px; }
+  .vamas-reel-card { flex: 0 0 160px; }
   .vamas-reel__handle, .vamas-reel__stats { font-size: 9px; }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
-  .vamas-reels { padding: 48px 40px; }
-  .vamas-reels__grid { grid-template-columns: repeat(3, 1fr); }
+  .vamas-reels { padding: 48px 40px 72px; }
 }
