@@ -103,6 +103,7 @@
     .about-tl::before { left: 20px; transform: none; }
     .about-tl::after { left: 20px; transform: scaleY(var(--progress, 0)); }
     .about-tl__item, .about-tl__item.right { flex-direction: row; gap: 20px; }
+    .about-tl__item:not(.right) .about-tl__content,
     .about-tl__item.right .about-tl__content { text-align: left; }
     .about-tl__dot { left: 20px; top: 34px; }
     .about-tl__item.revealed .about-tl__dot { transform: translateX(-50%) scale(1); }

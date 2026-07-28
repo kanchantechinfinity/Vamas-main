@@ -118,7 +118,8 @@
     .btn-buy{flex:1;width:100%;height:52px;background:transparent;border:2px solid var(--m);color:var(--m);font-size:14px;font-weight:700;letter-spacing:1px;font-family:var(--font-body);border-radius:12px;cursor:pointer;margin-top:0;transition:all 0.3s;}
     .btn-buy:hover{background:var(--m);color:white;}
     @media (max-width: 480px) {
-      .atc-buy-row{flex-direction:column;}
+      .atc-buy-row{flex-direction:row;gap:8px;}
+      .btn-atc,.btn-buy{height:48px;font-size:12px;letter-spacing:1px;padding:0 6px;}
     }
 
     /* ── Payment strip ── */
