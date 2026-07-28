@@ -97,6 +97,16 @@
                       {% endfor %}
                     </div>
                   </div>
+                {% elsif has_leaf %}
+                  <div class="vamas-nav__mega-promo">
+                    <a href="{{ link.url }}" class="vamas-nav__promo-card">
+                      <img src="{{ 'banner-corset.jpg' | asset_url }}" alt="" loading="lazy">
+                      <span class="vamas-nav__promo-overlay">
+                        <span class="vamas-nav__promo-title">Big Discounts</span>
+                        <span class="vamas-nav__promo-cta">Shop Now</span>
+                      </span>
+                    </a>
+                  </div>
                 {% endif %}
                 <div class="vamas-nav__mega-main">
                   {% if group_icons_1 %}
@@ -164,7 +174,7 @@
                   {% endif %}
                   {% if has_leaf %}
                     <div class="vamas-nav__mega-section">
-                      <div class="vamas-nav__mega-icons">
+                      <div class="vamas-nav__mega-icons vamas-nav__mega-icons--compact">
                         {% for childlink in link.links %}
                           {% if childlink.links == blank and childlink.title != 'Categories' and childlink.title != 'Shop by Look' and childlink.title != 'Shop by Colour' and childlink.title != 'Shop by Color' %}
                             {% capture leaf_img %}{% cycle 'nav-leaf': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
