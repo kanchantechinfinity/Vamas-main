@@ -25,6 +25,13 @@
   {% endif %}
 {% endfor %}
 
+{% comment %} The default-displayed image/swatch must correspond to the SAME variant, not just "first image" vs "first swatch in the list" {% endcomment %}
+{% assign default_color = '' %}
+{% if color_option_position == 1 %}{% assign default_color = first_variant.option1 %}{% endif %}
+{% if color_option_position == 2 %}{% assign default_color = first_variant.option2 %}{% endif %}
+{% if color_option_position == 3 %}{% assign default_color = first_variant.option3 %}{% endif %}
+{% assign default_card_image = first_variant.featured_image | default: product.featured_image %}
+
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
   {% for v in product.variants %}
@@ -53,13 +60,13 @@
   {% endfor %}
 ]{% endcapture %}
 
-<div class="vamas-prod-card" data-color-option="{{ color_option_position }}">
+<div class="vamas-prod-card" data-color-option="{{ color_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'center' }}"{% endif %}>
   <div class="vamas-prod-card__img">
     <a href="{{ product.url }}">
-      {% if product.featured_image %}
+      {% if default_card_image %}
         <img class="vamas-prod-card__img-primary" data-primary-img
-             src="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
-             alt="{{ product.featured_image.alt | escape | default: product.title }}"
+             src="{{ default_card_image | img_url: '400x533', crop: 'center' }}"
+             alt="{{ default_card_image.alt | escape | default: product.title }}"
              loading="lazy" width="400" height="533">
       {% else %}
         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg vamas-prod-card__img-primary' }}
@@ -102,7 +109,7 @@
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
             {% assign swatch_hex = swatch_hex | strip %}
             {% unless swatch_hex == 'SKIP' %}
-              <div class="vamas-prod-card__color{% if forloop.first %} active{% endif %}"
+              <div class="vamas-prod-card__color{% if value == default_color %} active{% endif %}"
                    style="background:{{ swatch_hex }};"
                    data-color="{{ value | escape }}"
                    title="{{ value }}"></div>
@@ -175,9 +182,11 @@
     card.querySelectorAll('.vamas-prod-card__color').forEach(function(s){ s.classList.remove('active'); });
     swatch.classList.add('active');
 
-    if (match.image) {
-      var img = card.querySelector('[data-primary-img]');
-      if (img) img.src = match.image;
+    var img = card.querySelector('[data-primary-img]');
+    if (img) {
+      var fallbackImg = card.getAttribute('data-default-img');
+      if (match.image) img.src = match.image;
+      else if (fallbackImg) img.src = fallbackImg;
     }
 
     var priceEl = card.querySelector('[data-price]');
