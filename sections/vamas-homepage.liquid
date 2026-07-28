@@ -143,7 +143,7 @@
       <h2 class="vamas-section__title">Shop by <span>Occasion</span></h2>
       <p class="vamas-section__subtitle">Find the perfect blouse for every moment</p>
     </div>
-    <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
+    <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--desktop">VIEW ALL</a>
   </div>
   <div class="vamas-cat-carousel" data-cat-carousel data-count="{{ cat_blocks.size }}" data-speed="0.6">
     <div class="vamas-cat-circle-row" data-cat-track>
@@ -170,6 +170,7 @@
     </div>
   </div>
   <div class="vamas-cat-dots" data-cat-dots></div>
+  <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--mobile-btn">VIEW ALL</a>
 </section>
 {% endif %}
 
@@ -189,18 +190,27 @@
     function setWidth(){ return count * itemWidth(); }
 
     var isDown = false, startX = 0, startScroll = 0, dragged = false;
-    var autoTimer = null, paused = false;
+    var autoRAF = null, paused = false, lastTs = null;
 
     function startAuto(){
       stopAuto();
-      autoTimer = setInterval(function(){
-        if (paused || isDown) return;
-        track.scrollLeft += opts.speed || 0.6;
-        if (track.scrollLeft >= setWidth()) { track.scrollLeft -= setWidth(); }
-        updateDots();
-      }, 16);
+      var pxPerMs = (opts.speed || 0.6) / 16;
+      function step(ts){
+        if (!paused && !isDown) {
+          if (lastTs !== null) {
+            track.scrollLeft += pxPerMs * (ts - lastTs);
+            if (track.scrollLeft >= setWidth()) { track.scrollLeft -= setWidth(); }
+            updateDots();
+          }
+          lastTs = ts;
+        } else {
+          lastTs = null;
+        }
+        autoRAF = requestAnimationFrame(step);
+      }
+      autoRAF = requestAnimationFrame(step);
     }
-    function stopAuto(){ if (autoTimer) clearInterval(autoTimer); }
+    function stopAuto(){ if (autoRAF) cancelAnimationFrame(autoRAF); autoRAF = null; }
 
     track.addEventListener('mouseenter', function(){ paused = true; });
     track.addEventListener('mouseleave', function(){ paused = false; if (isDown) endDrag(); });
@@ -263,7 +273,7 @@
       var dots = dotsWrap.querySelectorAll('.vamas-cat-dot');
       for (var i = 0; i < dots.length; i++) { dots[i].classList.toggle('active', i === page); }
     }
-    track.addEventListener('scroll', function(){ if (!autoTimer) updateDots(); });
+    track.addEventListener('scroll', function(){ if (isDown || paused) updateDots(); });
 
     buildDots();
     startAuto();
