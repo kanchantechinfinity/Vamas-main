@@ -39,7 +39,7 @@
           "type": "slide",
           "settings": {
             "slide_bg": "#1a0a00",
-            "slide_image": "shopify://shop_images/Banner_1_copy.png",
+            "slide_image": "shopify://shop_images/Banner_2.png",
             "image_asset": "slide-maroon.jpg",
             "video_url": "",
             "mobile_slide_image": "shopify://shop_images/M_Banner_1_copy.png",
@@ -276,8 +276,6 @@
         "cat_view_all": "/collections/all",
         "show_new_arrivals": true,
         "new_arrivals_collection": "jackets",
-        "show_by_size": true,
-        "by_size_collection": "",
         "show_bestsellers": true,
         "bestsellers_collection": "demo-collection",
         "show_brand": true,
