@@ -145,29 +145,140 @@
     </div>
     <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
   </div>
-  <div class="vamas-cat-circle-row">
-    {% for block in section.blocks %}
-      {% if block.type == 'category' %}
-        <a href="{{ block.settings.cat_url | default: '/collections/all' }}" class="vamas-cat-circle">
-          <div class="vamas-cat-circle__ring">
-            {% if block.settings.cat_image != blank %}
-              <img src="{{ block.settings.cat_image | img_url: '300x300', crop: 'top' }}"
-                   alt="{{ block.settings.cat_name }}" loading="lazy" width="150" height="150">
-            {% elsif block.settings.image_asset != blank %}
-              <img src="{{ block.settings.image_asset | asset_url }}"
-                   alt="{{ block.settings.cat_name | escape }}" loading="lazy" width="150" height="150">
-            {% else %}
-              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-            {% endif %}
-          </div>
-          <div class="vamas-cat-circle__label">{{ block.settings.cat_name }}</div>
-        </a>
-      {% endif %}
-    {% endfor %}
+  <div class="vamas-cat-carousel" data-cat-carousel data-count="{{ cat_blocks.size }}" data-speed="0.6">
+    <div class="vamas-cat-circle-row" data-cat-track>
+      {% for dup in (1..2) %}
+        {% for block in section.blocks %}
+          {% if block.type == 'category' %}
+            <a href="{{ block.settings.cat_url | default: '/collections/all' }}" class="vamas-cat-circle" draggable="false">
+              <div class="vamas-cat-circle__ring">
+                {% if block.settings.cat_image != blank %}
+                  <img src="{{ block.settings.cat_image | img_url: '300x300', crop: 'top' }}"
+                       alt="{{ block.settings.cat_name }}" loading="lazy" width="150" height="150" draggable="false">
+                {% elsif block.settings.image_asset != blank %}
+                  <img src="{{ block.settings.image_asset | asset_url }}"
+                       alt="{{ block.settings.cat_name | escape }}" loading="lazy" width="150" height="150" draggable="false">
+                {% else %}
+                  {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+              <div class="vamas-cat-circle__label">{{ block.settings.cat_name }}</div>
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
   </div>
+  <div class="vamas-cat-dots" data-cat-dots></div>
 </section>
 {% endif %}
 
+<script>
+(function(){
+  window.vamasInitDragCarousel = window.vamasInitDragCarousel || function(root, opts){
+    var track = root.querySelector(opts.trackSelector);
+    var dotsWrap = root.parentElement.querySelector(opts.dotsSelector) || root.querySelector(opts.dotsSelector);
+    if (!track) return;
+    var items = Array.prototype.slice.call(track.children);
+    var count = parseInt(root.getAttribute('data-count'), 10) || (items.length / 2);
+    if (!count || items.length < count * 2) return;
+
+    var itemStyle = getComputedStyle(items[0]);
+    var gap = parseFloat(getComputedStyle(track).gap) || 0;
+    function itemWidth(){ return items[0].getBoundingClientRect().width + gap; }
+    function setWidth(){ return count * itemWidth(); }
+
+    var isDown = false, startX = 0, startScroll = 0, dragged = false;
+    var autoTimer = null, paused = false;
+
+    function startAuto(){
+      stopAuto();
+      autoTimer = setInterval(function(){
+        if (paused || isDown) return;
+        track.scrollLeft += opts.speed || 0.6;
+        if (track.scrollLeft >= setWidth()) { track.scrollLeft -= setWidth(); }
+        updateDots();
+      }, 16);
+    }
+    function stopAuto(){ if (autoTimer) clearInterval(autoTimer); }
+
+    track.addEventListener('mouseenter', function(){ paused = true; });
+    track.addEventListener('mouseleave', function(){ paused = false; if (isDown) endDrag(); });
+
+    function pointerX(e){ return (e.touches ? e.touches[0].pageX : e.pageX); }
+    function startDrag(e){
+      isDown = true; dragged = false;
+      startX = pointerX(e); startScroll = track.scrollLeft;
+      track.classList.add('is-dragging');
+    }
+    function duringDrag(e){
+      if (!isDown) return;
+      var dx = pointerX(e) - startX;
+      if (Math.abs(dx) > 4) dragged = true;
+      track.scrollLeft = startScroll - dx;
+    }
+    function endDrag(){
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove('is-dragging');
+      if (track.scrollLeft < 0) track.scrollLeft += setWidth();
+      if (track.scrollLeft >= setWidth()) track.scrollLeft -= setWidth();
+    }
+    track.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', duringDrag);
+    window.addEventListener('mouseup', endDrag);
+    track.addEventListener('touchstart', function(e){ paused = true; startDrag(e); }, { passive: true });
+    track.addEventListener('touchmove', duringDrag, { passive: true });
+    track.addEventListener('touchend', function(){ endDrag(); paused = false; });
+    track.addEventListener('click', function(e){ if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+    var perView = 1;
+    function computePerView(){
+      perView = Math.max(1, Math.round(root.clientWidth / itemWidth()));
+      return perView;
+    }
+    function pageCount(){ return Math.max(1, Math.ceil(count / computePerView())); }
+
+    function buildDots(){
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = '';
+      var pages = pageCount();
+      for (var i = 0; i < pages; i++) {
+        var dot = document.createElement('button');
+        dot.className = 'vamas-cat-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        (function(idx){
+          dot.addEventListener('click', function(){
+            track.scrollTo({ left: idx * perView * itemWidth(), behavior: 'smooth' });
+          });
+        })(i);
+        dotsWrap.appendChild(dot);
+      }
+    }
+    function updateDots(){
+      if (!dotsWrap) return;
+      var pages = pageCount();
+      var pos = track.scrollLeft % setWidth();
+      var page = Math.round(pos / (perView * itemWidth())) % pages;
+      var dots = dotsWrap.querySelectorAll('.vamas-cat-dot');
+      for (var i = 0; i < dots.length; i++) { dots[i].classList.toggle('active', i === page); }
+    }
+    track.addEventListener('scroll', function(){ if (!autoTimer) updateDots(); });
+
+    buildDots();
+    startAuto();
+    window.addEventListener('resize', function(){ buildDots(); });
+  };
+
+  document.querySelectorAll('[data-cat-carousel]').forEach(function(root){
+    window.vamasInitDragCarousel(root, {
+      trackSelector: '[data-cat-track]',
+      dotsSelector: '[data-cat-dots]',
+      speed: parseFloat(root.getAttribute('data-speed')) || 0.6
+    });
+  });
+})();
+</script>
 
 {% comment %} ── Full Look Banner ─────────────────── {% endcomment %}
 {% if section.settings.show_banner %}
@@ -234,13 +345,19 @@
     </div>
     <a href="{{ collections[section.settings.by_size_collection].url | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
   </div>
-  <div class="vamas-size-row">
-    {% assign bs_col = collections[section.settings.by_size_collection] %}
-    {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% endif %}
-    {% for product in bs_col.products limit: 10 %}
-      {% render 'vamas-size-product-card', product: product %}
-    {% endfor %}
+  {% assign bs_col = collections[section.settings.by_size_collection] %}
+  {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% endif %}
+  {% assign bs_count = bs_col.products.size | at_most: 10 %}
+  <div class="vamas-cat-carousel" data-cat-carousel data-count="{{ bs_count }}" data-speed="0.5">
+    <div class="vamas-size-row" data-cat-track>
+      {% for dup in (1..2) %}
+        {% for product in bs_col.products limit: 10 %}
+          {% render 'vamas-size-product-card', product: product %}
+        {% endfor %}
+      {% endfor %}
+    </div>
   </div>
+  <div class="vamas-cat-dots" data-cat-dots></div>
 </section>
 {% endif %}
 

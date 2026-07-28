@@ -175,7 +175,7 @@
     .btn-submit {
       width: 100%;
       background: var(--m); color: var(--g);
-      border: none; border-radius: 8px;
+      border: none; border-radius: 12px;
       padding: 14px;
       font-size: 11px; font-weight: 800; letter-spacing: 2px;
       cursor: pointer; font-family: var(--font-body);
@@ -365,7 +365,7 @@
     .dark-nl-input::placeholder { color: rgba(235,211,173,0.3); }
     .dark-nl-btn {
       background: var(--g); color: var(--m); border: none;
-      padding: 10px 22px; border-radius: 100px;
+      padding: 10px 22px; border-radius: 12px;
       font-size: 10px; font-weight: 800; letter-spacing: 2px;
       cursor: pointer; font-family: var(--font-body);
       white-space: nowrap; transition: background 0.2s;

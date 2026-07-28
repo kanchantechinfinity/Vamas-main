@@ -266,7 +266,7 @@
 .vblog-page-link {
   padding: 10px 22px;
   border: 1px solid var(--color-maroon, #420001);
-  border-radius: 999px;
+  border-radius: 12px;
   color: var(--color-maroon, #420001);
   text-decoration: none;
   font-size: 14px;
@@ -331,7 +331,7 @@
   padding: 11px 16px;
   background: var(--color-maroon, #420001);
   color: #fff;
-  border-radius: 999px;
+  border-radius: 12px;
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
@@ -468,7 +468,7 @@
 .vart-tag:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); }
 .vart-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 36px; }
 .vart-nav-link { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--color-maroon, #420001); text-decoration: none; }
-.vart-nav-all { border: 1.5px solid var(--color-maroon, #420001); border-radius: 100px; padding: 9px 22px; }
+.vart-nav-all { border: 1.5px solid var(--color-maroon, #420001); border-radius: 12px; padding: 9px 22px; }
 .vart-nav-all:hover { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); }
 .vart-comments { margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(66,0,1,0.08); }
 .vart-comments-title { font-family: var(--font-heading); color: var(--color-maroon, #420001); font-size: 22px; margin-bottom: 20px; }
@@ -479,7 +479,7 @@
 .vart-comment-row { display: flex; gap: 12px; margin-bottom: 12px; }
 .vart-comment-row input, .vart-comments textarea { flex: 1; width: 100%; border: 1.5px solid rgba(66,0,1,0.15); border-radius: 8px; padding: 11px 14px; font-family: var(--font-body); font-size: 13px; outline: none; }
 .vart-comments textarea { margin-bottom: 12px; }
-.vart-comment-btn { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); border: none; border-radius: 100px; padding: 12px 28px; font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); }
+.vart-comment-btn { background: var(--color-maroon, #420001); color: var(--color-gold, #EBD3AD); border: none; border-radius: 12px; padding: 12px 28px; font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); }
 .vart-comment-ok { background: #e8f5e9; color: #2e7d32; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; }
 .vart-comment-error { background: #ffebee; color: #c62828; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 13px; }
 @media (max-width: 768px) {
