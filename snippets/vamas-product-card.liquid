@@ -27,10 +27,25 @@
 
 {% comment %} The default-displayed image/swatch must correspond to the SAME variant, not just "first image" vs "first swatch in the list" {% endcomment %}
 {% assign default_color = '' %}
-{% if color_option_position == 1 %}{% assign default_color = first_variant.option1 %}{% endif %}
-{% if color_option_position == 2 %}{% assign default_color = first_variant.option2 %}{% endif %}
-{% if color_option_position == 3 %}{% assign default_color = first_variant.option3 %}{% endif %}
-{% assign default_card_image = first_variant.featured_image | default: product.featured_image %}
+{% assign default_card_image = first_variant.featured_image %}
+{% if default_card_image %}
+  {% if color_option_position == 1 %}{% assign default_color = first_variant.option1 %}{% endif %}
+  {% if color_option_position == 2 %}{% assign default_color = first_variant.option2 %}{% endif %}
+  {% if color_option_position == 3 %}{% assign default_color = first_variant.option3 %}{% endif %}
+{% else %}
+  {% comment %} first_variant has no image of its own — the card falls back to the product's
+    default photo, so the active swatch must match whichever variant actually owns THAT photo,
+    not first_variant, otherwise the swatch and the shown image point at different colors. {% endcomment %}
+  {% assign default_card_image = product.featured_image %}
+  {% for v in product.variants %}
+    {% if v.featured_image == product.featured_image %}
+      {% if color_option_position == 1 %}{% assign default_color = v.option1 %}{% endif %}
+      {% if color_option_position == 2 %}{% assign default_color = v.option2 %}{% endif %}
+      {% if color_option_position == 3 %}{% assign default_color = v.option3 %}{% endif %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
