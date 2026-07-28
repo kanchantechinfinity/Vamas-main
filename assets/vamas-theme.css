@@ -228,6 +228,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   padding-bottom: 2px;
 }
 
+.vamas-view-all--bottom { display: none; }
+
 /* ── Category Row (circular carousel) ──── */
 .vamas-cat-carousel { position: relative; }
 .vamas-cat-circle-row {
@@ -396,18 +398,18 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-sizeguide-overlay { opacity: 0; visibility: hidden; }
 .vamas-search-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(42,0,1,0.55); backdrop-filter: blur(3px); display: flex; align-items: flex-start; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
 .vamas-search-overlay.open { opacity: 1; visibility: visible; }
-.vamas-search-box { display: flex; align-items: center; gap: 12px; width: min(680px, 92vw); margin-top: 14vh; background: #fff; border-radius: 100px; padding: 8px 8px 8px 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: translateY(-16px); transition: transform 0.25s; }
+.vamas-search-box { display: flex; align-items: center; gap: 12px; width: min(680px, 92vw); max-width: 100%; box-sizing: border-box; margin-top: 14vh; background: #fff; border-radius: 100px; padding: 8px 8px 8px 22px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: translateY(-16px); transition: transform 0.25s; }
 .vamas-search-overlay.open .vamas-search-box { transform: translateY(0); }
 .vamas-search-box__icon { color: var(--color-maroon); flex-shrink: 0; }
-.vamas-search-box input { flex: 1; border: none; outline: none; font-family: var(--font-body); font-size: 15px; color: var(--color-maroon); background: none; }
-.vamas-search-box input::placeholder { color: rgba(66,0,1,0.4); }
-.vamas-search-box__submit { background: var(--color-maroon); color: var(--color-gold); border: none; padding: 11px 24px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); transition: background 0.2s; }
+.vamas-search-box input { flex: 1; min-width: 0; border: none; outline: none; font-family: var(--font-body); font-size: 15px; color: var(--color-maroon); background: none; }
+.vamas-search-box input::placeholder { color: rgba(66,0,1,0.4); overflow: hidden; text-overflow: ellipsis; }
+.vamas-search-box__submit { background: var(--color-maroon); color: var(--color-gold); border: none; padding: 11px 24px; border-radius: 12px; font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); transition: background 0.2s; flex-shrink: 0; white-space: nowrap; }
 .vamas-search-box__submit:hover { background: var(--color-maroon-light); }
-.vamas-search-box__close { background: none; border: none; color: rgba(66,0,1,0.5); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 8px; }
+.vamas-search-box__close { background: none; border: none; color: rgba(66,0,1,0.5); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 8px; flex-shrink: 0; }
 .vamas-search-box__close:hover { color: var(--color-maroon); }
 @media (max-width: 768px) {
-  .vamas-search-box { margin-top: 12vh; padding-left: 16px; }
-  .vamas-search-box__submit { padding: 10px 14px; }
+  .vamas-search-box { margin-top: 12vh; padding-left: 16px; gap: 6px; }
+  .vamas-search-box__submit { padding: 10px 10px; font-size: 10px; letter-spacing: 1px; }
 }
 
 .vamas-prod-card__body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
@@ -694,6 +696,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-slide__offer { font-size: 26px; }
   .vamas-section { padding: 44px 24px; }
   .vamas-section__header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .vamas-view-all--top { display: none; }
+  .vamas-view-all--bottom { display: block; text-align: center; width: fit-content; margin: 20px auto 0; }
+  .vamas-section--cats .vamas-view-all--bottom { position: static; }
   .vamas-brand { border-radius: 20px; margin: 32px auto; height: auto; }
   .vamas-brand__text { padding: 32px 24px; }
   .vamas-brand__heading { font-size: 28px; }

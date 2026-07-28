@@ -143,7 +143,7 @@
       <h2 class="vamas-section__title">Shop by <span>Occasion</span></h2>
       <p class="vamas-section__subtitle">Find the perfect blouse for every moment</p>
     </div>
-    <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
+    <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
   </div>
   <div class="vamas-cat-carousel" data-cat-carousel data-count="{{ cat_blocks.size }}" data-speed="0.6">
     <div class="vamas-cat-circle-row" data-cat-track>
@@ -170,6 +170,7 @@
     </div>
   </div>
   <div class="vamas-cat-dots" data-cat-dots></div>
+  <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
 </section>
 {% endif %}
 
@@ -183,9 +184,10 @@
     var count = parseInt(root.getAttribute('data-count'), 10) || (items.length / 2);
     if (!count || items.length < count * 2) return;
 
-    var itemStyle = getComputedStyle(items[0]);
     var gap = parseFloat(getComputedStyle(track).gap) || 0;
-    function itemWidth(){ return items[0].getBoundingClientRect().width + gap; }
+    var cachedItemWidth = items[0].getBoundingClientRect().width + gap;
+    function refreshItemWidth(){ cachedItemWidth = items[0].getBoundingClientRect().width + gap; }
+    function itemWidth(){ return cachedItemWidth; }
     function setWidth(){ return count * itemWidth(); }
 
     var isDown = false, startX = 0, startScroll = 0, dragged = false;
@@ -264,11 +266,14 @@
         dotsWrap.appendChild(dot);
       }
     }
+    var lastActivePage = -1;
     function updateDots(){
       if (!dotsWrap) return;
       var pages = pageCount();
       var pos = track.scrollLeft % setWidth();
       var page = Math.round(pos / (perView * itemWidth())) % pages;
+      if (page === lastActivePage) return;
+      lastActivePage = page;
       var dots = dotsWrap.querySelectorAll('.vamas-cat-dot');
       for (var i = 0; i < dots.length; i++) { dots[i].classList.toggle('active', i === page); }
     }
@@ -276,7 +281,7 @@
 
     buildDots();
     startAuto();
-    window.addEventListener('resize', function(){ buildDots(); });
+    window.addEventListener('resize', function(){ refreshItemWidth(); buildDots(); });
   };
 
   document.querySelectorAll('[data-cat-carousel]').forEach(function(root){
@@ -330,7 +335,7 @@
       <h2 class="vamas-section__title">New <span>Arrivals</span></h2>
       <p class="vamas-section__subtitle">Fresh styles added every week</p>
     </div>
-    <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
+    <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
   </div>
   <div class="vamas-prod-grid">
     {% assign na_col = collections[section.settings.new_arrivals_collection] %}
@@ -341,6 +346,7 @@
       {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
     {% endfor %}
   </div>
+  <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
 </section>
 {% endif %}
 
