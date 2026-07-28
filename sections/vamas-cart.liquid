@@ -180,7 +180,36 @@
 
 <script>
 (function(){
-  function fmtMoney(cents){ return Shopify.formatMoney(cents, {{ shop.money_format | json }}); }
+  /* Shopify.formatMoney isn't guaranteed to be loaded on every page (requires
+     shopify_common.js) — use a local implementation so cart updates never
+     silently throw. */
+  function vamasFormatMoney(cents, format) {
+    if (typeof cents === 'string') { cents = cents.replace('.', ''); }
+    function withDelimiters(number, precision, thousands, decimalSep) {
+      precision = (typeof precision === 'undefined') ? 2 : precision;
+      thousands = (typeof thousands === 'undefined') ? ',' : thousands;
+      decimalSep = (typeof decimalSep === 'undefined') ? '.' : decimalSep;
+      if (isNaN(number) || number == null) { return 0; }
+      number = (number / 100.0).toFixed(precision);
+      var parts = number.split('.');
+      var dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + thousands);
+      var centsPart = parts[1] ? decimalSep + parts[1] : '';
+      return dollars + centsPart;
+    }
+    var formatString = format || '${{amount}}';
+    var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+    var match = formatString.match(placeholderRegex);
+    var key = match ? match[1] : 'amount';
+    var value;
+    switch (key) {
+      case 'amount_no_decimals': value = withDelimiters(cents, 0); break;
+      case 'amount_with_comma_separator': value = withDelimiters(cents, 2, '.', ','); break;
+      case 'amount_no_decimals_with_comma_separator': value = withDelimiters(cents, 0, '.', ','); break;
+      default: value = withDelimiters(cents, 2);
+    }
+    return match ? formatString.replace(placeholderRegex, value) : formatString + value;
+  }
+  function fmtMoney(cents){ return vamasFormatMoney(cents, {{ shop.money_format | json }}); }
 
   document.querySelectorAll('[data-line][data-delta]').forEach(function(btn){
     btn.addEventListener('click', function(){

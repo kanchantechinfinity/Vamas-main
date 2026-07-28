@@ -421,6 +421,36 @@
   var stickyBtn = document.getElementById('sticky-atc-btn');
   var buyBtn = document.getElementById('buy-btn');
 
+  /* Shopify.formatMoney isn't guaranteed to be loaded on every page (requires
+     shopify_common.js) — use a local implementation so variant switching never
+     silently throws and aborts before updating the image/price/ATC state. */
+  function vamasFormatMoney(cents, format) {
+    if (typeof cents === 'string') { cents = cents.replace('.', ''); }
+    function withDelimiters(number, precision, thousands, decimalSep) {
+      precision = (typeof precision === 'undefined') ? 2 : precision;
+      thousands = (typeof thousands === 'undefined') ? ',' : thousands;
+      decimalSep = (typeof decimalSep === 'undefined') ? '.' : decimalSep;
+      if (isNaN(number) || number == null) { return 0; }
+      number = (number / 100.0).toFixed(precision);
+      var parts = number.split('.');
+      var dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + thousands);
+      var centsPart = parts[1] ? decimalSep + parts[1] : '';
+      return dollars + centsPart;
+    }
+    var formatString = format || '${{amount}}';
+    var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+    var match = formatString.match(placeholderRegex);
+    var key = match ? match[1] : 'amount';
+    var value;
+    switch (key) {
+      case 'amount_no_decimals': value = withDelimiters(cents, 0); break;
+      case 'amount_with_comma_separator': value = withDelimiters(cents, 2, '.', ','); break;
+      case 'amount_no_decimals_with_comma_separator': value = withDelimiters(cents, 0, '.', ','); break;
+      default: value = withDelimiters(cents, 2);
+    }
+    return match ? formatString.replace(placeholderRegex, value) : formatString + value;
+  }
+
   function getSelectedOptions() {
     var opts = [];
     document.querySelectorAll('[data-option-index]').forEach(function(group) {
@@ -467,17 +497,17 @@
   function applyVariant(v) {
     if (!v) return;
     variantInput.value = v.id;
-    document.getElementById('price-now').textContent = Shopify.formatMoney(v.price, {{ shop.money_format | json }});
+    document.getElementById('price-now').textContent = vamasFormatMoney(v.price, {{ shop.money_format | json }});
     var priceOld = document.getElementById('price-old');
     if (priceOld) {
       if (v.compare_at_price && v.compare_at_price > v.price) {
         priceOld.style.display = '';
-        priceOld.textContent = Shopify.formatMoney(v.compare_at_price, {{ shop.money_format | json }});
+        priceOld.textContent = vamasFormatMoney(v.compare_at_price, {{ shop.money_format | json }});
       } else {
         priceOld.style.display = 'none';
       }
     }
-    document.getElementById('sticky-price').textContent = Shopify.formatMoney(v.price, {{ shop.money_format | json }});
+    document.getElementById('sticky-price').textContent = vamasFormatMoney(v.price, {{ shop.money_format | json }});
     var img = imageForVariant(v);
     if (img) {
       mainImg.src = img.src.replace(/(\.[a-zA-Z0-9]+)$/, '_1000x$1');
