@@ -16,7 +16,7 @@
           "type": "slide",
           "settings": {
             "slide_bg": "#420001",
-            "slide_image": "shopify://shop_images/Banner_2_copy.png",
+            "slide_image": "shopify://shop_images/WhatsApp_Image_2026-07-28_at_12.42.49_PM_1.jpg",
             "image_asset": "banner-corset.jpg",
             "video_url": "",
             "mobile_slide_image": "shopify://shop_images/Artboard_1_copy.png",
@@ -198,7 +198,8 @@
             "reel_handle": "@vamas.official",
             "reel_likes": "2.1k",
             "reel_views": "2,072",
-            "reel_url": ""
+            "reel_url": "",
+            "reel_product": ""
           }
         },
         "reel-2": {
@@ -208,7 +209,8 @@
             "reel_handle": "@vamas.official",
             "reel_likes": "953",
             "reel_views": "953",
-            "reel_url": ""
+            "reel_url": "",
+            "reel_product": ""
           }
         },
         "reel-3": {
@@ -218,7 +220,8 @@
             "reel_handle": "@vamas.official",
             "reel_likes": "1.2k",
             "reel_views": "1,215",
-            "reel_url": ""
+            "reel_url": "",
+            "reel_product": ""
           }
         },
         "reel-4": {
@@ -228,7 +231,8 @@
             "reel_handle": "@vamas.official",
             "reel_likes": "1.4k",
             "reel_views": "1,439",
-            "reel_url": ""
+            "reel_url": "",
+            "reel_product": ""
           }
         },
         "reel-5": {
@@ -238,7 +242,8 @@
             "reel_handle": "@vamas.official",
             "reel_likes": "26.6k",
             "reel_views": "26.6k",
-            "reel_url": ""
+            "reel_url": "",
+            "reel_product": ""
           }
         }
       },
