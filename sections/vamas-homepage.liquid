@@ -184,13 +184,25 @@
     var count = parseInt(root.getAttribute('data-count'), 10) || (items.length / 2);
     if (!count || items.length < count * 2) return;
 
+    track.style.willChange = 'transform';
+
     var gap = parseFloat(getComputedStyle(track).gap) || 0;
     var cachedItemWidth = items[0].getBoundingClientRect().width + gap;
     function refreshItemWidth(){ cachedItemWidth = items[0].getBoundingClientRect().width + gap; }
     function itemWidth(){ return cachedItemWidth; }
     function setWidth(){ return count * itemWidth(); }
 
-    var isDown = false, startX = 0, startScroll = 0, dragged = false;
+    // offset = how far the track has moved left, in px. Purely transform-driven
+    // (no scrollLeft mutation) so the browser can composite it on the GPU
+    // instead of doing main-thread layout work every frame.
+    var offset = 0;
+    function applyTransform(){ track.style.transform = 'translate3d(-' + offset + 'px,0,0)'; }
+    function normalizeOffset(){
+      var w = setWidth();
+      offset = ((offset % w) + w) % w;
+    }
+
+    var isDown = false, startX = 0, startOffset = 0, dragged = false;
     var autoRAF = null, paused = false, lastTs = null;
 
     function startAuto(){
@@ -199,8 +211,9 @@
       function step(ts){
         if (!paused && !isDown) {
           if (lastTs !== null) {
-            track.scrollLeft += pxPerMs * (ts - lastTs);
-            if (track.scrollLeft >= setWidth()) { track.scrollLeft -= setWidth(); }
+            offset += pxPerMs * (ts - lastTs);
+            normalizeOffset();
+            applyTransform();
             updateDots();
           }
           lastTs = ts;
@@ -219,21 +232,22 @@
     function pointerX(e){ return (e.touches ? e.touches[0].pageX : e.pageX); }
     function startDrag(e){
       isDown = true; dragged = false;
-      startX = pointerX(e); startScroll = track.scrollLeft;
+      startX = pointerX(e); startOffset = offset;
       track.classList.add('is-dragging');
     }
     function duringDrag(e){
       if (!isDown) return;
       var dx = pointerX(e) - startX;
       if (Math.abs(dx) > 4) dragged = true;
-      track.scrollLeft = startScroll - dx;
+      offset = startOffset - dx;
+      normalizeOffset();
+      applyTransform();
+      updateDots();
     }
     function endDrag(){
       if (!isDown) return;
       isDown = false;
       track.classList.remove('is-dragging');
-      if (track.scrollLeft < 0) track.scrollLeft += setWidth();
-      if (track.scrollLeft >= setWidth()) track.scrollLeft -= setWidth();
     }
     track.addEventListener('mousedown', startDrag);
     window.addEventListener('mousemove', duringDrag);
@@ -250,6 +264,14 @@
     }
     function pageCount(){ return Math.max(1, Math.ceil(count / computePerView())); }
 
+    function goToPage(idx){
+      offset = idx * perView * itemWidth();
+      normalizeOffset();
+      track.style.transition = 'transform 0.4s ease';
+      applyTransform();
+      setTimeout(function(){ track.style.transition = ''; }, 420);
+    }
+
     function buildDots(){
       if (!dotsWrap) return;
       dotsWrap.innerHTML = '';
@@ -259,9 +281,7 @@
         dot.className = 'vamas-cat-dot' + (i === 0 ? ' active' : '');
         dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
         (function(idx){
-          dot.addEventListener('click', function(){
-            track.scrollTo({ left: idx * perView * itemWidth(), behavior: 'smooth' });
-          });
+          dot.addEventListener('click', function(){ goToPage(idx); });
         })(i);
         dotsWrap.appendChild(dot);
       }
@@ -270,15 +290,15 @@
     function updateDots(){
       if (!dotsWrap) return;
       var pages = pageCount();
-      var pos = track.scrollLeft % setWidth();
+      var pos = offset % setWidth();
       var page = Math.round(pos / (perView * itemWidth())) % pages;
       if (page === lastActivePage) return;
       lastActivePage = page;
       var dots = dotsWrap.querySelectorAll('.vamas-cat-dot');
       for (var i = 0; i < dots.length; i++) { dots[i].classList.toggle('active', i === page); }
     }
-    track.addEventListener('scroll', function(){ if (isDown || paused) updateDots(); });
 
+    applyTransform();
     buildDots();
     startAuto();
     window.addEventListener('resize', function(){ refreshItemWidth(); buildDots(); });

@@ -231,20 +231,16 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-view-all--bottom { display: none; }
 
 /* ── Category Row (circular carousel) ──── */
-.vamas-cat-carousel { position: relative; }
+.vamas-cat-carousel { position: relative; overflow: hidden; }
 .vamas-cat-circle-row {
   display: flex;
   flex-wrap: nowrap;
   gap: 20px;
-  overflow-x: auto;
   padding-bottom: 6px;
-  -webkit-overflow-scrolling: touch;
   cursor: grab;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  width: max-content;
 }
-.vamas-cat-circle-row.is-dragging { cursor: grabbing; scroll-snap-type: none; }
-.vamas-cat-circle-row::-webkit-scrollbar { display: none; }
+.vamas-cat-circle-row.is-dragging { cursor: grabbing; }
 
 .vamas-cat-dots { display: flex; justify-content: center; gap: 8px; margin-top: 22px; }
 .vamas-cat-dot {
@@ -879,9 +875,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 /* ── Instagram Reels ──────────────────── */
 .vamas-reels { padding: 64px var(--page-gutter) 84px; background: #fff; }
-.vamas-reels__grid { display: flex; gap: 18px; overflow-x: auto; -webkit-overflow-scrolling: touch; cursor: grab; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 6px; }
+.vamas-reels__grid { display: flex; gap: 18px; cursor: grab; padding-bottom: 6px; width: max-content; }
 .vamas-reels__grid.is-dragging { cursor: grabbing; }
-.vamas-reels__grid::-webkit-scrollbar { display: none; }
 .vamas-reel-card { position: relative; flex: 0 0 220px; padding-bottom: 34px; }
 .vamas-reel { position: relative; border-radius: 14px; overflow: hidden; aspect-ratio: 9/16; cursor: pointer; background: #0a0a0a; transition: transform 0.25s, box-shadow 0.25s; display: block; }
 .vamas-reel:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(66,0,1,0.2); }
