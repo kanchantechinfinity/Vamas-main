@@ -157,16 +157,64 @@
 {% comment %} ── 3. Stats Bar ────────────────────── {% endcomment %}
 {% assign stat_blocks = section.blocks | where: 'type', 'stat' %}
 {% if stat_blocks.size > 0 %}
-<div class="about-stats">
+<div class="about-stats" data-stats-counter>
   {% for block in section.blocks %}
     {% if block.type == 'stat' %}
       <div class="about-stats__item" {{ block.shopify_attributes }}>
-        <div class="about-stats__num">{{ block.settings.stat_num }}</div>
+        <div class="about-stats__num" data-count-target="{{ block.settings.stat_num }}">0</div>
         <div class="about-stats__label">{{ block.settings.stat_label }}</div>
       </div>
     {% endif %}
   {% endfor %}
 </div>
+<script>
+(function(){
+  var wrap = document.querySelector('.about-stats[data-stats-counter]');
+  if (!wrap) return;
+  var nums = wrap.querySelectorAll('[data-count-target]');
+  var duration = 1500;
+
+  function animateOne(el){
+    var raw = el.getAttribute('data-count-target') || '';
+    var match = raw.match(/^([\d,]*\.?\d+)/);
+    if (!match) { el.textContent = raw; return; }
+    var numStr = match[1];
+    var suffix = raw.slice(numStr.length);
+    var target = parseFloat(numStr.replace(/,/g, ''));
+    if (isNaN(target)) { el.textContent = raw; return; }
+    var decimals = (numStr.split('.')[1] || '').length;
+    var hasCommas = numStr.indexOf(',') > -1;
+    var start = null;
+    function frame(ts){
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = target * eased;
+      var text = decimals > 0 ? current.toFixed(decimals) : Math.round(current).toString();
+      if (hasCommas) {
+        var parts = text.split('.');
+        parts[0] = parseInt(parts[0], 10).toLocaleString('en-IN');
+        text = parts.join('.');
+      }
+      el.textContent = text + suffix;
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  var done = false;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting && !done) {
+        done = true;
+        nums.forEach(animateOne);
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  io.observe(wrap);
+})();
+</script>
 {% endif %}
 
 {% comment %} ── 4. Our Values ───────────────────── {% endcomment %}
