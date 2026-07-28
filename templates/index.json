@@ -293,6 +293,7 @@
         "nl_placeholder": "Your email address",
         "nl_btn": "SUBSCRIBE",
         "show_banner": true,
+        "banner_image": "shopify://shop_images/CAROSEL_1.png",
         "banner_image_asset": "fulllook.webp",
         "banner_video_url": "",
         "banner_tag": "",
