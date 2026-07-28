@@ -468,6 +468,27 @@
     return null;
   }
 
+  function colorOptionIndex() {
+    var idx = null;
+    document.querySelectorAll('[data-option-index]').forEach(function(group) {
+      if (group.querySelector('.swatch')) idx = parseInt(group.dataset.optionIndex, 10);
+    });
+    return idx;
+  }
+
+  function imageForVariant(v) {
+    if (v.featured_image) return v.featured_image;
+    var cIdx = colorOptionIndex();
+    if (cIdx === null) return null;
+    var color = v.options[cIdx];
+    for (var i = 0; i < variants.length; i++) {
+      if (variants[i].options[cIdx] === color && variants[i].featured_image) {
+        return variants[i].featured_image;
+      }
+    }
+    return null;
+  }
+
   function applyVariant(v) {
     if (!v) return;
     variantInput.value = v.id;
@@ -482,9 +503,10 @@
       }
     }
     document.getElementById('sticky-price').textContent = Shopify.formatMoney(v.price, {{ shop.money_format | json }});
-    if (v.featured_image) {
-      mainImg.src = v.featured_image.src.replace(/(\.[a-zA-Z0-9]+)$/, '_1000x$1');
-      document.querySelector('.sticky-thumb img').src = v.featured_image.src.replace(/(\.[a-zA-Z0-9]+)$/, '_100x$1');
+    var img = imageForVariant(v);
+    if (img) {
+      mainImg.src = img.src.replace(/(\.[a-zA-Z0-9]+)$/, '_1000x$1');
+      document.querySelector('.sticky-thumb img').src = img.src.replace(/(\.[a-zA-Z0-9]+)$/, '_100x$1');
     }
     var available = v.available;
     [atcBtn, stickyBtn, buyBtn].forEach(function(b){ if(b){ b.disabled = !available; } });
