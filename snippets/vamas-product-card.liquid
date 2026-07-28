@@ -10,15 +10,6 @@
   {% assign discount_pct = diff | times: 100 | divided_by: first_variant.compare_at_price | round %}
 {% endif %}
 
-{% assign is_new = false %}
-{% if product.tags contains 'new' %}
-  {% assign is_new = true %}
-{% else %}
-  {% assign new_cutoff = 'now' | date: '%s' | minus: 2592000 | plus: 0 %}
-  {% assign created_ts = product.created_at | date: '%s' | plus: 0 %}
-  {% if created_ts > new_cutoff %}{% assign is_new = true %}{% endif %}
-{% endif %}
-
 {% comment %} Second/third image for the hover swap {% endcomment %}
 {% assign hover_image = product.images[1] %}
 {% if hover_image == blank %}{% assign hover_image = product.images[2] %}{% endif %}
@@ -37,13 +28,24 @@
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
   {% for v in product.variants %}
+    {% assign v_price_html = v.price | money %}
+    {% assign v_compare_html = '' %}
+    {% assign v_discount = 0 %}
+    {% if v.compare_at_price > v.price %}
+      {% assign v_compare_html = v.compare_at_price | money %}
+      {% assign v_discount = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price | round %}
+    {% endif %}
+    {% assign v_image_url = '' %}
+    {% if v.featured_image %}
+      {% assign v_image_url = v.featured_image | img_url: '400x533', crop: 'center' %}
+    {% endif %}
     {
       "id": {{ v.id | json }},
       "available": {{ v.available | json }},
-      "priceHtml": {{ v.price | money | json }},
-      "comparePriceHtml": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %},
-      "discountPct": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price | round }}{% else %}0{% endif %},
-      "image": {% if v.featured_image %}{{ v.featured_image | img_url: '400x533', crop: 'center' | json }}{% else %}null{% endif %},
+      "priceHtml": {{ v_price_html | json }},
+      "comparePriceHtml": {% if v_compare_html != blank %}{{ v_compare_html | json }}{% else %}null{% endif %},
+      "discountPct": {{ v_discount | json }},
+      "image": {% if v_image_url != blank %}{{ v_image_url | json }}{% else %}null{% endif %},
       "option1": {{ v.option1 | json }},
       "option2": {{ v.option2 | json }},
       "option3": {{ v.option3 | json }}
@@ -69,19 +71,9 @@
       {% endif %}
     </a>
 
-    {% unless product.available %}
-      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">SOLD OUT</span>
-    {% else %}
-      {% if is_new %}
-        <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">NEW</span>
-      {% elsif on_sale %}
-        <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">SALE</span>
-      {% elsif product.tags contains 'bestseller' %}
-        <span class="vamas-prod-card__badge vamas-prod-card__badge--gold">BESTSELLER</span>
-      {% elsif product.tags contains 'limited' %}
-        <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">LIMITED</span>
-      {% endif %}
-    {% endunless %}
+    {% if product.collections.first.title != blank %}
+      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">{{ product.collections.first.title | upcase }}</span>
+    {% endif %}
 
     <button class="vamas-prod-card__wishlist" aria-label="Add to wishlist"
             data-product-id="{{ product.id }}"
