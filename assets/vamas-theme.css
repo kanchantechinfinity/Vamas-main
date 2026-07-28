@@ -718,7 +718,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 @media (max-width: 480px) {
-  .vamas-prod-grid { grid-template-columns: 1fr; }
+  .vamas-prod-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .vamas-slide__heading { font-size: 28px; }
   .vamas-slide__offer { font-size: 22px; }
   .vamas-brand__stats { flex-wrap: nowrap; gap: 12px; }
