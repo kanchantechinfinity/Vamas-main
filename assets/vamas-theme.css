@@ -228,8 +228,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   padding-bottom: 2px;
 }
 
-.vamas-view-all--mobile-btn { display: none; }
-
 /* ── Category Row (circular carousel) ──── */
 .vamas-cat-carousel { position: relative; }
 .vamas-cat-circle-row {
@@ -696,20 +694,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-slide__offer { font-size: 26px; }
   .vamas-section { padding: 44px 24px; }
   .vamas-section__header { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .vamas-view-all--desktop { display: none; }
-  .vamas-view-all--mobile-btn {
-    display: block;
-    text-align: center;
-    margin: 20px auto 0;
-    width: fit-content;
-    background: var(--color-maroon);
-    color: var(--color-gold);
-    border: none;
-    border-bottom: none;
-    padding: 12px 32px;
-    border-radius: 12px;
-    font-size: 11px;
-  }
   .vamas-brand { border-radius: 20px; margin: 32px auto; height: auto; }
   .vamas-brand__text { padding: 32px 24px; }
   .vamas-brand__heading { font-size: 28px; }
