@@ -9,6 +9,9 @@
 </div>
 
 {% assign current_variant = product.selected_or_first_available_variant %}
+{% assign product_type_lower = product.type | downcase %}
+{% assign is_kids_product = false %}
+{% if product_type_lower contains 'kid' %}{% assign is_kids_product = true %}{% endif %}
 
 <section class="product-section">
 
@@ -90,14 +93,25 @@
           <div class="color-section">
             <div class="selector-label">SELECT {{ option.name | upcase }}</div>
             <div class="color-swatches" data-option-index="{{ forloop.index0 }}">
+              {% assign pdp_swatch_seen_keys = '' %}
               {% for value in option.values %}
                 {% assign swatch_hex = '' %}
                 {% for sw in section.blocks %}
                   {% if sw.type == 'color_swatch' and sw.settings.name == value %}{% assign swatch_hex = sw.settings.hex %}{% endif %}
                 {% endfor %}
-                <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
-                     style="background:{% if swatch_hex != blank %}{{ swatch_hex }}{% else %}{% render 'vamas-color-hex', name: value %}{% endif %};"
-                     data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
+                {% if swatch_hex == blank %}
+                  {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
+                  {% assign swatch_hex = swatch_hex | strip %}
+                {% endif %}
+                {% unless swatch_hex == 'SKIP' %}
+                  {% assign pdp_dedup_key = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
+                  {% unless pdp_swatch_seen_keys contains pdp_dedup_key %}
+                    <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
+                         style="background:{{ swatch_hex }};"
+                         data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
+                    {% assign pdp_swatch_seen_keys = pdp_swatch_seen_keys | append: pdp_dedup_key %}
+                  {% endunless %}
+                {% endunless %}
               {% endfor %}
             </div>
             <div class="color-name-label">{{ option.name }}: <strong id="color-name-text">{{ current_variant.options[forloop.index0] }}</strong></div>
@@ -110,7 +124,8 @@
             </div>
             <div class="size-buttons" data-option-index="{{ forloop.index0 }}">
               {% for value in option.values %}
-                <button type="button" class="size-btn{% if value == current_variant.options[forloop.index0] %} active{% endif %}" data-value="{{ value | escape }}">{{ value }}</button>
+                {% capture size_label %}{% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product %}{% endcapture %}
+                <button type="button" class="size-btn{% if value == current_variant.options[forloop.index0] %} active{% endif %}" data-value="{{ value | escape }}">{{ size_label | strip }}</button>
               {% endfor %}
             </div>
             <div class="stock-row">

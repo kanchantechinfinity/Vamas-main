@@ -1,0 +1,20 @@
+{% comment %}
+  Maps alphabetic blouse sizes to their numeric equivalent for display only
+  (never changes the underlying variant option value used for cart/variant matching).
+  Usage: {% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product %}
+{% endcomment %}
+{% assign size_label = size_value %}
+{% unless is_kids %}
+  {% assign size_key = size_value | upcase | strip %}
+  {% case size_key %}
+    {% when 'XS' %}{% assign size_label = '32' %}
+    {% when 'S' %}{% assign size_label = '34' %}
+    {% when 'M' %}{% assign size_label = '36' %}
+    {% when 'L' %}{% assign size_label = '38' %}
+    {% when 'XL' %}{% assign size_label = '40' %}
+    {% when 'XXL', '2XL' %}{% assign size_label = '42' %}
+    {% when 'XXXL', '3XL' %}{% assign size_label = '44' %}
+    {% when '4XL' %}{% assign size_label = '46' %}
+  {% endcase %}
+{% endunless %}
+{{- size_label -}}

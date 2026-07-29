@@ -340,8 +340,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   padding: 4px 10px;
   border-radius: 10px;
 }
-.vamas-prod-card__badge-short { display: none; }
-
 .vamas-prod-card__badge--maroon { background: var(--color-maroon); color: var(--color-gold); }
 .vamas-prod-card__badge--gold { background: var(--color-gold); color: var(--color-maroon); }
 
@@ -717,10 +715,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-newsletter__heading { font-size: 26px; }
   .vamas-footer__bottom { flex-direction: column; align-items: flex-start; }
 
-  /* Product card: reclaim space by shortening the badge, hiding the type
-     label, and stacking swatches/rating/price for narrow columns. */
-  .vamas-prod-card__badge-full { display: none; }
-  .vamas-prod-card__badge-short { display: inline; }
+  /* Product card: reclaim space by hiding the type label and stacking
+     swatches/rating/price for narrow columns (badge is short on all sizes). */
   .vamas-prod-card__type { display: none; }
   .vamas-prod-card__meta-row { flex-direction: column; align-items: flex-start; gap: 6px; }
   .vamas-prod-card__colors--single { display: none; }

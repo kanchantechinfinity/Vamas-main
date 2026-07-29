@@ -54,20 +54,29 @@
 {% if badge_title_lower contains 'new' %}
   {% assign badge_title_short = 'NEW' %}
 {% elsif badge_title_lower contains 'best' or badge_title_lower contains 'trending' %}
-  {% assign badge_title_short = 'TRENDING' %}
+  {% assign badge_title_short = 'BEST' %}
 {% elsif badge_title_lower contains 'sale' %}
   {% assign badge_title_short = 'SALE' %}
 {% else %}
   {% assign badge_title_short = badge_title | truncate: 10, '' %}
 {% endif %}
 
-{% comment %} Count valid (non-SKIP) swatch colors so the swatch row can be hidden on mobile when there's only one {% endcomment %}
+{% comment %}
+  Count DISTINCT valid (non-SKIP) swatch colors, deduping names that only differ by
+  case/spacing/hyphenation (e.g. "Navy Blue" vs "NAVY-BLUE") so the count reflects
+  actual color variants rather than raw option-value strings.
+{% endcomment %}
 {% assign valid_color_count = 0 %}
-{% for value in color_values limit: 4 %}
+{% assign seen_color_keys = '' %}
+{% for value in color_values %}
   {% capture swatch_hex_check %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
   {% assign swatch_hex_check = swatch_hex_check | strip %}
   {% unless swatch_hex_check == 'SKIP' %}
-    {% assign valid_color_count = valid_color_count | plus: 1 %}
+    {% assign dedup_key_check = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
+    {% unless seen_color_keys contains dedup_key_check %}
+      {% assign valid_color_count = valid_color_count | plus: 1 %}
+      {% assign seen_color_keys = seen_color_keys | append: dedup_key_check %}
+    {% endunless %}
   {% endunless %}
 {% endfor %}
 
@@ -118,10 +127,7 @@
     </a>
 
     {% if badge_title != blank %}
-      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">
-        <span class="vamas-prod-card__badge-full">{{ badge_title | upcase }}</span>
-        <span class="vamas-prod-card__badge-short">{{ badge_title_short | upcase }}</span>
-      </span>
+      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">{{ badge_title_short | upcase }}</span>
     {% endif %}
 
     <button class="vamas-prod-card__wishlist" aria-label="Add to wishlist"
@@ -147,14 +153,22 @@
     <div class="vamas-prod-card__meta-row">
       {% if color_values.size > 0 %}
         <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
-          {% for value in color_values limit: 4 %}
+          {% assign swatches_rendered = 0 %}
+          {% assign swatch_seen_keys = '' %}
+          {% for value in color_values %}
+            {% if swatches_rendered >= 4 %}{% break %}{% endif %}
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
             {% assign swatch_hex = swatch_hex | strip %}
             {% unless swatch_hex == 'SKIP' %}
-              <div class="vamas-prod-card__color{% if value == default_color %} active{% endif %}"
-                   style="background:{{ swatch_hex }};"
-                   data-color="{{ value | escape }}"
-                   title="{{ value }}"></div>
+              {% assign swatch_dedup_key = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
+              {% unless swatch_seen_keys contains swatch_dedup_key %}
+                <div class="vamas-prod-card__color{% if value == default_color %} active{% endif %}"
+                     style="background:{{ swatch_hex }};"
+                     data-color="{{ value | escape }}"
+                     title="{{ value }}"></div>
+                {% assign swatch_seen_keys = swatch_seen_keys | append: swatch_dedup_key %}
+                {% assign swatches_rendered = swatches_rendered | plus: 1 %}
+              {% endunless %}
             {% endunless %}
           {% endfor %}
         </div>
