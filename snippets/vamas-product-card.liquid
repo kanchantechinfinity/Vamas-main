@@ -155,10 +155,8 @@
     <div class="vamas-prod-card__meta-row">
       {% if color_values.size > 0 %}
         <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
-          {% assign swatches_rendered = 0 %}
           {% assign swatch_seen_keys = '' %}
           {% for value in color_values %}
-            {% if swatches_rendered >= 4 %}{% break %}{% endif %}
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
             {% assign swatch_hex = swatch_hex | strip %}
             {% unless swatch_hex == 'SKIP' %}
@@ -169,7 +167,6 @@
                      data-color="{{ value | escape }}"
                      title="{{ value }}"></div>
                 {% assign swatch_seen_keys = swatch_seen_keys | append: swatch_dedup_key %}
-                {% assign swatches_rendered = swatches_rendered | plus: 1 %}
               {% endunless %}
             {% endunless %}
           {% endfor %}
