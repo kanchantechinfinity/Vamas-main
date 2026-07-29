@@ -65,7 +65,8 @@
 {% assign valid_color_count = 0 %}
 {% for value in color_values limit: 4 %}
   {% capture swatch_hex_check %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
-  {% unless swatch_hex_check | strip == 'SKIP' %}
+  {% assign swatch_hex_check = swatch_hex_check | strip %}
+  {% unless swatch_hex_check == 'SKIP' %}
     {% assign valid_color_count = valid_color_count | plus: 1 %}
   {% endunless %}
 {% endfor %}
