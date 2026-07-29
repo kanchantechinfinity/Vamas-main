@@ -11,12 +11,152 @@
   "sections": {
     "main": {
       "type": "vamas-about",
+      "blocks": {
+        "stat-1": {
+          "type": "stat",
+          "settings": {
+            "stat_num": "10,000+",
+            "stat_label": "Happy Customers"
+          }
+        },
+        "stat-2": {
+          "type": "stat",
+          "settings": {
+            "stat_num": "500+",
+            "stat_label": "Designs"
+          }
+        },
+        "stat-3": {
+          "type": "stat",
+          "settings": {
+            "stat_num": "15+",
+            "stat_label": "States"
+          }
+        },
+        "stat-4": {
+          "type": "stat",
+          "settings": {
+            "stat_num": "4.9 ★",
+            "stat_label": "Rating"
+          }
+        },
+        "val-1": {
+          "type": "value",
+          "settings": {
+            "icon": "craft",
+            "title": "Quality, Guaranteed",
+            "desc": "We source like hawks and stitch with love, ensuring your Vamas blouse becomes a treasured story in your wardrobe — not a fabric faux pas."
+          }
+        },
+        "val-2": {
+          "type": "value",
+          "settings": {
+            "icon": "sustain",
+            "title": "Classic With a Twist",
+            "desc": "We take timeless silhouettes for a spin, adding a dash of modern magic — think peplums and off-the-shoulder styles — to make your saree the envy of the room."
+          }
+        },
+        "val-3": {
+          "type": "value",
+          "settings": {
+            "icon": "authentic",
+            "title": "Confidence, Worn",
+            "desc": "A saree deserves a partner in crime, not a wallflower. We design blouses that unleash your inner boss lady — because confidence is the ultimate accessory."
+          }
+        },
+        "member-1": {
+          "type": "member",
+          "settings": {
+            "initials": "MS",
+            "name": "Meera Sharma",
+            "role": "Founder",
+            "bio": "Visionary behind Vamas, passionate about preserving Indian textile heritage. Meera started the brand after a decade of working with karigars across Rajasthan and UP."
+          }
+        },
+        "member-2": {
+          "type": "member",
+          "settings": {
+            "initials": "PN",
+            "name": "Priya Nair",
+            "role": "Head Designer",
+            "bio": "Brings 12 years of design expertise to every collection. Priya blends contemporary aesthetics with classical motifs, creating pieces that are timeless yet modern."
+          }
+        },
+        "member-3": {
+          "type": "member",
+          "settings": {
+            "initials": "RK",
+            "name": "Ramesh Kumar",
+            "role": "Master Artisan",
+            "bio": "Trained in traditional embroidery techniques from Varanasi, Ramesh leads our karigar network and ensures every piece meets Vamas' signature quality standard."
+          }
+        },
+        "ms-1": {
+          "type": "milestone",
+          "settings": {
+            "year": "2018",
+            "desc": "Founded in Jaipur with just 10 designs and a single karigar workshop. The first collection sold out in 3 weeks.",
+            "align_right": false
+          }
+        },
+        "ms-2": {
+          "type": "milestone",
+          "settings": {
+            "year": "2020",
+            "desc": "Expanded to 200+ designs and launched our online store, bringing handcrafted blouses to customers across India.",
+            "align_right": true
+          }
+        },
+        "ms-3": {
+          "type": "milestone",
+          "settings": {
+            "year": "2022",
+            "desc": "Crossed 5,000 happy customers and partnered with artisan clusters in Varanasi, Lucknow, and Bhopal.",
+            "align_right": false
+          }
+        },
+        "ms-4": {
+          "type": "milestone",
+          "settings": {
+            "year": "2024",
+            "desc": "Featured in Vogue India's \"Brands Celebrating Indian Craft\" spotlight. A proud moment for our entire karigar community.",
+            "align_right": true
+          }
+        },
+        "ms-5": {
+          "type": "milestone",
+          "settings": {
+            "year": "2026",
+            "desc": "10,000+ customers, 500+ designs, and shipping to 15+ states. The journey continues — one blouse at a time.",
+            "align_right": false
+          }
+        }
+      },
+      "block_order": [
+        "stat-1",
+        "stat-2",
+        "stat-3",
+        "stat-4",
+        "val-1",
+        "val-2",
+        "val-3",
+        "member-1",
+        "member-2",
+        "member-3",
+        "ms-1",
+        "ms-2",
+        "ms-3",
+        "ms-4",
+        "ms-5"
+      ],
       "settings": {
         "hero_eyebrow": "WHO WE ARE",
         "hero_heading": "Our Story",
         "hero_sub": "We put the \"extra\" in \"extra blouse.\"",
+        "hero_bg_image": "shopify://shop_images/Artboard_1_5804b263-b659-4223-9352-a3a39321b525.png",
+        "hero_bg_mobile": "shopify://shop_images/Artboard_1_5804b263-b659-4223-9352-a3a39321b525.png",
         "story_eyebrow": "THE VAMAS STORY",
-        "story_heading": "<p>Where sarees<br><em>get obsessed.</em></p>",
+        "story_heading": "<p>Where sarees<br/><em>get obsessed.</em></p>",
         "story_body": "<p>It started in Mumbai in the 1960s, a time when sarees swirled like magic carpets. Vamas began not just as a brand, but as a mission to elevate the saree — crafting blouses that turn it into a masterpiece. Five decades on, Vamas is a family tradition, and our love for quality, craftsmanship, and understanding what makes a woman feel special hasn't changed.</p><p>A saree deserves a partner in crime, not just any old blouse. Our blouses are a symphony of fabrics — the silky whisper of silk, the rich drape of brocade, the comfy coolness of cotton, the modern edge of velvet — meticulously crafted by artisans who pour their heritage into every stitch.</p><p>We're all about tradition with a modern twist: classic silhouettes like halter necks and sweetheart necklines reimagined for today, alongside new-age styles like peplums, off-the-shoulder cuts, and capes — so you find the perfect match for your saree, family heirloom or brand new.</p>",
         "story_image_asset": "slide-pink.jpg",
         "values_eyebrow": "WHAT WE STAND FOR",
@@ -28,26 +168,10 @@
         "tl_eyebrow": "OUR JOURNEY",
         "tl_heading": "Milestones That Define Us",
         "tl_sub": "From a small Jaipur studio to India's trusted blouse brand — here is how we grew."
-      },
-      "blocks": {
-        "stat-1": { "type": "stat", "settings": { "stat_num": "10,000+", "stat_label": "Happy Customers" } },
-        "stat-2": { "type": "stat", "settings": { "stat_num": "500+", "stat_label": "Designs" } },
-        "stat-3": { "type": "stat", "settings": { "stat_num": "15+", "stat_label": "States" } },
-        "stat-4": { "type": "stat", "settings": { "stat_num": "4.9 ★", "stat_label": "Rating" } },
-        "val-1": { "type": "value", "settings": { "icon": "craft", "title": "Quality, Guaranteed", "desc": "We source like hawks and stitch with love, ensuring your Vamas blouse becomes a treasured story in your wardrobe — not a fabric faux pas." } },
-        "val-2": { "type": "value", "settings": { "icon": "sustain", "title": "Classic With a Twist", "desc": "We take timeless silhouettes for a spin, adding a dash of modern magic — think peplums and off-the-shoulder styles — to make your saree the envy of the room." } },
-        "val-3": { "type": "value", "settings": { "icon": "authentic", "title": "Confidence, Worn", "desc": "A saree deserves a partner in crime, not a wallflower. We design blouses that unleash your inner boss lady — because confidence is the ultimate accessory." } },
-        "member-1": { "type": "member", "settings": { "initials": "MS", "name": "Meera Sharma", "role": "Founder", "bio": "Visionary behind Vamas, passionate about preserving Indian textile heritage. Meera started the brand after a decade of working with karigars across Rajasthan and UP." } },
-        "member-2": { "type": "member", "settings": { "initials": "PN", "name": "Priya Nair", "role": "Head Designer", "bio": "Brings 12 years of design expertise to every collection. Priya blends contemporary aesthetics with classical motifs, creating pieces that are timeless yet modern." } },
-        "member-3": { "type": "member", "settings": { "initials": "RK", "name": "Ramesh Kumar", "role": "Master Artisan", "bio": "Trained in traditional embroidery techniques from Varanasi, Ramesh leads our karigar network and ensures every piece meets Vamas' signature quality standard." } },
-        "ms-1": { "type": "milestone", "settings": { "year": "2018", "desc": "Founded in Jaipur with just 10 designs and a single karigar workshop. The first collection sold out in 3 weeks.", "align_right": false } },
-        "ms-2": { "type": "milestone", "settings": { "year": "2020", "desc": "Expanded to 200+ designs and launched our online store, bringing handcrafted blouses to customers across India.", "align_right": true } },
-        "ms-3": { "type": "milestone", "settings": { "year": "2022", "desc": "Crossed 5,000 happy customers and partnered with artisan clusters in Varanasi, Lucknow, and Bhopal.", "align_right": false } },
-        "ms-4": { "type": "milestone", "settings": { "year": "2024", "desc": "Featured in Vogue India's \"Brands Celebrating Indian Craft\" spotlight. A proud moment for our entire karigar community.", "align_right": true } },
-        "ms-5": { "type": "milestone", "settings": { "year": "2026", "desc": "10,000+ customers, 500+ designs, and shipping to 15+ states. The journey continues — one blouse at a time.", "align_right": false } }
-      },
-      "block_order": ["stat-1","stat-2","stat-3","stat-4","val-1","val-2","val-3","member-1","member-2","member-3","ms-1","ms-2","ms-3","ms-4","ms-5"]
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
