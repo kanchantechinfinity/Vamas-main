@@ -44,7 +44,7 @@
             <div class="vamas-slide__text">
               {% if block.settings.eyebrow != blank %}<p class="vamas-slide__eyebrow">{{ block.settings.eyebrow }}</p>{% endif %}
               <h1 class="vamas-slide__heading">
-                {{ block.settings.line1 }}{% if block.settings.line2_accent != blank %} <em>{{ block.settings.line2_accent }}</em>{% endif %}{% if block.settings.line3 != blank %} {{ block.settings.line3 }}{% endif %}
+                {{ block.settings.line1 }}<br class="vamas-slide__heading-break">{% if block.settings.line2_accent != blank %} <em>{{ block.settings.line2_accent }}</em>{% endif %}{% if block.settings.line3 != blank %} {{ block.settings.line3 }}{% endif %}
               </h1>
               {% if block.settings.offer != blank %}<div class="vamas-slide__offer">{{ block.settings.offer }}</div>{% endif %}
               {% if block.settings.coupon != blank %}<div class="vamas-slide__coupon">WITH COUPON <span>{{ block.settings.coupon }}</span></div>{% endif %}

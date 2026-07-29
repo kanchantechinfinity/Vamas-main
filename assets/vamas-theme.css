@@ -68,6 +68,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-slide__eyebrow { color: rgba(235,211,173,0.8); font-size: 10px; font-weight: 700; letter-spacing: 4px; margin-bottom: 16px; }
 .vamas-slide__heading { font-family: var(--font-heading); color: #fff; font-size: 64px; font-weight: 700; line-height: 1.08; margin-bottom: 18px; }
 .vamas-slide__heading em { color: var(--color-gold); font-style: italic; }
+.vamas-slide__heading-break { display: none; }
 .vamas-slide__offer { color: #fff; font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 14px; }
 .vamas-slide__offer span { color: var(--color-gold); }
 .vamas-slide__coupon { display: inline-flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.85); font-size: 12px; font-weight: 700; letter-spacing: 2px; margin-bottom: 22px; }
@@ -689,10 +690,13 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 @media (max-width: 768px) {
-  .vamas-slide { min-height: 420px; }
+  .vamas-slide { min-height: 560px; }
   .vamas-slide__inner { padding: 0 24px; }
-  .vamas-slide__heading { font-size: 34px; }
-  .vamas-slide__offer { font-size: 26px; }
+  .vamas-slide__heading { font-size: 26px; }
+  .vamas-slide__heading-break { display: block; }
+  .vamas-slide__offer { font-size: 20px; }
+  .vamas-slide__sub { font-size: 12px; margin-bottom: 20px; }
+  .vamas-slide__eyebrow { font-size: 9px; margin-bottom: 10px; }
   .vamas-section { padding: 44px 24px; }
   .vamas-section__header { flex-direction: column; align-items: flex-start; gap: 12px; }
   .vamas-view-all--top { display: none; }
@@ -730,8 +734,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 @media (max-width: 480px) {
   .vamas-prod-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .vamas-slide__heading { font-size: 28px; }
-  .vamas-slide__offer { font-size: 22px; }
+  .vamas-slide { min-height: 520px; }
+  .vamas-slide__heading { font-size: 22px; }
+  .vamas-slide__offer { font-size: 18px; }
   .vamas-brand__stats { flex-wrap: nowrap; gap: 12px; }
   .vamas-brand__stat-num { font-size: 20px; }
   .vamas-brand__stat-lbl { font-size: 8px; letter-spacing: 1px; }
