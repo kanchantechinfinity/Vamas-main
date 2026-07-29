@@ -936,9 +936,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 @media (max-width: 768px) {
   .vamas-full-banner { height: 300px; }
-  .vamas-full-banner--has-mobile-img { height: 480px; }
+  .vamas-full-banner--has-mobile-img { height: auto; }
   .vamas-full-banner--has-mobile-img .vamas-full-banner__img--desktop { display: none; }
-  .vamas-full-banner--has-mobile-img .vamas-full-banner__img--mobile { display: block; }
+  .vamas-full-banner--has-mobile-img .vamas-full-banner__img--mobile { display: block; width: 100%; height: auto; object-fit: contain; }
   .vamas-full-banner__overlay { padding: 0 24px; }
   .vamas-full-banner__title { font-size: 26px; }
   .vamas-full-banner__sub { display: none; }

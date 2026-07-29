@@ -355,7 +355,7 @@
     <img class="vamas-full-banner__img--desktop" src="{{ section.settings.banner_image_asset | asset_url }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
   {% endif %}
   {% if section.settings.banner_mobile_image != blank %}
-    <img class="vamas-full-banner__img--mobile" src="{{ section.settings.banner_mobile_image | img_url: '900x1200', crop: 'center' }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
+    <img class="vamas-full-banner__img--mobile" src="{{ section.settings.banner_mobile_image | img_url: '900x' }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
   {% elsif section.settings.banner_mobile_image_asset != blank %}
     <img class="vamas-full-banner__img--mobile" src="{{ section.settings.banner_mobile_image_asset | asset_url }}" alt="{{ section.settings.banner_title | escape | default: 'Vamas full look' }}" loading="lazy">
   {% endif %}
