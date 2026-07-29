@@ -418,6 +418,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-prod-card__meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .vamas-prod-card__colors { display: flex; gap: 6px; }
+.vamas-prod-card__colors--single { display: none; }
 .vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: box-shadow 0.15s, transform 0.15s; }
 .vamas-prod-card__color.active { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--color-maroon); transform: scale(1.05); }
 
@@ -724,7 +725,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
      swatches/rating/price for narrow columns (badge is short on all sizes). */
   .vamas-prod-card__type { display: none; }
   .vamas-prod-card__meta-row { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .vamas-prod-card__colors--single { display: none; }
   .vamas-prod-card__stars { margin-left: 0; }
 
   .vamas-prod-card__price { display: grid; grid-template-columns: max-content max-content; column-gap: 8px; row-gap: 2px; align-items: baseline; }
