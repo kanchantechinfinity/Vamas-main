@@ -3,10 +3,19 @@
 <div class="vblog-container">
 
   {%- comment -%} 1. Header {%- endcomment -%}
-  {%- assign hero_bg_style = '' -%}
-  {%- if section.settings.hero_bg_image != blank -%}{%- assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' -%}{%- endif -%}
-  {%- if section.settings.hero_bg_mobile != blank -%}{%- assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' -%}{%- endif -%}
-  <header class="vblog-header"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
+  {%- if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank -%}
+  <style>
+    {%- if section.settings.hero_bg_image != blank -%}
+      #vblog-header-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_image | image_url: width: 1600 }}'); }
+    {%- endif -%}
+    {%- if section.settings.hero_bg_mobile != blank -%}
+      @media (max-width: 768px) {
+        #vblog-header-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_mobile | image_url: width: 900 }}'); }
+      }
+    {%- endif -%}
+  </style>
+  {%- endif -%}
+  <header class="vblog-header" id="vblog-header-{{ section.id }}">
     <p class="vblog-eyebrow"><span class="dash"></span>Journal<span class="dash"></span></p>
     <h1 class="vblog-title">{{ section.settings.blog_title | default: blog.title | default: 'The Blouse Journal' }}</h1>
     {%- if section.settings.blog_tagline != blank -%}

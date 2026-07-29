@@ -1,10 +1,15 @@
 {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
 
 <style>
-  .about-hero { background: var(--color-maroon) var(--hero-bg, url('https://images.unsplash.com/photo-1717585679395-bbe39b5fb6bc?w=1600&q=80&auto=format&fit=crop')) center/cover; padding: 56px var(--page-gutter) 48px; text-align: center; position: relative; overflow: hidden; }
-  @media (max-width: 768px) {
-    .about-hero { background-image: var(--hero-bg-mobile, var(--hero-bg, url('https://images.unsplash.com/photo-1717585679395-bbe39b5fb6bc?w=1600&q=80&auto=format&fit=crop'))); }
-  }
+  .about-hero { background: var(--color-maroon) url('https://images.unsplash.com/photo-1717585679395-bbe39b5fb6bc?w=1600&q=80&auto=format&fit=crop') center/cover; padding: 56px var(--page-gutter) 48px; text-align: center; position: relative; overflow: hidden; }
+  {% if section.settings.hero_bg_image != blank %}
+    #about-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_image | image_url: width: 1600 }}'); }
+  {% endif %}
+  {% if section.settings.hero_bg_mobile != blank %}
+    @media (max-width: 768px) {
+      #about-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_mobile | image_url: width: 900 }}'); }
+    }
+  {% endif %}
   .about-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(42,0,1,0.45), rgba(42,0,1,0.45)), radial-gradient(ellipse at 50% 0%, rgba(235,211,173,0.08) 0%, transparent 70%); }
   .about-hero__eye { font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(235,211,173,0.45); margin-bottom: 22px; position: relative; z-index: 1; }
   .about-hero__h1 { font-family: var(--font-heading); font-size: 52px; font-weight: 700; color: var(--color-gold); line-height: 1.1; margin-bottom: 16px; position: relative; z-index: 1; }
@@ -127,10 +132,7 @@
 </style>
 
 {% comment %} ── 1. Hero ─────────────────────────── {% endcomment %}
-{% assign hero_bg_style = '' %}
-{% if section.settings.hero_bg_image != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' %}{% endif %}
-{% if section.settings.hero_bg_mobile != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' %}{% endif %}
-<section class="about-hero"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
+<section class="about-hero" id="about-hero-{{ section.id }}">
   <div class="about-hero__eye">{{ section.settings.hero_eyebrow }}</div>
   <h1 class="about-hero__h1">{{ section.settings.hero_heading }}</h1>
   <p class="about-hero__sub">{{ section.settings.hero_sub }}</p>

@@ -5,10 +5,19 @@
   {%- assign collection = collections.all -%}
 {%- endunless -%}
 
-{% assign hero_bg_style = '' %}
-{% if section.settings.hero_bg_image != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' %}{% endif %}
-{% if section.settings.hero_bg_mobile != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' %}{% endif %}
-<section class="col-hero"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
+{% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
+<style>
+  {% if section.settings.hero_bg_image != blank %}
+    #col-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_image | image_url: width: 1600 }}'); }
+  {% endif %}
+  {% if section.settings.hero_bg_mobile != blank %}
+    @media (max-width: 768px) {
+      #col-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_mobile | image_url: width: 900 }}'); }
+    }
+  {% endif %}
+</style>
+{% endif %}
+<section class="col-hero" id="col-hero-{{ section.id }}">
   <div class="col-hero-left">
     <div class="col-hero-breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>

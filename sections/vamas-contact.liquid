@@ -1,9 +1,18 @@
 {{ 'vamas-contact.css' | asset_url | stylesheet_tag }}
 
-{% assign hero_bg_style = '' %}
-{% if section.settings.hero_bg_image != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' %}{% endif %}
-{% if section.settings.hero_bg_mobile != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' %}{% endif %}
-<section class="contact-hero"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
+{% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
+<style>
+  {% if section.settings.hero_bg_image != blank %}
+    #contact-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_image | image_url: width: 1600 }}'); }
+  {% endif %}
+  {% if section.settings.hero_bg_mobile != blank %}
+    @media (max-width: 768px) {
+      #contact-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_mobile | image_url: width: 900 }}'); }
+    }
+  {% endif %}
+</style>
+{% endif %}
+<section class="contact-hero" id="contact-hero-{{ section.id }}">
   <div class="hero-eye">{{ section.settings.eyebrow | default: shop.name | upcase }}</div>
   <h1 class="hero-title">{{ section.settings.heading | default: 'Get In Touch' }}</h1>
   <p class="hero-sub">{{ section.settings.subheading | default: "We'd love to hear from you" }}</p>
