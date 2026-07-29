@@ -109,8 +109,9 @@
                     <div class="vamas-nav__mega-looks-grid">
                       {% for look in group_looks.links %}
                         {% capture look_img %}{% cycle 'nav-looks': 'prod-indigo.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-cobalt.jpg', 'prod-brinjal.jpg' %}{% endcapture %}
+                        {% capture look_img_src %}{% render 'vamas-nav-icon-src', title: look.title, default_asset: look_img %}{% endcapture %}
                         <a href="{{ look.url }}" class="vamas-nav__look-item">
-                          <span class="vamas-nav__look-thumb"><img src="{{ look_img | asset_url }}" width="72" height="72" alt="" loading="lazy"></span>
+                          <span class="vamas-nav__look-thumb"><img src="{{ look_img_src | strip }}" width="72" height="72" alt="" loading="lazy"></span>
                           <span class="vamas-nav__look-label">{{ look.title }}</span>
                         </a>
                       {% endfor %}
@@ -152,8 +153,9 @@
                       <div class="vamas-nav__mega-icons">
                         {% for cat in group_icons_1.links %}
                           {% capture icon_img %}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                          {% capture icon_img_src %}{% render 'vamas-nav-icon-src', title: cat.title, default_asset: icon_img %}{% endcapture %}
                           <a href="{{ cat.url }}" class="vamas-nav__icon-item">
-                            <span class="vamas-nav__icon-thumb"><img src="{{ icon_img | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
+                            <span class="vamas-nav__icon-thumb"><img src="{{ icon_img_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
                             <span class="vamas-nav__icon-label">{{ cat.title }}</span>
                           </a>
                         {% endfor %}
@@ -166,8 +168,9 @@
                       <div class="vamas-nav__mega-icons">
                         {% for cat in group_icons_2.links %}
                           {% capture icon_img2 %}{% cycle 'nav-icons-2': 'prod-indigo.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-cobalt.jpg', 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-darkmaroon.jpg' %}{% endcapture %}
+                          {% capture icon_img2_src %}{% render 'vamas-nav-icon-src', title: cat.title, default_asset: icon_img2 %}{% endcapture %}
                           <a href="{{ cat.url }}" class="vamas-nav__icon-item">
-                            <span class="vamas-nav__icon-thumb"><img src="{{ icon_img2 | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
+                            <span class="vamas-nav__icon-thumb"><img src="{{ icon_img2_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
                             <span class="vamas-nav__icon-label">{{ cat.title }}</span>
                           </a>
                         {% endfor %}
@@ -201,8 +204,9 @@
                       <div class="vamas-nav__mega-swatches-grid">
                         {% for colour in group_colours.links %}
                           {% capture swatch_img %}{% cycle 'nav-swatches': 'prod-cobalt.jpg', 'prod-maroon2.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-blue.jpg' %}{% endcapture %}
+                          {% capture swatch_img_src %}{% render 'vamas-nav-icon-src', title: colour.title, default_asset: swatch_img %}{% endcapture %}
                           <a href="{{ colour.url }}" class="vamas-nav__swatch-item">
-                            <span class="vamas-nav__swatch-thumb"><img src="{{ swatch_img | asset_url }}" width="64" height="64" alt="" loading="lazy"></span>
+                            <span class="vamas-nav__swatch-thumb"><img src="{{ swatch_img_src | strip }}" width="64" height="64" alt="" loading="lazy"></span>
                             <span class="vamas-nav__swatch-label">{{ colour.title }}</span>
                           </a>
                         {% endfor %}
@@ -215,8 +219,9 @@
                         {% for childlink in link.links %}
                           {% if childlink.links == blank and childlink.title != 'Categories' and childlink.title != 'Shop by Look' and childlink.title != 'Shop by Colour' and childlink.title != 'Shop by Color' %}
                             {% capture leaf_img %}{% cycle 'nav-leaf': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                            {% capture leaf_img_src %}{% render 'vamas-nav-icon-src', title: childlink.title, default_asset: leaf_img %}{% endcapture %}
                             <a href="{{ childlink.url }}" class="vamas-nav__icon-item">
-                              <span class="vamas-nav__icon-thumb"><img src="{{ leaf_img | asset_url }}" width="56" height="56" alt="" loading="lazy"></span>
+                              <span class="vamas-nav__icon-thumb"><img src="{{ leaf_img_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
                               <span class="vamas-nav__icon-label">{{ childlink.title }}</span>
                             </a>
                           {% endif %}
@@ -365,6 +370,16 @@
     { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = text scrolls in a loop. Off = static.", "default": false },
     { "type": "range", "id": "announce_speed", "min": 8, "max": 40, "step": 2, "unit": "s", "label": "Marquee Speed (seconds per loop)", "default": 22 },
     { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
+  ],
+  "blocks": [
+    {
+      "type": "nav_icon_image",
+      "name": "Menu Icon Image",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Menu Item Title", "info": "Must exactly match a navigation menu item's title (e.g. \"All Blouses\") to override its icon." },
+        { "type": "image_picker", "id": "image", "label": "Icon Image" }
+      ]
+    }
   ],
   "presets": [{ "name": "Vamas Header" }]
 }

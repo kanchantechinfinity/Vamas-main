@@ -1,0 +1,13 @@
+{% comment %}
+  Resolves the image URL for a mega-menu icon/swatch/look thumbnail: a merchant-set
+  image override (matched by nav item title via a "Menu Icon Image" block) if one
+  exists, else the default decorative theme asset.
+  Usage: {% render 'vamas-nav-icon-src', title: cat.title, default_asset: icon_img %}
+{% endcomment %}
+{%- assign _override = nil -%}
+{%- for blk in section.blocks -%}
+  {%- if blk.type == 'nav_icon_image' and blk.settings.name == title and blk.settings.image != blank -%}
+    {%- assign _override = blk.settings.image -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if _override -%}{{ _override | img_url: '150x' }}{%- else -%}{{ default_asset | asset_url }}{%- endif -%}

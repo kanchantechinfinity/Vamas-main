@@ -107,7 +107,11 @@
 
     <div>
       <div class="vamas-footer__logo">
-        <img src="{{ 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }} Logo" class="vamas-footer__logo-img">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ section.settings.brand_name | default: 'Vamas' }} Logo" class="vamas-footer__logo-img">
+        {% else %}
+          <img src="{{ section.settings.logo_asset | default: 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }} Logo" class="vamas-footer__logo-img">
+        {% endif %}
       </div>
       <p class="vamas-footer__desc">{{ section.settings.brand_desc }}</p>
       <div class="vamas-footer__socials">
@@ -279,6 +283,8 @@
     { "type": "checkbox", "id": "show_newsletter", "label": "Show Newsletter", "default": true },
     { "type": "checkbox", "id": "show_shop_links", "label": "Show Shop By Links", "default": true },
     { "type": "checkbox", "id": "show_faq", "label": "Show FAQ Accordion", "default": true },
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "text", "id": "logo_asset", "label": "Or theme asset filename", "info": "e.g. vamas-logo.avif", "default": "vamas-logo.avif" },
     { "type": "text", "id": "brand_name", "label": "Brand Name", "default": "VAMAS" },
     { "type": "textarea", "id": "brand_desc", "label": "Brand Description", "default": "Premium handcrafted blouses celebrating Indian artistry and elegance. Every piece tells a story." },
     { "type": "header", "content": "Social Links" },
