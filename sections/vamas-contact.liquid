@@ -1,6 +1,9 @@
 {{ 'vamas-contact.css' | asset_url | stylesheet_tag }}
 
-<section class="contact-hero">
+{% assign hero_bg_style = '' %}
+{% if section.settings.hero_bg_image != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' %}{% endif %}
+{% if section.settings.hero_bg_mobile != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' %}{% endif %}
+<section class="contact-hero"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
   <div class="hero-eye">{{ section.settings.eyebrow | default: shop.name | upcase }}</div>
   <h1 class="hero-title">{{ section.settings.heading | default: 'Get In Touch' }}</h1>
   <p class="hero-sub">{{ section.settings.subheading | default: "We'd love to hear from you" }}</p>
@@ -124,6 +127,8 @@
     { "type": "text", "id": "eyebrow", "label": "Eyebrow Text" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Get In Touch" },
     { "type": "text", "id": "subheading", "label": "Subheading", "default": "We'd love to hear from you" },
+    { "type": "image_picker", "id": "hero_bg_image", "label": "Hero Background Image", "info": "Leave blank to keep the default background." },
+    { "type": "image_picker", "id": "hero_bg_mobile", "label": "Hero Background Image (Mobile)", "info": "Shown instead of the image above on phones." },
     { "type": "header", "content": "Form" },
     { "type": "text", "id": "form_title", "label": "Form Title", "default": "Send Us a Message" },
     { "type": "text", "id": "form_subtitle", "label": "Form Subtitle" },

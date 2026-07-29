@@ -3,7 +3,10 @@
 <div class="vblog-container">
 
   {%- comment -%} 1. Header {%- endcomment -%}
-  <header class="vblog-header">
+  {%- assign hero_bg_style = '' -%}
+  {%- if section.settings.hero_bg_image != blank -%}{%- assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' -%}{%- endif -%}
+  {%- if section.settings.hero_bg_mobile != blank -%}{%- assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' -%}{%- endif -%}
+  <header class="vblog-header"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
     <p class="vblog-eyebrow"><span class="dash"></span>Journal<span class="dash"></span></p>
     <h1 class="vblog-title">{{ section.settings.blog_title | default: blog.title | default: 'The Blouse Journal' }}</h1>
     {%- if section.settings.blog_tagline != blank -%}
@@ -227,6 +230,8 @@
       "label": "Tagline",
       "default": "Stories from the Vamas atelier"
     },
+    { "type": "image_picker", "id": "hero_bg_image", "label": "Hero Background Image", "info": "Leave blank to keep the default background." },
+    { "type": "image_picker", "id": "hero_bg_mobile", "label": "Hero Background Image (Mobile)", "info": "Shown instead of the image above on phones." },
     {
       "type": "textarea",
       "id": "blog_desc",

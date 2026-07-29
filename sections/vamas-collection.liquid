@@ -5,7 +5,10 @@
   {%- assign collection = collections.all -%}
 {%- endunless -%}
 
-<section class="col-hero">
+{% assign hero_bg_style = '' %}
+{% if section.settings.hero_bg_image != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg:url(' | append: section.settings.hero_bg_image | img_url: '1600x' | append: ');' %}{% endif %}
+{% if section.settings.hero_bg_mobile != blank %}{% assign hero_bg_style = hero_bg_style | append: '--hero-bg-mobile:url(' | append: section.settings.hero_bg_mobile | img_url: '900x' | append: ');' %}{% endif %}
+<section class="col-hero"{% if hero_bg_style != blank %} style="{{ hero_bg_style }}"{% endif %}>
   <div class="col-hero-left">
     <div class="col-hero-breadcrumb">
       <a href="{{ routes.root_url }}">Home</a>
@@ -244,7 +247,9 @@ document.getElementById('mob-filter-open') && document.getElementById('mob-filte
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
     { "type": "textarea", "id": "hero_subtitle", "label": "Hero Subtitle (overrides collection description)" },
-    { "type": "checkbox", "id": "show_hero_motif", "label": "Show Decorative Motif", "default": true }
+    { "type": "checkbox", "id": "show_hero_motif", "label": "Show Decorative Motif", "default": true },
+    { "type": "image_picker", "id": "hero_bg_image", "label": "Hero Background Image", "info": "Leave blank to keep the default background." },
+    { "type": "image_picker", "id": "hero_bg_mobile", "label": "Hero Background Image (Mobile)", "info": "Shown instead of the image above on phones." }
   ],
   "presets": [{ "name": "Vamas Collection" }]
 }

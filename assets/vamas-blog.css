@@ -16,7 +16,10 @@
   padding: 44px 24px 36px;
   position: relative;
   overflow: hidden;
-  background: var(--color-maroon, #420001) url('https://images.unsplash.com/photo-1654758790049-8ad380620acc?w=1600&q=80&auto=format&fit=crop') center/cover;
+  background: var(--color-maroon, #420001) var(--hero-bg, url('https://images.unsplash.com/photo-1654758790049-8ad380620acc?w=1600&q=80&auto=format&fit=crop')) center/cover;
+}
+@media (max-width: 768px) {
+  .vblog-header { background-image: var(--hero-bg-mobile, var(--hero-bg, url('https://images.unsplash.com/photo-1654758790049-8ad380620acc?w=1600&q=80&auto=format&fit=crop'))); }
 }
 .vblog-header::before {
   content: '';

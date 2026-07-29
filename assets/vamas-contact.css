@@ -78,11 +78,14 @@
 
     /* -- Hero --- */
     .contact-hero {
-      background: var(--m) url('https://images.unsplash.com/photo-1640181637089-cce4a3040ed2?w=1600&q=80&auto=format&fit=crop') center/cover;
+      background: var(--m) var(--hero-bg, url('https://images.unsplash.com/photo-1640181637089-cce4a3040ed2?w=1600&q=80&auto=format&fit=crop')) center/cover;
       padding: 44px var(--page-gutter) 40px;
       text-align: center;
       position: relative;
       overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .contact-hero { background-image: var(--hero-bg-mobile, var(--hero-bg, url('https://images.unsplash.com/photo-1640181637089-cce4a3040ed2?w=1600&q=80&auto=format&fit=crop'))); }
     }
     .contact-hero::before {
       content: '';
