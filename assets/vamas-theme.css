@@ -690,7 +690,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 @media (max-width: 768px) {
-  .vamas-slide { min-height: 560px; }
+  .vamas-slide { min-height: 420px; }
   .vamas-slide__inner { padding: 0 24px; }
   .vamas-slide__heading { font-size: 26px; }
   .vamas-slide__heading-break { display: block; }
@@ -734,7 +734,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 @media (max-width: 480px) {
   .vamas-prod-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .vamas-slide { min-height: 520px; }
   .vamas-slide__heading { font-size: 22px; }
   .vamas-slide__offer { font-size: 18px; }
   .vamas-brand__stats { flex-wrap: nowrap; gap: 12px; }
