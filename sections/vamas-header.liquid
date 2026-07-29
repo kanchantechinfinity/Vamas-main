@@ -32,6 +32,18 @@
       {% endif %}
       {% assign mega_bestseller_product = mega_bestseller_collection.products.first %}
 
+      {% comment %} Promo card image: pick a discounted product so "Big Discounts" shows a real sale item {% endcomment %}
+      {% assign mega_promo_product = nil %}
+      {% for p in collections.all.products %}
+        {% if p.compare_at_price > p.price and p.featured_image %}
+          {% assign mega_promo_product = p %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      {% if mega_promo_product == nil %}
+        {% assign mega_promo_product = collections.all.products.first %}
+      {% endif %}
+
       <div class="vamas-nav__links">
         {% for link in section.settings.main_menu.links %}
           {% if link.links != blank %}
@@ -108,8 +120,10 @@
                   <div class="vamas-nav__mega-promo-group">
                     <div class="vamas-nav__mega-promo">
                       <span class="vamas-nav__mega-looks-title">Big Discounts</span>
-                      <a href="{{ link.url }}" class="vamas-nav__promo-card">
-                        <img src="https://images.unsplash.com/photo-1552110832-d3f99766fa5e?w=500&q=80&auto=format&fit=crop" alt="" loading="lazy">
+                      <a href="{% if mega_promo_product %}{{ mega_promo_product.url }}{% else %}{{ link.url }}{% endif %}" class="vamas-nav__promo-card">
+                        {% if mega_promo_product.featured_image %}
+                          <img src="{{ mega_promo_product.featured_image | img_url: '400x' }}" alt="{{ mega_promo_product.title | escape }}" loading="lazy">
+                        {% endif %}
                         <span class="vamas-nav__promo-overlay">
                           <span class="vamas-nav__promo-cta">Shop Now</span>
                         </span>
