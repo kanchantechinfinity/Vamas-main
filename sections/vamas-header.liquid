@@ -25,6 +25,13 @@
         {% endif %}
       </a>
 
+      {% comment %} Fallback best-seller product for mega-menu promo cards whose own link has no collection of its own {% endcomment %}
+      {% assign mega_bestseller_collection = collections['best-sellers'] %}
+      {% if mega_bestseller_collection == blank or mega_bestseller_collection.products.size == 0 %}
+        {% assign mega_bestseller_collection = collections.all %}
+      {% endif %}
+      {% assign mega_bestseller_product = mega_bestseller_collection.products.first %}
+
       <div class="vamas-nav__links">
         {% for link in section.settings.main_menu.links %}
           {% if link.links != blank %}
@@ -98,14 +105,30 @@
                     </div>
                   </div>
                 {% elsif has_leaf %}
-                  <div class="vamas-nav__mega-promo">
-                    <a href="{{ link.url }}" class="vamas-nav__promo-card">
-                      <img src="{{ 'banner-corset.jpg' | asset_url }}" alt="" loading="lazy">
-                      <span class="vamas-nav__promo-overlay">
-                        <span class="vamas-nav__promo-title">Big Discounts</span>
-                        <span class="vamas-nav__promo-cta">Shop Now</span>
-                      </span>
-                    </a>
+                  <div class="vamas-nav__mega-promo-group">
+                    <div class="vamas-nav__mega-promo">
+                      <a href="{{ link.url }}" class="vamas-nav__promo-card">
+                        <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=500&q=80&auto=format&fit=crop" alt="" loading="lazy">
+                        <span class="vamas-nav__promo-overlay">
+                          <span class="vamas-nav__promo-title">Big Discounts</span>
+                          <span class="vamas-nav__promo-cta">Shop Now</span>
+                        </span>
+                      </a>
+                    </div>
+                    {% if mega_bestseller_product %}
+                      <div class="vamas-nav__mega-feature">
+                        <span class="vamas-nav__mega-looks-title">Best Seller</span>
+                        <a href="{{ mega_bestseller_product.url }}" class="vamas-nav__feature-card">
+                          <span class="vamas-nav__feature-thumb">
+                            {% if mega_bestseller_product.featured_image %}
+                              <img src="{{ mega_bestseller_product.featured_image | img_url: '300x' }}" width="150" height="150" alt="{{ mega_bestseller_product.title | escape }}" loading="lazy">
+                            {% endif %}
+                          </span>
+                          <span class="vamas-nav__feature-title">{{ mega_bestseller_product.title }}</span>
+                          <span class="vamas-nav__feature-price">{{ mega_bestseller_product.price | money }}</span>
+                        </a>
+                      </div>
+                    {% endif %}
                   </div>
                 {% endif %}
                 <div class="vamas-nav__mega-main">
