@@ -51,9 +51,9 @@
 {% assign badge_title = product.collections.first.title %}
 {% assign badge_title_lower = badge_title | downcase %}
 {% assign badge_title_short = badge_title %}
-{% if badge_title_lower contains 'new' %}
+{% if badge_title_lower contains 'new' or badge_title_lower contains 'trending' %}
   {% assign badge_title_short = 'NEW' %}
-{% elsif badge_title_lower contains 'best' or badge_title_lower contains 'trending' %}
+{% elsif badge_title_lower contains 'best' %}
   {% assign badge_title_short = 'BEST' %}
 {% elsif badge_title_lower contains 'sale' %}
   {% assign badge_title_short = 'SALE' %}
