@@ -295,6 +295,7 @@
         "show_banner": true,
         "banner_image": "shopify://shop_images/CAROSEL_1.png",
         "banner_image_asset": "fulllook.webp",
+        "banner_mobile_image": "shopify://shop_images/WhatsApp_Image_2026-07-29_at_11.11.06_AM.jpg",
         "banner_mobile_image_asset": "",
         "banner_video_url": "",
         "banner_tag": "",
