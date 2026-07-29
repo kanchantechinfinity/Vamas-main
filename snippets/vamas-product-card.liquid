@@ -62,21 +62,23 @@
 {% endif %}
 
 {% comment %}
-  Count DISTINCT valid (non-SKIP) swatch colors, deduping names that only differ by
-  case/spacing/hyphenation (e.g. "Navy Blue" vs "NAVY-BLUE") so the count reflects
-  actual color variants rather than raw option-value strings.
+  Count DISTINCT color variants the product actually has (deduping names that only
+  differ by case/spacing/hyphenation, e.g. "Navy Blue" vs "NAVY-BLUE") - this must be
+  based on the product's real option data, NOT on how many of those names our hex
+  mapper manages to resolve. Using a SKIP-filtered count here would hide the entire
+  swatch row for a genuinely multi-color product whenever most of its color names
+  happen to be unmapped, even though the product page shows them fine (it has no
+  such hiding rule). The hex-mapping/SKIP logic still applies separately, per-swatch,
+  in the render loop below - it only controls which swatches draw, not whether the
+  row exists at all.
 {% endcomment %}
 {% assign valid_color_count = 0 %}
 {% assign seen_color_keys = '' %}
 {% for value in color_values %}
-  {% capture swatch_hex_check %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
-  {% assign swatch_hex_check = swatch_hex_check | strip %}
-  {% unless swatch_hex_check == 'SKIP' %}
-    {% assign dedup_key_check = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
-    {% unless seen_color_keys contains dedup_key_check %}
-      {% assign valid_color_count = valid_color_count | plus: 1 %}
-      {% assign seen_color_keys = seen_color_keys | append: dedup_key_check %}
-    {% endunless %}
+  {% assign dedup_key_check = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
+  {% unless seen_color_keys contains dedup_key_check %}
+    {% assign valid_color_count = valid_color_count | plus: 1 %}
+    {% assign seen_color_keys = seen_color_keys | append: dedup_key_check %}
   {% endunless %}
 {% endfor %}
 
