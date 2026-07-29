@@ -340,6 +340,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   padding: 4px 10px;
   border-radius: 10px;
 }
+.vamas-prod-card__badge-short { display: none; }
 
 .vamas-prod-card__badge--maroon { background: var(--color-maroon); color: var(--color-gold); }
 .vamas-prod-card__badge--gold { background: var(--color-gold); color: var(--color-maroon); }
@@ -715,6 +716,20 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-slide__btns { flex-wrap: wrap; }
   .vamas-newsletter__heading { font-size: 26px; }
   .vamas-footer__bottom { flex-direction: column; align-items: flex-start; }
+
+  /* Product card: reclaim space by shortening the badge, hiding the type
+     label, and stacking swatches/rating/price for narrow columns. */
+  .vamas-prod-card__badge-full { display: none; }
+  .vamas-prod-card__badge-short { display: inline; }
+  .vamas-prod-card__type { display: none; }
+  .vamas-prod-card__meta-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .vamas-prod-card__colors--single { display: none; }
+  .vamas-prod-card__stars { margin-left: 0; }
+
+  .vamas-prod-card__price { display: grid; grid-template-columns: max-content max-content; column-gap: 8px; row-gap: 2px; align-items: baseline; }
+  .vamas-prod-card__price .price { grid-column: 1 / -1; font-size: 16px; }
+  .vamas-prod-card__price .original { font-size: 10px; }
+  .vamas-prod-card__price .discount { font-size: 9px; }
 }
 
 @media (max-width: 480px) {
@@ -838,6 +853,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 #wa-fab{position:fixed;bottom:calc(28px + env(safe-area-inset-bottom, 0px));right:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:9999;box-shadow:0 4px 20px rgba(37,211,102,.45);border:none;transition:transform .2s,box-shadow .2s;}
 #wa-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(37,211,102,.55);}
 #wa-fab svg{width:30px;height:30px;}
+@media (max-width: 768px) {
+  #wa-fab { bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+}
 #wa-popup{position:fixed;bottom:92px;right:24px;width:300px;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.18);z-index:9998;overflow:hidden;transform:scale(.85) translateY(12px);opacity:0;pointer-events:none;transition:all .22s cubic-bezier(.4,0,.2,1);}
 #wa-popup.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
 #wa-popup-head{background:#075E54;padding:14px 16px;display:flex;align-items:center;gap:12px;}

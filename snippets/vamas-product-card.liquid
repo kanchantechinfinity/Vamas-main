@@ -47,6 +47,29 @@
   {% endfor %}
 {% endif %}
 
+{% comment %} Short badge label for mobile, where the full collection title doesn't fit the pill {% endcomment %}
+{% assign badge_title = product.collections.first.title %}
+{% assign badge_title_lower = badge_title | downcase %}
+{% assign badge_title_short = badge_title %}
+{% if badge_title_lower contains 'new' %}
+  {% assign badge_title_short = 'NEW' %}
+{% elsif badge_title_lower contains 'best' or badge_title_lower contains 'trending' %}
+  {% assign badge_title_short = 'TRENDING' %}
+{% elsif badge_title_lower contains 'sale' %}
+  {% assign badge_title_short = 'SALE' %}
+{% else %}
+  {% assign badge_title_short = badge_title | truncate: 10, '' %}
+{% endif %}
+
+{% comment %} Count valid (non-SKIP) swatch colors so the swatch row can be hidden on mobile when there's only one {% endcomment %}
+{% assign valid_color_count = 0 %}
+{% for value in color_values limit: 4 %}
+  {% capture swatch_hex_check %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
+  {% unless swatch_hex_check | strip == 'SKIP' %}
+    {% assign valid_color_count = valid_color_count | plus: 1 %}
+  {% endunless %}
+{% endfor %}
+
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
   {% for v in product.variants %}
@@ -93,8 +116,11 @@
       {% endif %}
     </a>
 
-    {% if product.collections.first.title != blank %}
-      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">{{ product.collections.first.title | upcase }}</span>
+    {% if badge_title != blank %}
+      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">
+        <span class="vamas-prod-card__badge-full">{{ badge_title | upcase }}</span>
+        <span class="vamas-prod-card__badge-short">{{ badge_title_short | upcase }}</span>
+      </span>
     {% endif %}
 
     <button class="vamas-prod-card__wishlist" aria-label="Add to wishlist"
@@ -119,7 +145,7 @@
 
     <div class="vamas-prod-card__meta-row">
       {% if color_values.size > 0 %}
-        <div class="vamas-prod-card__colors">
+        <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
           {% for value in color_values limit: 4 %}
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
             {% assign swatch_hex = swatch_hex | strip %}
