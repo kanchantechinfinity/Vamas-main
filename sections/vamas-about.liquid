@@ -1,7 +1,7 @@
 {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
 
 <style>
-  .about-hero { background: var(--color-maroon) url('https://images.unsplash.com/photo-1717585679395-bbe39b5fb6bc?w=1600&q=80&auto=format&fit=crop') center/cover; padding: 56px var(--page-gutter) 48px; text-align: center; position: relative; overflow: hidden; }
+  .about-hero { background: var(--color-maroon) center/cover; padding: 56px var(--page-gutter) 48px; text-align: center; position: relative; overflow: hidden; }
   {% if section.settings.hero_bg_image != blank %}
     #about-hero-{{ section.id }} { background-image: url('{{ section.settings.hero_bg_image | image_url: width: 1600 }}'); }
   {% endif %}

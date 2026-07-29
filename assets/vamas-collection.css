@@ -81,7 +81,7 @@ a{text-decoration:none;color:inherit;}
 
 /* -- COLLECTION HERO -- */
 .col-hero{
-  background:var(--m) url('https://images.unsplash.com/photo-1602229235490-d2d76988115a?w=1600&q=80&auto=format&fit=crop') center/cover;
+  background:var(--m) center/cover;
   min-height:150px;
   display:flex;
   align-items:center;

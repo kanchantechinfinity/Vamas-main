@@ -1,7 +1,11 @@
 {
   "sections": {
     "main": {
-      "type": "vamas-blog"
+      "type": "vamas-blog",
+      "settings": {
+        "hero_bg_image": "shopify://shop_images/Artboard_1_5804b263-b659-4223-9352-a3a39321b525.png",
+        "hero_bg_mobile": "shopify://shop_images/Artboard_1_5804b263-b659-4223-9352-a3a39321b525.png"
+      }
     }
   },
   "order": ["main"]
