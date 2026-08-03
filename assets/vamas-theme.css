@@ -292,6 +292,14 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 @media (max-width: 640px) {
   .vamas-cat-circle-row { justify-content: flex-start; gap: 14px; }
   .vamas-cat-circle__label { font-size: 12px; }
+
+  /* Bleed the carousel itself full-width (cancel the section's side padding)
+     and size circles so exactly 2 show at a time, edge to edge, with no
+     partial third circle cut off at the screen edge. */
+  .vamas-cat-carousel { margin-left: -24px; margin-right: -24px; }
+  .vamas-cat-circle-row { gap: 12px; padding-left: 0; padding-right: 0; }
+  .vamas-cat-circle { width: calc((100vw - 12px) / 2); }
+  .vamas-cat-circle__ring { width: calc((100vw - 12px) / 2); height: calc((100vw - 12px) / 2); }
 }
 
 /* ── Product Grid ─────────────────────── */
