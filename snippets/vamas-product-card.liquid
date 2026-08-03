@@ -156,7 +156,10 @@
       {% if color_values.size > 0 %}
         <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
           {% assign swatch_seen_keys = '' %}
+          {% assign swatches_rendered = 0 %}
+          {% assign card_swatch_limit = 5 %}
           {% for value in color_values %}
+            {% if swatches_rendered >= card_swatch_limit %}{% break %}{% endif %}
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
             {% assign swatch_hex = swatch_hex | strip %}
             {% unless swatch_hex == 'SKIP' %}
@@ -167,9 +170,13 @@
                      data-color="{{ value | escape }}"
                      title="{{ value }}"></div>
                 {% assign swatch_seen_keys = swatch_seen_keys | append: swatch_dedup_key %}
+                {% assign swatches_rendered = swatches_rendered | plus: 1 %}
               {% endunless %}
             {% endunless %}
           {% endfor %}
+          {% if valid_color_count > card_swatch_limit %}
+            <a href="{{ product.url }}" class="vamas-prod-card__color-more" title="{{ valid_color_count | minus: card_swatch_limit }} more colors">+{{ valid_color_count | minus: card_swatch_limit }}</a>
+          {% endif %}
         </div>
       {% else %}
         <span></span>
