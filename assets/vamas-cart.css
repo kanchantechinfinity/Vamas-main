@@ -29,7 +29,12 @@
     .cart-item:hover{background:rgba(66,0,1,.015);}
     .cart-item.removing{opacity:.3;pointer-events:none;}
 
-    .ci-product{display:flex;align-items:center;gap:14px;}
+    /* Grid items default to min-width:auto (= min-content). Because .ci-name
+       uses white-space:nowrap, min-content is the full untruncated product
+       title, so these refuse to shrink and blow the grid column past the
+       viewport. min-width:0 lets them shrink so the title can ellipsize. */
+    .cart-item > *{min-width:0;}
+    .ci-product{display:flex;align-items:center;gap:14px;min-width:0;}
     .ci-info{flex:1;min-width:0;}
     .ci-img{width:80px;height:96px;border-radius:8px;overflow:hidden;flex-shrink:0;border:1px solid rgba(66,0,1,.08);}
     .ci-img img{width:100%;height:100%;object-fit:cover;object-position:top;}
