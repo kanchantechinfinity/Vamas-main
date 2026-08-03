@@ -28,7 +28,7 @@
           "contact_url": "",
           "wishlist_url": "shopify://pages/wishlist",
           "show_announce": true,
-          "announce_marquee": false,
+          "announce_marquee": true,
           "announce_speed": 22,
           "announce_text": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦"
         }
@@ -39,6 +39,7 @@
           "show_newsletter": true,
           "show_shop_links": true,
           "show_faq": true,
+          "logo_asset": "vamas-logo.avif",
           "brand_name": "VAMAS",
           "brand_desc": "Premium handcrafted blouses celebrating Indian artistry and elegance. Every piece tells a story.",
           "instagram": "https://www.instagram.com/vamas_thedesignerblouses/",
