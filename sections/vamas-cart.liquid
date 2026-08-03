@@ -38,7 +38,7 @@
         <div class="cart-item" data-key="{{ item.key }}" data-line="{{ forloop.index }}">
           <div class="ci-product">
             <div class="ci-img"><img src="{{ item.image | img_url: '160x' }}" alt="{{ item.title | escape }}"></div>
-            <div>
+            <div class="ci-info">
               <div class="ci-name"><a href="{{ item.url }}" style="color:inherit;text-decoration:none;">{{ item.product.title }}</a></div>
               <div class="ci-type">{{ item.product.type }}</div>
               <div class="ci-attrs">
