@@ -251,6 +251,20 @@
       else if (fallbackImg) img.src = fallbackImg;
     }
 
+    /* The card's hover-swap image sits on top of the primary image while the
+       mouse is anywhere over the card (including the swatch row below the
+       photo), so a just-picked color's image was hidden underneath it until
+       the mouse left. Force it hidden immediately on click, then let CSS
+       hover take back over on the next mouseleave/mouseenter cycle. */
+    var hoverImg = card.querySelector('.vamas-prod-card__img-hover');
+    if (hoverImg) {
+      hoverImg.style.opacity = '0';
+      card.addEventListener('mouseleave', function onLeave(){
+        hoverImg.style.opacity = '';
+        card.removeEventListener('mouseleave', onLeave);
+      });
+    }
+
     var priceEl = card.querySelector('[data-price]');
     var compareEl = card.querySelector('[data-compare]');
     var discountEl = card.querySelector('[data-discount]');
