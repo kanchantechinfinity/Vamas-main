@@ -330,27 +330,43 @@
 
   var navLogo = document.querySelector('.vamas-nav__logo');
   var navBar = document.querySelector('.vamas-nav');
+
+  function positionDropdown(item, dd){
+    dd.style.left = '';
+    dd.style.right = '';
+    dd.style.width = '';
+    if (navLogo && navBar) {
+      var itemRect = item.getBoundingClientRect();
+      var logoRect = navLogo.getBoundingClientRect();
+      var navRect = navBar.getBoundingClientRect();
+      var offset = logoRect.left - itemRect.left;
+      dd.style.left = offset + 'px';
+      dd.style.width = (navRect.right - logoRect.left) + 'px';
+    }
+    var rect = dd.getBoundingClientRect();
+    if (rect.right > window.innerWidth - 16) {
+      dd.style.left = (parseFloat(dd.style.left || 0) - (rect.right - (window.innerWidth - 16))) + 'px';
+    }
+  }
+
+  var ddPairs = [];
   document.querySelectorAll('.vamas-nav__item--has-dropdown').forEach(function(item){
     var dd = item.querySelector('.vamas-nav__dropdown');
     if (!dd) return;
-    item.addEventListener('mouseenter', function(){
-      dd.style.left = '';
-      dd.style.right = '';
-      dd.style.width = '';
-      if (navLogo && navBar) {
-        var itemRect = item.getBoundingClientRect();
-        var logoRect = navLogo.getBoundingClientRect();
-        var navRect = navBar.getBoundingClientRect();
-        var offset = logoRect.left - itemRect.left;
-        dd.style.left = offset + 'px';
-        dd.style.width = (navRect.right - logoRect.left) + 'px';
-      }
-      var rect = dd.getBoundingClientRect();
-      if (rect.right > window.innerWidth - 16) {
-        dd.style.left = (parseFloat(dd.style.left || 0) - (rect.right - (window.innerWidth - 16))) + 'px';
-      }
-    });
+    ddPairs.push([item, dd]);
+    item.addEventListener('mouseenter', function(){ positionDropdown(item, dd); });
   });
+
+  /* Dropdowns are position:absolute, so even while hidden they still count
+     toward the document's scrollable width. Previously they were only
+     positioned/clamped on mouseenter, which meant that before any hover the
+     right-most menus sat at their unclamped default offset and pushed the
+     whole page wider than the viewport (horizontal scroll on every desktop
+     page). Position them up front, and again on resize. */
+  function positionAll(){ ddPairs.forEach(function(p){ positionDropdown(p[0], p[1]); }); }
+  positionAll();
+  window.addEventListener('resize', positionAll);
+  window.addEventListener('load', positionAll);
 })();
 </script>
 

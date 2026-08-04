@@ -13,6 +13,10 @@
     .continue-link{font-size:11px;color:var(--m);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--m);padding-bottom:1px;}
 
     .cart-layout{display:grid;grid-template-columns:1fr 360px;gap:28px;padding:0 var(--page-gutter) 80px;align-items:flex-start;max-width:none;margin:0 auto;}
+    /* Grid items default to min-width:auto (min-content). The cart column's
+       min-content is driven by nowrap product titles, which pushed the 1fr
+       track past its share and overflowed the page on desktop too. */
+    .cart-layout > *{min-width:0;}
 
     .free-del-box{background:#fff;border-radius:10px;padding:14px 16px;margin-bottom:12px;border:1px solid rgba(66,0,1,.08);}
     .fdel-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
