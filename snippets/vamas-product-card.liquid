@@ -187,7 +187,7 @@
         <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
           {% assign swatch_seen_keys = '' %}
           {% assign swatches_rendered = 0 %}
-          {% assign card_swatch_limit = 5 %}
+          {% assign card_swatch_limit = 3 %}
           {% for value in color_values %}
             {% if swatches_rendered >= card_swatch_limit %}{% break %}{% endif %}
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
@@ -220,7 +220,7 @@
             {% endunless %}
           {% endfor %}
           {% if valid_color_count > card_swatch_limit %}
-            <a href="{{ product.url }}" class="vamas-prod-card__color-more" title="{{ valid_color_count | minus: card_swatch_limit }} more colors">+{{ valid_color_count | minus: card_swatch_limit }}</a>
+            <a href="{{ product.url }}" class="vamas-prod-card__color-more" title="{{ valid_color_count | minus: card_swatch_limit }} more blouses">+{{ valid_color_count | minus: card_swatch_limit }}</a>
           {% endif %}
         </div>
       {% else %}
