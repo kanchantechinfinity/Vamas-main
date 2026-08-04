@@ -82,6 +82,34 @@
   {% endunless %}
 {% endfor %}
 
+{% comment %}
+  Map each colour to the first variant photo that exists for it, so the card can
+  show small image thumbnails instead of flat colour dots. Built in ONE pass over
+  the variants (products here can have 30+ colours x 10 sizes, so a nested
+  per-colour lookup would be far too slow across a 12-card grid). Stored as a
+  delimited string because Liquid has no dictionaries:
+  "~colourkey~<url>§~colourkey2~<url2>§"
+{% endcomment %}
+{% assign color_img_map = '' %}
+{% if color_option_position > 0 %}
+  {% for v in product.variants %}
+    {% if v.featured_image %}
+      {% assign v_color = '' %}
+      {% if color_option_position == 1 %}{% assign v_color = v.option1 %}{% endif %}
+      {% if color_option_position == 2 %}{% assign v_color = v.option2 %}{% endif %}
+      {% if color_option_position == 3 %}{% assign v_color = v.option3 %}{% endif %}
+      {% if v_color != blank %}
+        {% assign v_key = v_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+        {% assign v_probe = '~' | append: v_key | append: '~' %}
+        {% unless color_img_map contains v_probe %}
+          {% assign v_thumb = v.featured_image | image_url: width: 120 %}
+          {% assign color_img_map = color_img_map | append: v_probe | append: v_thumb | append: '§' %}
+        {% endunless %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
   {% for v in product.variants %}
@@ -144,6 +172,8 @@
             data-variant="{{ first_variant.id }}">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
+
+    <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
   </div>
 
   <div class="vamas-prod-card__body">
@@ -163,12 +193,27 @@
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
             {% assign swatch_hex = swatch_hex | strip %}
             {% unless swatch_hex == 'SKIP' %}
-              {% assign swatch_dedup_key = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
+              {% assign swatch_plain_key = value | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+              {% assign swatch_dedup_key = swatch_plain_key | prepend: '|' | append: '|' %}
               {% unless swatch_seen_keys contains swatch_dedup_key %}
-                <div class="vamas-prod-card__color{% if value == default_color %} active{% endif %}"
-                     style="background:{{ swatch_hex }};"
-                     data-color="{{ value | escape }}"
-                     title="{{ value }}"></div>
+                {% assign swatch_thumb = '' %}
+                {% assign swatch_probe = '~' | append: swatch_plain_key | append: '~' %}
+                {% if color_img_map contains swatch_probe %}
+                  {% assign swatch_thumb = color_img_map | split: swatch_probe | last | split: '§' | first %}
+                {% endif %}
+                {% if swatch_thumb != '' %}
+                  <img class="vamas-prod-card__color vamas-prod-card__color--img{% if value == default_color %} active{% endif %}"
+                       src="{{ swatch_thumb }}"
+                       alt="{{ value | escape }}"
+                       data-color="{{ value | escape }}"
+                       title="{{ value }}"
+                       loading="lazy" width="120" height="150">
+                {% else %}
+                  <div class="vamas-prod-card__color{% if value == default_color %} active{% endif %}"
+                       style="background:{{ swatch_hex }};"
+                       data-color="{{ value | escape }}"
+                       title="{{ value }}"></div>
+                {% endif %}
                 {% assign swatch_seen_keys = swatch_seen_keys | append: swatch_dedup_key %}
                 {% assign swatches_rendered = swatches_rendered | plus: 1 %}
               {% endunless %}

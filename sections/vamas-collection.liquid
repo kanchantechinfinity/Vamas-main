@@ -45,11 +45,45 @@
   {% endif %}
 </section>
 
-<div class="mob-filter-bar">
-  <button class="mob-filter-btn" id="mob-filter-open" type="button">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-    Filters
-  </button>
+{%- comment -%} Mobile-only collection header: title, count, tools row, filter-group chips {%- endcomment -%}
+<div class="col-mhead">
+  <h1 class="col-mhead__title">{{ collection.title }}</h1>
+  <div class="col-mhead__count">{{ collection.products_count }} Products</div>
+
+  <div class="col-mhead__tools">
+    <button class="col-mhead__tool" id="mob-filter-open" type="button">FILTER</button>
+    <div class="col-mhead__tool col-mhead__tool--sort">
+      <form method="get" id="mob-sort-form">
+        {% for filter in collection.filters %}
+          {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
+          {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
+          {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
+        {% endfor %}
+        <select name="sort_by" aria-label="Sort by" onchange="this.form.submit()">
+          {% for option in collection.sort_options %}
+            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+    <div class="col-mhead__views" role="group" aria-label="Grid size">
+      <button type="button" class="col-mhead__view" data-cols="1" aria-label="One per row">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+      </button>
+      <button type="button" class="col-mhead__view is-active" data-cols="2" aria-label="Two per row">
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  {% if collection.filters.size > 0 %}
+    <div class="col-mhead__groups">
+      {% for filter in collection.filters %}
+        <button type="button" class="col-mhead__group" data-open-filters>{{ filter.label | upcase }}</button>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <div class="filter-chips" id="mob-chips" style="margin:0;"></div>
 </div>
 
@@ -213,6 +247,25 @@ function toggleAcc(head){
 document.getElementById('mob-filter-open') && document.getElementById('mob-filter-open').addEventListener('click', function(){
   document.getElementById('sidebar').classList.toggle('mob-open');
 });
+/* The filter-group chips (SIZE / COLOUR / FABRIC …) open the same filter drawer */
+document.querySelectorAll('[data-open-filters]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var sb = document.getElementById('sidebar');
+    if (sb) { sb.classList.add('mob-open'); sb.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+/* 1-up / 2-up grid toggle */
+(function(){
+  var grid = document.querySelector('.prod-grid');
+  if (!grid) return;
+  document.querySelectorAll('.col-mhead__view').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.col-mhead__view').forEach(function(b){ b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+      grid.classList.toggle('prod-grid--one', btn.getAttribute('data-cols') === '1');
+    });
+  });
+})();
 (function(){
   var apply = document.getElementById('vtag-apply');
   if(!apply) return;
