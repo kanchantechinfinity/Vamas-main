@@ -124,6 +124,34 @@
 })();
 </script>
 
+{% comment %} ── Trust Bar ────────────────────────── {% endcomment %}
+<div class="vamas-trust">
+  <div class="vamas-trust__item">
+    <div class="vamas-trust__icon">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <div><div class="vamas-trust__title">Quality Materials</div><div class="vamas-trust__sub">Quality guaranteed, every time</div></div>
+  </div>
+  <div class="vamas-trust__item">
+    <div class="vamas-trust__icon">
+      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    </div>
+    <div><div class="vamas-trust__title">Free Shipping</div><div class="vamas-trust__sub">7–8 business days, pan-India</div></div>
+  </div>
+  <div class="vamas-trust__item">
+    <div class="vamas-trust__icon">
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+    </div>
+    <div><div class="vamas-trust__title">Easy Returns</div><div class="vamas-trust__sub">7-day hassle-free</div></div>
+  </div>
+  <div class="vamas-trust__item">
+    <div class="vamas-trust__icon">
+      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    </div>
+    <div><div class="vamas-trust__title">Secure Payment</div><div class="vamas-trust__sub">UPI · Card · Net Banking · COD</div></div>
+  </div>
+</div>
+
 {% comment %} ── Categories ───────────────────────── {% endcomment %}
 {% assign cat_blocks = section.blocks | where: 'type', 'category' %}
 {% if cat_blocks.size > 0 and section.settings.show_categories %}
@@ -540,34 +568,6 @@
   </div>
 </section>
 {% endif %}
-
-{% comment %} ── Trust Bar (moved here, right before Customer Reviews) ── {% endcomment %}
-<div class="vamas-trust">
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Quality Materials</div><div class="vamas-trust__sub">Quality guaranteed, every time</div></div>
-  </div>
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Free Shipping</div><div class="vamas-trust__sub">7–8 business days, pan-India</div></div>
-  </div>
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Easy Returns</div><div class="vamas-trust__sub">7-day hassle-free</div></div>
-  </div>
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Secure Payment</div><div class="vamas-trust__sub">UPI · Card · Net Banking · COD</div></div>
-  </div>
-</div>
 
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
 {% assign test_blocks = section.blocks | where: 'type', 'testimonial' %}

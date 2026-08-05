@@ -68,48 +68,38 @@
   {% endif %}
 
   {% if section.settings.show_shop_links %}
-  {% comment %}
-    Shop By groups render from real store data only — either a menu the merchant
-    picks in Navigation, or (if no menu is set) the store's actual collections.
-    Never hardcode category names here: they drift from the real catalog.
-  {% endcomment %}
-  {% assign shopby_menus = '' %}
-  {% if section.settings.shopby_menu_1 != blank %}{% assign shopby_menus = shopby_menus | append: '1' %}{% endif %}
-  {% if section.settings.shopby_menu_2 != blank %}{% assign shopby_menus = shopby_menus | append: '2' %}{% endif %}
-  {% if section.settings.shopby_menu_3 != blank %}{% assign shopby_menus = shopby_menus | append: '3' %}{% endif %}
-  {% if section.settings.shopby_menu_4 != blank %}{% assign shopby_menus = shopby_menus | append: '4' %}{% endif %}
-
   <div class="vamas-shopby">
-    {% if shopby_menus != '' %}
-      {% for n in (1..4) %}
-        {% case n %}
-          {% when 1 %}{% assign shopby_menu = section.settings.shopby_menu_1 %}{% assign shopby_title = section.settings.shopby_title_1 %}
-          {% when 2 %}{% assign shopby_menu = section.settings.shopby_menu_2 %}{% assign shopby_title = section.settings.shopby_title_2 %}
-          {% when 3 %}{% assign shopby_menu = section.settings.shopby_menu_3 %}{% assign shopby_title = section.settings.shopby_title_3 %}
-          {% when 4 %}{% assign shopby_menu = section.settings.shopby_menu_4 %}{% assign shopby_title = section.settings.shopby_title_4 %}
-        {% endcase %}
-        {% if shopby_menu != blank and shopby_menu.links.size > 0 %}
-          <div class="vamas-shopby__group">
-            <div class="vamas-shopby__title">{{ shopby_title | default: shopby_menu.title }}</div>
-            <div class="vamas-shopby__links">
-              {% for l in shopby_menu.links %}<a href="{{ l.url }}">{{ l.title }}</a>{% endfor %}
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% else %}
-      {% comment %} No menus configured yet — show the store's real collections {% endcomment %}
-      {% if collections.size > 0 %}
-        <div class="vamas-shopby__group">
-          <div class="vamas-shopby__title">{{ section.settings.shopby_title_1 | default: 'Shop By Collection' }}</div>
-          <div class="vamas-shopby__links">
-            {% for c in collections %}
-              {% unless c.handle == 'frontpage' %}<a href="{{ c.url }}">{{ c.title }}</a>{% endunless %}
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-    {% endif %}
+    {% assign shopby_cat = "Sarees | Kurtas for Women | Short Kurtas for Women | Blouse | Kurta Sets for Women | Co-Ord Sets | Dress Materials | Suits for Women | Tunics | Dresses for Women | Kaftans | Shrugs | Ethnic Gowns | Jumpsuits | Lehenga | Chudidars | Dupatta | Petticoats | Pants | Palazzos | Sharara Suits | Anarkali Suits | Kurta Pant Sets | Palazzo Kurta Sets | Dhoti Sets | Collar Kurtas and Sets | Punjabi Suits | Sleeveless Kurta Sets | Indo-Western Wear for Women | Lehenga Choli for Women | Crop Top Lehenga | Long Dresses" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Shop By Category</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_cat %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
+
+    {% assign shopby_fest = "Diwali | Karwa Chauth | Bhai Dooj Special | Onam | Rakhi Collection | Navratri | Dussehra | Durga Pujo | The Festival of Lohri and Sankranti | Pongal | Holi | Ugadi and Gudi Padwa | Christmas | Ramadan & Eid | Ganesh Chaturthi" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Shop By Festival</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_fest %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
+
+    {% assign shopby_occ = "Wedding Dresses for Women | Wedding Guest Outfits | Bridesmaid Dresses | Mehendi Outfits | Sangeet Dresses | Haldi Ready Dresses | Reception Outfits | Party Wear Dresses for Women | Engagement Dresses | Autumn Outfits | Festive Edit | Bridal Lehenga | Kasavu Sarees | Colors of Freedom | Valentine Day | Women's Day Special | Summer Outfits | Black Friday | Office Work Wear | Monsoon Edit | Winter Outfits" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Shop By Occasion</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_occ %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
+
+    {% assign shopby_trend = "Purple and Lavender Collection | Embroidered Outfits | Fendi Suits | Black Ethnic Dresses | Fendi Sarees | Red Ethnic Dresses | Green Ethnic Wear | Vivid Blooms | Tales of Tissue | Simply Solids | Linen Loom | Gypsy Ink - Bohemian Inspired Collection | Bandhej Treasures | Print Perfection | Pastel Harmony | Kalamkari Chronicles | Baroque Collection | Ivory Elegance | Floral Drifts | Glimmer Glam | Muse of Mirror | Black Sarees | Our Top Picks | Evergreen Anarkali | Chikankari Collection | Kota Couture" | split: "|" %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Top Trendsetter's Collection</div>
+      <div class="vamas-shopby__links">
+        {% for item in shopby_trend %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
+      </div>
+    </div>
   </div>
   {% endif %}
 
@@ -233,7 +223,7 @@
   .vamas-sizeguide__note { margin-top: 16px; font-size: 12px; color: rgba(66,0,1,0.6); line-height: 1.6; }
 
   /* Shop By mega links */
-  .vamas-shopby { max-width: 1280px; margin: 0 auto; padding: 8px 24px 32px; border-bottom: 1px solid rgba(235,211,173,0.18); }
+  .vamas-shopby { max-width: 1280px; margin: 0 auto; padding: 8px var(--page-gutter) 32px; border-bottom: 1px solid rgba(235,211,173,0.18); }
   .vamas-shopby__group { padding: 16px 0; border-top: 1px solid rgba(235,211,173,0.12); }
   .vamas-shopby__group:first-child { border-top: none; }
   .vamas-shopby__title { font-family: var(--font-heading); color: var(--color-gold); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
@@ -292,15 +282,6 @@
   "settings": [
     { "type": "checkbox", "id": "show_newsletter", "label": "Show Newsletter", "default": true },
     { "type": "checkbox", "id": "show_shop_links", "label": "Show Shop By Links", "default": true },
-    { "type": "paragraph", "content": "Pick menus you create in Online Store → Navigation. If no menu is picked, your real store collections are listed automatically. Category names are never hardcoded." },
-    { "type": "text", "id": "shopby_title_1", "label": "Group 1 Title", "default": "Shop By Category" },
-    { "type": "link_list", "id": "shopby_menu_1", "label": "Group 1 Menu" },
-    { "type": "text", "id": "shopby_title_2", "label": "Group 2 Title", "default": "Shop By Festival" },
-    { "type": "link_list", "id": "shopby_menu_2", "label": "Group 2 Menu" },
-    { "type": "text", "id": "shopby_title_3", "label": "Group 3 Title", "default": "Shop By Occasion" },
-    { "type": "link_list", "id": "shopby_menu_3", "label": "Group 3 Menu" },
-    { "type": "text", "id": "shopby_title_4", "label": "Group 4 Title", "default": "Featured Collections" },
-    { "type": "link_list", "id": "shopby_menu_4", "label": "Group 4 Menu" },
     { "type": "checkbox", "id": "show_faq", "label": "Show FAQ Accordion", "default": true },
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "text", "id": "logo_asset", "label": "Or theme asset filename", "info": "e.g. vamas-logo.avif", "default": "vamas-logo.avif" },

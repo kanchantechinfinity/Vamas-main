@@ -30,32 +30,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-announce--marquee:hover .vamas-announce__track { animation-play-state: paused; }
 @keyframes vamas-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-/* Switching (non-marquee) announcement messages */
-.vamas-announce--switch { position: relative; overflow: hidden; }
-.vamas-announce--switch .vamas-announce__msg {
-  display: block;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-.vamas-announce--switch .vamas-announce__msg.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-/* Keep the bar's height stable: only the active message occupies flow */
-.vamas-announce--switch .vamas-announce__msg:not(.is-active) {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (prefers-reduced-motion: reduce) {
-  .vamas-announce--switch .vamas-announce__msg { transition: none; }
-}
-
 /* ── HERO SLIDER ──────────────────────── */
 .vamas-slider { position: relative; overflow: hidden; }
 
@@ -766,10 +740,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__stats { gap: 24px; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
-  .vamas-trust { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; padding: 16px 20px; gap: 14px 10px; }
-  .vamas-trust__item { flex: 0 0 calc(50% - 8px); padding: 4px 0; gap: 8px; }
-  .vamas-trust__title { font-size: 11px; }
-  .vamas-trust__sub { font-size: 9px; }
+  .vamas-trust { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 0; }
   .vamas-tags { padding: 16px 24px; }
   .vamas-tag { pointer-events: none; cursor: default; }
   .vamas-footer { padding: 44px 24px 24px; }
@@ -812,13 +783,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .shopify-section:has(> .vamas-nav-wrapper){display:contents;}
 .vamas-nav-wrapper{position:sticky;top:0;z-index:1000;}
 .vamas-nav-outer{padding:10px 48px;background:transparent;pointer-events:none;}
-.vamas-nav{background:#fff;border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:8px 22px;box-shadow:0 4px 28px rgba(0,0,0,.10),0 1px 6px rgba(0,0,0,.06);pointer-events:all;max-width:1200px;margin:0 auto;}
-/* Three-zone layout: menu left | logo centre | icons right.
-   Both side zones flex equally so the logo lands dead centre. */
-.vamas-nav__bar-left{order:0;display:none;}
-.vamas-nav__links{order:1;flex:1 1 0;min-width:0;justify-content:flex-start;flex-wrap:nowrap;}
-.vamas-nav__logo{order:2;flex:0 0 auto;}
-.vamas-nav__icons{order:3;flex:1 1 0;min-width:0;justify-content:flex-end;}
+.vamas-nav{background:#fff;border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:8px 8px 8px 22px;box-shadow:0 4px 28px rgba(0,0,0,.10),0 1px 6px rgba(0,0,0,.06);pointer-events:all;max-width:1200px;margin:0 auto;}
 .vamas-nav__logo{display:flex;align-items:center;gap:10px;border:none;outline:none;text-decoration:none;}
 .vamas-nav__logo-img{height:42px;width:auto;object-fit:contain;display:block;}
 .vamas-nav__brand{color:var(--m,var(--color-maroon));font-size:15px;font-weight:800;letter-spacing:3px;}
@@ -886,33 +851,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-nav__contact-btn{background:var(--color-maroon);color:var(--color-gold) !important;padding:9px 20px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:1.5px;white-space:nowrap;transition:background .2s;margin-left:4px;text-decoration:none;}
 .vamas-nav__contact-btn:hover{background:var(--color-maroon-light) !important;}
 .vamas-cart-badge{position:absolute;top:-7px;right:-7px;background:var(--color-maroon);color:var(--color-gold);width:16px;height:16px;border-radius:50%;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;}
-/* ── Quick-nav strip ──────────────────── */
-.vamas-quicknav{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:36px;
-  padding:10px 16px;
-  pointer-events:all;
-}
-.vamas-quicknav__link{
-  font-family:var(--font-body);
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:1.6px;
-  color:var(--color-maroon);
-  text-decoration:none;
-  padding:4px 2px;
-  border-bottom:1.5px solid transparent;
-  transition:border-color .2s,color .2s;
-  white-space:nowrap;
-}
-.vamas-quicknav__link:hover{border-bottom-color:var(--color-gold-dark);color:var(--color-maroon-light);}
-@media(max-width:640px){
-  .vamas-quicknav{gap:20px;padding:8px 12px;}
-  .vamas-quicknav__link{font-size:10px;letter-spacing:1.2px;}
-}
-
 .vamas-nav__hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;margin-left:8px;}
 .vamas-nav__hamburger span{display:block;width:22px;height:2px;background:var(--color-maroon);border-radius:2px;transition:all .3s;}
 .vamas-nav__mobile-menu{display:none;flex-direction:column;background:#fff;border-top:1px solid rgba(66,0,1,.08);padding:10px 20px 14px;gap:0;box-shadow:0 8px 24px rgba(0,0,0,.08);max-height:80vh;overflow-y:auto;}
@@ -938,8 +876,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-nav__links{display:none!important;}
   .vamas-nav__contact-btn{display:none!important;}
   .vamas-nav__hamburger{display:flex;}
-  /* Hamburger becomes the left zone so the logo stays centred */
-  .vamas-nav__bar-left{display:flex;align-items:center;flex:1 1 0;min-width:0;justify-content:flex-start;}
 }
 @media(min-width:769px)and(max-width:1024px){
   .vamas-nav-outer{padding:10px 24px;}
