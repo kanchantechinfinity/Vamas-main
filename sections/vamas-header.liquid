@@ -1,15 +1,37 @@
 {% comment %} ── Announcement Bar ─────────────────── {% endcomment %}
 {% if section.settings.show_announce %}
-{% if section.settings.announce_marquee %}
-<div class="vamas-announce vamas-announce--marquee">
-  <div class="vamas-announce__track" style="animation-duration: {{ section.settings.announce_speed | default: 22 }}s;">
-    <span>{{ section.settings.announce_text }}</span>
-    <span aria-hidden="true">{{ section.settings.announce_text }}</span>
-  </div>
-</div>
-{% else %}
-<div class="vamas-announce">{{ section.settings.announce_text }}</div>
-{% endif %}
+  {% comment %} Build the message list from the 3 editable slots, skipping blanks {% endcomment %}
+  {% assign announce_msgs = '' %}
+  {% if section.settings.announce_text_1 != blank %}{% assign announce_msgs = announce_msgs | append: section.settings.announce_text_1 | append: '§' %}{% endif %}
+  {% if section.settings.announce_text_2 != blank %}{% assign announce_msgs = announce_msgs | append: section.settings.announce_text_2 | append: '§' %}{% endif %}
+  {% if section.settings.announce_text_3 != blank %}{% assign announce_msgs = announce_msgs | append: section.settings.announce_text_3 | append: '§' %}{% endif %}
+  {% comment %} Fall back to the old single-text setting so nothing disappears if the new slots are empty {% endcomment %}
+  {% if announce_msgs == '' and section.settings.announce_text != blank %}
+    {% assign announce_msgs = section.settings.announce_text | append: '§' %}
+  {% endif %}
+  {% assign announce_list = announce_msgs | split: '§' %}
+
+  {% if announce_list.size > 0 %}
+    {% if section.settings.announce_marquee %}
+      <div class="vamas-announce vamas-announce--marquee">
+        <div class="vamas-announce__track" style="animation-duration: {{ section.settings.announce_speed | default: 22 }}s;">
+          {% for i in (1..2) %}
+            <span{% if i == 2 %} aria-hidden="true"{% endif %}>
+              {% for msg in announce_list %}{{ msg }}{% unless forloop.last %} &nbsp;|&nbsp; {% endunless %}{% endfor %}
+            </span>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="vamas-announce vamas-announce--switch"
+           data-announce-switch
+           data-interval="{{ section.settings.announce_switch_seconds | default: 2 }}">
+        {% for msg in announce_list %}
+          <span class="vamas-announce__msg{% if forloop.first %} is-active{% endif %}">{{ msg }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
 {% endif %}
 
 <div class="vamas-nav-wrapper" id="vamas-nav-wrapper">
@@ -305,6 +327,21 @@
 
 <script>
 (function(){
+  /* Rotating announcement messages */
+  var switcher = document.querySelector('[data-announce-switch]');
+  if (switcher) {
+    var msgs = switcher.querySelectorAll('.vamas-announce__msg');
+    if (msgs.length > 1) {
+      var idx = 0;
+      var delay = (parseFloat(switcher.dataset.interval) || 2) * 1000;
+      setInterval(function(){
+        msgs[idx].classList.remove('is-active');
+        idx = (idx + 1) % msgs.length;
+        msgs[idx].classList.add('is-active');
+      }, delay);
+    }
+  }
+
   var wrap = document.getElementById('vamas-nav-wrapper');
   var btn = document.getElementById('vamas-nav-hamburger');
   if (btn) {
@@ -383,9 +420,13 @@
     { "type": "url", "id": "wishlist_url", "label": "Wishlist URL" },
     { "type": "header", "content": "Announcement Bar" },
     { "type": "checkbox", "id": "show_announce", "label": "Show Announcement Bar", "default": true },
-    { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = text scrolls in a loop. Off = static.", "default": false },
+    { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = all messages scroll in one loop. Off = messages switch one at a time.", "default": false },
     { "type": "range", "id": "announce_speed", "min": 8, "max": 40, "step": 2, "unit": "s", "label": "Marquee Speed (seconds per loop)", "default": 22 },
-    { "type": "text", "id": "announce_text", "label": "Announcement Text", "default": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦" }
+    { "type": "range", "id": "announce_switch_seconds", "min": 1, "max": 10, "step": 1, "unit": "s", "label": "Switch Every (seconds)", "info": "Used when Scrolling Marquee is off.", "default": 2 },
+    { "type": "text", "id": "announce_text_1", "label": "Message 1", "default": "FREE SHIPPING ABOVE ₹999" },
+    { "type": "text", "id": "announce_text_2", "label": "Message 2", "default": "COD AVAILABLE" },
+    { "type": "text", "id": "announce_text_3", "label": "Message 3", "info": "Only use claims you can substantiate.", "default": "LOVED BY 10L+ WOMEN" },
+    { "type": "text", "id": "announce_text", "label": "Legacy Single Text", "info": "Fallback only — used if Messages 1-3 are all empty." }
   ],
   "blocks": [
     {

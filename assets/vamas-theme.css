@@ -30,6 +30,31 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-announce--marquee:hover .vamas-announce__track { animation-play-state: paused; }
 @keyframes vamas-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
+/* Switching (non-marquee) announcement messages */
+.vamas-announce--switch { position: relative; overflow: hidden; }
+.vamas-announce--switch .vamas-announce__msg {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.vamas-announce--switch .vamas-announce__msg.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.vamas-announce--switch .vamas-announce__msg:not(.is-active) {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vamas-announce--switch .vamas-announce__msg { transition: none; }
+}
+
 /* ── HERO SLIDER ──────────────────────── */
 .vamas-slider { position: relative; overflow: hidden; }
 

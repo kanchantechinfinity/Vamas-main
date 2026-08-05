@@ -28,9 +28,13 @@
           "contact_url": "",
           "wishlist_url": "shopify://pages/wishlist",
           "show_announce": true,
-          "announce_marquee": true,
+          "announce_marquee": false,
           "announce_speed": 22,
-          "announce_text": "✦ FREE SHIPPING ABOVE ₹999  |  USE CODE FIRST10 FOR 10% OFF  |  NEW BRIDAL COLLECTION NOW LIVE ✦"
+          "announce_switch_seconds": 2,
+          "announce_text_1": "FREE SHIPPING ABOVE ₹999",
+          "announce_text_2": "COD AVAILABLE",
+          "announce_text_3": "LOVED BY 10L+ WOMEN",
+          "announce_text": ""
         }
       },
       "vamas-footer": {
