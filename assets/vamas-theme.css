@@ -766,7 +766,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__stats { gap: 24px; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
-  .vamas-trust { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 0; }
+  .vamas-trust { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; padding: 16px 20px; gap: 14px 10px; }
+  .vamas-trust__item { flex: 0 0 calc(50% - 8px); padding: 4px 0; gap: 8px; }
+  .vamas-trust__title { font-size: 11px; }
+  .vamas-trust__sub { font-size: 9px; }
   .vamas-tags { padding: 16px 24px; }
   .vamas-tag { pointer-events: none; cursor: default; }
   .vamas-footer { padding: 44px 24px 24px; }
