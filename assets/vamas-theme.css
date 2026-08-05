@@ -720,7 +720,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 @media (max-width: 768px) {
-  .vamas-slide { min-height: 420px; }
+  /* Fills to the bottom nav bar; --vamas-hero-mobile-h is set by JS in
+     vamas-homepage.liquid. Falls back to 420px before JS runs / if JS fails. */
+  .vamas-slide { min-height: var(--vamas-hero-mobile-h, 420px); }
   .vamas-slide__inner { padding: 0 24px; }
   .vamas-slide--right .vamas-slide__inner { justify-content: flex-start; }
   .vamas-slide__heading { font-size: 26px; }

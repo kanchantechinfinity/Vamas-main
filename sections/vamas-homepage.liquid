@@ -80,6 +80,39 @@
   {% endif %}
 </div>
 
+{% comment %}
+  Mobile-only: make the hero slider fill the screen down to the bottom nav bar.
+  Scoped entirely to <=768px via matchMedia; does nothing on desktop, and the
+  underlying CSS min-height (520px) is untouched so desktop is unaffected.
+{% endcomment %}
+<script>
+(function(){
+  var slider = document.getElementById('vamas-slider');
+  if (!slider) return;
+  var mq = window.matchMedia('(max-width: 768px)');
+
+  function fitMobileHero(){
+    if (!mq.matches) {
+      slider.style.removeProperty('--vamas-hero-mobile-h');
+      return;
+    }
+    var headerEl = document.getElementById('vamas-nav-wrapper');
+    var announceEl = document.querySelector('.vamas-announce');
+    var botnavEl = document.querySelector('.vamas-botnav');
+    var headerH = (headerEl ? headerEl.offsetHeight : 0) + (announceEl ? announceEl.offsetHeight : 0);
+    var botnavH = botnavEl ? botnavEl.offsetHeight : 0;
+    var vh = window.innerHeight;
+    var target = Math.max(320, vh - headerH - botnavH);
+    slider.style.setProperty('--vamas-hero-mobile-h', target + 'px');
+  }
+
+  fitMobileHero();
+  window.addEventListener('resize', fitMobileHero);
+  window.addEventListener('orientationchange', fitMobileHero);
+  if (mq.addEventListener) { mq.addEventListener('change', fitMobileHero); }
+})();
+</script>
+
 <script>
 (function(){
   var track = document.getElementById('vamas-track');
