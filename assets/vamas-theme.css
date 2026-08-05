@@ -878,6 +878,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-nav__contact-btn{background:var(--color-maroon);color:var(--color-gold) !important;padding:9px 20px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:1.5px;white-space:nowrap;transition:background .2s;margin-left:4px;text-decoration:none;}
 .vamas-nav__contact-btn:hover{background:var(--color-maroon-light) !important;}
 .vamas-cart-badge{position:absolute;top:-7px;right:-7px;background:var(--color-maroon);color:var(--color-gold);width:16px;height:16px;border-radius:50%;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.vamas-nav__bar-left{display:none;}
 .vamas-nav__hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;margin-left:8px;}
 .vamas-nav__hamburger span{display:block;width:22px;height:2px;background:var(--color-maroon);border-radius:2px;transition:all .3s;}
 .vamas-nav__mobile-menu{display:none;flex-direction:column;background:#fff;border-top:1px solid rgba(66,0,1,.08);padding:10px 20px 14px;gap:0;box-shadow:0 8px 24px rgba(0,0,0,.08);max-height:80vh;overflow-y:auto;}
@@ -898,11 +899,17 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-mobile-submenu--grand a{padding:9px 0;font-size:11px;color:rgba(66,0,1,.65);text-decoration:none;display:block;}
 @media(max-width:768px){
   .vamas-nav-outer{padding:6px 12px;}
-  .vamas-nav{padding:6px 14px;border-radius:50px;}
+  .vamas-nav{padding:6px 14px;border-radius:50px;justify-content:space-between;}
   .vamas-nav__logo-img{height:34px;}
   .vamas-nav__links{display:none!important;}
   .vamas-nav__contact-btn{display:none!important;}
-  .vamas-nav__hamburger{display:flex;}
+  .vamas-nav__hamburger{display:flex;margin-left:0;}
+  /* Mobile-only 3-zone header: menu (hamburger) left | logo centre | wishlist+cart right */
+  .vamas-nav__bar-left{display:flex;order:0;flex:1;justify-content:flex-start;}
+  .vamas-nav__logo{order:1;flex:0 0 auto;}
+  .vamas-nav__icons{order:2;flex:1;justify-content:flex-end;}
+  #vamas-search-toggle{display:none!important;}
+  .vamas-nav__icons a[title="Account"]{display:none!important;}
 }
 @media(min-width:769px)and(max-width:1024px){
   .vamas-nav-outer{padding:10px 24px;}

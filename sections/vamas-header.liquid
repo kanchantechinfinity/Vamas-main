@@ -37,6 +37,11 @@
 <div class="vamas-nav-wrapper" id="vamas-nav-wrapper">
   <nav class="vamas-nav-outer">
     <div class="vamas-nav">
+      {% comment %} Mobile-only left zone (hidden on desktop): keeps the centred logo centred once the desktop menu is replaced by the hamburger {% endcomment %}
+      <div class="vamas-nav__bar-left">
+        <button class="vamas-nav__hamburger" id="vamas-nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+
       <a href="{{ routes.root_url }}" class="vamas-nav__logo">
         {% if section.settings.logo != blank %}
           <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ shop.name }}" class="vamas-nav__logo-img" width="120" height="42">
@@ -276,7 +281,6 @@
           <span class="vamas-cart-badge" id="vamas-nav-cart-badge" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>{{ cart.item_count }}</span>
         </a>
         <a href="{{ section.settings.contact_url | default: '/pages/contact' }}" class="vamas-nav__contact-btn">{{ section.settings.contact_label | default: 'Contact Us' }}</a>
-        <button class="vamas-nav__hamburger" id="vamas-nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       </div>
     </div>
   </nav>
