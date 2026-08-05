@@ -1,0 +1,25 @@
+{% comment %} ── Quick-nav strip — mobile only (independent section, not tied to the header) ─────────── {% endcomment %}
+{% if section.settings.show_quicknav %}
+  {% assign qn_labels = section.settings.quicknav_labels | default: 'BLOUSE, KIDS, SHAPEWEAR' | split: ',' %}
+  {% assign qn_urls = section.settings.quicknav_urls | default: '/collections/all, /collections/all, /collections/all' | split: ',' %}
+  <div class="vamas-quicknav">
+    {% for label in qn_labels %}
+      {% assign qn_href = qn_urls[forloop.index0] | default: '/collections/all' | strip %}
+      <a class="vamas-quicknav__link" href="{{ qn_href }}">{{ label | strip }}</a>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Quick Nav Strip (Mobile)",
+  "settings": [
+    { "type": "checkbox", "id": "show_quicknav", "label": "Show Quick Nav Strip", "default": true },
+    { "type": "text", "id": "quicknav_labels", "label": "Labels (comma separated)", "default": "BLOUSE, KIDS, SHAPEWEAR" },
+    { "type": "text", "id": "quicknav_urls", "label": "URLs (comma separated, same order)", "info": "One URL per label, in the same order.", "default": "/collections/all, /collections/all, /collections/all" }
+  ],
+  "presets": [
+    { "name": "Quick Nav Strip (Mobile)" }
+  ]
+}
+{% endschema %}

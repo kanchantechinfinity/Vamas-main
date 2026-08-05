@@ -37,6 +37,14 @@
           "announce_text": ""
         }
       },
+      "vamas-quicknav": {
+        "type": "vamas-quicknav",
+        "settings": {
+          "show_quicknav": true,
+          "quicknav_labels": "BLOUSE, KIDS, SHAPEWEAR",
+          "quicknav_urls": "/collections/all, /collections/all, /collections/all"
+        }
+      },
       "vamas-footer": {
         "type": "vamas-footer",
         "settings": {
