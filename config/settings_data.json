@@ -30,11 +30,19 @@
           "show_announce": true,
           "announce_marquee": false,
           "announce_speed": 22,
-          "announce_switch_seconds": 4,
+          "announce_switch_seconds": 2,
           "announce_text_1": "FREE SHIPPING ABOVE ₹999",
           "announce_text_2": "COD AVAILABLE",
           "announce_text_3": "LOVED BY 10L+ WOMEN",
           "announce_text": ""
+        }
+      },
+      "vamas-quicknav": {
+        "type": "vamas-quicknav",
+        "settings": {
+          "show_quicknav": true,
+          "quicknav_labels": "BLOUSE, KIDS, SHAPEWEAR",
+          "quicknav_urls": "/collections/all, /collections/all, /collections/all"
         }
       },
       "vamas-footer": {

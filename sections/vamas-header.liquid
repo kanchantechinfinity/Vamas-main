@@ -25,7 +25,7 @@
     {% else %}
       <div class="vamas-announce vamas-announce--switch"
            data-announce-switch
-           data-interval="{{ section.settings.announce_switch_seconds | default: 4 }}">
+           data-interval="{{ section.settings.announce_switch_seconds | default: 2 }}">
         {% for msg in announce_list %}
           <span class="vamas-announce__msg{% if forloop.first %} is-active{% endif %}">{{ msg }}</span>
         {% endfor %}
@@ -266,15 +266,9 @@
       </div>
 
       <div class="vamas-nav__icons">
-        <a href="{{ routes.search_url }}" id="vamas-search-toggle" title="Search" aria-label="Search">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </a>
         <a href="{{ section.settings.wishlist_url | default: '/pages/wishlist' }}" title="Wishlist" aria-label="Wishlist" style="position:relative;">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           <span class="vamas-cart-badge" id="vamas-nav-wish-badge" style="display:none;">0</span>
-        </a>
-        <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" title="Account" aria-label="Account">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </a>
         <a href="{{ routes.cart_url }}" id="vamas-nav-cart-link" title="Cart" aria-label="Cart" style="position:relative;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -284,18 +278,6 @@
       </div>
     </div>
   </nav>
-
-  {% comment %} ── Quick-nav strip (3 titles) ─────────── {% endcomment %}
-  {% if section.settings.show_quicknav %}
-    {% assign qn_labels = section.settings.quicknav_labels | default: 'BLOUSE, KIDS, SHAPEWEAR' | split: ',' %}
-    {% assign qn_urls = section.settings.quicknav_urls | default: '/collections/all, /collections/all, /collections/all' | split: ',' %}
-    <div class="vamas-quicknav">
-      {% for label in qn_labels %}
-        {% assign qn_href = qn_urls[forloop.index0] | default: '/collections/all' | strip %}
-        <a class="vamas-quicknav__link" href="{{ qn_href }}">{{ label | strip }}</a>
-      {% endfor %}
-    </div>
-  {% endif %}
 
   <div class="vamas-nav__mobile-menu" id="vamas-nav-mobile-menu">
     {% for link in section.settings.main_menu.links %}
@@ -434,15 +416,11 @@
     { "type": "text", "id": "contact_label", "label": "Button Text", "default": "Contact Us" },
     { "type": "url", "id": "contact_url", "label": "Button URL" },
     { "type": "url", "id": "wishlist_url", "label": "Wishlist URL" },
-    { "type": "header", "content": "Quick Nav Strip" },
-    { "type": "checkbox", "id": "show_quicknav", "label": "Show Quick Nav Strip", "default": true },
-    { "type": "text", "id": "quicknav_labels", "label": "Labels (comma separated)", "default": "BLOUSE, KIDS, SHAPEWEAR" },
-    { "type": "text", "id": "quicknav_urls", "label": "URLs (comma separated, same order)", "info": "One URL per label, in the same order.", "default": "/collections/all, /collections/all, /collections/all" },
     { "type": "header", "content": "Announcement Bar" },
     { "type": "checkbox", "id": "show_announce", "label": "Show Announcement Bar", "default": true },
     { "type": "checkbox", "id": "announce_marquee", "label": "Scrolling Marquee (start/stop)", "info": "On = all messages scroll in one loop. Off = messages switch one at a time.", "default": false },
     { "type": "range", "id": "announce_speed", "min": 8, "max": 40, "step": 2, "unit": "s", "label": "Marquee Speed (seconds per loop)", "default": 22 },
-    { "type": "range", "id": "announce_switch_seconds", "min": 2, "max": 10, "step": 1, "unit": "s", "label": "Switch Every (seconds)", "info": "Used when Scrolling Marquee is off.", "default": 4 },
+    { "type": "range", "id": "announce_switch_seconds", "min": 1, "max": 10, "step": 1, "unit": "s", "label": "Switch Every (seconds)", "info": "Used when Scrolling Marquee is off.", "default": 2 },
     { "type": "text", "id": "announce_text_1", "label": "Message 1", "default": "FREE SHIPPING ABOVE ₹999" },
     { "type": "text", "id": "announce_text_2", "label": "Message 2", "default": "COD AVAILABLE" },
     { "type": "text", "id": "announce_text_3", "label": "Message 3", "info": "Only use claims you can substantiate.", "default": "LOVED BY 10L+ WOMEN" },

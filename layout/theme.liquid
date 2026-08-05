@@ -31,6 +31,7 @@
 <body data-shop-name="{{ shop.name }}"{% if settings.whatsapp_number != blank %} data-wa-number="{{ settings.whatsapp_number }}" data-wa-message="{{ settings.whatsapp_message | default: 'Hi! I am interested in your products.' }}"{% endif %}>
 
   {% section 'vamas-header' %}
+  {% section 'vamas-quicknav' %}
 
   <main id="MainContent">
     {{ content_for_layout }}
