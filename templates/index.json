@@ -61,72 +61,54 @@
         "cat-1": {
           "type": "category",
           "settings": {
-            "image_asset": "bridal.jpg",
-            "cat_name": "BRIDAL",
-            "cat_count": "120+",
+            "image_asset": "prod-darkmaroon.jpg",
+            "cat_name": "CLASSIC V",
+            "cat_count": "",
             "cat_url": "/collections/all"
           }
         },
         "cat-2": {
           "type": "category",
           "settings": {
-            "image_asset": "festive.jpg",
-            "cat_name": "FESTIVE",
-            "cat_count": "90+",
+            "image_asset": "casual.jpg",
+            "cat_name": "EASY STRETCH",
+            "cat_count": "",
             "cat_url": "/collections/all"
           }
         },
         "cat-3": {
           "type": "category",
           "settings": {
-            "image_asset": "casual.jpg",
-            "cat_name": "CASUAL",
-            "cat_count": "200+",
+            "image_asset": "prod-cobalt.jpg",
+            "cat_name": "PLAIN ONLY",
+            "cat_count": "",
             "cat_url": "/collections/all"
           }
         },
         "cat-4": {
           "type": "category",
           "settings": {
-            "image_asset": "party-wear.jpg",
-            "cat_name": "PARTY WEAR",
-            "cat_count": "80+",
+            "image_asset": "slide-pink.jpg",
+            "cat_name": "SLEEVE OFF",
+            "cat_count": "",
             "cat_url": "/collections/all"
           }
         },
         "cat-5": {
           "type": "category",
           "settings": {
-            "image_asset": "slide-maroon.jpg",
-            "cat_name": "WEDDING",
-            "cat_count": "150+",
+            "image_asset": "prod-maroon2.jpg",
+            "cat_name": "SUPER BASIC",
+            "cat_count": "",
             "cat_url": "/collections/all"
           }
         },
         "cat-6": {
           "type": "category",
           "settings": {
-            "image_asset": "slide-pink.jpg",
-            "cat_name": "SAREE MATCH",
-            "cat_count": "180+",
-            "cat_url": "/collections/all"
-          }
-        },
-        "cat-7": {
-          "type": "category",
-          "settings": {
-            "image_asset": "prod-cobalt.jpg",
-            "cat_name": "OFFICE WEAR",
-            "cat_count": "60+",
-            "cat_url": "/collections/all"
-          }
-        },
-        "cat-8": {
-          "type": "category",
-          "settings": {
             "image_asset": "prod-indigo.jpg",
-            "cat_name": "DESIGNER",
-            "cat_count": "40+",
+            "cat_name": "BOUTIQUE",
+            "cat_count": "",
             "cat_url": "/collections/all"
           }
         },
@@ -256,8 +238,6 @@
         "cat-4",
         "cat-5",
         "cat-6",
-        "cat-7",
-        "cat-8",
         "stat-1",
         "stat-2",
         "stat-3",
