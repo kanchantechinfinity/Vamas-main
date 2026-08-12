@@ -40,8 +40,8 @@
   {% endif %}
 {% endfor %}
 
-{% comment %} Mobile gallery images — a few real product photos for the hand-swipeable strip {% endcomment %}
-{% assign gallery_images = product.images | slice: 0, 4 %}
+{% comment %} gallery_images / gallery_slot_count are built further down, once the
+  per-colour photo map and the default colour are known. {% endcomment %}
 
 {% comment %} The default-displayed image/swatch must correspond to the SAME variant, not just "first image" vs "first swatch in the list" {% endcomment %}
 {% assign default_color = '' %}
@@ -164,9 +164,57 @@
   {% endfor %}
 {% endif %}
 
+{% comment %}
+  Map each colour to ALL of its photos, using the same anchor-plus-following-
+  untagged-photos convention as color_second_img_map above. This is what makes
+  the swipeable gallery colour-aware: picking a swatch must swap EVERY slide to
+  that colour's photos, not just the first one, otherwise a shopper who has
+  already swiped sees no change at all when they tap a swatch.
+  Photos are collected per contiguous colour block and flushed when the block
+  ends, since Liquid can't append into the middle of an existing entry:
+  "~colourkey~<url1>¤<url2>¤§~colourkey2~<url3>¤§"
+{% endcomment %}
+{% assign color_all_img_map = '' %}
+{% assign cur_key = '' %}
+{% assign cur_list = '' %}
+{% if color_option_position > 0 %}
+  {% for img in product.images %}
+    {% assign img_first_variant = img.variants.first %}
+    {% assign img_color = '' %}
+    {% if img_first_variant %}
+      {% if color_option_position == 1 %}{% assign img_color = img_first_variant.option1 %}{% endif %}
+      {% if color_option_position == 2 %}{% assign img_color = img_first_variant.option2 %}{% endif %}
+      {% if color_option_position == 3 %}{% assign img_color = img_first_variant.option3 %}{% endif %}
+    {% endif %}
+    {% if img_color != blank %}
+      {% assign new_key = img_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+      {% if cur_key != '' and new_key != cur_key %}
+        {% assign flush_probe = '~' | append: cur_key | append: '~' %}
+        {% unless color_all_img_map contains flush_probe %}
+          {% assign color_all_img_map = color_all_img_map | append: flush_probe | append: cur_list | append: '§' %}
+        {% endunless %}
+        {% assign cur_list = '' %}
+      {% endif %}
+      {% assign cur_key = new_key %}
+    {% endif %}
+    {% if cur_key != '' %}
+      {% assign img_u = img | img_url: '400x533', crop: 'center' %}
+      {% assign cur_list = cur_list | append: img_u | append: '¤' %}
+    {% endif %}
+  {% endfor %}
+  {% comment %} Flush the final colour block, which has no following anchor to trigger it {% endcomment %}
+  {% if cur_key != '' %}
+    {% assign flush_probe = '~' | append: cur_key | append: '~' %}
+    {% unless color_all_img_map contains flush_probe %}
+      {% assign color_all_img_map = color_all_img_map | append: flush_probe | append: cur_list | append: '§' %}
+    {% endunless %}
+  {% endif %}
+{% endif %}
+
 {% comment %} The hover-swap image for the DEFAULT-shown colour, resolved via the same
   per-colour map so the initial (no-JS) markup matches the JS behaviour. {% endcomment %}
 {% assign hover_image_url = '' %}
+{% assign default_color_key = '' %}
 {% if default_color != '' %}
   {% assign default_color_key = default_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
   {% assign default_color_probe = '~' | append: default_color_key | append: '~' %}
@@ -174,6 +222,40 @@
     {% assign hover_image_url = color_second_img_map | split: default_color_probe | last | split: '§' | first %}
   {% endif %}
 {% endif %}
+
+{% comment %}
+  Gallery slides for the DEFAULT colour (so the card is colour-consistent on
+  first paint, before any click). Falls back to the product's first few raw
+  photos when the product has no colour option / no per-colour mapping.
+{% endcomment %}
+{% assign gallery_urls_str = '' %}
+{% if default_color_key != '' %}
+  {% assign default_all_probe = '~' | append: default_color_key | append: '~' %}
+  {% if color_all_img_map contains default_all_probe %}
+    {% assign gallery_urls_str = color_all_img_map | split: default_all_probe | last | split: '§' | first %}
+  {% endif %}
+{% endif %}
+{% if gallery_urls_str == '' %}
+  {% for img in product.images limit: 4 %}
+    {% assign g_u = img | img_url: '400x533', crop: 'center' %}
+    {% assign gallery_urls_str = gallery_urls_str | append: g_u | append: '¤' %}
+  {% endfor %}
+{% endif %}
+{% assign gallery_images = gallery_urls_str | split: '¤' %}
+
+{% comment %}
+  Render as many slide slots as the richest colour needs (capped), so switching
+  to a colour with MORE photos than the default one still has DOM slots to fill.
+  Surplus slots are hidden per-colour by the swatch handler.
+{% endcomment %}
+{% assign gallery_slot_count = gallery_images.size %}
+{% assign all_map_entries = color_all_img_map | split: '§' %}
+{% for entry in all_map_entries %}
+  {% assign entry_urls = entry | split: '~' | last %}
+  {% assign entry_count = entry_urls | split: '¤' | size %}
+  {% if entry_count > gallery_slot_count %}{% assign gallery_slot_count = entry_count %}{% endif %}
+{% endfor %}
+{% if gallery_slot_count > 6 %}{% assign gallery_slot_count = 6 %}{% endif %}
 
 {% comment %} Map each size to a variant to link to: prefer one matching the card's currently
   displayed color (so tapping a size doesn't silently switch color too); fall back
@@ -227,13 +309,18 @@
     {% if color_option_position == 2 %}{% assign v_color_for_hover = v.option2 %}{% endif %}
     {% if color_option_position == 3 %}{% assign v_color_for_hover = v.option3 %}{% endif %}
     {% assign v_second_image_url = '' %}
+    {% assign v_all_images_str = '' %}
     {% if v_color_for_hover != '' %}
       {% assign v_hover_key = v_color_for_hover | downcase | strip | replace: ' ', '' | replace: '-', '' %}
       {% assign v_hover_probe = '~' | append: v_hover_key | append: '~' %}
       {% if color_second_img_map contains v_hover_probe %}
         {% assign v_second_image_url = color_second_img_map | split: v_hover_probe | last | split: '§' | first %}
       {% endif %}
+      {% if color_all_img_map contains v_hover_probe %}
+        {% assign v_all_images_str = color_all_img_map | split: v_hover_probe | last | split: '§' | first %}
+      {% endif %}
     {% endif %}
+    {% assign v_all_images = v_all_images_str | split: '¤' %}
     {
       "id": {{ v.id | json }},
       "available": {{ v.available | json }},
@@ -242,6 +329,7 @@
       "discountPct": {{ v_discount | json }},
       "image": {% if v_image_url != blank %}{{ v_image_url | json }}{% else %}null{% endif %},
       "secondImage": {% if v_second_image_url != blank %}{{ v_second_image_url | json }}{% else %}null{% endif %},
+      "colorImages": [{% for u in v_all_images %}{{ u | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
       "option1": {{ v.option1 | json }},
       "option2": {{ v.option2 | json }},
       "option3": {{ v.option3 | json }}
@@ -250,7 +338,7 @@
 ]{% endcapture %}
 
 <div class="vamas-prod-card" data-color-option="{{ color_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'center' }}"{% endif %}>
-  <div class="vamas-prod-card__img{% if gallery_images.size > 1 %} has-gallery{% endif %}">
+  <div class="vamas-prod-card__img{% if gallery_slot_count > 1 %} has-gallery{% endif %}">
     <a href="{{ product.url }}" class="vamas-prod-card__img-desktop-link">
       {% if default_card_image %}
         <img class="vamas-prod-card__img-primary" data-primary-img
@@ -266,17 +354,20 @@
       {% endif %}
     </a>
 
-    {% if gallery_images.size > 1 %}
-      {% comment %} Mobile-only: hand-swipeable image strip (hidden on desktop, which keeps the hover-swap pair above) {% endcomment %}
+    {% if gallery_slot_count > 1 %}
+      {% comment %} Hand-swipeable image strip showing the SELECTED colour's photos.
+        Slots beyond the current colour's photo count are rendered but hidden, so
+        switching to a colour with more photos still has DOM slots to fill. {% endcomment %}
       <div class="vamas-prod-card__gallery" data-gallery>
-        {% for img in gallery_images %}
-          <a href="{{ product.url }}" class="vamas-prod-card__gallery-slide">
-            <img src="{{ img | img_url: '400x533', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy" width="400" height="533">
+        {% for i in (1..gallery_slot_count) %}
+          {% assign slide_url = gallery_images[forloop.index0] %}
+          <a href="{{ product.url }}" class="vamas-prod-card__gallery-slide"{% if slide_url == blank %} style="display:none;"{% endif %}>
+            <img src="{% if slide_url != blank %}{{ slide_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'center' }}{% endif %}" alt="{{ product.title | escape }}" loading="lazy" width="400" height="533">
           </a>
         {% endfor %}
       </div>
       <div class="vamas-prod-card__dots" data-gallery-dots>
-        {% for img in gallery_images %}<span class="vamas-prod-card__dot{% if forloop.first %} active{% endif %}"></span>{% endfor %}
+        {% for i in (1..gallery_slot_count) %}<span class="vamas-prod-card__dot{% if forloop.first %} active{% endif %}"{% if forloop.index > gallery_images.size %} style="display:none;"{% endif %}></span>{% endfor %}
       </div>
     {% endif %}
 
@@ -457,13 +548,36 @@
       else if (fallbackImg) img.src = fallbackImg;
     }
 
-    /* When the card shows the swipeable gallery instead of the single primary
-       image (has-gallery), that gallery's first slide is what's actually
-       visible - update it too, or picking a color would silently do nothing
-       the user can see. */
-    var galleryFirstImg = card.querySelector('.vamas-prod-card__gallery-slide:first-child img');
-    if (galleryFirstImg && (match.image || img)) {
-      galleryFirstImg.src = match.image || img.src;
+    /* The swipeable gallery - not [data-primary-img] - is what shoppers actually
+       see whenever the card has more than one photo (CSS hides the primary/hover
+       pair via .has-gallery). So EVERY slide has to be rebuilt from the picked
+       color's photos, and the strip scrolled back to its first photo. Updating
+       only slide 0 meant a shopper who had already swiped saw nothing change. */
+    var gallery = card.querySelector('[data-gallery]');
+    if (gallery) {
+      var colorImgs = (match.colorImages && match.colorImages.length)
+        ? match.colorImages
+        : (match.image ? [match.image] : []);
+      if (colorImgs.length) {
+        var slides = gallery.querySelectorAll('.vamas-prod-card__gallery-slide');
+        slides.forEach(function(slide, i){
+          var slideImg = slide.querySelector('img');
+          if (i < colorImgs.length) {
+            if (slideImg) slideImg.src = colorImgs[i];
+            slide.style.display = '';
+          } else {
+            slide.style.display = 'none';
+          }
+        });
+        gallery.scrollLeft = 0;
+        var dotsWrap = card.querySelector('[data-gallery-dots]');
+        if (dotsWrap) {
+          dotsWrap.querySelectorAll('.vamas-prod-card__dot').forEach(function(dot, i){
+            dot.style.display = i < colorImgs.length ? '' : 'none';
+            dot.classList.toggle('active', i === 0);
+          });
+        }
+      }
     }
 
     /* The hover-swap image must show the SECOND photo of the just-selected
