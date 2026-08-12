@@ -483,13 +483,77 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-prod-card__stars { color: var(--color-gold-dark); font-size: 12px; margin-left: auto; }
 
-/* Mobile-only product-card elements (swipe gallery, dots, on-image rating badge, size pills) -
-   hidden by default so desktop is never affected; shown only inside the max-width:768px query. */
-.vamas-prod-card__gallery,
-.vamas-prod-card__dots,
-.vamas-prod-card__rating-badge,
-.vamas-prod-card__sizes { display: none; }
 .vamas-prod-card__review-count { color: rgba(66,0,1,0.4); font-size: 10px; }
+
+/* Quick Shop removed site-wide */
+.vamas-prod-card__quickshop { display: none !important; }
+
+/* Rating now shown as an on-image badge (below), not below the title */
+.vamas-prod-card__stars { display: none; }
+
+/* Small color-swatch thumbnail images, site-wide */
+.vamas-prod-card__color--img { width: 18px; height: 22px; }
+.vamas-prod-card__colors:has(.vamas-prod-card__color--img) .vamas-prod-card__color-more { width: 16px; height: 22px; }
+
+/* Swipeable image gallery + dots + on-image rating badge, site-wide */
+.vamas-prod-card__img.has-gallery .vamas-prod-card__img-desktop-link { display: none; }
+.vamas-prod-card__gallery {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  height: 100%;
+  scrollbar-width: none;
+}
+.vamas-prod-card__gallery::-webkit-scrollbar { display: none; }
+.vamas-prod-card__gallery-slide { flex: 0 0 100%; scroll-snap-align: start; display: block; }
+.vamas-prod-card__gallery-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vamas-prod-card__dots {
+  position: absolute;
+  left: 0; right: 0; bottom: 8px;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+}
+.vamas-prod-card__dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6); }
+.vamas-prod-card__dot.active { background: #fff; width: 6px; height: 6px; }
+.vamas-prod-card__rating-badge {
+  position: absolute;
+  right: 8px; bottom: 8px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(255,255,255,0.95);
+  color: var(--color-maroon);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  text-decoration: none;
+}
+.vamas-prod-card__rating-badge svg { color: var(--color-gold-dark); }
+
+/* Size pills replace Add to Cart on the card, site-wide - tapping a size lands on the PDP with that variant */
+.vamas-prod-card__sizes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.vamas-prod-card__size {
+  flex: 1 1 auto;
+  min-width: 30px;
+  text-align: center;
+  padding: 6px 4px;
+  border: 1px solid rgba(66,0,1,0.18);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-maroon);
+  text-decoration: none;
+}
+.vamas-prod-card__size:hover { background: var(--color-maroon); color: var(--color-gold); border-color: var(--color-maroon); }
+.vamas-prod-card__sizes ~ form,
+.vamas-prod-card__sizes ~ .vamas-atc { display: none; }
 
 .vamas-prod-card__price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
 .vamas-prod-card__price .price { font-size: 18px; font-weight: 800; color: var(--color-maroon); }
@@ -794,72 +858,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
      swatches/rating/price for narrow columns (badge is short on all sizes). */
   .vamas-prod-card__type { display: none; }
   .vamas-prod-card__meta-row { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .vamas-prod-card__quickshop { display: none !important; } /* removed on mobile */
-  .vamas-prod-card__color--img { width: 18px; height: 22px; }
-  .vamas-prod-card__colors:has(.vamas-prod-card__color--img) .vamas-prod-card__color-more { width: 16px; height: 22px; }
-  .vamas-prod-card__stars { display: none; } /* rating now shown on the image instead */
 
-  /* Swipeable image gallery + dots + on-image rating badge (mobile only) */
-  .vamas-prod-card__img.has-gallery .vamas-prod-card__img-desktop-link { display: none; }
-  .vamas-prod-card__gallery {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    height: 100%;
-    scrollbar-width: none;
-  }
-  .vamas-prod-card__gallery::-webkit-scrollbar { display: none; }
-  .vamas-prod-card__gallery-slide { flex: 0 0 100%; scroll-snap-align: start; display: block; }
-  .vamas-prod-card__gallery-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .vamas-prod-card__dots {
-    position: absolute;
-    left: 0; right: 0; bottom: 8px;
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    pointer-events: none;
-  }
-  .vamas-prod-card__dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6); }
-  .vamas-prod-card__dot.active { background: #fff; width: 6px; height: 6px; }
-  .vamas-prod-card__rating-badge {
-    position: absolute;
-    right: 8px; bottom: 8px;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    background: rgba(255,255,255,0.95);
-    color: var(--color-maroon);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 20px;
-    text-decoration: none;
-  }
-  .vamas-prod-card__rating-badge svg { color: var(--color-gold-dark); }
-
-  /* Size pills replace Add to Cart on the card - tapping a size lands on the PDP with that variant */
-  .vamas-prod-card__sizes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .vamas-prod-card__size {
-    flex: 1 1 auto;
-    min-width: 30px;
-    text-align: center;
-    padding: 6px 4px;
-    border: 1px solid rgba(66,0,1,0.18);
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--color-maroon);
-    text-decoration: none;
-  }
-  .vamas-prod-card__sizes ~ form,
-  .vamas-prod-card__sizes ~ .vamas-atc { display: none; }
-
-  .vamas-prod-card__price { display: grid; grid-template-columns: max-content max-content; column-gap: 8px; row-gap: 2px; align-items: baseline; }
-  .vamas-prod-card__price .price { grid-column: 1 / -1; font-size: 16px; }
+  /* Keep price/compare/discount on one line on mobile too (was a 2-row grid) */
+  .vamas-prod-card__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+  .vamas-prod-card__price .price { font-size: 15px; }
   .vamas-prod-card__price .original { font-size: 10px; }
   .vamas-prod-card__price .discount { font-size: 9px; }
 }
