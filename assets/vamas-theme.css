@@ -1231,3 +1231,24 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 @media (min-width: 769px) and (max-width: 1024px) {
   .vamas-reels { padding: 48px 40px 72px; }
 }
+
+/* ── Wishlist drawer (mobile: opens as a right-side panel instead of
+     navigating to the full wishlist page) ── */
+.vamas-wish-drawer { position: fixed; inset: 0; z-index: 999; pointer-events: none; }
+.vamas-wish-drawer.open { pointer-events: auto; }
+.vamas-wish-drawer__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.25s ease; }
+.vamas-wish-drawer.open .vamas-wish-drawer__overlay { opacity: 1; }
+.vamas-wish-drawer__panel {
+  position: absolute; top: 0; right: 0; height: 100%;
+  width: min(86vw, 380px); background: var(--color-white);
+  box-shadow: -8px 0 30px rgba(0,0,0,0.18);
+  transform: translateX(100%); transition: transform 0.3s ease;
+  overflow-y: auto; padding: 18px; box-sizing: border-box;
+}
+.vamas-wish-drawer.open .vamas-wish-drawer__panel { transform: translateX(0); }
+.vamas-wish-drawer__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.vamas-wish-drawer__title { font-family: var(--font-heading); font-size: 20px; color: var(--color-maroon); }
+.vamas-wish-drawer__close { background: none; border: none; font-size: 26px; line-height: 1; color: var(--color-maroon); cursor: pointer; padding: 4px 8px; }
+.vamas-wish-drawer__subtitle { font-size: 12px; color: rgba(66,0,1,0.6); margin-bottom: 14px; }
+.vamas-wish-drawer__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+body.vamas-wish-drawer-lock { overflow: hidden; }

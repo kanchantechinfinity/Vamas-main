@@ -9,10 +9,16 @@
     <span class="cart-page-title">My Cart</span>
     <span class="cart-count-badge" id="cart-count-badge">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %}</span>
   </div>
-  <a href="{{ section.settings.continue_shopping_url | default: routes.all_products_collection_url }}" class="continue-link">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-    Continue Shopping
-  </a>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <a href="{{ section.settings.wishlist_url | default: '/pages/wishlist' }}" data-wishlist-drawer-trigger class="continue-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Wishlist
+    </a>
+    <a href="{{ section.settings.continue_shopping_url | default: routes.all_products_collection_url }}" class="continue-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Continue Shopping
+    </a>
+  </div>
 </div>
 
 <div class="cart-layout">

@@ -1,0 +1,110 @@
+{% comment %}
+  Global right-side wishlist drawer, mobile only. Reuses the exact same
+  render markup/logic as sections/vamas-wishlist.liquid so the drawer's
+  content, styling, and behavior match the full wishlist page exactly -
+  only the presentation (page vs. sliding panel) differs. Any element with
+  [data-wishlist-drawer-trigger] opens this instead of navigating, but only
+  below the mobile breakpoint; desktop keeps its normal full-page link.
+{% endcomment %}
+<div class="vamas-wish-drawer" id="vamas-wish-drawer" aria-hidden="true">
+  <div class="vamas-wish-drawer__overlay" id="vamas-wish-drawer-overlay"></div>
+  <div class="vamas-wish-drawer__panel" role="dialog" aria-label="Wishlist">
+    <div class="vamas-wish-drawer__head">
+      <span class="vamas-wish-drawer__title">My Wishlist</span>
+      <button class="vamas-wish-drawer__close" id="vamas-wish-drawer-close" type="button" aria-label="Close wishlist">&times;</button>
+    </div>
+    <p class="vamas-wish-drawer__subtitle" id="vamas-wish-drawer-count">Your saved pieces</p>
+
+    <div class="empty-cart" id="vamas-wish-drawer-empty" style="display:none;text-align:center;padding:40px 20px;">
+      <div class="empty-icon" style="font-size:40px;">&#9825;</div>
+      <div class="empty-title" style="font-family:var(--font-heading);font-size:20px;color:var(--color-maroon);margin:16px 0 8px;">Your wishlist is empty</div>
+      <div class="empty-sub" style="color:rgba(66,0,1,0.55);font-size:13px;margin-bottom:24px;">Tap the &#9825; on any product to save it here.</div>
+      <a href="{{ routes.all_products_collection_url }}" class="btn-primary">SHOP NOW</a>
+    </div>
+
+    <div class="vamas-prod-grid vamas-wish-drawer__grid" id="vamas-wish-drawer-grid"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var drawer = document.getElementById('vamas-wish-drawer');
+  if (!drawer) return;
+  var overlay = document.getElementById('vamas-wish-drawer-overlay');
+  var closeBtn = document.getElementById('vamas-wish-drawer-close');
+  var grid = document.getElementById('vamas-wish-drawer-grid');
+  var empty = document.getElementById('vamas-wish-drawer-empty');
+  var countEl = document.getElementById('vamas-wish-drawer-count');
+
+  function esc(s){ return (s == null ? '' : String(s)).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  function render(){
+    var items = (window.VamasWishlist ? window.VamasWishlist.get() : []);
+    if (!items.length){
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      countEl.textContent = '0 items saved';
+      return;
+    }
+    empty.style.display = 'none';
+    countEl.textContent = items.length + (items.length === 1 ? ' item saved' : ' items saved');
+    grid.innerHTML = items.map(function(it){
+      var img = it.image ? '<img src="' + esc(it.image) + '" alt="' + esc(it.title) + '" loading="lazy">' : '';
+      var priceExtra = it.compare ? ('<span class="original">' + esc(it.compare) + '</span>' + (it.discount ? '<span class="discount">' + esc(it.discount) + '% off</span>' : '')) : '';
+      var atc = it.variant
+        ? ('<form method="post" action="/cart/add"><input type="hidden" name="id" value="' + esc(it.variant) + '"><input type="hidden" name="quantity" value="1"><button type="submit" class="vamas-atc">ADD TO CART</button></form>')
+        : '';
+      return '' +
+      '<div class="vamas-prod-card" data-id="' + esc(it.id) + '">' +
+        '<div class="vamas-prod-card__img">' +
+          '<a href="' + esc(it.url) + '">' + img + '</a>' +
+          '<button class="vamas-prod-card__wishlist active" type="button" aria-label="Remove from wishlist" data-remove="' + esc(it.id) + '">' +
+            '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="vamas-prod-card__body">' +
+          '<a href="' + esc(it.url) + '" style="text-decoration:none;"><div class="vamas-prod-card__name">' + esc(it.title) + '</div></a>' +
+          '<div class="vamas-prod-card__type">' + esc(it.type) + '</div>' +
+          '<div class="vamas-prod-card__price"><span class="price">' + esc(it.price) + '</span>' + priceExtra + '</div>' +
+          atc +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    grid.querySelectorAll('[data-remove]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        window.VamasWishlist.remove(this.getAttribute('data-remove'));
+        render();
+      });
+    });
+  }
+
+  function openDrawer(){
+    render();
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('vamas-wish-drawer-lock');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('vamas-wish-drawer-lock');
+  }
+
+  overlay.addEventListener('click', closeDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  document.addEventListener('vamas:wishlist', function(){ if (drawer.classList.contains('open')) render(); });
+
+  window.VamasWishlistDrawer = { open: openDrawer, close: closeDrawer };
+
+  function isMobile(){ return window.matchMedia('(max-width: 767px)').matches; }
+  document.querySelectorAll('[data-wishlist-drawer-trigger]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      if (!isMobile()) return;
+      e.preventDefault();
+      openDrawer();
+    });
+  });
+})();
+</script>
