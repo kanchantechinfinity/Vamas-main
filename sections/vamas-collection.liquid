@@ -5,6 +5,23 @@
   {%- assign collection = collections.all -%}
 {%- endunless -%}
 
+{%- comment -%}
+  Sleeve/Neckline/Size are native Search & Discovery filters (set up by the
+  merchant, not hardcoded like Occasion/Fabric below) - detect them by label
+  so the tabs below render once they exist, and stay empty/hidden until then.
+{%- endcomment -%}
+{%- assign sleeve_filter = blank -%}
+{%- assign neckline_filter = blank -%}
+{%- assign size_filter = blank -%}
+{%- assign availability_filter = blank -%}
+{%- for filter in collection.filters -%}
+  {%- assign filter_label_down = filter.label | downcase -%}
+  {%- if filter_label_down contains 'sleeve' -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'neck' -%}{%- assign neckline_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'size' -%}{%- assign size_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'vail' -%}{%- assign availability_filter = filter -%}{%- endif -%}
+{%- endfor -%}
+
 {% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
 <style>
   {% if section.settings.hero_bg_image != blank %}
@@ -45,27 +62,11 @@
   {% endif %}
 </section>
 
-{%- comment -%} Mobile-only collection header: title, count, tools row, filter-group chips {%- endcomment -%}
+{%- comment -%} Mobile-only collection header: title, count {%- endcomment -%}
 <div class="col-mhead">
   <h1 class="col-mhead__title">{{ collection.title }}</h1>
-  <div class="col-mhead__count">{{ collection.products_count }} Products</div>
-
-  <div class="col-mhead__tools">
-    <button class="col-mhead__tool" id="mob-filter-open" type="button">FILTER</button>
-    <div class="col-mhead__tool col-mhead__tool--sort">
-      <form method="get" id="mob-sort-form">
-        {% for filter in collection.filters %}
-          {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
-          {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
-          {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
-        {% endfor %}
-        <select name="sort_by" aria-label="Sort by" onchange="this.form.submit()">
-          {% for option in collection.sort_options %}
-            <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
-          {% endfor %}
-        </select>
-      </form>
-    </div>
+  <div class="col-mhead__count">
+    {{ collection.products_count }} Products
     <div class="col-mhead__views" role="group" aria-label="Grid size">
       <button type="button" class="col-mhead__view" data-cols="1" aria-label="One per row">
         <svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
@@ -75,16 +76,136 @@
       </button>
     </div>
   </div>
+</div>
 
-  {% if collection.filters.size > 0 %}
-    <div class="col-mhead__groups">
-      {% for filter in collection.filters %}
-        <button type="button" class="col-mhead__group" data-open-filters>{{ filter.label | upcase }}</button>
+{%- comment -%}
+  Sticky mobile/responsive filter+sort toolbar.
+  Row 1: ALL SIZES (only renders once a Size filter is set up in Search & Discovery).
+  Row 2: FILTERS | FEATURED tabs - mutually exclusive panels, don't interfere.
+  Row 3 (inside Filters): SLEEVE | NECKLINE | COLOR | FABRIC | PRICE | AVAILABILITY | OCCASION sub-tabs.
+{%- endcomment -%}
+<div class="col-toolbar" id="col-toolbar">
+  {% if size_filter %}
+    <div class="col-toolbar__sizes">
+      <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL SIZES</a>
+      {% for value in size_filter.values %}
+        <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
       {% endfor %}
     </div>
   {% endif %}
 
-  <div class="filter-chips" id="mob-chips" style="margin:0;"></div>
+  <div class="col-toolbar__tabs">
+    <button type="button" class="col-toolbar__tab is-active" data-toolbar-tab="filters">FILTERS</button>
+    <button type="button" class="col-toolbar__tab" data-toolbar-tab="featured">FEATURED</button>
+  </div>
+
+  <div class="col-toolbar__panel is-active" data-toolbar-panel="filters">
+    <div class="col-toolbar__subtabs">
+      <button type="button" class="col-toolbar__subtab is-active" data-subtab="sleeve">SLEEVE</button>
+      <button type="button" class="col-toolbar__subtab" data-subtab="neckline">NECKLINE</button>
+      <button type="button" class="col-toolbar__subtab" data-subtab="color">COLOR</button>
+      <button type="button" class="col-toolbar__subtab" data-subtab="fabric">FABRIC</button>
+      <button type="button" class="col-toolbar__subtab" data-subtab="price">PRICE</button>
+      <button type="button" class="col-toolbar__subtab" data-subtab="availability">AVAILABILITY</button>
+      <button type="button" class="col-toolbar__subtab" data-subtab="occasion">OCCASION</button>
+    </div>
+
+    <form method="get" id="toolbar-filter-form">
+      {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
+
+      <div class="col-toolbar__subpanel is-active" data-subpanel="sleeve">
+        {% if sleeve_filter %}
+          {% for value in sleeve_filter.values %}
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+          {% endfor %}
+        {% else %}
+          <p class="filter-empty-note">Sleeve filter not set up yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="col-toolbar__subpanel" data-subpanel="neckline">
+        {% if neckline_filter %}
+          {% for value in neckline_filter.values %}
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+          {% endfor %}
+        {% else %}
+          <p class="filter-empty-note">Neckline filter not set up yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="col-toolbar__subpanel" data-subpanel="color">
+        <div class="color-dots">
+          <label><input type="checkbox" class="vtag-filter" value="Maroon" {% if collection.current_tags contains 'Maroon' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#420001;" title="Maroon" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Gold" {% if collection.current_tags contains 'Gold' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#c9a96e;" title="Gold" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Green" {% if collection.current_tags contains 'Green' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#2e7d32;" title="Green" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Navy" {% if collection.current_tags contains 'Navy' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#1a237e;" title="Navy" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="White" {% if collection.current_tags contains 'White' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#f5f5f5;border:1.5px solid #ccc;" title="White" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+          <label><input type="checkbox" class="vtag-filter" value="Pink" {% if collection.current_tags contains 'Pink' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#e91e8c;" title="Pink" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+        </div>
+      </div>
+
+      <div class="col-toolbar__subpanel" data-subpanel="fabric">
+        {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
+        {% for t in vtag_fabric %}
+          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+        {% endfor %}
+      </div>
+
+      <div class="col-toolbar__subpanel" data-subpanel="price">
+        {% for filter in collection.filters %}
+          {% if filter.type != 'price_range' %}{% continue %}{% endif %}
+          <div class="price-range">
+            <div class="price-labels">
+              <span id="priceMinT">{{ filter.min_value.value | default: filter.range_min | money }}</span>
+              <span id="priceMaxT">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+            </div>
+            <div class="price-slider" id="priceSliderT">
+              <div class="price-slider__track"></div>
+              <div class="price-slider__fill" id="priceFillT"></div>
+              <input type="range" class="price-slider__input" id="rangeMinT" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
+              <input type="range" class="price-slider__input" id="rangeMaxT" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="col-toolbar__subpanel" data-subpanel="availability">
+        {% if availability_filter %}
+          {% for value in availability_filter.values %}
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+          {% endfor %}
+        {% else %}
+          <p class="filter-empty-note">Availability filter not set up yet.</p>
+        {% endif %}
+      </div>
+
+      <div class="col-toolbar__subpanel" data-subpanel="occasion">
+        {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
+        {% for t in vtag_occasion %}
+          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+        {% endfor %}
+      </div>
+
+      <div class="col-toolbar__apply">
+        <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply-toolbar">APPLY FILTERS</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="col-toolbar__panel" data-toolbar-panel="featured">
+    <form method="get" id="toolbar-sort-form">
+      {% for filter in collection.filters %}
+        {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
+        {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
+        {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
+      {% endfor %}
+      {% for option in collection.sort_options %}
+        <label class="filter-check-row">
+          <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %} onchange="this.form.submit()"> {{ option.name }}
+        </label>
+      {% endfor %}
+    </form>
+  </div>
 </div>
 
 <div class="col-body">
@@ -95,26 +216,46 @@
       <a href="/collections/{{ collection.handle | default: 'all' }}" class="clear-all">Clear All</a>
     </div>
 
+    {% if size_filter %}
+      <div class="sidebar-sizes">
+        <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL SIZES</a>
+        {% for value in size_filter.values %}
+          <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     <div class="sidebar-scroll">
-    {% comment %} Tag-based filters (Occasion / Fabric / Color) — filter natively via the collection URL {% endcomment %}
+    {% comment %} Fixed filter order: Sleeve, Neckline, Color, Fabric, Price, Availability, Occasion {% endcomment %}
     {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
     {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
+
     <div class="acc-item">
-      <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% for t in vtag_occasion %}
-          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
-        {% endfor %}
+        {% if sleeve_filter %}
+          {% for value in sleeve_filter.values %}
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+          {% endfor %}
+        {% else %}
+          <p class="filter-empty-note">Sleeve filter not set up yet.</p>
+        {% endif %}
       </div>
     </div>
+
     <div class="acc-item">
-      <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% for t in vtag_fabric %}
-          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
-        {% endfor %}
+        {% if neckline_filter %}
+          {% for value in neckline_filter.values %}
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+          {% endfor %}
+        {% else %}
+          <p class="filter-empty-note">Neckline filter not set up yet.</p>
+        {% endif %}
       </div>
     </div>
+
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
@@ -129,10 +270,18 @@
       </div>
     </div>
 
+    <div class="acc-item">
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-body open">
+        {% for t in vtag_fabric %}
+          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+        {% endfor %}
+      </div>
+    </div>
+
     <form method="get">
     {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
 
-    {% comment %} Price range first — shown above Tags / Availability {% endcomment %}
     {% for filter in collection.filters %}
       {% if filter.type != 'price_range' %}{% continue %}{% endif %}
       <div class="acc-item">
@@ -157,26 +306,28 @@
       </div>
     {% endfor %}
 
-    {% comment %} Then the remaining filters (Tags, Availability, …) — Color and Price already handled above {% endcomment %}
-    {% for filter in collection.filters %}
-      {% if filter.type == 'price_range' %}{% continue %}{% endif %}
-      {% if filter.label contains 'olor' %}{% continue %}{% endif %}
-      <div class="acc-item">
-        <div class="acc-head open" onclick="toggleAcc(this)">
-          <span>{{ filter.label | upcase }}</span>
-          <span class="acc-arrow">&#9660;</span>
-        </div>
-        <div class="acc-body open">
-          {% for value in filter.values %}
-            <label class="filter-check-row">
-              <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()">
-              {{ value.label }} ({{ value.count }})
-            </label>
+    <div class="acc-item">
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>AVAILABILITY</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-body open">
+        {% if availability_filter %}
+          {% for value in availability_filter.values %}
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
-        </div>
+        {% else %}
+          <p class="filter-empty-note">Availability filter not set up yet.</p>
+        {% endif %}
       </div>
-    {% endfor %}
+    </div>
     </form>
+
+    <div class="acc-item">
+      <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
+      <div class="acc-body open">
+        {% for t in vtag_occasion %}
+          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+        {% endfor %}
+      </div>
+    </div>
     </div>
 
     <div class="sidebar-apply">
@@ -244,16 +395,54 @@ function toggleAcc(head){
   var body = head.nextElementSibling;
   body.classList.toggle('open');
 }
-document.getElementById('mob-filter-open') && document.getElementById('mob-filter-open').addEventListener('click', function(){
-  document.getElementById('sidebar').classList.toggle('mob-open');
-});
-/* The filter-group chips (SIZE / COLOUR / FABRIC …) open the same filter drawer */
-document.querySelectorAll('[data-open-filters]').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    var sb = document.getElementById('sidebar');
-    if (sb) { sb.classList.add('mob-open'); sb.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+
+/* Stick the toolbar right below the site's own sticky header (also
+   position:sticky/top:0), instead of overlapping it. Only the header
+   wrapper's own height matters here - the announcement bar above it isn't
+   sticky, so it's already scrolled out of view by the time the toolbar's
+   stickiness engages (it sits well below the header in the page). */
+(function(){
+  var toolbar = document.getElementById('col-toolbar');
+  if (!toolbar) return;
+  function setOffset(){
+    var headerEl = document.getElementById('vamas-nav-wrapper');
+    toolbar.style.setProperty('--vamas-header-h', (headerEl ? headerEl.offsetHeight : 0) + 'px');
+  }
+  setOffset();
+  window.addEventListener('resize', setOffset);
+  window.addEventListener('orientationchange', setOffset);
+})();
+
+/* Row 2: FILTERS | FEATURED tabs — mutually exclusive panels */
+(function(){
+  var toolbar = document.getElementById('col-toolbar');
+  if (!toolbar) return;
+  var tabs = toolbar.querySelectorAll(':scope > .col-toolbar__tabs > .col-toolbar__tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('is-active'); });
+      tab.classList.add('is-active');
+      var target = tab.getAttribute('data-toolbar-tab');
+      toolbar.querySelectorAll(':scope > .col-toolbar__panel').forEach(function(panel){
+        panel.classList.toggle('is-active', panel.getAttribute('data-toolbar-panel') === target);
+      });
+    });
   });
-});
+
+  /* Row 3: SLEEVE | NECKLINE | COLOR | FABRIC | PRICE | AVAILABILITY | OCCASION sub-tabs */
+  var subtabs = toolbar.querySelectorAll('.col-toolbar__subtab');
+  subtabs.forEach(function(subtab){
+    subtab.addEventListener('click', function(){
+      subtabs.forEach(function(s){ s.classList.remove('is-active'); });
+      subtab.classList.add('is-active');
+      var target = subtab.getAttribute('data-subtab');
+      toolbar.querySelectorAll('.col-toolbar__subpanel').forEach(function(panel){
+        panel.classList.toggle('is-active', panel.getAttribute('data-subpanel') === target);
+      });
+    });
+  });
+})();
+
 /* 1-up / 2-up grid toggle */
 (function(){
   var grid = document.querySelector('.prod-grid');
@@ -266,8 +455,8 @@ document.querySelectorAll('[data-open-filters]').forEach(function(btn){
     });
   });
 })();
-(function(){
-  var apply = document.getElementById('vtag-apply');
+function wireVtagApply(id){
+  var apply = document.getElementById(id);
   if(!apply) return;
   apply.addEventListener('click', function(){
     var tags = [];
@@ -275,13 +464,16 @@ document.querySelectorAll('[data-open-filters]').forEach(function(btn){
     var base = '/collections/{{ collection.handle | default: "all" }}';
     window.location.href = tags.length ? (base + '/' + tags.join('+')) : base;
   });
-})();
-(function(){
-  var minInput = document.getElementById('rangeMin');
-  var maxInput = document.getElementById('rangeMax');
-  var fill = document.getElementById('priceFill');
-  var minLabel = document.getElementById('priceMin');
-  var maxLabel = document.getElementById('priceMax');
+}
+wireVtagApply('vtag-apply');
+wireVtagApply('vtag-apply-toolbar');
+
+function wirePriceSlider(minId, maxId, fillId, minLabelId, maxLabelId){
+  var minInput = document.getElementById(minId);
+  var maxInput = document.getElementById(maxId);
+  var fill = document.getElementById(fillId);
+  var minLabel = document.getElementById(minLabelId);
+  var maxLabel = document.getElementById(maxLabelId);
   if (!minInput || !maxInput || !fill) return;
 
   function update(){
@@ -300,7 +492,9 @@ document.querySelectorAll('[data-open-filters]').forEach(function(btn){
   minInput.addEventListener('input', update);
   maxInput.addEventListener('input', update);
   update();
-})();
+}
+wirePriceSlider('rangeMin', 'rangeMax', 'priceFill', 'priceMin', 'priceMax');
+wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT');
 </script>
 
 {% schema %}
