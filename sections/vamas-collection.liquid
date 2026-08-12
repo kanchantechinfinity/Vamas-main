@@ -99,29 +99,42 @@
     </button>
   </div>
 
-  {% comment %} Row 2: every size the store sells, on one line {% endcomment %}
+  {% comment %}
+    Row 2: sizes. On phones this is a 4-column grid capped at two rows - ALL plus
+    six sizes, then a "+N" pill that expands the rest in place rather than
+    sending the shopper somewhere else.
+  {% endcomment %}
+  {% assign size_visible_cap = 6 %}
   {% if size_filter != blank %}
-    <div class="col-toolbar__sizes">
+    {% assign size_total = size_filter.values.size %}
+    {% assign size_hidden = size_total | minus: size_visible_cap %}
+    <div class="col-toolbar__sizes" data-size-row>
       <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL</a>
       {% for value in size_filter.values %}
-        <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+        <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"
+           class="size-pill{% if value.active %} is-active{% endif %}{% if forloop.index0 >= size_visible_cap %} size-pill--extra{% endif %}">{{ value.label }}</a>
       {% endfor %}
+      {% if size_hidden > 0 %}
+        <button type="button" class="size-pill size-pill--more" data-size-more>+{{ size_hidden }}</button>
+      {% endif %}
     </div>
   {% elsif section.settings.size_list != blank %}
     {% comment %} No native Size filter enabled in Search & Discovery yet - render the
       store's known sizes anyway, linking to the standard variant-option filter param
       so they start filtering the moment that filter is switched on. {% endcomment %}
     {% assign fallback_sizes = section.settings.size_list | split: ',' %}
+    {% assign size_total = fallback_sizes.size %}
+    {% assign size_hidden = size_total | minus: size_visible_cap %}
     {% assign active_size = '' %}
     {% for f in collection.filters %}
       {% assign f_label_down = f.label | downcase %}
       {% if f_label_down contains 'size' %}{% assign active_size = f.active_values.first.value %}{% endif %}
     {% endfor %}
-    <div class="col-toolbar__sizes">
+    <div class="col-toolbar__sizes" data-size-row>
       <a href="{{ collection.url }}" class="size-pill{% if active_size == '' %} is-active{% endif %}">ALL</a>
       {% for s in fallback_sizes %}
         {% assign s_clean = s | strip %}
-        <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill{% if active_size == s_clean %} is-active{% endif %}">{{ s_clean }}</a>
+        <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill{% if active_size == s_clean %} is-active{% endif %}{% if forloop.index0 >= size_visible_cap %} size-pill--extra{% endif %}">{{ s_clean }}</a>
       {% endfor %}
     </div>
   {% endif %}
@@ -266,12 +279,26 @@
       <a href="/collections/{{ collection.handle | default: 'all' }}" class="clear-all">Clear All</a>
     </div>
 
+    {% comment %} Desktop sizes: a single line that fits as many pills as the sidebar
+      allows, with a "+N" pill for the rest. How many actually fit depends on the
+      rendered width, so the trimming is measured in JS rather than guessed here. {% endcomment %}
     {% if size_filter != blank %}
-      <div class="sidebar-sizes">
-        <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL SIZES</a>
+      <div class="sidebar-sizes" data-size-fit>
+        <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL</a>
         {% for value in size_filter.values %}
           <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
         {% endfor %}
+        <button type="button" class="size-pill size-pill--more" data-size-fit-more hidden>+0</button>
+      </div>
+    {% elsif section.settings.size_list != blank %}
+      {% assign sb_sizes = section.settings.size_list | split: ',' %}
+      <div class="sidebar-sizes" data-size-fit>
+        <a href="{{ collection.url }}" class="size-pill">ALL</a>
+        {% for s in sb_sizes %}
+          {% assign s_clean = s | strip %}
+          <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill">{{ s_clean }}</a>
+        {% endfor %}
+        <button type="button" class="size-pill size-pill--more" data-size-fit-more hidden>+0</button>
       </div>
     {% endif %}
 
@@ -515,6 +542,56 @@ function toggleAcc(head){
       grid.classList.toggle('prod-grid--one', btn.getAttribute('data-cols') === '1');
     });
   });
+})();
+
+/* "+N" on the mobile size grid reveals the remaining sizes in place */
+(function(){
+  var row = document.querySelector('[data-size-row]');
+  if (!row) return;
+  var more = row.querySelector('[data-size-more]');
+  if (more) more.addEventListener('click', function(){ row.classList.add('is-expanded'); });
+})();
+
+/* Desktop sidebar sizes: keep them on ONE line, showing however many actually
+   fit, and roll the rest into a "+N" pill. The count can't be decided in Liquid
+   because it depends on rendered pill widths, so measure after layout. */
+(function(){
+  var row = document.querySelector('[data-size-fit]');
+  if (!row) return;
+  var more = row.querySelector('[data-size-fit-more]');
+  if (!more) return;
+  var pills = Array.prototype.slice.call(row.querySelectorAll('.size-pill:not([data-size-fit-more])'));
+  var expanded = false;
+
+  function fit(){
+    if (expanded) return;
+    pills.forEach(function(p){ p.hidden = false; });
+    more.hidden = true;
+    var rowTop = pills.length ? pills[0].getBoundingClientRect().top : 0;
+    /* Anything that wrapped onto a second line sits lower than the first pill. */
+    var overflow = pills.filter(function(p){ return p.getBoundingClientRect().top > rowTop + 2; });
+    if (!overflow.length) return;
+    more.hidden = false;
+    /* Showing "+N" itself takes room, so hide one extra pill if it now wraps. */
+    for (var guard = 0; guard < pills.length; guard++) {
+      var stillOver = pills.filter(function(p){ return !p.hidden && p.getBoundingClientRect().top > rowTop + 2; });
+      var moreWrapped = more.getBoundingClientRect().top > rowTop + 2;
+      if (!stillOver.length && !moreWrapped) break;
+      for (var i = pills.length - 1; i >= 0; i--) { if (!pills[i].hidden) { pills[i].hidden = true; break; } }
+    }
+    more.textContent = '+' + pills.filter(function(p){ return p.hidden; }).length;
+  }
+
+  more.addEventListener('click', function(){
+    expanded = true;
+    pills.forEach(function(p){ p.hidden = false; });
+    more.hidden = true;
+  });
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit);
+  else fit();
+  window.addEventListener('load', fit);
+  window.addEventListener('resize', fit);
 })();
 function wireVtagApply(id){
   var apply = document.getElementById(id);
