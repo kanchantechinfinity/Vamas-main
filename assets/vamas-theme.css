@@ -1296,3 +1296,38 @@ body.vamas-wish-drawer-lock { overflow: hidden; }
 .vamas-cart-drawer__footer { flex-shrink: 0; border-top: 1px solid rgba(66,0,1,0.1); padding-top: 14px; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
 .vamas-cart-drawer__subtotal { display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: var(--color-maroon); }
 body.vamas-cart-drawer-lock { overflow: hidden; }
+
+/* ── Customer login / register ──────────── */
+.vamas-auth { display: flex; justify-content: center; padding: 64px 24px 100px; background: var(--color-bg); }
+.vamas-auth__card {
+  width: 100%; max-width: 440px; background: var(--color-white);
+  border: 1px solid rgba(235, 211, 173, 0.5); border-radius: 14px;
+  padding: 40px 36px; box-shadow: 0 8px 36px rgba(66, 0, 1, 0.06);
+}
+.vamas-auth__title { font-family: var(--font-heading); color: var(--color-maroon); font-size: 30px; margin-bottom: 6px; }
+.vamas-auth__subtitle { font-size: 13px; color: rgba(66,0,1,0.6); margin-bottom: 28px; }
+.vamas-auth__row { display: flex; gap: 14px; }
+.vamas-auth__row .vamas-auth__field { flex: 1; }
+.vamas-auth__field { margin-bottom: 18px; }
+.vamas-auth__field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--color-maroon); text-transform: uppercase; margin-bottom: 8px; }
+.vamas-auth__field input {
+  width: 100%; padding: 13px 16px; font-size: 14px; font-family: var(--font-primary);
+  color: var(--color-maroon); background: var(--color-bg);
+  border: 1.5px solid rgba(66,0,1,0.12); border-radius: 8px; outline: none;
+  transition: border-color 0.2s; box-sizing: border-box;
+}
+.vamas-auth__field input:focus { border-color: var(--color-gold-dark); }
+.vamas-auth__submit { width: 100%; margin-top: 4px; }
+.vamas-auth__error { background: rgba(161,39,39,0.08); color: #a12727; border: 1px solid rgba(161,39,39,0.25); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 18px; }
+.vamas-auth__success { background: rgba(46,125,50,0.08); color: #2e7d32; border: 1px solid rgba(46,125,50,0.25); border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; }
+.vamas-auth__forgot { margin-top: 20px; border-top: 1px solid rgba(66,0,1,0.08); padding-top: 18px; }
+.vamas-auth__forgot summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--color-maroon); }
+.vamas-auth__forgot[open] summary { margin-bottom: 16px; }
+.vamas-auth__switch { text-align: center; font-size: 13px; color: rgba(66,0,1,0.65); margin-top: 24px; }
+.vamas-auth__switch a { color: var(--color-maroon); font-weight: 700; text-decoration: underline; }
+@media (max-width: 480px) {
+  .vamas-auth { padding: 36px 16px 72px; }
+  .vamas-auth__card { padding: 28px 22px; }
+  .vamas-auth__title { font-size: 24px; }
+  .vamas-auth__row { flex-direction: column; gap: 0; }
+}

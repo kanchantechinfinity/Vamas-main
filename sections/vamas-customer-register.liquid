@@ -1,29 +1,34 @@
-<div style="max-width:420px;margin:60px auto 100px;padding:0 24px;">
-  <h1 style="font-family:var(--font-heading);color:var(--color-maroon);font-size:28px;margin-bottom:24px;">Create Account</h1>
+<div class="vamas-auth">
+  <div class="vamas-auth__card">
+    <h1 class="vamas-auth__title">Create Account</h1>
+    <p class="vamas-auth__subtitle">Join Vamas for a faster checkout and order tracking.</p>
 
-  {% form 'create_customer' %}
-    {% if form.errors %}
-      <p style="color:#a12727;">{{ form.errors.messages.first }}</p>
-    {% endif %}
-    <p>
-      <label for="FirstName">First name</label><br>
-      <input type="text" name="customer[first_name]" id="FirstName" autocomplete="given-name">
-    </p>
-    <p>
-      <label for="LastName">Last name</label><br>
-      <input type="text" name="customer[last_name]" id="LastName" autocomplete="family-name">
-    </p>
-    <p>
-      <label for="RegisterEmail">Email</label><br>
-      <input type="email" name="customer[email]" id="RegisterEmail" autocomplete="email" required>
-    </p>
-    <p>
-      <label for="RegisterPassword">Password</label><br>
-      <input type="password" name="customer[password]" id="RegisterPassword" autocomplete="new-password" required>
-    </p>
-    <button type="submit">Create Account</button>
-  {% endform %}
+    {% form 'create_customer' %}
+      {% if form.errors %}
+        <div class="vamas-auth__error">{{ form.errors.messages.first }}</div>
+      {% endif %}
+      <div class="vamas-auth__row">
+        <div class="vamas-auth__field">
+          <label for="FirstName">First name</label>
+          <input type="text" name="customer[first_name]" id="FirstName" autocomplete="given-name">
+        </div>
+        <div class="vamas-auth__field">
+          <label for="LastName">Last name</label>
+          <input type="text" name="customer[last_name]" id="LastName" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="vamas-auth__field">
+        <label for="RegisterEmail">Email</label>
+        <input type="email" name="customer[email]" id="RegisterEmail" autocomplete="email" required>
+      </div>
+      <div class="vamas-auth__field">
+        <label for="RegisterPassword">Password</label>
+        <input type="password" name="customer[password]" id="RegisterPassword" autocomplete="new-password" required>
+      </div>
+      <button type="submit" class="btn-primary vamas-auth__submit">CREATE ACCOUNT</button>
+    {% endform %}
 
-  <p style="margin-top:24px;">Already have an account? <a href="{{ routes.account_login_url }}">Login</a></p>
+    <p class="vamas-auth__switch">Already have an account? <a href="{{ routes.account_login_url }}">Login</a></p>
+  </div>
 </div>
 {% schema %}{ "name": "Customer Register", "settings": [] }{% endschema %}

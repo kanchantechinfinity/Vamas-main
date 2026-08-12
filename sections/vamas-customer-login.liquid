@@ -1,38 +1,41 @@
-<div style="max-width:420px;margin:60px auto 100px;padding:0 24px;">
-  <h1 style="font-family:var(--font-heading);color:var(--color-maroon);font-size:28px;margin-bottom:24px;">Login</h1>
+<div class="vamas-auth">
+  <div class="vamas-auth__card">
+    <h1 class="vamas-auth__title">Login</h1>
+    <p class="vamas-auth__subtitle">Welcome back! Sign in to continue.</p>
 
-  {% form 'customer_login' %}
-    {% if form.errors %}
-      <p style="color:#a12727;">{{ form.errors.messages.first }}</p>
-    {% endif %}
-    <p>
-      <label for="CustomerEmail">Email</label><br>
-      <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required>
-    </p>
-    <p>
-      <label for="CustomerPassword">Password</label><br>
-      <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
-    </p>
-    <button type="submit">Sign In</button>
-  {% endform %}
-
-  <details style="margin-top:16px;">
-    <summary style="cursor:pointer;">Forgot your password?</summary>
-    {% form 'recover_customer_password' %}
-      {% if form.posted_successfully? %}
-        <p>If that email address exists in our system, you will receive an email with instructions on how to reset your password.</p>
-      {% endif %}
+    {% form 'customer_login' %}
       {% if form.errors %}
-        <p style="color:#a12727;">{{ form.errors.messages.first }}</p>
+        <div class="vamas-auth__error">{{ form.errors.messages.first }}</div>
       {% endif %}
-      <p>
-        <label for="RecoverEmail">Email</label><br>
-        <input type="email" name="email" id="RecoverEmail" autocomplete="email" required>
-      </p>
-      <button type="submit">Reset password</button>
+      <div class="vamas-auth__field">
+        <label for="CustomerEmail">Email</label>
+        <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required>
+      </div>
+      <div class="vamas-auth__field">
+        <label for="CustomerPassword">Password</label>
+        <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-primary vamas-auth__submit">SIGN IN</button>
     {% endform %}
-  </details>
 
-  <p style="margin-top:24px;">New customer? <a href="{{ routes.account_register_url }}">Create account</a></p>
+    <details class="vamas-auth__forgot">
+      <summary>Forgot your password?</summary>
+      {% form 'recover_customer_password' %}
+        {% if form.posted_successfully? %}
+          <div class="vamas-auth__success">If that email address exists in our system, you will receive an email with instructions on how to reset your password.</div>
+        {% endif %}
+        {% if form.errors %}
+          <div class="vamas-auth__error">{{ form.errors.messages.first }}</div>
+        {% endif %}
+        <div class="vamas-auth__field">
+          <label for="RecoverEmail">Email</label>
+          <input type="email" name="email" id="RecoverEmail" autocomplete="email" required>
+        </div>
+        <button type="submit" class="btn-outline vamas-auth__submit">RESET PASSWORD</button>
+      {% endform %}
+    </details>
+
+    <p class="vamas-auth__switch">New customer? <a href="{{ routes.account_register_url }}">Create account</a></p>
+  </div>
 </div>
 {% schema %}{ "name": "Customer Login", "settings": [] }{% endschema %}
