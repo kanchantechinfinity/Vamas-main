@@ -8,11 +8,21 @@
       {% if block.type == 'slide' %}
         {% assign has_mobile_bg = false %}
         {% if block.settings.mobile_slide_image != blank or block.settings.mobile_image_asset != blank %}{% assign has_mobile_bg = true %}{% endif %}
-        {%- comment -%} Per-slide crop focus. A single global object-position can't
-          suit two different photos - one needs the model's face kept in frame, the
-          other needs her lower body cropped away - so each slide carries its own,
-          separately for desktop and mobile since the crop shape differs. {%- endcomment -%}
+        {%- comment -%}
+          Per-slide crop focus. A single global object-position can't suit two
+          different photos - one needs the model's head kept in frame, the other
+          needs her lower body cropped away.
+
+          BOTH axes are needed, and which one actually does anything depends on
+          the shape mismatch between photo and slot:
+            desktop - wide photo (~1.78) in a wide slot -> crops VERTICALLY, Y matters
+            mobile  - square photo (1.00) in a tall slot -> crops HORIZONTALLY, X matters
+          That's why the mobile banner looked off-centre no matter what the
+          vertical value was set to.
+        {%- endcomment -%}
+        {%- assign focus_x = block.settings.image_focus_x | default: 50 -%}
         {%- assign focus_y = block.settings.image_focus_y | default: 8 -%}
+        {%- assign m_focus_x = block.settings.mobile_image_focus_x | default: 50 -%}
         {%- assign m_focus_y = block.settings.mobile_image_focus_y | default: 8 -%}
         <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}{% if has_mobile_bg %} vamas-slide--has-mobile-bg{% endif %}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
           {% if block.settings.video != blank %}
@@ -29,23 +39,23 @@
             </div>
           {% elsif block.settings.slide_image != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
-                 style="object-position: center {{ focus_y }}%;"
+                 style="object-position: {{ focus_x }}% {{ focus_y }}%;"
                  alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% elsif block.settings.image_asset != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.image_asset | asset_url }}"
-                 style="object-position: center {{ focus_y }}%;"
+                 style="object-position: {{ focus_x }}% {{ focus_y }}%;"
                  alt="{{ block.settings.line1 | escape }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% endif %}
           {% if block.settings.mobile_slide_image != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_slide_image | img_url: '900x1200', crop: 'center' }}"
-                 style="object-position: center {{ m_focus_y }}%;"
+                 style="object-position: {{ m_focus_x }}% {{ m_focus_y }}%;"
                  alt="{{ block.settings.mobile_slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% elsif block.settings.mobile_image_asset != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_image_asset | asset_url }}"
-                 style="object-position: center {{ m_focus_y }}%;"
+                 style="object-position: {{ m_focus_x }}% {{ m_focus_y }}%;"
                  alt="{{ block.settings.line1 | escape }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% endif %}
@@ -817,7 +827,10 @@
         { "type": "image_picker", "id": "mobile_slide_image", "label": "Mobile Image", "info": "Shown instead of the desktop image/video on phones & tablets (≤768px). Leave blank to reuse the desktop banner on mobile." },
         { "type": "text", "id": "mobile_image_asset", "label": "Or theme asset filename (mobile)", "info": "e.g. mobile-banner.jpg" },
         { "type": "header", "content": "Image Crop Focus" },
-        { "type": "range", "id": "image_focus_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Desktop vertical focus", "info": "0% keeps the very top of the photo in frame, 100% the very bottom. Lower this if a model's head is being cut off; raise it to crop away the lower body.", "default": 8 },
+        { "type": "paragraph", "content": "Which slider actually does anything depends on the photo's shape. A wide photo in the wide desktop slot is cropped top/bottom, so the VERTICAL slider moves it. A square/portrait photo in the tall mobile slot is cropped left/right, so the HORIZONTAL slider moves it. Nudge one; if nothing changes, use the other." },
+        { "type": "range", "id": "image_focus_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Desktop horizontal focus", "info": "0% = show the left edge, 100% = the right edge.", "default": 50 },
+        { "type": "range", "id": "image_focus_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Desktop vertical focus", "info": "0% keeps the very top of the photo in frame, 100% the very bottom. Lower it if a model's head is cut off; raise it to crop the lower body away.", "default": 8 },
+        { "type": "range", "id": "mobile_image_focus_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Mobile horizontal focus", "default": 50 },
         { "type": "range", "id": "mobile_image_focus_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Mobile vertical focus", "default": 8 },
         { "type": "select", "id": "text_align", "label": "Text Alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "NEW COLLECTION 2026" },
