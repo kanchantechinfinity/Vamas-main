@@ -87,6 +87,34 @@
     {% form 'product', product %}
       <input type="hidden" name="id" id="variant-id-input" value="{{ current_variant.id }}">
 
+      {% comment %}
+        Per-colour thumbnail, same idea as the product-card swatches: the first
+        variant photo found for each colour, so the PDP selector can show a
+        compact image swatch instead of a flat colour circle. Single pass over
+        this product's own variants (cheap - only one product on this page).
+        "~colourkey~<url>§~colourkey2~<url2>§"
+      {% endcomment %}
+      {% assign pdp_color_img_map = '' %}
+      {% for option in product.options_with_values %}
+        {% assign pdp_option_down = option.name | downcase %}
+        {% if pdp_option_down contains 'colour' or pdp_option_down contains 'color' %}
+          {% assign pdp_color_option_idx = forloop.index0 %}
+          {% for v in product.variants %}
+            {% if v.featured_image %}
+              {% assign pdp_v_color = v.options[pdp_color_option_idx] %}
+              {% if pdp_v_color != blank %}
+                {% assign pdp_v_key = pdp_v_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+                {% assign pdp_v_probe = '~' | append: pdp_v_key | append: '~' %}
+                {% unless pdp_color_img_map contains pdp_v_probe %}
+                  {% assign pdp_v_thumb = v.featured_image | image_url: width: 120 %}
+                  {% assign pdp_color_img_map = pdp_color_img_map | append: pdp_v_probe | append: pdp_v_thumb | append: '§' %}
+                {% endunless %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
       {% for option in product.options_with_values %}
         {% assign option_down = option.name | downcase %}
         {% if option_down contains 'colour' or option_down contains 'color' %}
@@ -106,9 +134,22 @@
                 {% unless swatch_hex == 'SKIP' %}
                   {% assign pdp_dedup_key = value | downcase | strip | replace: ' ', '' | replace: '-', '' | prepend: '|' | append: '|' %}
                   {% unless pdp_swatch_seen_keys contains pdp_dedup_key %}
-                    <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
-                         style="background:{{ swatch_hex }};"
-                         data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
+                    {% assign pdp_swatch_thumb = '' %}
+                    {% assign pdp_swatch_key = value | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+                    {% assign pdp_swatch_probe = '~' | append: pdp_swatch_key | append: '~' %}
+                    {% if pdp_color_img_map contains pdp_swatch_probe %}
+                      {% assign pdp_swatch_thumb = pdp_color_img_map | split: pdp_swatch_probe | last | split: '§' | first %}
+                    {% endif %}
+                    {% if pdp_swatch_thumb != '' %}
+                      <img class="swatch swatch--img{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
+                           src="{{ pdp_swatch_thumb }}"
+                           data-value="{{ value | escape }}" alt="{{ value | escape }}" title="{{ value | escape }}"
+                           loading="lazy" width="120" height="150">
+                    {% else %}
+                      <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
+                           style="background:{{ swatch_hex }};"
+                           data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
+                    {% endif %}
                     {% assign pdp_swatch_seen_keys = pdp_swatch_seen_keys | append: pdp_dedup_key %}
                   {% endunless %}
                 {% endunless %}
