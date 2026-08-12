@@ -139,6 +139,50 @@
 </section>
 {% endif %}
 
+{% assign store_blocks = section.blocks | where: 'type', 'store_location' %}
+{% if store_blocks.size > 0 %}
+<section class="store-locator-sec" id="store-locator">
+  <div class="sec-hdr-c">
+    <div class="sec-eye">{{ section.settings.store_locator_eyebrow | default: 'VISIT US' }}</div>
+    <div class="sec-title-c">{{ section.settings.store_locator_heading | default: 'Find A Store Near You' }}</div>
+    <div class="sec-sub-c">{{ section.settings.store_locator_subheading | default: 'Search our exclusive brand outlets by city or area' }}</div>
+  </div>
+  <div class="store-locator-search">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="store-locator-input" placeholder="Search by city or area, e.g. Thane, Vashi..." autocomplete="off">
+  </div>
+  <div class="store-locator-list" id="store-locator-list">
+    {% for block in store_blocks %}
+      <div class="store-locator-item" data-search="{{ block.settings.name | append: ' ' | append: block.settings.address | downcase | escape }}">
+        <div class="store-locator-item__name">{{ block.settings.name }}</div>
+        <div class="store-locator-item__addr">{{ block.settings.address }}</div>
+        {% if block.settings.phone != blank %}<div class="store-locator-item__phone">Contact: {{ block.settings.phone }}</div>{% endif %}
+        {% if block.settings.maps_url != blank %}<a href="{{ block.settings.maps_url }}" target="_blank" rel="noopener" class="store-locator-item__link">View on Google Maps &#8594;</a>{% endif %}
+      </div>
+    {% endfor %}
+    <div class="store-locator-empty" id="store-locator-empty" style="display:none;">No stores match that search. Try a different city or area.</div>
+  </div>
+</section>
+<script>
+(function(){
+  var input = document.getElementById('store-locator-input');
+  if (!input) return;
+  var items = document.querySelectorAll('.store-locator-item');
+  var empty = document.getElementById('store-locator-empty');
+  input.addEventListener('input', function(){
+    var q = input.value.trim().toLowerCase();
+    var visibleCount = 0;
+    items.forEach(function(item){
+      var match = item.getAttribute('data-search').indexOf(q) !== -1;
+      item.style.display = match ? '' : 'none';
+      if (match) visibleCount++;
+    });
+    empty.style.display = visibleCount === 0 ? 'block' : 'none';
+  });
+})();
+</script>
+{% endif %}
+
 {% if section.settings.show_map %}
 <section class="map-sec">
   <div class="map-inner">
@@ -180,6 +224,10 @@
     { "type": "text", "id": "faq_eyebrow", "label": "FAQ Eyebrow", "default": "GOT QUESTIONS?" },
     { "type": "text", "id": "faq_heading", "label": "FAQ Heading", "default": "Frequently Asked Questions" },
     { "type": "text", "id": "faq_subheading", "label": "FAQ Subheading" },
+    { "type": "header", "content": "Store Locator" },
+    { "type": "text", "id": "store_locator_eyebrow", "label": "Eyebrow", "default": "VISIT US" },
+    { "type": "text", "id": "store_locator_heading", "label": "Heading", "default": "Find A Store Near You" },
+    { "type": "text", "id": "store_locator_subheading", "label": "Subheading", "default": "Search our exclusive brand outlets by city or area" },
     { "type": "header", "content": "Map" },
     { "type": "checkbox", "id": "show_map", "label": "Show Map Section", "default": true },
     { "type": "text", "id": "map_address", "label": "Address", "default": "123, Artisan Lane, Jaipur, Rajasthan 302001" }
@@ -201,6 +249,16 @@
       "settings": [
         { "type": "text", "id": "question", "label": "Question", "default": "How long does delivery take?" },
         { "type": "textarea", "id": "answer", "label": "Answer" }
+      ]
+    },
+    {
+      "type": "store_location",
+      "name": "Store Location",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Store Name", "default": "Store Name" },
+        { "type": "textarea", "id": "address", "label": "Address" },
+        { "type": "text", "id": "phone", "label": "Phone Number" },
+        { "type": "url", "id": "maps_url", "label": "Google Maps Link" }
       ]
     }
   ],
