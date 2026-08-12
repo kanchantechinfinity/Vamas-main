@@ -37,7 +37,7 @@
 
     <div class="cart-items-wrap" id="cart-items-wrap" {% if cart.item_count == 0 %}style="display:none;"{% endif %}>
       <div class="cart-items-head">
-        <div>PRODUCT</div><div>PRICE</div><div>QUANTITY</div><div style="text-align:right;">SUBTOTAL</div><div></div>
+        <div>PRODUCT</div><div>QUANTITY</div><div style="text-align:right;">SUBTOTAL</div><div></div>
       </div>
       <div id="cart-items-body">
         {% for item in cart.items %}

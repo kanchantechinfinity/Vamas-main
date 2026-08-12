@@ -27,8 +27,8 @@
     .fdel-success{font-size:12px;color:#2e7d32;font-weight:600;text-align:center;padding:10px 16px;background:#e8f5e9;border-radius:10px;margin-bottom:12px;}
 
     .cart-items-wrap{background:#fff;border-radius:14px;box-shadow:0 2px 16px rgba(66,0,1,.06);overflow:hidden;}
-    .cart-items-head{display:grid;grid-template-columns:3fr 1fr 1fr 1fr 40px;gap:12px;padding:13px 20px;background:rgba(66,0,1,.03);border-bottom:1px solid rgba(66,0,1,.07);font-size:10px;font-weight:700;letter-spacing:1.5px;color:#888;}
-    .cart-item{display:grid;grid-template-columns:3fr 1fr 1fr 1fr 40px;gap:12px;align-items:center;padding:18px 20px;border-bottom:1px solid rgba(66,0,1,.06);transition:background .2s,opacity .3s;}
+    .cart-items-head{display:grid;grid-template-columns:3fr 1fr 1fr 40px;gap:12px;padding:13px 20px;background:rgba(66,0,1,.03);border-bottom:1px solid rgba(66,0,1,.07);font-size:10px;font-weight:700;letter-spacing:1.5px;color:#888;}
+    .cart-item{display:grid;grid-template-columns:3fr 1fr 1fr 40px;gap:12px;align-items:center;padding:18px 20px;border-bottom:1px solid rgba(66,0,1,.06);transition:background .2s,opacity .3s;}
     .cart-item:last-child{border-bottom:none;}
     .cart-item:hover{background:rgba(66,0,1,.015);}
     .cart-item.removing{opacity:.3;pointer-events:none;}
@@ -51,7 +51,7 @@
     .ci-action-btn{font-size:10px;color:#aaa;background:none;border:none;cursor:pointer;font-family:var(--font-body);padding:0;display:flex;align-items:center;gap:3px;transition:color .15s;}
     .ci-action-btn:hover{color:var(--m);}
 
-    .ci-price{font-size:13px;font-weight:700;color:var(--m);}
+    .ci-price{display:none;}
     .ci-orig{font-size:11px;color:#bbb;text-decoration:line-through;margin-top:2px;}
     .ci-save{font-size:10px;color:#2e7d32;font-weight:600;}
 
@@ -137,7 +137,6 @@
       .cart-items-head{display:none;}
       .cart-item{grid-template-columns:1fr;gap:10px;padding:14px;}
       .ci-img{width:72px;height:86px;}
-      .ci-price{display:none;}
       .ci-subtotal{text-align:left;}
       .ci-remove{justify-content:flex-start;}
       .order-summary{position:static;}
