@@ -104,7 +104,7 @@
     six sizes, then a "+N" pill that expands the rest in place rather than
     sending the shopper somewhere else.
   {% endcomment %}
-  {% assign size_visible_cap = 6 %}
+  {% assign size_visible_cap = 7 %}
   {% if size_filter != blank %}
     {% assign size_total = size_filter.values.size %}
     {% assign size_hidden = size_total | minus: size_visible_cap %}

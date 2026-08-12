@@ -201,10 +201,14 @@
 {% if cat_blocks.size > 0 and section.settings.show_categories %}
 <section class="vamas-section vamas-section--cats">
   {% if section.settings.made_with_love_text != blank %}
+    {%- comment -%} SVG rather than the ❤ character - see the note in
+      vamas-header.liquid: the glyph renders as an uncolourable red emoji on
+      phones. {%- endcomment -%}
+    {%- capture love_heart -%}<svg class="vamas-made-love__heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.6-9A5.4 5.4 0 0 1 12 6a5.4 5.4 0 0 1 9.6 6c-2.1 4.3-9.6 9-9.6 9z"/></svg>{%- endcapture -%}
     <p class="vamas-made-love">
-      <span class="vamas-made-love__heart" aria-hidden="true">&#10084;</span>
+      {{ love_heart }}
       <span class="vamas-made-love__text">{{ section.settings.made_with_love_text }}</span>
-      <span class="vamas-made-love__heart" aria-hidden="true">&#10084;</span>
+      {{ love_heart }}
     </p>
   {% endif %}
   <div class="vamas-section__header">

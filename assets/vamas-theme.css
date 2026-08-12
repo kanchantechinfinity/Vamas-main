@@ -52,8 +52,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   justify-content: center;
 }
 /* Hearts bracketing each announcement line. The bar sits on gold, so the
-   hearts take the maroon brand colour rather than a generic red. */
-.vamas-announce__heart { color: var(--color-maroon); margin: 0 2px; font-size: 0.95em; line-height: 1; }
+   hearts take the maroon brand colour rather than a generic red. SVG (not the
+   ❤ glyph) so the colour actually applies on phones. */
+.vamas-announce__heart { width: 11px; height: 11px; color: var(--color-maroon); margin: 0 3px; vertical-align: -1px; flex-shrink: 0; }
 @media (prefers-reduced-motion: reduce) {
   .vamas-announce--switch .vamas-announce__msg { transition: none; }
 }
@@ -270,15 +271,16 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 /* "Made with Love" line above the categories heading */
 .vamas-made-love {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  font-family: 'Great Vibes', cursive;
-  font-size: 34px; line-height: 1.2; color: var(--color-gold-dark);
-  margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  font-family: 'Rubik Dirt', var(--font-heading), serif;
+  font-size: 26px; line-height: 1.25; color: var(--color-maroon);
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
 }
-.vamas-made-love__heart { color: var(--color-maroon); font-size: 17px; line-height: 1; }
+.vamas-made-love__heart { width: 18px; height: 18px; color: var(--color-maroon); flex-shrink: 0; }
 @media (max-width: 768px) {
-  .vamas-made-love { font-size: 26px; gap: 8px; margin-bottom: 4px; }
-  .vamas-made-love__heart { font-size: 14px; }
+  .vamas-made-love { font-size: 20px; gap: 9px; margin-bottom: 6px; }
+  .vamas-made-love__heart { width: 14px; height: 14px; }
 }
 .vamas-section__title { font-size: 30px; font-weight: 800; color: var(--color-maroon); line-height: 1.2; }
 .vamas-section__title span { color: var(--color-gold-dark); }

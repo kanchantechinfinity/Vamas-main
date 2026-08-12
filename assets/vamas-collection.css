@@ -742,7 +742,7 @@ a{text-decoration:none;color:inherit;}
   .col-toolbar__tab { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 13px 6px; background: none; border: none; font-family: var(--font-body); font-size: 11.5px; font-weight: 700; letter-spacing: 1.5px; color: var(--m); cursor: pointer; text-align: center; }
   .col-toolbar__tab + .col-toolbar__tab { border-left: 1px solid rgba(66,0,1,.1); }
 
-  /* Sizes as a 4-across grid capped at two rows (ALL + 6 sizes + the "+N" pill).
+  /* Sizes as a 4-across grid: exactly two full rows of four (ALL + 7 sizes),
      Anything past that is hidden until "+N" is tapped, which expands in place. */
   .col-toolbar__sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 9px 16px; border-bottom: 1px solid rgba(66,0,1,.07); }
   .col-toolbar__sizes .size-pill { padding: 7px 4px; text-align: center; }
