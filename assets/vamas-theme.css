@@ -90,7 +90,14 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-slide--center .vamas-slide__scrim { background: linear-gradient(0deg, rgba(42,0,1,0.55) 0%, rgba(42,0,1,0.35) 100%); }
 
 .vamas-slide__inner { position: relative; z-index: 2; width: 100%; max-width: var(--page-max); margin: 0 auto; padding: 0 80px; }
+/* Side-aligned slides use the full width rather than the 1200px content column,
+   so the copy hugs the real edge of the screen. That buys ~115px of clearance
+   from a model standing on the opposite side, which matters because wide/short
+   banners get upscaled hard to fill the tall hero. */
+.vamas-slide--left .vamas-slide__inner,
+.vamas-slide--right .vamas-slide__inner { max-width: none; }
 .vamas-slide--right .vamas-slide__inner { display: flex; justify-content: flex-end; }
+.vamas-slide--right .vamas-slide__text { max-width: 600px; text-align: right; }
 .vamas-slide--center .vamas-slide__inner { display: flex; justify-content: center; text-align: center; }
 
 /* Type scale is deliberately generous - the hero now fills the viewport height,
