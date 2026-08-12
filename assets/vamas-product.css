@@ -206,16 +206,23 @@
     .write-rev-btn{border:2px solid var(--m);background:transparent;color:var(--m);padding:12px 28px;font-size:13px;font-weight:700;letter-spacing:1px;border-radius:12px;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;}
     .write-rev-btn:hover{background:var(--m);color:white;}
 
-    /* ── Sticky ATC bar ── */
-    .sticky-atc{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid rgba(66,0,1,0.12);padding:10px 32px;display:flex;align-items:center;gap:16px;z-index:600;transform:translateY(100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);box-shadow:0 -4px 24px rgba(0,0,0,0.1);}
+    /* ── Sticky ATC bar ──
+       Sits directly above the mobile bottom nav (--vamas-botnav-h, measured at
+       runtime). Previously it was pinned to bottom:0 with z-index 600 while the
+       bottom nav is z-index 9990, so the nav covered the bar's button entirely
+       and it was unusable on phones. */
+    .sticky-atc{position:fixed;bottom:var(--vamas-botnav-h,0px);left:0;right:0;background:white;border-top:2px solid rgba(66,0,1,0.12);z-index:9991;transform:translateY(calc(100% + var(--vamas-botnav-h,0px)));transition:transform 0.3s cubic-bezier(.4,0,.2,1);box-shadow:0 -4px 24px rgba(0,0,0,0.1);}
     .sticky-atc.visible{transform:translateY(0);}
+    .sticky-atc__state{padding:10px 32px;display:flex;align-items:center;gap:16px;text-decoration:none;}
     .sticky-thumb{width:48px;height:58px;border-radius:6px;overflow:hidden;flex-shrink:0;}
     .sticky-thumb img{width:100%;height:100%;object-fit:cover;object-position:top;}
     .sticky-info{flex:1;min-width:0;}
     .sticky-name{font-size:13px;font-weight:700;color:var(--m);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .sticky-price{font-size:12px;color:#666;margin-top:2px;}
+    .sticky-cart-label{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--gd);margin-bottom:2px;}
     .sticky-btn{background:var(--m);color:var(--g);border:none;border-radius:12px;padding:11px 28px;font-size:13px;font-weight:800;letter-spacing:1.5px;cursor:pointer;font-family:var(--font-body);white-space:nowrap;transition:background 0.2s;}
     .sticky-btn:hover{background:var(--ml);}
+    .sticky-btn--cart{display:inline-block;}
 
     /* ── Lightbox ── */
     .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;}
@@ -275,7 +282,7 @@
       .reviews-section{padding:40px 16px;}
       .reviews-grid{grid-template-columns:1fr;}
       .trust-grid{grid-template-columns:repeat(2,1fr);}
-      .sticky-atc{padding:10px 16px;}
+      .sticky-atc__state{padding:10px 16px;}
       .sticky-btn{padding:10px 18px;font-size:12px;}
       .care-grid{gap:10px;}
     }
@@ -293,6 +300,6 @@
       .trust-grid{grid-template-columns:1fr;}
       .prod-name{font-size:20px;}
       .qty-row{gap:12px;flex-wrap:wrap;}
-      .sticky-atc{padding:8px 12px;gap:10px;}
+      .sticky-atc__state{padding:8px 12px;gap:10px;}
       .sticky-btn{padding:10px 14px;font-size:11px;letter-spacing:1px;}
     }

@@ -458,13 +458,32 @@
   <button class="lb-close" id="lb-close">&times;</button>
 </div>
 
+{% comment %}
+  Sticky bottom bar. Two states sharing one bar:
+   - default: this product + price + ADD TO CART
+   - once the cart has items: a "YOUR CART" summary (thumb, item count, total)
+     that goes to the cart instead. Rebuilt from /cart.js so it stays correct
+     after adds, quantity changes, or landing on the page with a full cart.
+{% endcomment %}
 <div class="sticky-atc" id="sticky-atc">
-  <div class="sticky-thumb"><img src="{{ current_variant.featured_image | default: product.featured_image | img_url: '100x' }}" alt="{{ product.title | escape }}"></div>
-  <div class="sticky-info">
-    <div class="sticky-name">{{ product.title }}</div>
-    <div class="sticky-price" id="sticky-price">{{ current_variant.price | money }}</div>
+  <div class="sticky-atc__state" id="sticky-atc-product">
+    <div class="sticky-thumb"><img src="{{ current_variant.featured_image | default: product.featured_image | img_url: '100x' }}" alt="{{ product.title | escape }}"></div>
+    <div class="sticky-info">
+      <div class="sticky-name">{{ product.title }}</div>
+      <div class="sticky-price" id="sticky-price">{{ current_variant.price | money }}</div>
+    </div>
+    <button class="sticky-btn" id="sticky-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>ADD TO CART</button>
   </div>
-  <button class="sticky-btn" id="sticky-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>ADD TO CART</button>
+
+  <a href="{{ routes.cart_url }}" class="sticky-atc__state sticky-atc__cart" id="sticky-atc-cart" style="display:none;">
+    <div class="sticky-thumb"><img id="sticky-cart-thumb" src="{{ current_variant.featured_image | default: product.featured_image | img_url: '100x' }}" alt=""></div>
+    <div class="sticky-info">
+      <div class="sticky-cart-label">YOUR CART</div>
+      <div class="sticky-name" id="sticky-cart-name"></div>
+      <div class="sticky-price" id="sticky-cart-total"></div>
+    </div>
+    <span class="sticky-btn sticky-btn--cart">VIEW CART</span>
+  </a>
 </div>
 
 <script>
@@ -729,6 +748,52 @@
       stickyBar.classList.toggle('visible', rect.bottom < 0);
     }, { passive: true });
   }
+
+  /* Park the bar directly above the mobile bottom nav rather than under it.
+     The nav is fixed at z-index 9990, so a bar at bottom:0 had its button
+     completely covered. Measured at runtime since the nav is mobile-only. */
+  if (stickyBar) {
+    var setBotnavOffset = function(){
+      var nav = document.querySelector('.vamas-botnav');
+      var h = (nav && getComputedStyle(nav).display !== 'none') ? nav.offsetHeight : 0;
+      stickyBar.style.setProperty('--vamas-botnav-h', h + 'px');
+    };
+    setBotnavOffset();
+    window.addEventListener('resize', setBotnavOffset);
+    window.addEventListener('orientationchange', setBotnavOffset);
+  }
+
+  /* Once the cart has something in it, the sticky bar becomes a cart summary
+     ("YOUR CART" + item + total) instead of another ADD TO CART. Driven off
+     /cart.js so it's right on first load too, not just after an add. */
+  var stickyProductState = document.getElementById('sticky-atc-product');
+  var stickyCartState = document.getElementById('sticky-atc-cart');
+  function renderStickyCart(cart){
+    if (!stickyProductState || !stickyCartState) return;
+    if (!cart || !cart.items || !cart.items.length) {
+      stickyProductState.style.display = '';
+      stickyCartState.style.display = 'none';
+      return;
+    }
+    var first = cart.items[0];
+    var thumb = document.getElementById('sticky-cart-thumb');
+    if (thumb && first.image) thumb.src = first.image;
+    var nameEl = document.getElementById('sticky-cart-name');
+    if (nameEl) {
+      nameEl.textContent = cart.item_count === 1
+        ? first.product_title
+        : first.product_title + ' + ' + (cart.item_count - 1) + ' more';
+    }
+    var totalEl = document.getElementById('sticky-cart-total');
+    if (totalEl) totalEl.textContent = vamasFormatMoney(cart.total_price, {{ shop.money_format | json }});
+    stickyProductState.style.display = 'none';
+    stickyCartState.style.display = '';
+  }
+  function refreshStickyCart(){
+    fetch('/cart.js').then(function(r){ return r.json(); }).then(renderStickyCart).catch(function(){});
+  }
+  refreshStickyCart();
+  document.addEventListener('vamas:cartAdded', refreshStickyCart);
 
   /* Real add-to-cart via product form */
   document.querySelectorAll('product-form form').forEach(function(form) {
