@@ -71,6 +71,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   position: relative;
   overflow: hidden;
 }
+@media (min-width: 769px) {
+  /* Fills to the bottom of the screen on desktop; --vamas-hero-desktop-h is
+     set by JS in vamas-homepage.liquid. Falls back to 520px before JS runs. */
+  .vamas-slide { min-height: var(--vamas-hero-desktop-h, 520px); }
+}
 .vamas-slide__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 8%; z-index: 0; }
 .vamas-slide__bg--mobile { display: none; }
 @media (max-width: 768px) {

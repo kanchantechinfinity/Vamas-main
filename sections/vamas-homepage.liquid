@@ -110,6 +110,25 @@
   window.addEventListener('resize', fitMobileHero);
   window.addEventListener('orientationchange', fitMobileHero);
   if (mq.addEventListener) { mq.addEventListener('change', fitMobileHero); }
+
+  /* Desktop-only: fill the hero to the bottom of the screen (viewport height
+     minus the actual header height). Independent of the mobile logic above -
+     uses its own CSS variable, so mobile is completely unaffected. */
+  var dmq = window.matchMedia('(min-width: 769px)');
+  function fitDesktopHero(){
+    if (!dmq.matches) {
+      slider.style.removeProperty('--vamas-hero-desktop-h');
+      return;
+    }
+    var headerEl = document.getElementById('vamas-nav-wrapper');
+    var announceEl = document.querySelector('.vamas-announce');
+    var headerH = (headerEl ? headerEl.offsetHeight : 0) + (announceEl ? announceEl.offsetHeight : 0);
+    var target = Math.max(520, window.innerHeight - headerH);
+    slider.style.setProperty('--vamas-hero-desktop-h', target + 'px');
+  }
+  fitDesktopHero();
+  window.addEventListener('resize', fitDesktopHero);
+  if (dmq.addEventListener) { dmq.addEventListener('change', fitDesktopHero); }
 })();
 </script>
 
