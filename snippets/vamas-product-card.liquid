@@ -236,12 +236,15 @@
             data-title="{{ product.title | escape }}"
             data-type="{{ product.type | escape | default: 'Blouse' }}"
             data-price="{{ first_variant.price | money }}"
-            {% if on_sale %}data-compare="{{ first_variant.compare_at_price | money }}" data-discount="{{ discount_pct }}"{% endif %}
+            {% if on_sale %}data-wish-compare="{{ first_variant.compare_at_price | money }}" data-wish-discount="{{ discount_pct }}"{% endif %}
             data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
             data-url="{{ product.url }}"
             data-variant="{{ first_variant.id }}">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
+
+    {% comment %} Discount badge, stacked below the wishlist heart, themed (maroon/gold), independent of the wishlist button's own data attributes {% endcomment %}
+    <span class="vamas-prod-card__discount-badge" data-discount-badge{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}% OFF</span>
 
     <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
 
@@ -429,6 +432,11 @@
     if (discountEl) {
       if (match.comparePriceHtml) { discountEl.textContent = match.discountPct + '% off'; discountEl.style.display = ''; }
       else { discountEl.style.display = 'none'; }
+    }
+    var discountBadgeEl = card.querySelector('[data-discount-badge]');
+    if (discountBadgeEl) {
+      if (match.comparePriceHtml) { discountBadgeEl.textContent = match.discountPct + '% OFF'; discountBadgeEl.style.display = ''; }
+      else { discountBadgeEl.style.display = 'none'; }
     }
 
     var variantInput = card.querySelector('[data-variant-input]');

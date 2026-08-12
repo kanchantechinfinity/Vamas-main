@@ -403,6 +403,21 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-prod-card__wishlist.active { background: var(--color-maroon); }
 .vamas-prod-card__wishlist.active svg { fill: var(--color-gold); stroke: var(--color-gold); }
 
+.vamas-prod-card__discount-badge {
+  position: absolute;
+  top: 48px;
+  right: 10px;
+  z-index: 2;
+  background: var(--color-maroon);
+  color: var(--color-gold);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 7px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
 /* ── Blouses by Size ──────────────────── */
 .vamas-size-row {
   display: flex;
