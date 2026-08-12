@@ -346,8 +346,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   transition: box-shadow 0.25s;
 }
 
-.vamas-prod-card:hover { box-shadow: 0 8px 36px rgba(66, 0, 1, 0.1); }
-
 .vamas-prod-card__img {
   position: relative;
   aspect-ratio: 3/4;
@@ -364,10 +362,19 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   transition: transform 0.5s ease, opacity 0.35s ease;
 }
 
-.vamas-prod-card:hover .vamas-prod-card__img img { transform: scale(1.05); }
-
 .vamas-prod-card__img-hover { opacity: 0; }
-.vamas-prod-card:hover .vamas-prod-card__img-hover { opacity: 1; }
+
+/* Card hover effects: scoped to devices that genuinely support hover (mouse/trackpad).
+   Without this, :hover on the card causes a well-known touchscreen bug (mainly iOS
+   Safari) where the FIRST tap anywhere inside the card is consumed just to simulate
+   entering the hover state, and the real click/tap (e.g. on a color swatch) never
+   fires - requiring a second tap. Scoping to (hover: hover) removes the hover state
+   entirely on touch devices, so taps register immediately, every time. */
+@media (hover: hover) and (pointer: fine) {
+  .vamas-prod-card:hover { box-shadow: 0 8px 36px rgba(66, 0, 1, 0.1); }
+  .vamas-prod-card:hover .vamas-prod-card__img img { transform: scale(1.05); }
+  .vamas-prod-card:hover .vamas-prod-card__img-hover { opacity: 1; }
+}
 
 .vamas-prod-card__badge {
   position: absolute;
@@ -398,7 +405,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   transition: background 0.2s;
 }
 
-.vamas-prod-card__wishlist:hover { background: var(--color-gold); }
+@media (hover: hover) and (pointer: fine) {
+  .vamas-prod-card__wishlist:hover { background: var(--color-gold); }
+}
 .vamas-prod-card__wishlist svg { width: 15px; height: 15px; fill: none; stroke: var(--color-maroon); stroke-width: 1.8; }
 .vamas-prod-card__wishlist.active { background: var(--color-maroon); }
 .vamas-prod-card__wishlist.active svg { fill: var(--color-gold); stroke: var(--color-gold); }
@@ -574,7 +583,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   color: var(--color-maroon);
   text-decoration: none;
 }
-.vamas-prod-card__size:hover { background: var(--color-maroon); color: var(--color-gold); border-color: var(--color-maroon); }
+@media (hover: hover) and (pointer: fine) {
+  .vamas-prod-card__size:hover { background: var(--color-maroon); color: var(--color-gold); border-color: var(--color-maroon); }
+}
 .vamas-prod-card__sizes ~ form,
 .vamas-prod-card__sizes ~ .vamas-atc { display: none; }
 
