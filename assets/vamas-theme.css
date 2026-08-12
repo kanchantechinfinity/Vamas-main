@@ -51,8 +51,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   align-items: center;
   justify-content: center;
 }
-/* Hearts bracketing each announcement line */
-.vamas-announce__heart { color: #e0245e; margin: 0 2px; font-size: 0.95em; line-height: 1; }
+/* Hearts bracketing each announcement line. The bar sits on gold, so the
+   hearts take the maroon brand colour rather than a generic red. */
+.vamas-announce__heart { color: var(--color-maroon); margin: 0 2px; font-size: 0.95em; line-height: 1; }
 @media (prefers-reduced-motion: reduce) {
   .vamas-announce--switch .vamas-announce__msg { transition: none; }
 }
@@ -274,7 +275,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   font-size: 34px; line-height: 1.2; color: var(--color-gold-dark);
   margin-bottom: 6px;
 }
-.vamas-made-love__heart { color: #e0245e; font-size: 17px; line-height: 1; }
+.vamas-made-love__heart { color: var(--color-maroon); font-size: 17px; line-height: 1; }
 @media (max-width: 768px) {
   .vamas-made-love { font-size: 26px; gap: 8px; margin-bottom: 4px; }
   .vamas-made-love__heart { font-size: 14px; }
