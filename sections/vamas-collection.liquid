@@ -136,6 +136,9 @@
         {% assign s_clean = s | strip %}
         <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill{% if active_size == s_clean %} is-active{% endif %}{% if forloop.index0 >= size_visible_cap %} size-pill--extra{% endif %}">{{ s_clean }}</a>
       {% endfor %}
+      {% if size_hidden > 0 %}
+        <button type="button" class="size-pill size-pill--more" data-size-more>+{{ size_hidden }}</button>
+      {% endif %}
     </div>
   {% endif %}
 
