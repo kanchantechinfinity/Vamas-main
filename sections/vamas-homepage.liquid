@@ -356,49 +356,121 @@
 })();
 </script>
 
-{% comment %} ── New Arrivals ─────────────────────── {% endcomment %}
-{% if section.settings.show_new_arrivals %}
-<section class="vamas-section vamas-section--alt">
-  <div class="vamas-section__header">
+{% comment %} ── New Arrivals / Best Sellers, as tabs sharing one grid (vamas.in style) ── {% endcomment %}
+{% if section.settings.show_new_arrivals or section.settings.show_bestsellers %}
+<section class="vamas-section vamas-section--alt vamas-tabbed-collections">
+  <div class="vamas-section__header vamas-section__header--center">
     <div>
-      <h2 class="vamas-section__title">New <span>Arrivals</span></h2>
-      <p class="vamas-section__subtitle">Fresh styles added every week</p>
+      <h2 class="vamas-section__title">Shop <span>Our Picks</span></h2>
+      <p class="vamas-section__subtitle">Fresh styles, fan favorites</p>
     </div>
-    <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
   </div>
-  <div class="vamas-prod-grid">
-    {% assign na_col = collections[section.settings.new_arrivals_collection] %}
-    {% if na_col == blank or na_col.products.size == 0 %}{% assign na_col = collections.all %}{% endif %}
-    {% for product in na_col.products limit: 8 %}
-      {% render 'vamas-product-card', product: product %}
-    {% else %}
-      {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
-    {% endfor %}
+
+  <div class="vamas-tabs" role="tablist">
+    {% if section.settings.show_new_arrivals %}
+      <button type="button" class="vamas-tabs__tab is-active" data-tab-target="new-arrivals" role="tab" aria-selected="true">New Arrivals</button>
+    {% endif %}
+    {% if section.settings.show_bestsellers %}
+      <button type="button" class="vamas-tabs__tab{% unless section.settings.show_new_arrivals %} is-active{% endunless %}" data-tab-target="best-sellers" role="tab" aria-selected="{% if section.settings.show_new_arrivals %}false{% else %}true{% endif %}">Best Sellers</button>
+    {% endif %}
   </div>
-  <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+
+  {% if section.settings.show_new_arrivals %}
+    <div class="vamas-tabs__panel is-active" data-tab-panel="new-arrivals">
+      <div class="vamas-prod-grid">
+        {% assign na_col = collections[section.settings.new_arrivals_collection] %}
+        {% if na_col == blank or na_col.products.size == 0 %}{% assign na_col = collections.all %}{% endif %}
+        {% for product in na_col.products limit: 8 %}
+          {% render 'vamas-product-card', product: product %}
+        {% else %}
+          {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+        {% endfor %}
+      </div>
+      <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+    </div>
+  {% endif %}
+
+  {% if section.settings.show_bestsellers %}
+    <div class="vamas-tabs__panel{% unless section.settings.show_new_arrivals %} is-active{% endunless %}" data-tab-panel="best-sellers">
+      <div class="vamas-prod-grid">
+        {% assign bs_col = collections[section.settings.bestsellers_collection] %}
+        {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% endif %}
+        {% for product in bs_col.products reversed limit: 8 %}
+          {% render 'vamas-product-card', product: product %}
+        {% else %}
+          {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+        {% endfor %}
+      </div>
+      <a href="{{ collections[section.settings.bestsellers_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+    </div>
+  {% endif %}
 </section>
+
+<script>
+(function(){
+  document.querySelectorAll('.vamas-tabbed-collections').forEach(function(wrap){
+    if (wrap.dataset.tabsWired) return;
+    wrap.dataset.tabsWired = '1';
+    var tabs = wrap.querySelectorAll('.vamas-tabs__tab');
+    tabs.forEach(function(tab){
+      tab.addEventListener('click', function(){
+        tabs.forEach(function(t){ t.classList.remove('is-active'); t.setAttribute('aria-selected', 'false'); });
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+        var target = tab.getAttribute('data-tab-target');
+        wrap.querySelectorAll('.vamas-tabs__panel').forEach(function(panel){
+          panel.classList.toggle('is-active', panel.getAttribute('data-tab-panel') === target);
+        });
+      });
+    });
+  });
+})();
+</script>
 {% endif %}
 
-
-{% comment %} ── Best Sellers ─────────────────────── {% endcomment %}
-{% if section.settings.show_bestsellers %}
+{% comment %} ── Extra collection #1, standalone (below the tabs) ── {% endcomment %}
+{% if section.settings.show_extra_collection_1 %}
 <section class="vamas-section">
   <div class="vamas-section__header">
     <div>
-      <h2 class="vamas-section__title">Best <span>Sellers</span></h2>
-      <p class="vamas-section__subtitle">Most loved by our customers</p>
+      <h2 class="vamas-section__title">{{ section.settings.extra_collection_1_heading | default: 'Featured' }}</h2>
+      {% if section.settings.extra_collection_1_subtitle != blank %}<p class="vamas-section__subtitle">{{ section.settings.extra_collection_1_subtitle }}</p>{% endif %}
     </div>
-    <a href="{{ collections[section.settings.bestsellers_collection].url | default: '/collections/all' }}" class="vamas-view-all">VIEW ALL</a>
+    <a href="{{ collections[section.settings.extra_collection_1].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
   </div>
   <div class="vamas-prod-grid">
-    {% assign bs_col = collections[section.settings.bestsellers_collection] %}
-    {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% assign bs_reversed = true %}{% endif %}
-    {% for product in bs_col.products reversed limit: 8 %}
+    {% assign ec1_col = collections[section.settings.extra_collection_1] %}
+    {% if ec1_col == blank or ec1_col.products.size == 0 %}{% assign ec1_col = collections.all %}{% endif %}
+    {% for product in ec1_col.products limit: 8 %}
       {% render 'vamas-product-card', product: product %}
     {% else %}
       {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
     {% endfor %}
   </div>
+  <a href="{{ collections[section.settings.extra_collection_1].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+</section>
+{% endif %}
+
+{% comment %} ── Extra collection #2, standalone (below the tabs) ── {% endcomment %}
+{% if section.settings.show_extra_collection_2 %}
+<section class="vamas-section vamas-section--alt">
+  <div class="vamas-section__header">
+    <div>
+      <h2 class="vamas-section__title">{{ section.settings.extra_collection_2_heading | default: 'More To Love' }}</h2>
+      {% if section.settings.extra_collection_2_subtitle != blank %}<p class="vamas-section__subtitle">{{ section.settings.extra_collection_2_subtitle }}</p>{% endif %}
+    </div>
+    <a href="{{ collections[section.settings.extra_collection_2].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
+  </div>
+  <div class="vamas-prod-grid">
+    {% assign ec2_col = collections[section.settings.extra_collection_2] %}
+    {% if ec2_col == blank or ec2_col.products.size == 0 %}{% assign ec2_col = collections.all %}{% endif %}
+    {% for product in ec2_col.products limit: 8 %}
+      {% render 'vamas-product-card', product: product %}
+    {% else %}
+      {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+    {% endfor %}
+  </div>
+  <a href="{{ collections[section.settings.extra_collection_2].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
 </section>
 {% endif %}
 
@@ -663,6 +735,16 @@
     { "type": "header", "content": "Best Sellers" },
     { "type": "checkbox", "id": "show_bestsellers", "label": "Show Best Sellers", "default": true },
     { "type": "collection", "id": "bestsellers_collection", "label": "Best Sellers Collection" },
+    { "type": "header", "content": "Extra Collection #1 (below the tabs)" },
+    { "type": "checkbox", "id": "show_extra_collection_1", "label": "Show Extra Collection #1", "default": true },
+    { "type": "collection", "id": "extra_collection_1", "label": "Collection" },
+    { "type": "text", "id": "extra_collection_1_heading", "label": "Heading", "default": "Featured" },
+    { "type": "text", "id": "extra_collection_1_subtitle", "label": "Subtitle" },
+    { "type": "header", "content": "Extra Collection #2 (below the tabs)" },
+    { "type": "checkbox", "id": "show_extra_collection_2", "label": "Show Extra Collection #2", "default": true },
+    { "type": "collection", "id": "extra_collection_2", "label": "Collection" },
+    { "type": "text", "id": "extra_collection_2_heading", "label": "Heading", "default": "More To Love" },
+    { "type": "text", "id": "extra_collection_2_subtitle", "label": "Subtitle" },
     { "type": "header", "content": "Brand Story" },
     { "type": "checkbox", "id": "show_brand", "label": "Show Brand Section", "default": true },
     { "type": "text", "id": "brand_eyebrow", "label": "Eyebrow Text", "default": "OUR STORY" },
