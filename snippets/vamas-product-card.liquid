@@ -244,7 +244,7 @@
     </button>
 
     {% comment %} Discount badge, stacked below the wishlist heart, themed (maroon/gold), independent of the wishlist button's own data attributes {% endcomment %}
-    <span class="vamas-prod-card__discount-badge" data-discount-badge{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}% OFF</span>
+    <span class="vamas-prod-card__discount-badge" data-discount-badge{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}%</span>
 
     <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
 
@@ -407,6 +407,15 @@
       else if (fallbackImg) img.src = fallbackImg;
     }
 
+    /* When the card shows the swipeable gallery instead of the single primary
+       image (has-gallery), that gallery's first slide is what's actually
+       visible - update it too, or picking a color would silently do nothing
+       the user can see. */
+    var galleryFirstImg = card.querySelector('.vamas-prod-card__gallery-slide:first-child img');
+    if (galleryFirstImg && (match.image || img)) {
+      galleryFirstImg.src = match.image || img.src;
+    }
+
     /* The card's hover-swap image sits on top of the primary image while the
        mouse is anywhere over the card (including the swatch row below the
        photo), so a just-picked color's image was hidden underneath it until
@@ -435,7 +444,7 @@
     }
     var discountBadgeEl = card.querySelector('[data-discount-badge]');
     if (discountBadgeEl) {
-      if (match.comparePriceHtml) { discountBadgeEl.textContent = match.discountPct + '% OFF'; discountBadgeEl.style.display = ''; }
+      if (match.comparePriceHtml) { discountBadgeEl.textContent = match.discountPct + '%'; discountBadgeEl.style.display = ''; }
       else { discountBadgeEl.style.display = 'none'; }
     }
 
