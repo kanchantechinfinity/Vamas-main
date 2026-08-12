@@ -129,17 +129,20 @@
 {% endif %}
 
 {% comment %}
-  Map each colour to its SECOND distinct photo (the hover-swap image), so hover
-  always shows the next photo of the CURRENTLY SELECTED colour rather than a
-  fixed product-wide image. Single pass over product.images: the first photo
-  encountered for a colour is its "first" (matches color_img_map's variant
-  featured_image), the next DIFFERENT photo for that same colour is its
-  "second". Colours with only one photo simply never get an entry here, so
-  the hover swap is skipped for them.
+  Map each colour to its SECOND photo (the hover-swap image), so hover always
+  shows the next photo of the CURRENTLY SELECTED colour rather than a fixed
+  product-wide image. Merchants here only tag ONE photo per colour to its
+  variants (the swatch/anchor photo, matching color_img_map); any extra
+  photos for that colour are uploaded straight after it, untagged, forming a
+  contiguous block until the next colour's tagged anchor photo. So: walk
+  product.images once in order, remember which colour's block we're
+  currently inside, and take the first untagged photo right after a colour's
+  anchor as that colour's "second" photo. Colours with no such photo simply
+  never get an entry, so the hover swap is skipped for them.
   "~colourkey~<url>§~colourkey2~<url2>§"
 {% endcomment %}
 {% assign color_second_img_map = '' %}
-{% assign color_seen_once = '' %}
+{% assign current_color_key = '' %}
 {% if color_option_position > 0 %}
   {% for img in product.images %}
     {% assign img_first_variant = img.variants.first %}
@@ -149,18 +152,14 @@
       {% if color_option_position == 2 %}{% assign img_color = img_first_variant.option2 %}{% endif %}
       {% if color_option_position == 3 %}{% assign img_color = img_first_variant.option3 %}{% endif %}
       {% if img_color != blank %}
-        {% assign ic_key = img_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
-        {% assign ic_seen_probe = '|' | append: ic_key | append: '|' %}
-        {% assign ic_probe = '~' | append: ic_key | append: '~' %}
-        {% if color_seen_once contains ic_seen_probe %}
-          {% unless color_second_img_map contains ic_probe %}
-            {% assign img_thumb = img | img_url: '400x533', crop: 'center' %}
-            {% assign color_second_img_map = color_second_img_map | append: ic_probe | append: img_thumb | append: '§' %}
-          {% endunless %}
-        {% else %}
-          {% assign color_seen_once = color_seen_once | append: ic_seen_probe %}
-        {% endif %}
+        {% assign current_color_key = img_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
       {% endif %}
+    {% elsif current_color_key != '' %}
+      {% assign cur_probe = '~' | append: current_color_key | append: '~' %}
+      {% unless color_second_img_map contains cur_probe %}
+        {% assign img_thumb = img | img_url: '400x533', crop: 'center' %}
+        {% assign color_second_img_map = color_second_img_map | append: cur_probe | append: img_thumb | append: '§' %}
+      {% endunless %}
     {% endif %}
   {% endfor %}
 {% endif %}
