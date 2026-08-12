@@ -510,6 +510,39 @@ a{text-decoration:none;color:inherit;}
 .mob-filter-bar{display:none;}
 .col-mhead{display:none;}
 .col-toolbar{display:none;}
+
+/* -- FILTER / FEATURED DRAWER (mobile) -------------------------------------
+   Same interaction pattern as the cart & wishlist drawers: right-side sliding
+   panel, dimmed overlay, close X, click-outside to close. Hidden on desktop,
+   which keeps its permanent left sidebar instead. */
+.col-filter-drawer{display:none;}
+@media (max-width: 768px){
+  .col-filter-drawer{display:block;position:fixed;inset:0;z-index:10000;pointer-events:none;}
+  .col-filter-drawer.open{pointer-events:auto;}
+  .col-filter-drawer__overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .25s ease;}
+  .col-filter-drawer.open .col-filter-drawer__overlay{opacity:1;}
+  .col-filter-drawer__panel{
+    position:absolute;top:0;right:0;height:100%;
+    width:min(86vw,380px);background:#fff;
+    box-shadow:-8px 0 30px rgba(0,0,0,.18);
+    transform:translateX(100%);transition:transform .3s ease;
+    display:flex;flex-direction:column;overflow:hidden;
+    padding-bottom:env(safe-area-inset-bottom,0px);box-sizing:border-box;
+  }
+  .col-filter-drawer.open .col-filter-drawer__panel{transform:translateX(0);}
+  .col-filter-drawer__head{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid rgba(66,0,1,.08);}
+  .col-filter-drawer__title{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--m);}
+  .col-filter-drawer__close{background:none;border:none;font-size:26px;line-height:1;color:var(--m);cursor:pointer;padding:0 4px;}
+  .col-filter-drawer__tabs{flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(66,0,1,.1);}
+  .col-filter-drawer__tab{padding:12px 6px;background:none;border:none;font-family:var(--font-body);font-size:11.5px;font-weight:700;letter-spacing:1.5px;color:rgba(66,0,1,.5);cursor:pointer;border-bottom:2px solid transparent;}
+  .col-filter-drawer__tab.is-active{color:var(--m);border-bottom-color:var(--m);}
+  .col-filter-drawer__body{flex:1;min-height:0;overflow-y:auto;padding:0 18px;}
+  .col-filter-drawer__panel-inner{display:none;padding:8px 0 16px;}
+  .col-filter-drawer__panel-inner.is-active{display:block;}
+  .col-filter-drawer__footer{flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 18px;border-top:1px solid rgba(66,0,1,.1);}
+  .col-filter-drawer__footer .btn-outline,.col-filter-drawer__footer .btn-primary{width:100%;padding:12px 10px;font-size:10.5px;margin:0;}
+  body.col-filter-drawer-lock{overflow:hidden;}
+}
 .mob-filter-btn{
   display:flex;align-items:center;gap:6px;
   background:var(--m);color:#fff;
@@ -687,7 +720,10 @@ a{text-decoration:none;color:inherit;}
   .col-mhead__view svg { width: 100%; height: 100%; }
   .col-mhead__view.is-active { color: var(--m); }
 
-  /* Sticky filter/sort toolbar: Row 1 ALL SIZES, Row 2 FILTERS|FEATURED tabs, Row 3 (inside Filters) sub-tabs */
+  /* Sticky filter/sort toolbar.
+     Row 1: FILTER | FEATURED (both open the right-side drawer)
+     Row 2: every size on one line, horizontally scrollable so it never wraps
+     Row 3: SLEEVE | NECKLINE | COLOR | FABRIC shortcuts into the same drawer */
   .col-toolbar {
     display: block;
     position: sticky;
@@ -697,24 +733,20 @@ a{text-decoration:none;color:inherit;}
     border-top: 1px solid rgba(66,0,1,.1);
     border-bottom: 1px solid rgba(66,0,1,.1);
   }
-  .col-toolbar__sizes { display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px; scrollbar-width: none; border-bottom: 1px solid rgba(66,0,1,.07); }
+
+  .col-toolbar__tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(66,0,1,.07); }
+  .col-toolbar__tab { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 13px 6px; background: none; border: none; font-family: var(--font-body); font-size: 11.5px; font-weight: 700; letter-spacing: 1.5px; color: var(--m); cursor: pointer; text-align: center; }
+  .col-toolbar__tab + .col-toolbar__tab { border-left: 1px solid rgba(66,0,1,.1); }
+
+  /* One line, never wraps: shrink-proof pills that scroll sideways if they overflow */
+  .col-toolbar__sizes { display: flex; flex-wrap: nowrap; gap: 6px; overflow-x: auto; padding: 9px 16px; scrollbar-width: none; border-bottom: 1px solid rgba(66,0,1,.07); }
   .col-toolbar__sizes::-webkit-scrollbar { display: none; }
+  .col-toolbar__sizes .size-pill { padding: 5px 11px; }
 
-  .col-toolbar__tabs { display: grid; grid-template-columns: 1fr 1fr; }
-  .col-toolbar__tab { padding: 13px 6px; background: none; border: none; font-family: var(--font-body); font-size: 11.5px; font-weight: 700; letter-spacing: 1.5px; color: rgba(66,0,1,.55); cursor: pointer; text-align: center; border-bottom: 2px solid transparent; }
-  .col-toolbar__tab.is-active { color: var(--m); border-bottom-color: var(--m); }
-
-  .col-toolbar__panel { display: none; padding: 12px 16px 16px; max-height: 60vh; overflow-y: auto; }
-  .col-toolbar__panel.is-active { display: block; }
-
-  .col-toolbar__subtabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; margin-bottom: 4px; }
+  .col-toolbar__subtabs { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; padding: 10px 16px; scrollbar-width: none; }
   .col-toolbar__subtabs::-webkit-scrollbar { display: none; }
-  .col-toolbar__subtab { flex: 0 0 auto; padding: 8px 14px; background: #fff; border: 1px solid rgba(66,0,1,.16); border-radius: 20px; font-family: var(--font-body); font-size: 10.5px; font-weight: 700; letter-spacing: .8px; color: rgba(66,0,1,.65); cursor: pointer; }
-  .col-toolbar__subtab.is-active { background: var(--m); border-color: var(--m); color: var(--g); }
+  .col-toolbar__subtab { flex: 0 0 auto; padding: 8px 14px; background: #fff; border: 1px solid rgba(66,0,1,.16); border-radius: 20px; font-family: var(--font-body); font-size: 10.5px; font-weight: 700; letter-spacing: .8px; color: rgba(66,0,1,.65); cursor: pointer; white-space: nowrap; }
 
-  .col-toolbar__subpanel { display: none; }
-  .col-toolbar__subpanel.is-active { display: block; }
-  .col-toolbar__apply { margin-top: 14px; }
   .filter-empty-note { font-size: 12px; color: rgba(66,0,1,.4); padding: 8px 0; }
 
   .prod-topbar { display: none; }

@@ -85,126 +85,193 @@
   Row 3 (inside Filters): SLEEVE | NECKLINE | COLOR | FABRIC | PRICE | AVAILABILITY | OCCASION sub-tabs.
 {%- endcomment -%}
 <div class="col-toolbar" id="col-toolbar">
+  {% comment %} Row 1: the two drawer triggers {% endcomment %}
+  <div class="col-toolbar__tabs">
+    <button type="button" class="col-toolbar__tab" data-open-filter-drawer="filters">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+      FILTER
+    </button>
+    <button type="button" class="col-toolbar__tab" data-open-filter-drawer="featured">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+      FEATURED
+    </button>
+  </div>
+
+  {% comment %} Row 2: every size the store sells, on one line {% endcomment %}
   {% if size_filter != blank %}
     <div class="col-toolbar__sizes">
-      <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL SIZES</a>
+      <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL</a>
       {% for value in size_filter.values %}
         <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
       {% endfor %}
     </div>
+  {% elsif section.settings.size_list != blank %}
+    {% comment %} No native Size filter enabled in Search & Discovery yet - render the
+      store's known sizes anyway, linking to the standard variant-option filter param
+      so they start filtering the moment that filter is switched on. {% endcomment %}
+    {% assign fallback_sizes = section.settings.size_list | split: ',' %}
+    {% assign active_size = '' %}
+    {% for f in collection.filters %}
+      {% assign f_label_down = f.label | downcase %}
+      {% if f_label_down contains 'size' %}{% assign active_size = f.active_values.first.value %}{% endif %}
+    {% endfor %}
+    <div class="col-toolbar__sizes">
+      <a href="{{ collection.url }}" class="size-pill{% if active_size == '' %} is-active{% endif %}">ALL</a>
+      {% for s in fallback_sizes %}
+        {% assign s_clean = s | strip %}
+        <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill{% if active_size == s_clean %} is-active{% endif %}">{{ s_clean }}</a>
+      {% endfor %}
+    </div>
   {% endif %}
 
-  <div class="col-toolbar__tabs">
-    <button type="button" class="col-toolbar__tab is-active" data-toolbar-tab="filters">FILTERS</button>
-    <button type="button" class="col-toolbar__tab" data-toolbar-tab="featured">FEATURED</button>
+  {% comment %} Row 3: shortcuts that open the same Filter drawer, jumped to that group {% endcomment %}
+  <div class="col-toolbar__subtabs">
+    <button type="button" class="col-toolbar__subtab" data-open-filter-drawer="filters" data-jump-group="sleeve">SLEEVE</button>
+    <button type="button" class="col-toolbar__subtab" data-open-filter-drawer="filters" data-jump-group="neckline">NECKLINE</button>
+    <button type="button" class="col-toolbar__subtab" data-open-filter-drawer="filters" data-jump-group="color">COLOR</button>
+    <button type="button" class="col-toolbar__subtab" data-open-filter-drawer="filters" data-jump-group="fabric">FABRIC</button>
   </div>
+</div>
 
-  <div class="col-toolbar__panel is-active" data-toolbar-panel="filters">
-    <div class="col-toolbar__subtabs">
-      <button type="button" class="col-toolbar__subtab is-active" data-subtab="sleeve">SLEEVE</button>
-      <button type="button" class="col-toolbar__subtab" data-subtab="neckline">NECKLINE</button>
-      <button type="button" class="col-toolbar__subtab" data-subtab="color">COLOR</button>
-      <button type="button" class="col-toolbar__subtab" data-subtab="fabric">FABRIC</button>
-      <button type="button" class="col-toolbar__subtab" data-subtab="price">PRICE</button>
-      <button type="button" class="col-toolbar__subtab" data-subtab="availability">AVAILABILITY</button>
-      <button type="button" class="col-toolbar__subtab" data-subtab="occasion">OCCASION</button>
+{% comment %}
+  Right-side filter drawer, same interaction pattern as the cart/wishlist drawers
+  (overlay, close X, click-outside, body.vamas-drawer-open which also hides the
+  sticky header / bottom nav / WhatsApp fab so nothing floats over the panel).
+{% endcomment %}
+<div class="col-filter-drawer" id="col-filter-drawer" aria-hidden="true">
+  <div class="col-filter-drawer__overlay" id="col-filter-drawer-overlay"></div>
+  <div class="col-filter-drawer__panel" role="dialog" aria-label="Filter and sort">
+    <div class="col-filter-drawer__head">
+      <span class="col-filter-drawer__title">FILTER &amp; SORT</span>
+      <button class="col-filter-drawer__close" id="col-filter-drawer-close" type="button" aria-label="Close">&times;</button>
     </div>
 
-    <form method="get" id="toolbar-filter-form">
-      {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
+    <div class="col-filter-drawer__tabs">
+      <button type="button" class="col-filter-drawer__tab is-active" data-drawer-tab="filters">FILTER</button>
+      <button type="button" class="col-filter-drawer__tab" data-drawer-tab="featured">FEATURED</button>
+    </div>
 
-      <div class="col-toolbar__subpanel is-active" data-subpanel="sleeve">
-        {% if sleeve_filter != blank %}
-          {% for value in sleeve_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
-          {% endfor %}
-        {% else %}
-          <p class="filter-empty-note">Sleeve filter not set up yet.</p>
-        {% endif %}
-      </div>
+    <div class="col-filter-drawer__body">
+      <div class="col-filter-drawer__panel-inner is-active" data-drawer-panel="filters">
+        <form method="get" id="toolbar-filter-form">
+          {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
 
-      <div class="col-toolbar__subpanel" data-subpanel="neckline">
-        {% if neckline_filter != blank %}
-          {% for value in neckline_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
-          {% endfor %}
-        {% else %}
-          <p class="filter-empty-note">Neckline filter not set up yet.</p>
-        {% endif %}
-      </div>
-
-      <div class="col-toolbar__subpanel" data-subpanel="color">
-        <div class="color-dots">
-          <label><input type="checkbox" class="vtag-filter" value="Maroon" {% if collection.current_tags contains 'Maroon' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#420001;" title="Maroon" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Gold" {% if collection.current_tags contains 'Gold' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#c9a96e;" title="Gold" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Green" {% if collection.current_tags contains 'Green' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#2e7d32;" title="Green" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Navy" {% if collection.current_tags contains 'Navy' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#1a237e;" title="Navy" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="White" {% if collection.current_tags contains 'White' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#f5f5f5;border:1.5px solid #ccc;" title="White" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Pink" {% if collection.current_tags contains 'Pink' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#e91e8c;" title="Pink" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-        </div>
-      </div>
-
-      <div class="col-toolbar__subpanel" data-subpanel="fabric">
-        {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
-        {% for t in vtag_fabric %}
-          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
-        {% endfor %}
-      </div>
-
-      <div class="col-toolbar__subpanel" data-subpanel="price">
-        {% for filter in collection.filters %}
-          {% if filter.type != 'price_range' %}{% continue %}{% endif %}
-          <div class="price-range">
-            <div class="price-labels">
-              <span id="priceMinT">{{ filter.min_value.value | default: filter.range_min | money }}</span>
-              <span id="priceMaxT">{{ filter.max_value.value | default: filter.range_max | money }}</span>
-            </div>
-            <div class="price-slider" id="priceSliderT">
-              <div class="price-slider__track"></div>
-              <div class="price-slider__fill" id="priceFillT"></div>
-              <input type="range" class="price-slider__input" id="rangeMinT" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
-              <input type="range" class="price-slider__input" id="rangeMaxT" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
+          <div class="acc-item" data-filter-group="sleeve">
+            <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
+            <div class="acc-body open">
+              {% if sleeve_filter != blank %}
+                {% for value in sleeve_filter.values %}
+                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+                {% endfor %}
+              {% else %}
+                <p class="filter-empty-note">Sleeve filter not set up yet.</p>
+              {% endif %}
             </div>
           </div>
-        {% endfor %}
-      </div>
 
-      <div class="col-toolbar__subpanel" data-subpanel="availability">
-        {% if availability_filter != blank %}
-          {% for value in availability_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+          <div class="acc-item" data-filter-group="neckline">
+            <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
+            <div class="acc-body open">
+              {% if neckline_filter != blank %}
+                {% for value in neckline_filter.values %}
+                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+                {% endfor %}
+              {% else %}
+                <p class="filter-empty-note">Neckline filter not set up yet.</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="acc-item" data-filter-group="color">
+            <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
+            <div class="acc-body open">
+              <div class="color-dots">
+                <label><input type="checkbox" class="vtag-filter" value="Maroon" {% if collection.current_tags contains 'Maroon' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#420001;" title="Maroon" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+                <label><input type="checkbox" class="vtag-filter" value="Gold" {% if collection.current_tags contains 'Gold' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#c9a96e;" title="Gold" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+                <label><input type="checkbox" class="vtag-filter" value="Green" {% if collection.current_tags contains 'Green' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#2e7d32;" title="Green" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+                <label><input type="checkbox" class="vtag-filter" value="Navy" {% if collection.current_tags contains 'Navy' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#1a237e;" title="Navy" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+                <label><input type="checkbox" class="vtag-filter" value="White" {% if collection.current_tags contains 'White' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#f5f5f5;border:1.5px solid #ccc;" title="White" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+                <label><input type="checkbox" class="vtag-filter" value="Pink" {% if collection.current_tags contains 'Pink' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#e91e8c;" title="Pink" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="acc-item" data-filter-group="fabric">
+            <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
+            <div class="acc-body open">
+              {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
+              {% for t in vtag_fabric %}
+                <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+              {% endfor %}
+            </div>
+          </div>
+
+          {% for filter in collection.filters %}
+            {% if filter.type != 'price_range' %}{% continue %}{% endif %}
+            <div class="acc-item" data-filter-group="price">
+              <div class="acc-head open" onclick="toggleAcc(this)"><span>{{ filter.label | upcase }}</span><span class="acc-arrow">&#9660;</span></div>
+              <div class="acc-body open">
+                <div class="price-range">
+                  <div class="price-labels">
+                    <span id="priceMinT">{{ filter.min_value.value | default: filter.range_min | money }}</span>
+                    <span id="priceMaxT">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+                  </div>
+                  <div class="price-slider" id="priceSliderT">
+                    <div class="price-slider__track"></div>
+                    <div class="price-slider__fill" id="priceFillT"></div>
+                    <input type="range" class="price-slider__input" id="rangeMinT" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
+                    <input type="range" class="price-slider__input" id="rangeMaxT" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
+                  </div>
+                </div>
+              </div>
+            </div>
           {% endfor %}
-        {% else %}
-          <p class="filter-empty-note">Availability filter not set up yet.</p>
-        {% endif %}
+
+          <div class="acc-item" data-filter-group="availability">
+            <div class="acc-head open" onclick="toggleAcc(this)"><span>AVAILABILITY</span><span class="acc-arrow">&#9660;</span></div>
+            <div class="acc-body open">
+              {% if availability_filter != blank %}
+                {% for value in availability_filter.values %}
+                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+                {% endfor %}
+              {% else %}
+                <p class="filter-empty-note">Availability filter not set up yet.</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="acc-item" data-filter-group="occasion">
+            <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
+            <div class="acc-body open">
+              {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
+              {% for t in vtag_occasion %}
+                <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+              {% endfor %}
+            </div>
+          </div>
+        </form>
       </div>
 
-      <div class="col-toolbar__subpanel" data-subpanel="occasion">
-        {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
-        {% for t in vtag_occasion %}
-          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
-        {% endfor %}
+      <div class="col-filter-drawer__panel-inner" data-drawer-panel="featured">
+        <form method="get" id="toolbar-sort-form">
+          {% for filter in collection.filters %}
+            {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
+            {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
+            {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
+          {% endfor %}
+          {% for option in collection.sort_options %}
+            <label class="filter-check-row">
+              <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %} onchange="this.form.submit()"> {{ option.name }}
+            </label>
+          {% endfor %}
+        </form>
       </div>
+    </div>
 
-      <div class="col-toolbar__apply">
-        <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply-toolbar">APPLY FILTERS</button>
-      </div>
-    </form>
-  </div>
-
-  <div class="col-toolbar__panel" data-toolbar-panel="featured">
-    <form method="get" id="toolbar-sort-form">
-      {% for filter in collection.filters %}
-        {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
-        {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
-        {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
-      {% endfor %}
-      {% for option in collection.sort_options %}
-        <label class="filter-check-row">
-          <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %} onchange="this.form.submit()"> {{ option.name }}
-        </label>
-      {% endfor %}
-    </form>
+    <div class="col-filter-drawer__footer">
+      <a href="/collections/{{ collection.handle | default: 'all' }}" class="btn-outline col-filter-drawer__clear">CLEAR ALL</a>
+      <button type="button" class="btn-primary col-filter-drawer__apply" id="vtag-apply-toolbar">APPLY</button>
+    </div>
   </div>
 </div>
 
@@ -413,34 +480,64 @@ function toggleAcc(head){
   window.addEventListener('orientationchange', setOffset);
 })();
 
-/* Row 2: FILTERS | FEATURED tabs — mutually exclusive panels */
+/* Filter/Featured drawer — same interaction model as the cart & wishlist drawers */
 (function(){
-  var toolbar = document.getElementById('col-toolbar');
-  if (!toolbar) return;
-  var tabs = toolbar.querySelectorAll(':scope > .col-toolbar__tabs > .col-toolbar__tab');
+  var drawer = document.getElementById('col-filter-drawer');
+  if (!drawer) return;
+  var overlay = document.getElementById('col-filter-drawer-overlay');
+  var closeBtn = document.getElementById('col-filter-drawer-close');
+  var tabs = drawer.querySelectorAll('.col-filter-drawer__tab');
+  var panels = drawer.querySelectorAll('.col-filter-drawer__panel-inner');
+  var body = drawer.querySelector('.col-filter-drawer__body');
+
+  function showTab(name){
+    tabs.forEach(function(t){ t.classList.toggle('is-active', t.getAttribute('data-drawer-tab') === name); });
+    panels.forEach(function(p){ p.classList.toggle('is-active', p.getAttribute('data-drawer-panel') === name); });
+  }
+
+  function openDrawer(tabName, jumpGroup){
+    showTab(tabName || 'filters');
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('vamas-drawer-open', 'col-filter-drawer-lock');
+    if (jumpGroup) {
+      var group = drawer.querySelector('[data-filter-group="' + jumpGroup + '"]');
+      if (group) {
+        /* make sure the group the shopper asked for is expanded, then bring it into view */
+        var head = group.querySelector('.acc-head');
+        var accBody = group.querySelector('.acc-body');
+        if (head && accBody && !head.classList.contains('open')) {
+          head.classList.add('open');
+          accBody.classList.add('open');
+        }
+        setTimeout(function(){
+          if (body) body.scrollTop = group.offsetTop - body.offsetTop;
+        }, 30);
+      }
+    }
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('vamas-drawer-open', 'col-filter-drawer-lock');
+  }
+
   tabs.forEach(function(tab){
-    tab.addEventListener('click', function(){
-      tabs.forEach(function(t){ t.classList.remove('is-active'); });
-      tab.classList.add('is-active');
-      var target = tab.getAttribute('data-toolbar-tab');
-      toolbar.querySelectorAll(':scope > .col-toolbar__panel').forEach(function(panel){
-        panel.classList.toggle('is-active', panel.getAttribute('data-toolbar-panel') === target);
-      });
+    tab.addEventListener('click', function(){ showTab(tab.getAttribute('data-drawer-tab')); });
+  });
+  overlay.addEventListener('click', closeDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeDrawer(); });
+
+  /* Row 1 (FILTER / FEATURED) and Row 3 (SLEEVE / NECKLINE / COLOR / FABRIC) all
+     open this same drawer; row 3 additionally jumps to its own filter group. */
+  document.querySelectorAll('[data-open-filter-drawer]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      openDrawer(btn.getAttribute('data-open-filter-drawer'), btn.getAttribute('data-jump-group'));
     });
   });
 
-  /* Row 3: SLEEVE | NECKLINE | COLOR | FABRIC | PRICE | AVAILABILITY | OCCASION sub-tabs */
-  var subtabs = toolbar.querySelectorAll('.col-toolbar__subtab');
-  subtabs.forEach(function(subtab){
-    subtab.addEventListener('click', function(){
-      subtabs.forEach(function(s){ s.classList.remove('is-active'); });
-      subtab.classList.add('is-active');
-      var target = subtab.getAttribute('data-subtab');
-      toolbar.querySelectorAll('.col-toolbar__subpanel').forEach(function(panel){
-        panel.classList.toggle('is-active', panel.getAttribute('data-subpanel') === target);
-      });
-    });
-  });
+  window.VamasFilterDrawer = { open: openDrawer, close: closeDrawer };
 })();
 
 /* 1-up / 2-up grid toggle */
@@ -502,6 +599,7 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
   "name": "Vamas Collection",
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
+    { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only until a real Size filter is enabled in Search & Discovery — after that the live filter values (with counts) are used automatically.", "default": "32,34,36,38,40,42,44,46" },
     { "type": "textarea", "id": "hero_subtitle", "label": "Hero Subtitle (overrides collection description)" },
     { "type": "checkbox", "id": "show_hero_motif", "label": "Show Decorative Motif", "default": true },
     { "type": "image_picker", "id": "hero_bg_image", "label": "Hero Background Image", "info": "Leave blank to keep the default background." },
