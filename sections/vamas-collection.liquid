@@ -22,13 +22,6 @@
   {%- if filter_label_down contains 'vail' -%}{%- assign availability_filter = filter -%}{%- endif -%}
 {%- endfor -%}
 
-{%- comment -%} TEMP DEBUG: remove after diagnosing filter labels {%- endcomment -%}
-<div id="vamas-debug-filters" style="display:none;">
-  {% for filter in collection.filters %}
-    <span data-label="{{ filter.label | escape }}" data-type="{{ filter.type }}" data-count="{{ filter.values.size }}"></span>
-  {% endfor %}
-</div>
-
 {% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
 <style>
   {% if section.settings.hero_bg_image != blank %}
@@ -92,7 +85,7 @@
   Row 3 (inside Filters): SLEEVE | NECKLINE | COLOR | FABRIC | PRICE | AVAILABILITY | OCCASION sub-tabs.
 {%- endcomment -%}
 <div class="col-toolbar" id="col-toolbar">
-  {% if size_filter %}
+  {% if size_filter != blank %}
     <div class="col-toolbar__sizes">
       <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL SIZES</a>
       {% for value in size_filter.values %}
@@ -121,7 +114,7 @@
       {% if collection.sort_by != blank %}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{% endif %}
 
       <div class="col-toolbar__subpanel is-active" data-subpanel="sleeve">
-        {% if sleeve_filter %}
+        {% if sleeve_filter != blank %}
           {% for value in sleeve_filter.values %}
             <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
@@ -131,7 +124,7 @@
       </div>
 
       <div class="col-toolbar__subpanel" data-subpanel="neckline">
-        {% if neckline_filter %}
+        {% if neckline_filter != blank %}
           {% for value in neckline_filter.values %}
             <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
@@ -177,7 +170,7 @@
       </div>
 
       <div class="col-toolbar__subpanel" data-subpanel="availability">
-        {% if availability_filter %}
+        {% if availability_filter != blank %}
           {% for value in availability_filter.values %}
             <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
@@ -223,7 +216,7 @@
       <a href="/collections/{{ collection.handle | default: 'all' }}" class="clear-all">Clear All</a>
     </div>
 
-    {% if size_filter %}
+    {% if size_filter != blank %}
       <div class="sidebar-sizes">
         <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL SIZES</a>
         {% for value in size_filter.values %}
@@ -240,7 +233,7 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% if sleeve_filter %}
+        {% if sleeve_filter != blank %}
           {% for value in sleeve_filter.values %}
             <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
@@ -253,7 +246,7 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% if neckline_filter %}
+        {% if neckline_filter != blank %}
           {% for value in neckline_filter.values %}
             <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
@@ -316,7 +309,7 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>AVAILABILITY</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% if availability_filter %}
+        {% if availability_filter != blank %}
           {% for value in availability_filter.values %}
             <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
