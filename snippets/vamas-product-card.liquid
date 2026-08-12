@@ -372,11 +372,7 @@
     }, { capture: true, passive: true });
   }
 
-  if (window.__vamasCardSwatchInit) return;
-  window.__vamasCardSwatchInit = true;
-  document.addEventListener('click', function(e){
-    var swatch = e.target.closest('.vamas-prod-card__color');
-    if (!swatch) return;
+  function handleSwatchActivate(swatch){
     var card = swatch.closest('.vamas-prod-card');
     if (!card) return;
     var colorOptionIdx = parseInt(card.getAttribute('data-color-option'), 10);
@@ -465,6 +461,32 @@
         atcBtn.textContent = 'SOLD OUT';
       }
     }
-  });
+  }
+
+  /* Wire every swatch on the page directly (not via document-level delegation),
+     with both 'click' and 'touchend' handling. This removes any dependency on
+     event-bubbling/delegation timing and on which card's script tag happens to
+     run first - each swatch is now self-sufficient. Guarded per-element so
+     re-running this block (e.g. if the snippet renders many times) never
+     double-binds the same swatch. */
+  function wireSwatches(){
+    document.querySelectorAll('.vamas-prod-card__color').forEach(function(swatch){
+      if (swatch.dataset.swatchWired) return;
+      swatch.dataset.swatchWired = '1';
+
+      var touchHandled = false;
+      swatch.addEventListener('touchend', function(e){
+        touchHandled = true;
+        handleSwatchActivate(swatch);
+        setTimeout(function(){ touchHandled = false; }, 400);
+      }, { passive: true });
+
+      swatch.addEventListener('click', function(e){
+        if (touchHandled) return; /* avoid double-firing: touchend already handled this tap */
+        handleSwatchActivate(swatch);
+      });
+    });
+  }
+  wireSwatches();
 })();
 </script>
