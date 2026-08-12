@@ -1232,9 +1232,13 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-reels { padding: 48px 40px 72px; }
 }
 
+/* While any drawer (wishlist/cart) is open, hide the sticky header instead
+   of letting it float over the drawer panel at a higher z-index. */
+body.vamas-drawer-open .vamas-nav-wrapper { display: none; }
+
 /* ── Wishlist drawer (mobile: opens as a right-side panel instead of
      navigating to the full wishlist page) ── */
-.vamas-wish-drawer { position: fixed; inset: 0; z-index: 999; pointer-events: none; }
+.vamas-wish-drawer { position: fixed; inset: 0; z-index: 1001; pointer-events: none; }
 .vamas-wish-drawer.open { pointer-events: auto; }
 .vamas-wish-drawer__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.25s ease; }
 .vamas-wish-drawer.open .vamas-wish-drawer__overlay { opacity: 1; }
@@ -1252,3 +1256,38 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-wish-drawer__subtitle { font-size: 12px; color: rgba(66,0,1,0.6); margin-bottom: 14px; }
 .vamas-wish-drawer__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 body.vamas-wish-drawer-lock { overflow: hidden; }
+
+/* ── Cart drawer (mobile: opens as a right-side panel instead of
+     navigating to the full cart page) ── */
+.vamas-cart-drawer { position: fixed; inset: 0; z-index: 1001; pointer-events: none; }
+.vamas-cart-drawer.open { pointer-events: auto; }
+.vamas-cart-drawer__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.25s ease; }
+.vamas-cart-drawer.open .vamas-cart-drawer__overlay { opacity: 1; }
+.vamas-cart-drawer__panel {
+  position: absolute; top: 0; right: 0; height: 100%;
+  width: min(86vw, 380px); background: var(--color-white);
+  box-shadow: -8px 0 30px rgba(0,0,0,0.18);
+  transform: translateX(100%); transition: transform 0.3s ease;
+  display: flex; flex-direction: column;
+  overflow-y: auto; padding: 18px; box-sizing: border-box;
+}
+.vamas-cart-drawer.open .vamas-cart-drawer__panel { transform: translateX(0); }
+.vamas-cart-drawer__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-shrink: 0; }
+.vamas-cart-drawer__title { font-family: var(--font-heading); font-size: 20px; color: var(--color-maroon); }
+.vamas-cart-drawer__close { background: none; border: none; font-size: 26px; line-height: 1; color: var(--color-maroon); cursor: pointer; padding: 4px 8px; }
+.vamas-cart-drawer__items { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+.vamas-cart-drawer__item { display: flex; gap: 10px; position: relative; padding-right: 20px; }
+.vamas-cart-drawer__item-img { flex-shrink: 0; width: 64px; height: 85px; border-radius: 6px; overflow: hidden; display: block; background: #f6efe6; }
+.vamas-cart-drawer__item-img img { width: 100%; height: 100%; object-fit: cover; }
+.vamas-cart-drawer__item-info { flex: 1; min-width: 0; }
+.vamas-cart-drawer__item-title { font-size: 13px; font-weight: 600; color: var(--color-maroon); text-decoration: none; display: block; line-height: 1.3; }
+.vamas-cart-drawer__item-variant { font-size: 11px; color: rgba(66,0,1,0.55); margin-top: 2px; }
+.vamas-cart-drawer__item-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.vamas-cart-drawer__qty { display: flex; align-items: center; gap: 8px; border: 1px solid rgba(66,0,1,0.15); border-radius: 6px; padding: 2px 6px; }
+.vamas-cart-drawer__qty-btn { background: none; border: none; font-size: 15px; color: var(--color-maroon); cursor: pointer; width: 20px; line-height: 1; }
+.vamas-cart-drawer__qty-num { font-size: 12px; min-width: 16px; text-align: center; }
+.vamas-cart-drawer__item-price { font-size: 13px; color: var(--color-maroon); }
+.vamas-cart-drawer__remove { position: absolute; top: 0; right: 0; background: none; border: none; font-size: 18px; color: rgba(66,0,1,0.4); cursor: pointer; line-height: 1; }
+.vamas-cart-drawer__footer { flex-shrink: 0; border-top: 1px solid rgba(66,0,1,0.1); padding-top: 14px; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.vamas-cart-drawer__subtotal { display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: var(--color-maroon); }
+body.vamas-cart-drawer-lock { overflow: hidden; }

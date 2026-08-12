@@ -84,12 +84,12 @@
     render();
     drawer.classList.add('open');
     drawer.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('vamas-wish-drawer-lock');
+    document.body.classList.add('vamas-wish-drawer-lock', 'vamas-drawer-open');
   }
   function closeDrawer(){
     drawer.classList.remove('open');
     drawer.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('vamas-wish-drawer-lock');
+    document.body.classList.remove('vamas-wish-drawer-lock', 'vamas-drawer-open');
   }
 
   overlay.addEventListener('click', closeDrawer);

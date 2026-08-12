@@ -1,0 +1,155 @@
+{% comment %}
+  Global right-side cart drawer, mobile only (same pattern as
+  vamas-wishlist-drawer.liquid). Any element with [data-cart-drawer-trigger]
+  opens this instead of navigating to /cart, gated to below the mobile
+  breakpoint so desktop keeps navigating to the full cart page unchanged.
+  Fetches live cart data via Shopify's /cart.js and /cart/change.js AJAX
+  endpoints (same ones sections/vamas-cart.liquid already uses) so it always
+  reflects the real cart, not a cached snapshot.
+{% endcomment %}
+<div class="vamas-cart-drawer" id="vamas-cart-drawer" aria-hidden="true">
+  <div class="vamas-cart-drawer__overlay" id="vamas-cart-drawer-overlay"></div>
+  <div class="vamas-cart-drawer__panel" role="dialog" aria-label="Cart">
+    <div class="vamas-cart-drawer__head">
+      <span class="vamas-cart-drawer__title">My Cart</span>
+      <button class="vamas-cart-drawer__close" id="vamas-cart-drawer-close" type="button" aria-label="Close cart">&times;</button>
+    </div>
+
+    <div class="vamas-cart-drawer__empty" id="vamas-cart-drawer-empty" style="display:none;text-align:center;padding:40px 20px;">
+      <div style="font-size:40px;">&#128722;</div>
+      <div style="font-family:var(--font-heading);font-size:20px;color:var(--color-maroon);margin:16px 0 8px;">Your cart is empty</div>
+      <a href="{{ routes.all_products_collection_url }}" class="btn-primary">SHOP NOW</a>
+    </div>
+
+    <div class="vamas-cart-drawer__items" id="vamas-cart-drawer-items"></div>
+
+    <div class="vamas-cart-drawer__footer" id="vamas-cart-drawer-footer" style="display:none;">
+      <div class="vamas-cart-drawer__subtotal">
+        <span>Subtotal</span>
+        <strong id="vamas-cart-drawer-subtotal"></strong>
+      </div>
+      <a href="{{ routes.cart_url }}" class="btn-outline vamas-cart-drawer__view-cart">VIEW CART</a>
+      <a href="{{ routes.cart_url }}/checkout" class="btn-primary vamas-cart-drawer__checkout">CHECKOUT</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var drawer = document.getElementById('vamas-cart-drawer');
+  if (!drawer) return;
+  var overlay = document.getElementById('vamas-cart-drawer-overlay');
+  var closeBtn = document.getElementById('vamas-cart-drawer-close');
+  var itemsWrap = document.getElementById('vamas-cart-drawer-items');
+  var empty = document.getElementById('vamas-cart-drawer-empty');
+  var footer = document.getElementById('vamas-cart-drawer-footer');
+  var subtotalEl = document.getElementById('vamas-cart-drawer-subtotal');
+  var moneyFormat = {{ shop.money_format | json }};
+
+  function esc(s){ return (s == null ? '' : String(s)).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  function fmtMoney(cents){
+    var amount = (cents / 100).toFixed(2);
+    var parts = amount.split('.');
+    var dollars = parts[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+    var formatted = dollars + '.' + parts[1];
+    var m = moneyFormat.match(/\{\{\s*amount\s*\}\}/);
+    return m ? moneyFormat.replace(m[0], formatted) : formatted;
+  }
+
+  function renderCart(cart){
+    if (!cart.items.length){
+      itemsWrap.innerHTML = '';
+      footer.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    footer.style.display = '';
+    subtotalEl.textContent = fmtMoney(cart.total_price);
+    itemsWrap.innerHTML = cart.items.map(function(item, idx){
+      var line = idx + 1;
+      var variantBits = (item.variant_title && item.variant_title !== 'Default Title') ? item.variant_title : '';
+      return '' +
+      '<div class="vamas-cart-drawer__item" data-line="' + line + '">' +
+        '<a href="' + esc(item.url) + '" class="vamas-cart-drawer__item-img"><img src="' + esc(item.image) + '" alt="' + esc(item.product_title) + '" loading="lazy"></a>' +
+        '<div class="vamas-cart-drawer__item-info">' +
+          '<a href="' + esc(item.url) + '" class="vamas-cart-drawer__item-title">' + esc(item.product_title) + '</a>' +
+          (variantBits ? '<div class="vamas-cart-drawer__item-variant">' + esc(variantBits) + '</div>' : '') +
+          '<div class="vamas-cart-drawer__item-row">' +
+            '<div class="vamas-cart-drawer__qty">' +
+              '<button type="button" class="vamas-cart-drawer__qty-btn" data-line="' + line + '" data-delta="-1">&minus;</button>' +
+              '<span class="vamas-cart-drawer__qty-num">' + item.quantity + '</span>' +
+              '<button type="button" class="vamas-cart-drawer__qty-btn" data-line="' + line + '" data-delta="1">+</button>' +
+            '</div>' +
+            '<strong class="vamas-cart-drawer__item-price">' + fmtMoney(item.final_line_price) + '</strong>' +
+          '</div>' +
+        '</div>' +
+        '<button type="button" class="vamas-cart-drawer__remove" data-remove-line="' + line + '" aria-label="Remove">&times;</button>' +
+      '</div>';
+    }).join('');
+
+    itemsWrap.querySelectorAll('[data-delta]').forEach(function(btn){
+      btn.addEventListener('click', function(){ changeLine(this.dataset.line, parseInt(this.dataset.delta, 10)); });
+    });
+    itemsWrap.querySelectorAll('[data-remove-line]').forEach(function(btn){
+      btn.addEventListener('click', function(){ removeLine(this.dataset.removeLine); });
+    });
+  }
+
+  function fetchCart(){
+    return fetch('/cart.js').then(function(r){ return r.json(); }).then(renderCart);
+  }
+
+  function changeLine(line, delta){
+    var qtyEl = itemsWrap.querySelector('[data-line="' + line + '"] .vamas-cart-drawer__qty-num');
+    var newQty = Math.max(1, parseInt(qtyEl.textContent, 10) + delta);
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: line, quantity: newQty })
+    }).then(function(r){ return r.json(); }).then(function(cart){
+      renderCart(cart);
+      if (window.VamasCart) window.VamasCart.refresh();
+    });
+  }
+
+  function removeLine(line){
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: line, quantity: 0 })
+    }).then(function(r){ return r.json(); }).then(function(cart){
+      renderCart(cart);
+      if (window.VamasCart) window.VamasCart.refresh();
+    });
+  }
+
+  function openDrawer(){
+    fetchCart();
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('vamas-cart-drawer-lock', 'vamas-drawer-open');
+  }
+  function closeDrawer(){
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('vamas-cart-drawer-lock', 'vamas-drawer-open');
+  }
+
+  overlay.addEventListener('click', closeDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  document.addEventListener('vamas:cartAdded', function(){ if (drawer.classList.contains('open')) fetchCart(); });
+
+  window.VamasCartDrawer = { open: openDrawer, close: closeDrawer };
+
+  function isMobile(){ return window.matchMedia('(max-width: 767px)').matches; }
+  document.querySelectorAll('[data-cart-drawer-trigger]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      if (!isMobile()) return;
+      e.preventDefault();
+      openDrawer();
+    });
+  });
+})();
+</script>

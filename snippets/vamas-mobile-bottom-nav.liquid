@@ -37,7 +37,7 @@
     <span class="vamas-botnav__label">New Arrivals</span>
   </a>
 
-  <a class="vamas-botnav__item" href="{{ routes.cart_url | default: '/cart' }}">
+  <a class="vamas-botnav__item" href="{{ routes.cart_url | default: '/cart' }}" data-cart-drawer-trigger>
     <span class="vamas-botnav__icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2h11.2L21 7H6"/></svg>
       <span class="vamas-botnav__count" data-botnav-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
