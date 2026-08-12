@@ -1,0 +1,36 @@
+{% comment %}
+  Renders the options for one filter group, supporting BOTH data sources:
+
+  1. A native Search & Discovery filter (metafield / variant option / product
+     attribute). Preferred when present - gives real counts and auto-submits.
+  2. Otherwise, a comma-separated tag list. Uses the same `.vtag-filter`
+     mechanism FABRIC/OCCASION already use on this page: the shared
+     "APPLY FILTERS" button collects every checked tag and navigates to
+     /collections/<handle>/tag-a+tag-b.
+
+  So the merchant can set these up either way (or migrate from tags to
+  metafields later) without any theme change.
+
+  Params: native_filter, tag_list, current_tags, empty_note
+{% endcomment %}
+{% if native_filter != blank %}
+  {% for value in native_filter.values %}
+    <label class="filter-check-row">
+      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()">
+      {{ value.label }} ({{ value.count }})
+    </label>
+  {% endfor %}
+{% elsif tag_list != blank %}
+  {% assign group_tags = tag_list | split: ',' %}
+  {% for t in group_tags %}
+    {% assign tag_clean = t | strip %}
+    {% if tag_clean != '' %}
+      <label class="filter-check-row">
+        <input type="checkbox" class="vtag-filter" value="{{ tag_clean | escape }}" {% if current_tags contains tag_clean %}checked{% endif %}>
+        {{ tag_clean }}
+      </label>
+    {% endif %}
+  {% endfor %}
+{% else %}
+  <p class="filter-empty-note">{{ empty_note | default: 'Not set up yet.' }}</p>
+{% endif %}

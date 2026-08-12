@@ -159,26 +159,14 @@
           <div class="acc-item" data-filter-group="sleeve">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% if sleeve_filter != blank %}
-                {% for value in sleeve_filter.values %}
-                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
-                {% endfor %}
-              {% else %}
-                <p class="filter-empty-note">Sleeve filter not set up yet.</p>
-              {% endif %}
+              {% render 'vamas-filter-group-options', native_filter: sleeve_filter, tag_list: section.settings.sleeve_tag_list, current_tags: collection.current_tags, empty_note: 'Sleeve filter not set up yet.' %}
             </div>
           </div>
 
           <div class="acc-item" data-filter-group="neckline">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% if neckline_filter != blank %}
-                {% for value in neckline_filter.values %}
-                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
-                {% endfor %}
-              {% else %}
-                <p class="filter-empty-note">Neckline filter not set up yet.</p>
-              {% endif %}
+              {% render 'vamas-filter-group-options', native_filter: neckline_filter, tag_list: section.settings.neckline_tag_list, current_tags: collection.current_tags, empty_note: 'Neckline filter not set up yet.' %}
             </div>
           </div>
 
@@ -300,26 +288,14 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% if sleeve_filter != blank %}
-          {% for value in sleeve_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
-          {% endfor %}
-        {% else %}
-          <p class="filter-empty-note">Sleeve filter not set up yet.</p>
-        {% endif %}
+        {% render 'vamas-filter-group-options', native_filter: sleeve_filter, tag_list: section.settings.sleeve_tag_list, current_tags: collection.current_tags, empty_note: 'Sleeve filter not set up yet.' %}
       </div>
     </div>
 
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% if neckline_filter != blank %}
-          {% for value in neckline_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
-          {% endfor %}
-        {% else %}
-          <p class="filter-empty-note">Neckline filter not set up yet.</p>
-        {% endif %}
+        {% render 'vamas-filter-group-options', native_filter: neckline_filter, tag_list: section.settings.neckline_tag_list, current_tags: collection.current_tags, empty_note: 'Neckline filter not set up yet.' %}
       </div>
     </div>
 
@@ -600,6 +576,10 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
     { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only until a real Size filter is enabled in Search & Discovery — after that the live filter values (with counts) are used automatically.", "default": "32,34,36,38,40,42,44,46" },
+    { "type": "header", "content": "Sleeve & Neckline" },
+    { "type": "paragraph", "content": "These use a Search & Discovery filter if one exists (matched by label containing 'sleeve' / 'neck'). If not, the tag lists below are used instead — tags must match the product tags exactly." },
+    { "type": "text", "id": "sleeve_tag_list", "label": "Sleeve Tags (comma-separated)", "default": "Sleeveless, Cap Sleeves, Short Sleeves, Elbow Sleeves, Three-Quarter Sleeves, Full Sleeves" },
+    { "type": "text", "id": "neckline_tag_list", "label": "Neckline Tags (comma-separated)", "default": "Round Neck, V-Neck, Boat Neck, Square Neck, Sweetheart Neck, High Neck, Halter Neck" },
     { "type": "textarea", "id": "hero_subtitle", "label": "Hero Subtitle (overrides collection description)" },
     { "type": "checkbox", "id": "show_hero_motif", "label": "Show Decorative Motif", "default": true },
     { "type": "image_picker", "id": "hero_bg_image", "label": "Hero Background Image", "info": "Leave blank to keep the default background." },
