@@ -70,7 +70,7 @@
             "image_asset": "prod-darkmaroon.jpg",
             "cat_name": "CLASSIC V",
             "cat_count": "",
-            "cat_url": "/collections/all"
+            "cat_url": "/collections/classic-v"
           }
         },
         "cat-2": {
@@ -79,7 +79,7 @@
             "image_asset": "casual.jpg",
             "cat_name": "EASY STRETCH",
             "cat_count": "",
-            "cat_url": "/collections/all"
+            "cat_url": "/collections/easy-stretch"
           }
         },
         "cat-3": {
@@ -88,7 +88,7 @@
             "image_asset": "prod-cobalt.jpg",
             "cat_name": "PLAIN ONLY",
             "cat_count": "",
-            "cat_url": "/collections/all"
+            "cat_url": "/collections/plain-only"
           }
         },
         "cat-4": {
@@ -97,7 +97,7 @@
             "image_asset": "slide-pink.jpg",
             "cat_name": "SLEEVE OFF",
             "cat_count": "",
-            "cat_url": "/collections/all"
+            "cat_url": "/collections/sleeve-off"
           }
         },
         "cat-5": {
@@ -106,7 +106,7 @@
             "image_asset": "prod-maroon2.jpg",
             "cat_name": "SUPER BASIC",
             "cat_count": "",
-            "cat_url": "/collections/all"
+            "cat_url": "/collections/super-basic"
           }
         },
         "cat-6": {
@@ -115,7 +115,7 @@
             "image_asset": "prod-indigo.jpg",
             "cat_name": "BOUTIQUE",
             "cat_count": "",
-            "cat_url": "/collections/all"
+            "cat_url": "/collections/boutique"
           }
         },
         "stat-1": {
@@ -261,9 +261,9 @@
         "show_categories": true,
         "cat_view_all": "/collections/all",
         "show_new_arrivals": true,
-        "new_arrivals_collection": "jackets",
+        "new_arrivals_collection": "classic-v",
         "show_bestsellers": true,
-        "bestsellers_collection": "demo-collection",
+        "bestsellers_collection": "super-basic",
         "show_brand": true,
         "brand_eyebrow": "OUR STORY",
         "brand_heading": "A Fabric Symphony for Your Saree",
@@ -291,7 +291,11 @@
         "banner_btn_url": "",
         "show_reels": true,
         "reels_sub": "Follow @vamas.official for daily style inspiration",
-        "reels_follow_url": ""
+        "reels_follow_url": "",
+        "extra_collection_1": "bridal",
+        "extra_collection_1_heading": "Bridal",
+        "extra_collection_2": "velvet",
+        "extra_collection_2_heading": "Velvet"
       }
     }
   },
