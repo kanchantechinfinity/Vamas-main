@@ -758,7 +758,12 @@
       var h = (nav && getComputedStyle(nav).display !== 'none') ? nav.offsetHeight : 0;
       stickyBar.style.setProperty('--vamas-botnav-h', h + 'px');
     };
-    setBotnavOffset();
+    /* The bottom nav is rendered by theme.liquid AFTER this section, so it does
+       not exist yet while this script runs - measuring now would always yield 0.
+       Wait for the full document before measuring. */
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setBotnavOffset);
+    else setBotnavOffset();
+    window.addEventListener('load', setBotnavOffset);
     window.addEventListener('resize', setBotnavOffset);
     window.addEventListener('orientationchange', setBotnavOffset);
   }
