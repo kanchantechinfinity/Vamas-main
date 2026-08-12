@@ -235,7 +235,7 @@
             data-handle="{{ product.handle }}"
             data-title="{{ product.title | escape }}"
             data-type="{{ product.type | escape | default: 'Blouse' }}"
-            data-price="{{ first_variant.price | money }}"
+            data-wish-price="{{ first_variant.price | money }}"
             {% if on_sale %}data-wish-compare="{{ first_variant.compare_at_price | money }}" data-wish-discount="{{ discount_pct }}"{% endif %}
             data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
             data-url="{{ product.url }}"

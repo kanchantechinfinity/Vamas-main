@@ -156,7 +156,7 @@
         e.preventDefault(); e.stopPropagation();
         var item = {
           id: id, handle: btn.dataset.handle, title: btn.dataset.title,
-          type: btn.dataset.type, price: btn.dataset.price, compare: btn.dataset.wishCompare || '',
+          type: btn.dataset.type, price: btn.dataset.wishPrice, compare: btn.dataset.wishCompare || '',
           discount: btn.dataset.wishDiscount || '', image: btn.dataset.image, url: btn.dataset.url,
           variant: btn.dataset.variant
         };
