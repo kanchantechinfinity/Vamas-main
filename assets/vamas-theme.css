@@ -266,6 +266,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-view-all--bottom { display: none; }
 
+/* Homepage tabbed-collection panels: always show their own "View All" below
+   the grid, on both desktop and mobile (unlike --top/--bottom above, which
+   intentionally only show one or the other per breakpoint elsewhere). */
+.vamas-view-all--panel { display: block; text-align: center; width: fit-content; margin: 24px auto 0; }
+
 /* ── New Arrivals / Best Sellers tabs (share one grid) ── */
 .vamas-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 32px; }
 .vamas-tabs__tab {

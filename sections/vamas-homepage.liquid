@@ -386,7 +386,7 @@
           {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
-      <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+      <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--panel">VIEW ALL</a>
     </div>
   {% endif %}
 
@@ -401,7 +401,7 @@
           {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
-      <a href="{{ collections[section.settings.bestsellers_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+      <a href="{{ collections[section.settings.bestsellers_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--panel">VIEW ALL</a>
     </div>
   {% endif %}
 </section>
@@ -466,7 +466,7 @@
           {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
-      <a href="{{ collections[section.settings.extra_collection_1].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+      <a href="{{ collections[section.settings.extra_collection_1].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--panel">VIEW ALL</a>
     </div>
   {% endif %}
 
@@ -481,7 +481,7 @@
           {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
-      <a href="{{ collections[section.settings.extra_collection_2].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+      <a href="{{ collections[section.settings.extra_collection_2].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--panel">VIEW ALL</a>
     </div>
   {% endif %}
 </section>
