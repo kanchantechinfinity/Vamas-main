@@ -18,10 +18,6 @@
   {% assign rating_num = rating_seed | times: 0.1 | plus: 4.4 | round: 1 %}
 {% endif %}
 
-{% comment %} Second/third image for the hover swap {% endcomment %}
-{% assign hover_image = product.images[1] %}
-{% if hover_image == blank %}{% assign hover_image = product.images[2] %}{% endif %}
-
 {% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
 {% assign color_values = blank %}
 {% assign color_option_position = 0 %}
@@ -133,7 +129,53 @@
 {% endif %}
 
 {% comment %}
-  Map each size to a variant to link to: prefer one matching the card's currently
+  Map each colour to its SECOND photo (the hover-swap image), so hover always
+  shows the next photo of the CURRENTLY SELECTED colour rather than a fixed
+  product-wide image. Merchants here only tag ONE photo per colour to its
+  variants (the swatch/anchor photo, matching color_img_map); any extra
+  photos for that colour are uploaded straight after it, untagged, forming a
+  contiguous block until the next colour's tagged anchor photo. So: walk
+  product.images once in order, remember which colour's block we're
+  currently inside, and take the first untagged photo right after a colour's
+  anchor as that colour's "second" photo. Colours with no such photo simply
+  never get an entry, so the hover swap is skipped for them.
+  "~colourkey~<url>§~colourkey2~<url2>§"
+{% endcomment %}
+{% assign color_second_img_map = '' %}
+{% assign current_color_key = '' %}
+{% if color_option_position > 0 %}
+  {% for img in product.images %}
+    {% assign img_first_variant = img.variants.first %}
+    {% if img_first_variant %}
+      {% assign img_color = '' %}
+      {% if color_option_position == 1 %}{% assign img_color = img_first_variant.option1 %}{% endif %}
+      {% if color_option_position == 2 %}{% assign img_color = img_first_variant.option2 %}{% endif %}
+      {% if color_option_position == 3 %}{% assign img_color = img_first_variant.option3 %}{% endif %}
+      {% if img_color != blank %}
+        {% assign current_color_key = img_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+      {% endif %}
+    {% elsif current_color_key != '' %}
+      {% assign cur_probe = '~' | append: current_color_key | append: '~' %}
+      {% unless color_second_img_map contains cur_probe %}
+        {% assign img_thumb = img | img_url: '400x533', crop: 'center' %}
+        {% assign color_second_img_map = color_second_img_map | append: cur_probe | append: img_thumb | append: '§' %}
+      {% endunless %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% comment %} The hover-swap image for the DEFAULT-shown colour, resolved via the same
+  per-colour map so the initial (no-JS) markup matches the JS behaviour. {% endcomment %}
+{% assign hover_image_url = '' %}
+{% if default_color != '' %}
+  {% assign default_color_key = default_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+  {% assign default_color_probe = '~' | append: default_color_key | append: '~' %}
+  {% if color_second_img_map contains default_color_probe %}
+    {% assign hover_image_url = color_second_img_map | split: default_color_probe | last | split: '§' | first %}
+  {% endif %}
+{% endif %}
+
+{% comment %} Map each size to a variant to link to: prefer one matching the card's currently
   displayed color (so tapping a size doesn't silently switch color too); fall back
   to the first available variant of that size, then any variant of that size.
   "~sizekey~<variant_id>§"
@@ -180,6 +222,18 @@
     {% if v.featured_image %}
       {% assign v_image_url = v.featured_image | img_url: '400x533', crop: 'center' %}
     {% endif %}
+    {% assign v_color_for_hover = '' %}
+    {% if color_option_position == 1 %}{% assign v_color_for_hover = v.option1 %}{% endif %}
+    {% if color_option_position == 2 %}{% assign v_color_for_hover = v.option2 %}{% endif %}
+    {% if color_option_position == 3 %}{% assign v_color_for_hover = v.option3 %}{% endif %}
+    {% assign v_second_image_url = '' %}
+    {% if v_color_for_hover != '' %}
+      {% assign v_hover_key = v_color_for_hover | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+      {% assign v_hover_probe = '~' | append: v_hover_key | append: '~' %}
+      {% if color_second_img_map contains v_hover_probe %}
+        {% assign v_second_image_url = color_second_img_map | split: v_hover_probe | last | split: '§' | first %}
+      {% endif %}
+    {% endif %}
     {
       "id": {{ v.id | json }},
       "available": {{ v.available | json }},
@@ -187,6 +241,7 @@
       "comparePriceHtml": {% if v_compare_html != blank %}{{ v_compare_html | json }}{% else %}null{% endif %},
       "discountPct": {{ v_discount | json }},
       "image": {% if v_image_url != blank %}{{ v_image_url | json }}{% else %}null{% endif %},
+      "secondImage": {% if v_second_image_url != blank %}{{ v_second_image_url | json }}{% else %}null{% endif %},
       "option1": {{ v.option1 | json }},
       "option2": {{ v.option2 | json }},
       "option3": {{ v.option3 | json }}
@@ -202,13 +257,12 @@
              src="{{ default_card_image | img_url: '400x533', crop: 'center' }}"
              alt="{{ default_card_image.alt | escape | default: product.title }}"
              loading="lazy" width="400" height="533">
+        <img class="vamas-prod-card__img-hover"
+             data-hover-img
+             src="{% if hover_image_url != blank %}{{ hover_image_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'center' }}{% endif %}"
+             alt="" loading="lazy" aria-hidden="true">
       {% else %}
         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg vamas-prod-card__img-primary' }}
-      {% endif %}
-      {% if hover_image != blank %}
-        <img class="vamas-prod-card__img-hover"
-             src="{{ hover_image | img_url: '400x533', crop: 'center' }}"
-             alt="" loading="lazy" aria-hidden="true">
       {% endif %}
     </a>
 
@@ -235,13 +289,16 @@
             data-handle="{{ product.handle }}"
             data-title="{{ product.title | escape }}"
             data-type="{{ product.type | escape | default: 'Blouse' }}"
-            data-price="{{ first_variant.price | money }}"
-            {% if on_sale %}data-compare="{{ first_variant.compare_at_price | money }}" data-discount="{{ discount_pct }}"{% endif %}
+            data-wish-price="{{ first_variant.price | money }}"
+            {% if on_sale %}data-wish-compare="{{ first_variant.compare_at_price | money }}" data-wish-discount="{{ discount_pct }}"{% endif %}
             data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
             data-url="{{ product.url }}"
             data-variant="{{ first_variant.id }}">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
+
+    {% comment %} Discount badge, stacked below the wishlist heart, themed (maroon/gold), independent of the wishlist button's own data attributes {% endcomment %}
+    <span class="vamas-prod-card__discount-badge" data-discount-badge{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}%</span>
 
     <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
 
@@ -369,11 +426,7 @@
     }, { capture: true, passive: true });
   }
 
-  if (window.__vamasCardSwatchInit) return;
-  window.__vamasCardSwatchInit = true;
-  document.addEventListener('click', function(e){
-    var swatch = e.target.closest('.vamas-prod-card__color');
-    if (!swatch) return;
+  function handleSwatchActivate(swatch){
     var card = swatch.closest('.vamas-prod-card');
     if (!card) return;
     var colorOptionIdx = parseInt(card.getAttribute('data-color-option'), 10);
@@ -404,13 +457,28 @@
       else if (fallbackImg) img.src = fallbackImg;
     }
 
-    /* The card's hover-swap image sits on top of the primary image while the
-       mouse is anywhere over the card (including the swatch row below the
-       photo), so a just-picked color's image was hidden underneath it until
-       the mouse left. Force it hidden immediately on click, then let CSS
-       hover take back over on the next mouseleave/mouseenter cycle. */
+    /* When the card shows the swipeable gallery instead of the single primary
+       image (has-gallery), that gallery's first slide is what's actually
+       visible - update it too, or picking a color would silently do nothing
+       the user can see. */
+    var galleryFirstImg = card.querySelector('.vamas-prod-card__gallery-slide:first-child img');
+    if (galleryFirstImg && (match.image || img)) {
+      galleryFirstImg.src = match.image || img.src;
+    }
+
+    /* The hover-swap image must show the SECOND photo of the just-selected
+       color, not a fixed product-wide photo - otherwise hovering after a
+       color change shows the wrong color's picture. If that color has no
+       second photo, point it at the same photo as the primary so hovering
+       has no visible effect (nothing to swap to). */
     var hoverImg = card.querySelector('.vamas-prod-card__img-hover');
     if (hoverImg) {
+      hoverImg.src = match.secondImage || match.image || (img ? img.src : hoverImg.src);
+      /* The card's hover-swap image sits on top of the primary image while the
+         mouse is anywhere over the card (including the swatch row below the
+         photo), so a just-picked color's image was hidden underneath it until
+         the mouse left. Force it hidden immediately on click, then let CSS
+         hover take back over on the next mouseleave/mouseenter cycle. */
       hoverImg.style.opacity = '0';
       card.addEventListener('mouseleave', function onLeave(){
         hoverImg.style.opacity = '';
@@ -430,6 +498,11 @@
       if (match.comparePriceHtml) { discountEl.textContent = match.discountPct + '% off'; discountEl.style.display = ''; }
       else { discountEl.style.display = 'none'; }
     }
+    var discountBadgeEl = card.querySelector('[data-discount-badge]');
+    if (discountBadgeEl) {
+      if (match.comparePriceHtml) { discountBadgeEl.textContent = match.discountPct + '%'; discountBadgeEl.style.display = ''; }
+      else { discountBadgeEl.style.display = 'none'; }
+    }
 
     var variantInput = card.querySelector('[data-variant-input]');
     if (variantInput) variantInput.value = match.id;
@@ -448,6 +521,32 @@
         atcBtn.textContent = 'SOLD OUT';
       }
     }
-  });
+  }
+
+  /* Wire every swatch on the page directly (not via document-level delegation),
+     with both 'click' and 'touchend' handling. This removes any dependency on
+     event-bubbling/delegation timing and on which card's script tag happens to
+     run first - each swatch is now self-sufficient. Guarded per-element so
+     re-running this block (e.g. if the snippet renders many times) never
+     double-binds the same swatch. */
+  function wireSwatches(){
+    document.querySelectorAll('.vamas-prod-card__color').forEach(function(swatch){
+      if (swatch.dataset.swatchWired) return;
+      swatch.dataset.swatchWired = '1';
+
+      var touchHandled = false;
+      swatch.addEventListener('touchend', function(e){
+        touchHandled = true;
+        handleSwatchActivate(swatch);
+        setTimeout(function(){ touchHandled = false; }, 400);
+      }, { passive: true });
+
+      swatch.addEventListener('click', function(e){
+        if (touchHandled) return; /* avoid double-firing: touchend already handled this tap */
+        handleSwatchActivate(swatch);
+      });
+    });
+  }
+  wireSwatches();
 })();
 </script>
