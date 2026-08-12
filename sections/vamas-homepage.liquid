@@ -8,6 +8,12 @@
       {% if block.type == 'slide' %}
         {% assign has_mobile_bg = false %}
         {% if block.settings.mobile_slide_image != blank or block.settings.mobile_image_asset != blank %}{% assign has_mobile_bg = true %}{% endif %}
+        {%- comment -%} Per-slide crop focus. A single global object-position can't
+          suit two different photos - one needs the model's face kept in frame, the
+          other needs her lower body cropped away - so each slide carries its own,
+          separately for desktop and mobile since the crop shape differs. {%- endcomment -%}
+        {%- assign focus_y = block.settings.image_focus_y | default: 8 -%}
+        {%- assign m_focus_y = block.settings.mobile_image_focus_y | default: 8 -%}
         <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}{% if has_mobile_bg %} vamas-slide--has-mobile-bg{% endif %}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
           {% if block.settings.video != blank %}
             <video class="vamas-slide__bg vamas-slide__bg--desktop" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"{% endif %}>
@@ -23,19 +29,23 @@
             </div>
           {% elsif block.settings.slide_image != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
+                 style="object-position: center {{ focus_y }}%;"
                  alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% elsif block.settings.image_asset != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.image_asset | asset_url }}"
+                 style="object-position: center {{ focus_y }}%;"
                  alt="{{ block.settings.line1 | escape }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% endif %}
           {% if block.settings.mobile_slide_image != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_slide_image | img_url: '900x1200', crop: 'center' }}"
+                 style="object-position: center {{ m_focus_y }}%;"
                  alt="{{ block.settings.mobile_slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% elsif block.settings.mobile_image_asset != blank %}
             <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_image_asset | asset_url }}"
+                 style="object-position: center {{ m_focus_y }}%;"
                  alt="{{ block.settings.line1 | escape }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% endif %}
@@ -806,6 +816,9 @@
         { "type": "header", "content": "Mobile / Responsive Banner (optional)" },
         { "type": "image_picker", "id": "mobile_slide_image", "label": "Mobile Image", "info": "Shown instead of the desktop image/video on phones & tablets (≤768px). Leave blank to reuse the desktop banner on mobile." },
         { "type": "text", "id": "mobile_image_asset", "label": "Or theme asset filename (mobile)", "info": "e.g. mobile-banner.jpg" },
+        { "type": "header", "content": "Image Crop Focus" },
+        { "type": "range", "id": "image_focus_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Desktop vertical focus", "info": "0% keeps the very top of the photo in frame, 100% the very bottom. Lower this if a model's head is being cut off; raise it to crop away the lower body.", "default": 8 },
+        { "type": "range", "id": "mobile_image_focus_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Mobile vertical focus", "default": 8 },
         { "type": "select", "id": "text_align", "label": "Text Alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
         { "type": "text", "id": "eyebrow", "label": "Eyebrow Text", "default": "NEW COLLECTION 2026" },
         { "type": "text", "id": "line1", "label": "Heading Line 1", "default": "Craft Your" },
