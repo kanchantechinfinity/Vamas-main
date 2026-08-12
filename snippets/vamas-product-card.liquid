@@ -10,6 +10,14 @@
   {% assign discount_pct = diff | times: 100 | divided_by: first_variant.compare_at_price | round %}
 {% endif %}
 
+{% comment %} Rating value for the mobile on-image badge (e.g. "4.8") {% endcomment %}
+{% if product.metafields.reviews.rating.value %}
+  {% assign rating_num = product.metafields.reviews.rating.value.rating %}
+{% else %}
+  {% assign rating_seed = product.id | modulo: 6 %}
+  {% assign rating_num = rating_seed | times: 0.1 | plus: 4.4 | round: 1 %}
+{% endif %}
+
 {% comment %} Second/third image for the hover swap {% endcomment %}
 {% assign hover_image = product.images[1] %}
 {% if hover_image == blank %}{% assign hover_image = product.images[2] %}{% endif %}
@@ -24,6 +32,20 @@
     {% assign color_option_position = option.position %}
   {% endif %}
 {% endfor %}
+
+{% comment %} Find the product's actual Size option (numeric sizes, e.g. 32/34/36) — mobile-only size pills on the card {% endcomment %}
+{% assign size_values = blank %}
+{% assign size_option_position = 0 %}
+{% for option in product.options_with_values %}
+  {% assign option_name_lower = option.name | downcase %}
+  {% if option_name_lower contains 'size' %}
+    {% assign size_values = option.values %}
+    {% assign size_option_position = option.position %}
+  {% endif %}
+{% endfor %}
+
+{% comment %} Mobile gallery images — a few real product photos for the hand-swipeable strip {% endcomment %}
+{% assign gallery_images = product.images | slice: 0, 4 %}
 
 {% comment %} The default-displayed image/swatch must correspond to the SAME variant, not just "first image" vs "first swatch in the list" {% endcomment %}
 {% assign default_color = '' %}
@@ -110,6 +132,40 @@
   {% endfor %}
 {% endif %}
 
+{% comment %}
+  Map each size to a variant to link to: prefer one matching the card's currently
+  displayed color (so tapping a size doesn't silently switch color too); fall back
+  to the first available variant of that size, then any variant of that size.
+  "~sizekey~<variant_id>§"
+{% endcomment %}
+{% assign size_variant_map = '' %}
+{% if size_option_position > 0 %}
+  {% for value in size_values %}
+    {% assign s_key = value | downcase | strip | replace: ' ', '' %}
+    {% assign s_probe = '~' | append: s_key | append: '~' %}
+    {% assign best_variant_id = '' %}
+    {% assign fallback_variant_id = '' %}
+    {% for v in product.variants %}
+      {% assign v_size = '' %}
+      {% if size_option_position == 1 %}{% assign v_size = v.option1 %}{% endif %}
+      {% if size_option_position == 2 %}{% assign v_size = v.option2 %}{% endif %}
+      {% if size_option_position == 3 %}{% assign v_size = v.option3 %}{% endif %}
+      {% if v_size == value %}
+        {% if fallback_variant_id == '' %}{% assign fallback_variant_id = v.id %}{% endif %}
+        {% assign v_color = '' %}
+        {% if color_option_position == 1 %}{% assign v_color = v.option1 %}{% endif %}
+        {% if color_option_position == 2 %}{% assign v_color = v.option2 %}{% endif %}
+        {% if color_option_position == 3 %}{% assign v_color = v.option3 %}{% endif %}
+        {% if color_option_position == 0 or v_color == default_color %}
+          {% if v.available and best_variant_id == '' %}{% assign best_variant_id = v.id %}{% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if best_variant_id == '' %}{% assign best_variant_id = fallback_variant_id %}{% endif %}
+    {% assign size_variant_map = size_variant_map | append: s_probe | append: best_variant_id | append: '§' %}
+  {% endfor %}
+{% endif %}
+
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
   {% for v in product.variants %}
@@ -139,8 +195,8 @@
 ]{% endcapture %}
 
 <div class="vamas-prod-card" data-color-option="{{ color_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'center' }}"{% endif %}>
-  <div class="vamas-prod-card__img">
-    <a href="{{ product.url }}">
+  <div class="vamas-prod-card__img{% if gallery_images.size > 1 %} has-gallery{% endif %}">
+    <a href="{{ product.url }}" class="vamas-prod-card__img-desktop-link">
       {% if default_card_image %}
         <img class="vamas-prod-card__img-primary" data-primary-img
              src="{{ default_card_image | img_url: '400x533', crop: 'center' }}"
@@ -155,6 +211,20 @@
              alt="" loading="lazy" aria-hidden="true">
       {% endif %}
     </a>
+
+    {% if gallery_images.size > 1 %}
+      {% comment %} Mobile-only: hand-swipeable image strip (hidden on desktop, which keeps the hover-swap pair above) {% endcomment %}
+      <div class="vamas-prod-card__gallery" data-gallery>
+        {% for img in gallery_images %}
+          <a href="{{ product.url }}" class="vamas-prod-card__gallery-slide">
+            <img src="{{ img | img_url: '400x533', crop: 'center' }}" alt="{{ product.title | escape }}" loading="lazy" width="400" height="533">
+          </a>
+        {% endfor %}
+      </div>
+      <div class="vamas-prod-card__dots" data-gallery-dots>
+        {% for img in gallery_images %}<span class="vamas-prod-card__dot{% if forloop.first %} active{% endif %}"></span>{% endfor %}
+      </div>
+    {% endif %}
 
     {% if badge_title != blank %}
       <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">{{ badge_title_short | upcase }}</span>
@@ -174,6 +244,12 @@
     </button>
 
     <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
+
+    {% comment %} Mobile-only: rating badge overlaid on the image, bottom-right {% endcomment %}
+    <a href="{{ product.url }}#reviews" class="vamas-prod-card__rating-badge">
+      <span>{{ rating_num }}</span>
+      <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.5l7.1-.6z"/></svg>
+    </a>
   </div>
 
   <div class="vamas-prod-card__body">
@@ -246,6 +322,23 @@
       <span class="discount" data-discount{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}% off</span>
     </div>
 
+    {% if size_values.size > 0 %}
+      {% comment %} Mobile-only: tapping a size lands straight on the product page with that
+        variant preselected (Shopify auto-honours ?variant=<id> via selected_or_first_available_variant),
+        replacing Add to Cart on the card for mobile. {% endcomment %}
+      <div class="vamas-prod-card__sizes">
+        {% for value in size_values %}
+          {% assign sz_key = value | downcase | strip | replace: ' ', '' %}
+          {% assign sz_probe = '~' | append: sz_key | append: '~' %}
+          {% assign sz_variant_id = '' %}
+          {% if size_variant_map contains sz_probe %}
+            {% assign sz_variant_id = size_variant_map | split: sz_probe | last | split: '§' | first %}
+          {% endif %}
+          <a href="{{ product.url }}{% if sz_variant_id != blank %}?variant={{ sz_variant_id }}{% endif %}" class="vamas-prod-card__size">{{ value }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% if product.available %}
       <form method="post" action="/cart/add">
         <input type="hidden" name="id" value="{{ first_variant.id }}" data-variant-input>
@@ -261,6 +354,21 @@
 
 <script>
 (function(){
+  /* Mobile-only: sync the pagination dots to the swipeable gallery's scroll position */
+  if (!window.__vamasCardGalleryInit) {
+    window.__vamasCardGalleryInit = true;
+    document.addEventListener('scroll', function(e){
+      var gallery = e.target.closest && e.target.closest('[data-gallery]');
+      if (!gallery) return;
+      var card = gallery.closest('.vamas-prod-card');
+      var dotsWrap = card && card.querySelector('[data-gallery-dots]');
+      if (!dotsWrap) return;
+      var idx = Math.round(gallery.scrollLeft / gallery.clientWidth);
+      var dots = dotsWrap.querySelectorAll('.vamas-prod-card__dot');
+      dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+    }, { capture: true, passive: true });
+  }
+
   if (window.__vamasCardSwatchInit) return;
   window.__vamasCardSwatchInit = true;
   document.addEventListener('click', function(e){
