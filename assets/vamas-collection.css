@@ -287,13 +287,16 @@ a{text-decoration:none;color:inherit;}
 /* COLOR SWATCHES */
 .color-dots{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0;}
 .c-dot{
+  display:inline-block; /* dots are rendered as <span> when built from the real colour filter */
   width:24px;height:24px;
   border-radius:50%;
   cursor:pointer;
   border:2px solid transparent;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); /* keeps white/cream dots visible */
   transition:transform .2s,border-color .2s;
 }
 .c-dot:hover,.c-dot.active{transform:scale(1.15);border-color:rgba(66,0,1,.5);}
+.color-dot-label{display:inline-flex;line-height:0;cursor:pointer;}
 /* APPLY BUTTON */
 .sidebar-apply{
   padding:14px 18px;

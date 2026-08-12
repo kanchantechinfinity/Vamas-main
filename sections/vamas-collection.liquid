@@ -14,18 +14,15 @@
 {%- assign neckline_filter = blank -%}
 {%- assign size_filter = blank -%}
 {%- assign availability_filter = blank -%}
+{%- assign color_filter = blank -%}
 {%- for filter in collection.filters -%}
   {%- assign filter_label_down = filter.label | downcase -%}
   {%- if filter_label_down contains 'sleeve' -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'neck' -%}{%- assign neckline_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'size' -%}{%- assign size_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'vail' -%}{%- assign availability_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'colo' -%}{%- assign color_filter = filter -%}{%- endif -%}
 {%- endfor -%}
-
-{%- comment -%} TEMP DEBUG — remove after diagnosing the Size filter {%- endcomment -%}
-<script type="application/json" id="vamas-debug-filters">
-[{% for f in collection.filters %}{"label":{{ f.label | json }},"type":{{ f.type | json }},"param":{{ f.param_name | json }},"valueCount":{{ f.values.size | json }},"firstValues":[{% for v in f.values limit: 6 %}{"label":{{ v.label | json }},"value":{{ v.value | json }},"param":{{ v.param_name | json }},"count":{{ v.count | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}]
-</script>
 
 {% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
 <style>
@@ -178,14 +175,7 @@
           <div class="acc-item" data-filter-group="color">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              <div class="color-dots">
-                <label><input type="checkbox" class="vtag-filter" value="Maroon" {% if collection.current_tags contains 'Maroon' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#420001;" title="Maroon" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-                <label><input type="checkbox" class="vtag-filter" value="Gold" {% if collection.current_tags contains 'Gold' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#c9a96e;" title="Gold" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-                <label><input type="checkbox" class="vtag-filter" value="Green" {% if collection.current_tags contains 'Green' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#2e7d32;" title="Green" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-                <label><input type="checkbox" class="vtag-filter" value="Navy" {% if collection.current_tags contains 'Navy' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#1a237e;" title="Navy" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-                <label><input type="checkbox" class="vtag-filter" value="White" {% if collection.current_tags contains 'White' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#f5f5f5;border:1.5px solid #ccc;" title="White" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-                <label><input type="checkbox" class="vtag-filter" value="Pink" {% if collection.current_tags contains 'Pink' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#e91e8c;" title="Pink" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-              </div>
+              {% render 'vamas-color-filter-dots', color_filter: color_filter, current_tags: collection.current_tags %}
             </div>
           </div>
 
@@ -307,14 +297,7 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        <div class="color-dots">
-          <label><input type="checkbox" class="vtag-filter" value="Maroon" {% if collection.current_tags contains 'Maroon' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#420001;" title="Maroon" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Gold" {% if collection.current_tags contains 'Gold' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#c9a96e;" title="Gold" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Green" {% if collection.current_tags contains 'Green' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#2e7d32;" title="Green" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Navy" {% if collection.current_tags contains 'Navy' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#1a237e;" title="Navy" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="White" {% if collection.current_tags contains 'White' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#f5f5f5;border:1.5px solid #ccc;" title="White" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-          <label><input type="checkbox" class="vtag-filter" value="Pink" {% if collection.current_tags contains 'Pink' %}checked{% endif %} style="display:none;"><div class="c-dot" style="background:#e91e8c;" title="Pink" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></div></label>
-        </div>
+        {% render 'vamas-color-filter-dots', color_filter: color_filter, current_tags: collection.current_tags %}
       </div>
     </div>
 

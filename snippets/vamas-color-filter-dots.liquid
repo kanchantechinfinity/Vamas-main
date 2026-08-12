@@ -1,0 +1,40 @@
+{% comment %}
+  Colour swatch dots for the collection filters.
+
+  Prefers the store's REAL colour filter (Search & Discovery "Color", i.e.
+  filter.v.option.color) so every dot maps to an actual variant colour with a
+  real product count. Each value is run through vamas-color-hex to get a CSS
+  colour, and values that aren't really colours are skipped.
+
+  Falls back to a hardcoded tag-based dot list only when no colour filter is
+  set up, so the group is never empty.
+
+  Params: color_filter, current_tags
+{% endcomment %}
+{% if color_filter != blank %}
+  <div class="color-dots">
+    {% for value in color_filter.values %}
+      {% capture dot_hex %}{% render 'vamas-color-hex', name: value.label %}{% endcapture %}
+      {% assign dot_hex = dot_hex | strip %}
+      {% unless dot_hex == 'SKIP' %}
+        <label class="color-dot-label" title="{{ value.label | escape }} ({{ value.count }})">
+          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value | escape }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()" style="display:none;">
+          <span class="c-dot{% if value.active %} active{% endif %}" style="background:{{ dot_hex }};"></span>
+        </label>
+      {% endunless %}
+    {% endfor %}
+  </div>
+{% else %}
+  {% comment %} No colour filter configured - fall back to tag-based dots {% endcomment %}
+  <div class="color-dots">
+    {% assign fallback_colors = 'Maroon,Gold,Green,Navy,White,Pink' | split: ',' %}
+    {% for c in fallback_colors %}
+      {% capture dot_hex %}{% render 'vamas-color-hex', name: c %}{% endcapture %}
+      {% assign dot_hex = dot_hex | strip %}
+      <label title="{{ c }}">
+        <input type="checkbox" class="vtag-filter" value="{{ c }}" {% if current_tags contains c %}checked{% endif %} style="display:none;">
+        <span class="c-dot{% if current_tags contains c %} active{% endif %}" style="background:{{ dot_hex }};" onclick="var i=this.previousElementSibling;i.checked=!i.checked;this.classList.toggle('active');"></span>
+      </label>
+    {% endfor %}
+  </div>
+{% endif %}
