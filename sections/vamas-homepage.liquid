@@ -200,6 +200,13 @@
 {% assign cat_blocks = section.blocks | where: 'type', 'category' %}
 {% if cat_blocks.size > 0 and section.settings.show_categories %}
 <section class="vamas-section vamas-section--cats">
+  {% if section.settings.made_with_love_text != blank %}
+    <p class="vamas-made-love">
+      <span class="vamas-made-love__heart" aria-hidden="true">&#10084;</span>
+      <span class="vamas-made-love__text">{{ section.settings.made_with_love_text }}</span>
+      <span class="vamas-made-love__heart" aria-hidden="true">&#10084;</span>
+    </p>
+  {% endif %}
   <div class="vamas-section__header">
     <div>
       <h2 class="vamas-section__title">Choice <span>For You</span></h2>
@@ -761,6 +768,7 @@
   "settings": [
     { "type": "header", "content": "Categories Section" },
     { "type": "checkbox", "id": "show_categories", "label": "Show Categories", "default": true },
+    { "type": "text", "id": "made_with_love_text", "label": "\"Made with Love\" line", "info": "Shown in a script font with a heart on each side, above the Choice For You heading. Leave blank to hide.", "default": "Made with Love" },
     { "type": "url", "id": "cat_view_all", "label": "View All URL" },
     { "type": "header", "content": "New Arrivals" },
     { "type": "checkbox", "id": "show_new_arrivals", "label": "Show New Arrivals", "default": true },

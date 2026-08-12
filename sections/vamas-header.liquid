@@ -11,13 +11,17 @@
   {% endif %}
   {% assign announce_list = announce_msgs | split: '§' %}
 
+  {% comment %} Every message is framed by a heart on each side, so the merchant
+    types plain text and never has to paste the symbol themselves. {% endcomment %}
+  {% assign announce_heart = '<span class="vamas-announce__heart" aria-hidden="true">&#10084;</span>' %}
+
   {% if announce_list.size > 0 %}
     {% if section.settings.announce_marquee %}
       <div class="vamas-announce vamas-announce--marquee">
         <div class="vamas-announce__track" style="animation-duration: {{ section.settings.announce_speed | default: 22 }}s;">
           {% for i in (1..2) %}
             <span{% if i == 2 %} aria-hidden="true"{% endif %}>
-              {% for msg in announce_list %}{{ msg }}{% unless forloop.last %} &nbsp;|&nbsp; {% endunless %}{% endfor %}
+              {% for msg in announce_list %}{{ announce_heart }} {{ msg }} {{ announce_heart }}{% unless forloop.last %} &nbsp;&nbsp; {% endunless %}{% endfor %}
             </span>
           {% endfor %}
         </div>
@@ -27,7 +31,7 @@
            data-announce-switch
            data-interval="{{ section.settings.announce_switch_seconds | default: 2 }}">
         {% for msg in announce_list %}
-          <span class="vamas-announce__msg{% if forloop.first %} is-active{% endif %}">{{ msg }}</span>
+          <span class="vamas-announce__msg{% if forloop.first %} is-active{% endif %}">{{ announce_heart }} {{ msg }} {{ announce_heart }}</span>
         {% endfor %}
       </div>
     {% endif %}

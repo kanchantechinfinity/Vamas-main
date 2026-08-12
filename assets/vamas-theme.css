@@ -51,6 +51,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   align-items: center;
   justify-content: center;
 }
+/* Hearts bracketing each announcement line */
+.vamas-announce__heart { color: #e0245e; margin: 0 2px; font-size: 0.95em; line-height: 1; }
 @media (prefers-reduced-motion: reduce) {
   .vamas-announce--switch .vamas-announce__msg { transition: none; }
 }
@@ -264,6 +266,19 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 .vamas-section__header--center { flex-direction: column; align-items: center; text-align: center; }
+
+/* "Made with Love" line above the categories heading */
+.vamas-made-love {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: 'Great Vibes', cursive;
+  font-size: 34px; line-height: 1.2; color: var(--color-gold-dark);
+  margin-bottom: 6px;
+}
+.vamas-made-love__heart { color: #e0245e; font-size: 17px; line-height: 1; }
+@media (max-width: 768px) {
+  .vamas-made-love { font-size: 26px; gap: 8px; margin-bottom: 4px; }
+  .vamas-made-love__heart { font-size: 14px; }
+}
 .vamas-section__title { font-size: 30px; font-weight: 800; color: var(--color-maroon); line-height: 1.2; }
 .vamas-section__title span { color: var(--color-gold-dark); }
 .vamas-section__subtitle { font-size: 12px; color: rgba(66, 0, 1, 0.5); margin-top: 5px; }
@@ -915,7 +930,15 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
      vamas-homepage.liquid. Falls back to 420px before JS runs / if JS fails. */
   .vamas-slide { min-height: var(--vamas-hero-mobile-h, 420px); }
   .vamas-slide__inner { padding: 0 24px; }
+  /* On phones the model sits on the RIGHT of the crop, so right-aligned slides
+     flip fully to the left - block, text, button and all - or the copy lands on
+     top of her. The desktop right-alignment rules have to be undone here, not
+     just the container's justify-content. */
   .vamas-slide--right .vamas-slide__inner { justify-content: flex-start; }
+  .vamas-slide--right .vamas-slide__text { text-align: left; max-width: 100%; }
+  .vamas-slide--right .vamas-slide__btns { justify-content: flex-start; }
+  .vamas-slide--right .vamas-slide__coupon { justify-content: flex-start; }
+  .vamas-slide--right .vamas-slide__sub { margin-left: 0; }
   .vamas-slide__heading { font-size: 34px; }
   .vamas-slide__heading-break { display: block; }
   .vamas-slide__offer { font-size: 25px; }
