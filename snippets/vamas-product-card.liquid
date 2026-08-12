@@ -18,10 +18,6 @@
   {% assign rating_num = rating_seed | times: 0.1 | plus: 4.4 | round: 1 %}
 {% endif %}
 
-{% comment %} Second/third image for the hover swap {% endcomment %}
-{% assign hover_image = product.images[1] %}
-{% if hover_image == blank %}{% assign hover_image = product.images[2] %}{% endif %}
-
 {% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
 {% assign color_values = blank %}
 {% assign color_option_position = 0 %}
@@ -133,7 +129,54 @@
 {% endif %}
 
 {% comment %}
-  Map each size to a variant to link to: prefer one matching the card's currently
+  Map each colour to its SECOND distinct photo (the hover-swap image), so hover
+  always shows the next photo of the CURRENTLY SELECTED colour rather than a
+  fixed product-wide image. Single pass over product.images: the first photo
+  encountered for a colour is its "first" (matches color_img_map's variant
+  featured_image), the next DIFFERENT photo for that same colour is its
+  "second". Colours with only one photo simply never get an entry here, so
+  the hover swap is skipped for them.
+  "~colourkey~<url>§~colourkey2~<url2>§"
+{% endcomment %}
+{% assign color_second_img_map = '' %}
+{% assign color_seen_once = '' %}
+{% if color_option_position > 0 %}
+  {% for img in product.images %}
+    {% assign img_first_variant = img.variants.first %}
+    {% if img_first_variant %}
+      {% assign img_color = '' %}
+      {% if color_option_position == 1 %}{% assign img_color = img_first_variant.option1 %}{% endif %}
+      {% if color_option_position == 2 %}{% assign img_color = img_first_variant.option2 %}{% endif %}
+      {% if color_option_position == 3 %}{% assign img_color = img_first_variant.option3 %}{% endif %}
+      {% if img_color != blank %}
+        {% assign ic_key = img_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+        {% assign ic_seen_probe = '|' | append: ic_key | append: '|' %}
+        {% assign ic_probe = '~' | append: ic_key | append: '~' %}
+        {% if color_seen_once contains ic_seen_probe %}
+          {% unless color_second_img_map contains ic_probe %}
+            {% assign img_thumb = img | img_url: '400x533', crop: 'center' %}
+            {% assign color_second_img_map = color_second_img_map | append: ic_probe | append: img_thumb | append: '§' %}
+          {% endunless %}
+        {% else %}
+          {% assign color_seen_once = color_seen_once | append: ic_seen_probe %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% comment %} The hover-swap image for the DEFAULT-shown colour, resolved via the same
+  per-colour map so the initial (no-JS) markup matches the JS behaviour. {% endcomment %}
+{% assign hover_image_url = '' %}
+{% if default_color != '' %}
+  {% assign default_color_key = default_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+  {% assign default_color_probe = '~' | append: default_color_key | append: '~' %}
+  {% if color_second_img_map contains default_color_probe %}
+    {% assign hover_image_url = color_second_img_map | split: default_color_probe | last | split: '§' | first %}
+  {% endif %}
+{% endif %}
+
+{% comment %} Map each size to a variant to link to: prefer one matching the card's currently
   displayed color (so tapping a size doesn't silently switch color too); fall back
   to the first available variant of that size, then any variant of that size.
   "~sizekey~<variant_id>§"
@@ -180,6 +223,18 @@
     {% if v.featured_image %}
       {% assign v_image_url = v.featured_image | img_url: '400x533', crop: 'center' %}
     {% endif %}
+    {% assign v_color_for_hover = '' %}
+    {% if color_option_position == 1 %}{% assign v_color_for_hover = v.option1 %}{% endif %}
+    {% if color_option_position == 2 %}{% assign v_color_for_hover = v.option2 %}{% endif %}
+    {% if color_option_position == 3 %}{% assign v_color_for_hover = v.option3 %}{% endif %}
+    {% assign v_second_image_url = '' %}
+    {% if v_color_for_hover != '' %}
+      {% assign v_hover_key = v_color_for_hover | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+      {% assign v_hover_probe = '~' | append: v_hover_key | append: '~' %}
+      {% if color_second_img_map contains v_hover_probe %}
+        {% assign v_second_image_url = color_second_img_map | split: v_hover_probe | last | split: '§' | first %}
+      {% endif %}
+    {% endif %}
     {
       "id": {{ v.id | json }},
       "available": {{ v.available | json }},
@@ -187,6 +242,7 @@
       "comparePriceHtml": {% if v_compare_html != blank %}{{ v_compare_html | json }}{% else %}null{% endif %},
       "discountPct": {{ v_discount | json }},
       "image": {% if v_image_url != blank %}{{ v_image_url | json }}{% else %}null{% endif %},
+      "secondImage": {% if v_second_image_url != blank %}{{ v_second_image_url | json }}{% else %}null{% endif %},
       "option1": {{ v.option1 | json }},
       "option2": {{ v.option2 | json }},
       "option3": {{ v.option3 | json }}
@@ -202,13 +258,12 @@
              src="{{ default_card_image | img_url: '400x533', crop: 'center' }}"
              alt="{{ default_card_image.alt | escape | default: product.title }}"
              loading="lazy" width="400" height="533">
+        <img class="vamas-prod-card__img-hover"
+             data-hover-img
+             src="{% if hover_image_url != blank %}{{ hover_image_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'center' }}{% endif %}"
+             alt="" loading="lazy" aria-hidden="true">
       {% else %}
         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg vamas-prod-card__img-primary' }}
-      {% endif %}
-      {% if hover_image != blank %}
-        <img class="vamas-prod-card__img-hover"
-             src="{{ hover_image | img_url: '400x533', crop: 'center' }}"
-             alt="" loading="lazy" aria-hidden="true">
       {% endif %}
     </a>
 
@@ -412,13 +467,19 @@
       galleryFirstImg.src = match.image || img.src;
     }
 
-    /* The card's hover-swap image sits on top of the primary image while the
-       mouse is anywhere over the card (including the swatch row below the
-       photo), so a just-picked color's image was hidden underneath it until
-       the mouse left. Force it hidden immediately on click, then let CSS
-       hover take back over on the next mouseleave/mouseenter cycle. */
+    /* The hover-swap image must show the SECOND photo of the just-selected
+       color, not a fixed product-wide photo - otherwise hovering after a
+       color change shows the wrong color's picture. If that color has no
+       second photo, point it at the same photo as the primary so hovering
+       has no visible effect (nothing to swap to). */
     var hoverImg = card.querySelector('.vamas-prod-card__img-hover');
     if (hoverImg) {
+      hoverImg.src = match.secondImage || match.image || (img ? img.src : hoverImg.src);
+      /* The card's hover-swap image sits on top of the primary image while the
+         mouse is anywhere over the card (including the swatch row below the
+         photo), so a just-picked color's image was hidden underneath it until
+         the mouse left. Force it hidden immediately on click, then let CSS
+         hover take back over on the next mouseleave/mouseenter cycle. */
       hoverImg.style.opacity = '0';
       card.addEventListener('mouseleave', function onLeave(){
         hoverImg.style.opacity = '';
