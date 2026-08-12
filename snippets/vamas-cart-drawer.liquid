@@ -58,6 +58,7 @@
   }
 
   function renderCart(cart){
+    if (!cart || !cart.items) return; /* /cart/change.js and /cart/add.js return {status, message} on error (e.g. inventory limit reached), not a cart object - leave the drawer showing its last good state instead of crashing */
     if (!cart.items.length){
       itemsWrap.innerHTML = '';
       footer.style.display = 'none';
@@ -98,7 +99,7 @@
   }
 
   function fetchCart(){
-    return fetch('/cart.js').then(function(r){ return r.json(); }).then(renderCart);
+    return fetch('/cart.js').then(function(r){ return r.json(); }).then(renderCart).catch(function(){});
   }
 
   function changeLine(line, delta){
@@ -111,7 +112,7 @@
     }).then(function(r){ return r.json(); }).then(function(cart){
       renderCart(cart);
       if (window.VamasCart) window.VamasCart.refresh();
-    });
+    }).catch(function(){});
   }
 
   function removeLine(line){
@@ -122,7 +123,7 @@
     }).then(function(r){ return r.json(); }).then(function(cart){
       renderCart(cart);
       if (window.VamasCart) window.VamasCart.refresh();
-    });
+    }).catch(function(){});
   }
 
   function openDrawer(){
