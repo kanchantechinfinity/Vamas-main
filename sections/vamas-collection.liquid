@@ -22,6 +22,13 @@
   {%- if filter_label_down contains 'vail' -%}{%- assign availability_filter = filter -%}{%- endif -%}
 {%- endfor -%}
 
+{%- comment -%} TEMP DEBUG: remove after diagnosing filter labels {%- endcomment -%}
+<div id="vamas-debug-filters" style="display:none;">
+  {% for filter in collection.filters %}
+    <span data-label="{{ filter.label | escape }}" data-type="{{ filter.type }}" data-count="{{ filter.values.size }}"></span>
+  {% endfor %}
+</div>
+
 {% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
 <style>
   {% if section.settings.hero_bg_image != blank %}
