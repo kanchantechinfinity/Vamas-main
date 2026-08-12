@@ -137,6 +137,7 @@
       .cart-items-head{display:none;}
       .cart-item{grid-template-columns:1fr;gap:10px;padding:14px;}
       .ci-img{width:72px;height:86px;}
+      .ci-price{display:none;}
       .ci-subtotal{text-align:left;}
       .ci-remove{justify-content:flex-start;}
       .order-summary{position:static;}
