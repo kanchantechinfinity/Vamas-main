@@ -861,7 +861,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
   /* Keep price/compare/discount on one line on mobile too (was a 2-row grid) */
   .vamas-prod-card__body { padding: 12px; }
-  .vamas-prod-card__price { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 3px; overflow: hidden; }
+  .vamas-prod-card__price { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 1px; overflow: hidden; }
   .vamas-prod-card__price .price { font-size: 12px; white-space: nowrap; flex-shrink: 0; }
   .vamas-prod-card__price .original { font-size: 8px; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .vamas-prod-card__price .discount { font-size: 7px; white-space: nowrap; flex-shrink: 0; }
