@@ -380,10 +380,10 @@
       <div class="vamas-prod-grid vamas-prod-grid--scroll">
         {% assign na_col = collections[section.settings.new_arrivals_collection] %}
         {% if na_col == blank or na_col.products.size == 0 %}{% assign na_col = collections.all %}{% endif %}
-        {% for product in na_col.products limit: 2 %}
+        {% for product in na_col.products limit: 12 %}
           {% render 'vamas-product-card', product: product %}
         {% else %}
-          {% for i in (1..2) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+          {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
       <a href="{{ collections[section.settings.new_arrivals_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
@@ -395,10 +395,10 @@
       <div class="vamas-prod-grid vamas-prod-grid--scroll">
         {% assign bs_col = collections[section.settings.bestsellers_collection] %}
         {% if bs_col == blank or bs_col.products.size == 0 %}{% assign bs_col = collections.all %}{% endif %}
-        {% for product in bs_col.products reversed limit: 2 %}
+        {% for product in bs_col.products reversed limit: 12 %}
           {% render 'vamas-product-card', product: product %}
         {% else %}
-          {% for i in (1..2) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+          {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
       <a href="{{ collections[section.settings.bestsellers_collection].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
@@ -460,10 +460,10 @@
       <div class="vamas-prod-grid vamas-prod-grid--scroll">
         {% assign ec1_col = collections[section.settings.extra_collection_1] %}
         {% if ec1_col == blank or ec1_col.products.size == 0 %}{% assign ec1_col = collections.all %}{% endif %}
-        {% for product in ec1_col.products limit: 2 %}
+        {% for product in ec1_col.products limit: 12 %}
           {% render 'vamas-product-card', product: product %}
         {% else %}
-          {% for i in (1..2) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+          {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
       <a href="{{ collections[section.settings.extra_collection_1].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
@@ -475,10 +475,10 @@
       <div class="vamas-prod-grid vamas-prod-grid--scroll">
         {% assign ec2_col = collections[section.settings.extra_collection_2] %}
         {% if ec2_col == blank or ec2_col.products.size == 0 %}{% assign ec2_col = collections.all %}{% endif %}
-        {% for product in ec2_col.products limit: 2 %}
+        {% for product in ec2_col.products limit: 12 %}
           {% render 'vamas-product-card', product: product %}
         {% else %}
-          {% for i in (1..2) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
+          {% for i in (1..6) %}{% render 'vamas-product-card-placeholder', index: i %}{% endfor %}
         {% endfor %}
       </div>
       <a href="{{ collections[section.settings.extra_collection_2].url | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
