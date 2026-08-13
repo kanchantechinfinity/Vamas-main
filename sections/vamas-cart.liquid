@@ -146,47 +146,21 @@
 {% if related_blocks.size > 0 or rel_col.products.size > 0 %}
 <section class="recently-section">
   <div class="rs-title">{{ section.settings.related_heading | default: 'You May Also Like' }}</div>
-  <div class="rs-grid">
+  {% comment %} Same card the collection, homepage, search and product pages use.
+    The bespoke rs-card this replaced was 287px wide with a 220px landscape image,
+    against the real card's portrait 3:4 - which is what made it read as small
+    and slightly off next to every other grid on the site. {% endcomment %}
+  <div class="vamas-prod-grid">
     {% if related_blocks.size > 0 %}
       {% for block in related_blocks %}
         {% assign rp = block.settings.product %}
         {% if rp != blank %}
-        {% assign rfv = rp.selected_or_first_available_variant %}
-        <a href="{{ rp.url }}" class="rs-card" style="text-decoration:none;color:inherit;display:block;">
-          <div class="rs-img"><img src="{{ rp.featured_image | img_url: '400x' }}" alt="{{ rp.title | escape }}"></div>
-          <div class="rs-info">
-            <div class="rs-name">{{ rp.title }}</div>
-            <div class="rs-type">{{ rp.type }}</div>
-            <div class="rs-price-row">
-              <span class="rs-price">{{ rfv.price | money }}</span>
-              {% if rfv.compare_at_price > rfv.price %}<span class="rs-old">{{ rfv.compare_at_price | money }}</span>{% endif %}
-            </div>
-            {% form 'product', rp %}
-              <input type="hidden" name="id" value="{{ rfv.id }}">
-              <button type="submit" class="rs-add" onclick="event.stopPropagation();"{% unless rfv.available %} disabled{% endunless %}>ADD TO CART</button>
-            {% endform %}
-          </div>
-        </a>
+          {% render 'vamas-product-card', product: rp %}
         {% endif %}
       {% endfor %}
     {% else %}
       {% for rp in rel_col.products limit: 4 %}
-        {% assign rfv = rp.selected_or_first_available_variant %}
-        <a href="{{ rp.url }}" class="rs-card" style="text-decoration:none;color:inherit;display:block;">
-          <div class="rs-img"><img src="{{ rp.featured_image | img_url: '400x' }}" alt="{{ rp.title | escape }}"></div>
-          <div class="rs-info">
-            <div class="rs-name">{{ rp.title }}</div>
-            <div class="rs-type">{{ rp.type }}</div>
-            <div class="rs-price-row">
-              <span class="rs-price">{{ rfv.price | money }}</span>
-              {% if rfv.compare_at_price > rfv.price %}<span class="rs-old">{{ rfv.compare_at_price | money }}</span>{% endif %}
-            </div>
-            {% form 'product', rp %}
-              <input type="hidden" name="id" value="{{ rfv.id }}">
-              <button type="submit" class="rs-add" onclick="event.stopPropagation();"{% unless rfv.available %} disabled{% endunless %}>ADD TO CART</button>
-            {% endform %}
-          </div>
-        </a>
+        {% render 'vamas-product-card', product: rp %}
       {% endfor %}
     {% endif %}
   </div>

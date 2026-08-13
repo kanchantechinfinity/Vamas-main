@@ -112,20 +112,8 @@
 
     .recently-section{padding:48px var(--page-gutter) 64px;}
     .rs-title{font-size:20px;font-weight:800;color:var(--m);margin-bottom:24px;}
-    .rs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
-    .rs-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(66,0,1,.07);transition:transform .2s,box-shadow .2s;cursor:pointer;}
-    .rs-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(66,0,1,.13);}
-    .rs-img{height:220px;overflow:hidden;}
-    .rs-img img{width:100%;height:100%;object-fit:cover;object-position:top;}
-    .rs-info{padding:13px 14px;}
-    .rs-name{font-size:12px;font-weight:700;color:var(--m);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
-    .rs-type{font-size:10px;color:#888;margin-bottom:8px;}
-    .rs-price-row{display:flex;align-items:center;gap:7px;}
-    .rs-price{font-size:13px;font-weight:700;color:var(--m);}
-    .rs-old{font-size:11px;color:#bbb;text-decoration:line-through;}
-    .rs-off{background:#e8f5e9;color:#2e7d32;font-size:9px;padding:2px 6px;border-radius:8px;font-weight:600;}
-    .rs-add{width:100%;background:transparent;border:1.5px solid var(--m);color:var(--m);padding:7px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:9px;font-family:var(--font-body);transition:all .2s;}
-    .rs-add:hover{background:var(--m);color:var(--g);}
+    /* The rs-card rules that lived here are gone: this row now renders the shared
+       vamas-product-card, styled from vamas-theme.css like every other grid. */
 
     .wp-float{display:none;}
 
@@ -141,12 +129,9 @@
       .ci-remove{justify-content:flex-start;}
       .order-summary{position:static;}
       .recently-section{padding:32px 16px 48px;}
-      .rs-grid{grid-template-columns:repeat(2,1fr);gap:12px;}
-      .rs-img{height:170px;}
     }
     @media (min-width: 769px) and (max-width: 1180px) {
       .breadcrumb,.cart-page-header{padding-left:32px;padding-right:32px;}
       .cart-layout{padding:0 32px 60px;grid-template-columns:1fr 300px;}
       .recently-section{padding:40px 32px 56px;}
-      .rs-grid{grid-template-columns:repeat(2,1fr);}
     }
