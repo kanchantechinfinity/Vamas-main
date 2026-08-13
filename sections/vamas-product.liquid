@@ -215,10 +215,29 @@
         <button type="button" class="btn-notify" id="notify-btn"{% if current_variant.available %} hidden{% endif %}>&#128276; NOTIFY ME</button>
       </div>
 
+
+      {% if section.settings.custom_note != blank %}
+      <div class="custom-note">&#9986; {{ section.settings.custom_note }}</div>
+      {% endif %}
+
+      <div class="delivery-box">
+        {% if section.settings.delivery_line_1 != blank %}<div class="delivery-row"><span class="d-icon">&#128666;</span><span>{{ section.settings.delivery_line_1 }}</span></div>{% endif %}
+        {% if section.settings.delivery_line_2 != blank %}<div class="delivery-row"><span class="d-icon">&#128197;</span><span>{{ section.settings.delivery_line_2 }}</span></div>{% endif %}
+        {% if section.settings.delivery_line_3 != blank %}<div class="delivery-row"><span class="d-icon">&#8635;</span><span>{{ section.settings.delivery_line_3 }}</span></div>{% endif %}
+        {% if section.settings.show_pincode %}
+        <div class="pincode-form">
+          <input class="pincode-input" id="pincode-input" type="text" maxlength="6" placeholder="Enter pincode to check delivery">
+          <button type="button" class="pincode-btn" id="pincode-btn">CHECK</button>
+        </div>
+        <div class="pincode-result" id="pincode-result"></div>
+        {% endif %}
+      </div>
+    {% endform %}
+
       {% comment %} Back-in-stock request. There is no back-in-stock app on this store,
         so the request goes through Shopify's own contact form - it reaches the shop
         inbox with the product and variant attached, and needs no third party. {% endcomment %}
-      <div class="notify-modal{% if form.posted_successfully? %} is-open{% endif %}" id="notify-modal" aria-hidden="true">
+      <div class="notify-modal" id="notify-modal" aria-hidden="true">
         <div class="notify-modal__overlay" data-notify-close></div>
         <div class="notify-modal__panel" role="dialog" aria-modal="true" aria-labelledby="notify-title">
           <button type="button" class="notify-modal__close" data-notify-close aria-label="Close">&times;</button>
@@ -243,24 +262,6 @@
           {% endform %}
         </div>
       </div>
-
-      {% if section.settings.custom_note != blank %}
-      <div class="custom-note">&#9986; {{ section.settings.custom_note }}</div>
-      {% endif %}
-
-      <div class="delivery-box">
-        {% if section.settings.delivery_line_1 != blank %}<div class="delivery-row"><span class="d-icon">&#128666;</span><span>{{ section.settings.delivery_line_1 }}</span></div>{% endif %}
-        {% if section.settings.delivery_line_2 != blank %}<div class="delivery-row"><span class="d-icon">&#128197;</span><span>{{ section.settings.delivery_line_2 }}</span></div>{% endif %}
-        {% if section.settings.delivery_line_3 != blank %}<div class="delivery-row"><span class="d-icon">&#8635;</span><span>{{ section.settings.delivery_line_3 }}</span></div>{% endif %}
-        {% if section.settings.show_pincode %}
-        <div class="pincode-form">
-          <input class="pincode-input" id="pincode-input" type="text" maxlength="6" placeholder="Enter pincode to check delivery">
-          <button type="button" class="pincode-btn" id="pincode-btn">CHECK</button>
-        </div>
-        <div class="pincode-result" id="pincode-result"></div>
-        {% endif %}
-      </div>
-    {% endform %}
     </product-form>
 
     {% if section.settings.show_payment_strip %}
@@ -648,7 +649,7 @@
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
     /* Shopify bounces back to ?contact_posted=true after the form is sent, so the
        confirmation is only visible if the modal reopens itself on that return. */
-    if (modal.classList.contains('is-open')) modal.setAttribute('aria-hidden','false');
+    if (/[?&]contact_posted=true/.test(location.search)) open();
   })();
 
   document.querySelectorAll('.swatch, .size-btn').forEach(function(el) {
