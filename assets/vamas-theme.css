@@ -1345,6 +1345,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-nav__links a { font-size: 9px; letter-spacing: .6px; }
   .vamas-nav__icons { gap: 10px; }
 
+  /* The blanket "tablet and below" rule drops .vamas-prod-grid to 2-up, which
+     was fine at phone widths but leaves 469px cards on a 1022px tablet. Match
+     the collection grid at 3-up instead. */
+  .vamas-prod-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
   /* Homepage collection rails: 4-up left ~185px cards. Three reads better
      at this width and matches the card's own proportions. */
   .vamas-prod-grid--scroll { gap: 16px; }
