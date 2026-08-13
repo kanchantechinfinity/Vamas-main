@@ -24,6 +24,50 @@
   {%- if filter_label_down contains 'colo' -%}{%- assign color_filter = filter -%}{%- endif -%}
 {%- endfor -%}
 
+{%- comment -%}
+  Size, three ways, in order of preference:
+
+    1. size_filter        - the native Search & Discovery filter. Best option;
+                            used verbatim when the merchant enables it.
+    2. size-NN tags       - Shopify's built-in tag routes (/collections/x/size-46)
+                            filter server-side with no app involved, so this is a
+                            real working bypass while (1) is off.
+    3. size_list setting  - neither exists yet, so render the known sizes as
+                            placeholders pointing at filter.v.option.size. They do
+                            nothing until (1) is switched on, but they keep the row
+                            from vanishing and upgrade themselves automatically.
+
+  Note filter.v.option.size is SILENTLY IGNORED unless the Size filter is enabled
+  in Search & Discovery - the URL is accepted and the product count never changes.
+  That is why (2) exists.
+{%- endcomment -%}
+{%- assign size_tag_list = '' -%}
+{%- for t in collection.all_tags -%}
+  {%- assign t_head = t | downcase | slice: 0, 5 -%}
+  {%- if t_head == 'size-' -%}
+    {%- assign size_tag_list = size_tag_list | append: t | append: ',' -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign size_tags = size_tag_list | split: ',' -%}
+
+{%- comment -%} Tags already on screen that aren't sizes, so picking a size adds to
+  the sleeve/neckline choice instead of throwing it away. {%- endcomment -%}
+{%- assign size_other_tags = '' -%}
+{%- assign active_size_tag = '' -%}
+{%- for ct in current_tags -%}
+  {%- assign ct_head = ct | downcase | slice: 0, 5 -%}
+  {%- if ct_head == 'size-' -%}
+    {%- assign active_size_tag = ct -%}
+  {%- else -%}
+    {%- assign size_other_tags = size_other_tags | append: ct | append: '+' -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign size_base_url = collection.url -%}
+{%- if size_other_tags != '' -%}
+  {%- assign size_other_path = size_other_tags | split: '+' | join: '+' -%}
+  {%- assign size_base_url = collection.url | append: '/' | append: size_other_path -%}
+{%- endif -%}
+
 {% if section.settings.hero_bg_image != blank or section.settings.hero_bg_mobile != blank %}
 <style>
   {% if section.settings.hero_bg_image != blank %}
@@ -118,10 +162,22 @@
         <button type="button" class="size-pill size-pill--more" data-size-more>+{{ size_hidden }}</button>
       {% endif %}
     </div>
+  {% elsif size_tags.size > 0 %}
+    {% comment %} Tier 2: real filtering via Shopify's built-in tag routes. {% endcomment %}
+    {% assign size_total = size_tags.size %}
+    {% assign size_hidden = size_total | minus: size_visible_cap %}
+    <div class="col-toolbar__sizes" data-size-row data-size-tag-mode>
+      <a href="{{ size_base_url }}" class="size-pill{% if active_size_tag == '' %} is-active{% endif %}">ALL</a>
+      {% for t in size_tags %}
+        <a href="{% if t == active_size_tag %}{{ size_base_url }}{% else %}{{ size_base_url }}/{{ t | handleize }}{% endif %}"
+           class="size-pill{% if t == active_size_tag %} is-active{% endif %}{% if forloop.index0 >= size_visible_cap %} size-pill--extra{% endif %}">{{ t | remove_first: 'size-' | upcase }}</a>
+      {% endfor %}
+      {% if size_hidden > 0 %}
+        <button type="button" class="size-pill size-pill--more" data-size-more>+{{ size_hidden }}</button>
+      {% endif %}
+    </div>
   {% elsif section.settings.size_list != blank %}
-    {% comment %} No native Size filter enabled in Search & Discovery yet - render the
-      store's known sizes anyway, linking to the standard variant-option filter param
-      so they start filtering the moment that filter is switched on. {% endcomment %}
+    {% comment %} Tier 3: placeholders until either of the above exists. {% endcomment %}
     {% assign fallback_sizes = section.settings.size_list | split: ',' %}
     {% assign size_total = fallback_sizes.size %}
     {% assign size_hidden = size_total | minus: size_visible_cap %}
@@ -290,6 +346,15 @@
         <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL</a>
         {% for value in size_filter.values %}
           <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+        {% endfor %}
+        <button type="button" class="size-pill size-pill--more" data-size-fit-more hidden>+0</button>
+      </div>
+    {% elsif size_tags.size > 0 %}
+      <div class="sidebar-sizes" data-size-fit data-size-tag-mode>
+        <a href="{{ size_base_url }}" class="size-pill{% if active_size_tag == '' %} is-active{% endif %}">ALL</a>
+        {% for t in size_tags %}
+          <a href="{% if t == active_size_tag %}{{ size_base_url }}{% else %}{{ size_base_url }}/{{ t | handleize }}{% endif %}"
+             class="size-pill{% if t == active_size_tag %} is-active{% endif %}">{{ t | remove_first: 'size-' | upcase }}</a>
         {% endfor %}
         <button type="button" class="size-pill size-pill--more" data-size-fit-more hidden>+0</button>
       </div>
@@ -553,6 +618,25 @@ function toggleAcc(head){
   if (!row) return;
   var more = row.querySelector('[data-size-more]');
   if (more) more.addEventListener('click', function(){ row.classList.add('is-expanded'); });
+})();
+
+/* Tag-mode size pills navigate to a tag PATH (/collections/x/size-46), which on
+   its own would drop any filter.* query params the shopper already has active
+   (colour, price). Liquid can't read the query string, so re-attach it here. */
+(function(){
+  var rows = document.querySelectorAll('[data-size-tag-mode]');
+  if (!rows.length || !location.search) return;
+  var keep = [];
+  new URLSearchParams(location.search).forEach(function(v, k){
+    if (k.indexOf('filter.') === 0) keep.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+  });
+  if (!keep.length) return;
+  var qs = '?' + keep.join('&');
+  Array.prototype.forEach.call(rows, function(row){
+    Array.prototype.forEach.call(row.querySelectorAll('a.size-pill'), function(a){
+      if (a.getAttribute('href').indexOf('?') === -1) a.setAttribute('href', a.getAttribute('href') + qs);
+    });
+  });
 })();
 
 /* Desktop sidebar sizes: keep them on ONE line, showing however many actually
