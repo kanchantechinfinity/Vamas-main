@@ -1,6 +1,37 @@
 
 # Build Log
 
+## 2026-08-13 — Size chart popup rebuilt from the brand's own chart
+
+**Ask:** use Vamas's real size chart (supplied as a PDF), add a how-to-measure section,
+open it as a popup.
+
+The popup already existed but carried a generic Bust / Waist / Hip / Length table that
+did not match the brand's chart at all. Replaced with the real one, in the same
+orientation as the printed chart — measurements down the side, XS–XXL across the top —
+so the two can be checked line by line.
+
+**Worth knowing:** the numeric sizes sold on site *are* the chest measurement — 32 = XS
+through 42 = XXL. Both labels now sit in the header instead of leaving shoppers to work
+it out. This is also what the earlier M/L/XL/XXL variant data was standing in for.
+
+Added the three garment notes from the chart (1.5in seam allowance, margin can be opened
+up, measurements vary by fabric), a **HOW TO MEASURE** section with written steps for
+chest, waist, length and sleeve, and an optional image setting so the merchant can upload
+the diagram from page 2 of the PDF.
+
+**Same z-index bug as the lightbox:** the overlay was at 7500, below the sticky ATC bar's
+9991, so the bar covered the bottom of the chart on phones. Raised to 10040, bar hidden
+while open, Escape closes.
+
+**Verified live:** all 42 numbers match the PDF exactly. Header reads XS 32 … XXL 42.
+INCHES/CM toggle converts correctly (32in → 81.3cm). Phone 375px: modal 375×690, table
+scrolls sideways with the measurement column pinned, body scrolls, sticky bar hidden,
+page overflow 0. No JS errors.
+
+**Flagged:** the chart stops at XXL/42, but the store sells 44, 46, 48 and 50. Those
+sizes have no published measurements — the team needs to supply them.
+
 ## 2026-08-13 — Click-to-zoom, nav curve spacing
 
 **Click to zoom was broken two ways, both real:**
