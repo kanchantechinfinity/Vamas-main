@@ -266,7 +266,10 @@
     .lb-next{right:16px;}
 
     /* ── Size Chart Modal ── */
-    .sc-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:7500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    /* 7500 sat below the sticky ATC bar's 9991, which covered the bottom of the
+       chart on phones. */
+    .sc-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:10040;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    body.sc-open .sticky-atc{display:none;}
     .sc-overlay.open{opacity:1;pointer-events:all;}
     .sc-modal{background:#fff;border-radius:16px;width:100%;max-width:600px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,0.22);transform:translateY(20px) scale(0.97);transition:transform 0.25s;}
     .sc-overlay.open .sc-modal{transform:translateY(0) scale(1);}
@@ -288,6 +291,22 @@
     .sc-table tr:nth-child(even) td{background:rgba(66,0,1,0.025);}
     .sc-table tr.sc-active td{background:rgba(66,0,1,0.07);font-weight:600;}
     .sc-note{margin-top:14px;background:#fff8ee;border-left:3px solid var(--g);padding:10px 14px;border-radius:0 6px 6px 0;font-size:11px;color:#666;line-height:1.6;}
+
+    /* Measurements run down the side, sizes across the top - seven rows of six
+       will not fit a phone, so the table scrolls sideways with the measurement
+       column pinned. */
+    .sc-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+    .sc-table th[scope=row]{background:rgba(66,0,1,.04);color:var(--m);text-align:left;font-size:10px;letter-spacing:.6px;position:sticky;left:0;z-index:1;white-space:nowrap;}
+    .sc-num{display:block;font-size:9px;font-weight:600;opacity:.72;letter-spacing:.4px;margin-top:2px;}
+    .sc-fineprint{margin:14px 0 0;padding:12px 14px 12px 30px;background:#fff8ee;border-left:3px solid var(--g);border-radius:0 6px 6px 0;font-size:11px;color:#666;line-height:1.7;}
+    .sc-fineprint strong{color:var(--m);}
+
+    .sc-measure{margin-top:20px;padding-top:18px;border-top:1px solid rgba(66,0,1,.08);}
+    .sc-measure__title{font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--m);margin-bottom:12px;}
+    .sc-measure__img{width:100%;height:auto;border-radius:10px;margin-bottom:14px;border:1px solid rgba(66,0,1,.08);}
+    .sc-measure__list{margin:0 0 12px;padding-left:20px;font-size:12px;color:#555;line-height:1.75;}
+    .sc-measure__list strong{color:var(--m);}
+    .sc-measure__tip{font-size:11px;color:#999;line-height:1.6;}
     @media(max-width:600px){
       .sc-overlay{align-items:flex-end;padding:0;}
       .sc-modal{border-radius:16px 16px 0 0;max-height:85vh;}
