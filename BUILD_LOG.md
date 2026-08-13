@@ -1,5 +1,45 @@
 # Build Log
 
+## 2026-08-13 — Size filter: tag bypass, one-line row, numeric only
+
+**Root cause of the dead filter:** `filter.v.option.size` is silently ignored unless
+the Size filter is enabled in Search & Discovery. The URL is accepted and the product
+count never moves (`?filter.v.option.size=46` → 100 of 100), whereas
+`?filter.v.availability=1` → 100 → 95. So the pills were decorative.
+
+**Bypass, verified working:** Shopify's built-in tag routes filter server-side with no
+app at all — measured on this store: `/collections/all` 100 → `/collections/all/elbow-sleeves`
+6 → `/collections/all/short-sleeves` 2.
+
+**Size now resolves in three tiers** (`sections/vamas-collection.liquid`), upgrading itself
+as each becomes available:
+1. native `size_filter` from Search & Discovery
+2. `size-NN` product tags via tag routes — real filtering today
+3. the `size_list` setting as inert placeholders
+
+Picking a size keeps any sleeve/neckline tag already active, and a script re-attaches
+`filter.*` query params that a tag path would otherwise drop.
+
+**Numeric sizes only.** The catalogue splits exactly 50/50: 50 products carry numeric
+sizes (32–50), the other 50 carry **only** M/L/XL/XXL on their SIZE option — old import
+data for sizes Vamas does not sell. All three tiers filter to numeric values via
+`| times: 1` (returns 0 for non-numeric). Those 50 products cannot be size-filtered at
+all until their SIZE option is changed to numbers — listed in `products-with-letter-sizes.txt`.
+
+**Size row layout**
+- Phone: one scrolling line with every size, `+N` removed (15 pills, 756px scroll width
+  in a 375px viewport, page overflow 0). The active pill is scrolled into view on load.
+- Desktop sidebar: still one line with `+N`. Fixed a bug where the fit loop measured
+  while the label still read `+0`; the real `+12` was wider and pushed a pill onto a
+  second line. Tightened the sidebar pills too — 2 → 4 sizes visible.
+
+**Handed over:** `size-tags-import.csv` (50 products, 334 size tags, existing tags
+preserved — verified against two independent endpoints that untagged products really
+are untagged, so the import will not wipe anything).
+
+**Blocked:** writing the tags needs the Shopify connector, which asks for re-auth that
+this session cannot complete.
+
 ## 2026-08-13 — Tablet view (769–1024px) site-wide
 
 **Ask:** "pure website ka tab view bhi theek karo, acheses dikhe per desktop or phone ko kuch mat karna"
