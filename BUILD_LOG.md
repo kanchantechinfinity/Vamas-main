@@ -1,6 +1,34 @@
 
 # Build Log
 
+## 2026-08-13 — Hero slide 1 head clipping; size filter status
+
+**Head clipping.** Slide 1's desktop focus-Y was 30. The image is 1600×900 (aspect 1.78)
+in a container running 1.98–2.10, so 10–15% of the height is cropped, and at 30 part of
+that came off the top — where her head is. Set to **0**: the top edge is pinned and every
+lost pixel now comes off the bottom.
+
+Verified: 1920 → 0% off the top (was 3%); 1366 worst case → 0% off the top (was 4.6%).
+
+**Mobile deliberately untouched.** There the square 480×481 image sits in a 0.55 container,
+so it crops **horizontally** — 22% off each side, full height visible. focus-Y has no
+effect on that axis at all. The fix for mobile is a portrait upload (1200×2100), not a
+focus value.
+
+**Size filter — still nothing to filter on.** Measured today:
+
+| URL | Products |
+| --- | --- |
+| `/collections/all` | 100 |
+| `?filter.v.option.size=46` | 100 (no-op) |
+| `/collections/all/size-46` | 100 (tag does not exist) |
+| `?filter.v.availability=1` | 95 (control — enabled filters do work) |
+
+`productsWithSizeTags: 0 of 100`. The theme already handles all three tiers; what is
+missing is store data. The unblocking step is importing `size-tags-import.csv`
+(50 products, 334 tags, existing tags preserved) via Products → Import — no connector
+needed.
+
 ## 2026-08-13 — Hero banner sizes (and two sizing bugs found while measuring)
 
 The hero has **no fixed aspect ratio** — JS sets its height from the viewport:
