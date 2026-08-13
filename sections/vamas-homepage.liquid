@@ -26,7 +26,7 @@
         {%- assign m_focus_y = block.settings.mobile_image_focus_y | default: 8 -%}
         <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}{% if has_mobile_bg %} vamas-slide--has-mobile-bg{% endif %}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
           {% if block.settings.video != blank %}
-            <video class="vamas-slide__bg vamas-slide__bg--desktop" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"{% endif %}>
+            <video class="vamas-slide__bg vamas-slide__bg--desktop" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '2400x' }}"{% endif %}>
               {% for source in block.settings.video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
             </video>
           {% elsif block.settings.video_url != blank %}
@@ -38,7 +38,12 @@
               {% endif %}
             </div>
           {% elsif block.settings.slide_image != blank %}
-            <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.slide_image | img_url: '1800x760', crop: 'center' }}"
+            {% comment %} Width-only, no crop. The old '1800x760' forced a 2.37 crop and
+              then handed back only 760px of height for a container that runs to ~1000px
+              on a 1080p screen, so the hero was being upscaled. Asking for width alone
+              keeps the merchant's own framing intact and lets object-fit + the focus
+              settings below do the cropping. {% endcomment %}
+            <img class="vamas-slide__bg vamas-slide__bg--desktop" src="{{ block.settings.slide_image | img_url: '2400x' }}"
                  style="object-position: {{ focus_x }}% {{ focus_y }}%;"
                  alt="{{ block.settings.slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
@@ -49,7 +54,9 @@
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
           {% endif %}
           {% if block.settings.mobile_slide_image != blank %}
-            <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_slide_image | img_url: '900x1200', crop: 'center' }}"
+            {% comment %} Same reasoning: '900x1200' forced a 3:4 crop, but the phone
+              container is about 9:16 (0.56). A square upload was being cropped twice. {% endcomment %}
+            <img class="vamas-slide__bg vamas-slide__bg--mobile" src="{{ block.settings.mobile_slide_image | img_url: '1200x' }}"
                  style="object-position: {{ m_focus_x }}% {{ m_focus_y }}%;"
                  alt="{{ block.settings.mobile_slide_image.alt | escape | default: block.settings.line1 }}"
                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
