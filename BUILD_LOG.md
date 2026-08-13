@@ -1,6 +1,46 @@
 
 # Build Log
 
+## 2026-08-13 — Click-to-zoom, nav curve spacing
+
+**Click to zoom was broken two ways, both real:**
+
+1. `.lightbox img` was capped at `88vw`. On a 375px phone that is **330px**, and the
+   gallery it opens from is **343px** — so "zoom" made the photo *smaller*. Tapping
+   looked like it did nothing.
+2. `.lightbox` had `z-index: 8000`, below the sticky ATC bar's **9991**, so on phones
+   the bar floated over the zoomed view.
+
+Fixed: lightbox fills the viewport, loads the **original upload** instead of the
+`_1000x` thumbnail the gallery uses, sits at `z-index: 10050`, hides the sticky bar and
+locks body scroll while open, and a second tap magnifies **2.4×** with drag-to-pan
+(pointer events, so it works with mouse and touch). Escape closes it.
+
+**Verified live**
+
+| | Gallery | Lightbox | After magnify tap |
+| --- | --- | --- | --- |
+| Phone 375px | 343px | 375px | **900px (2.6× the gallery)** |
+| Desktop 1400px | 511px | 850px | **2040px (4.0×)** |
+
+Sticky bar `display: none` while open, body locked, src has no `_1000x`, no JS errors.
+
+**Nav:** right padding 8px → 14px so the Contact pill's 12px corner is not fighting the
+nav bar's own 100px curve. Gap from pill to nav edge is now 14px.
+
+**Notify popup** (asked about again) was already built and is live: sold-out variant →
+NOTIFY ME → 343×312 popup, required email field, posts to `/contact#notify-form` with
+the product and the live variant (`BLACK / M`) attached.
+
+**Not done — needs the merchant.** The New Arrivals / Best Sellers VIEW ALL buttons do
+link straight to a collection, but there is **no `new-arrivals` and no `best-sellers`
+collection in the store** (20 collections exist; neither is among them), so the tabs are
+wired to `classic-v` and `super-basic`. Creating those two collections needs the Shopify
+connector, which is asking for re-auth.
+
+**Separate bug spotted:** the VIEW ALL in the "As Seen on Instagram" section has
+`href="#"` — a dead link. Left alone as it is outside this request.
+
 ## 2026-08-13 — Desktop card price row
 
 **Ask:** shrink the price, struck price and discount on desktop — the row looks messy.
