@@ -41,11 +41,20 @@
   in Search & Discovery - the URL is accepted and the product count never changes.
   That is why (2) exists.
 {%- endcomment -%}
+{%- comment -%}
+  Vamas sells numbered sizes only (32-50). Some products still carry M/L/XL/XXL
+  on their SIZE option from an old import; those are bad data, so every tier
+  below keeps numeric values only rather than showing sizes the brand does not
+  sell. `| times: 1` yields 0 for anything non-numeric, which is the test.
+{%- endcomment -%}
 {%- assign size_tag_list = '' -%}
 {%- for t in collection.all_tags -%}
   {%- assign t_head = t | downcase | slice: 0, 5 -%}
   {%- if t_head == 'size-' -%}
-    {%- assign size_tag_list = size_tag_list | append: t | append: ',' -%}
+    {%- assign t_num = t | remove_first: 'size-' | remove_first: 'SIZE-' | times: 1 -%}
+    {%- if t_num > 0 -%}
+      {%- assign size_tag_list = size_tag_list | append: t | append: ',' -%}
+    {%- endif -%}
   {%- endif -%}
 {%- endfor -%}
 {%- assign size_tags = size_tag_list | split: ',' -%}
@@ -152,8 +161,11 @@
     <div class="col-toolbar__sizes" data-size-row>
       <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL</a>
       {% for value in size_filter.values %}
-        <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"
-           class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+        {% assign v_num = value.label | times: 1 %}
+        {% if v_num > 0 %}
+          <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"
+             class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+        {% endif %}
       {% endfor %}
     </div>
   {% elsif size_tags.size > 0 %}
@@ -177,7 +189,10 @@
       <a href="{{ collection.url }}" class="size-pill{% if active_size == '' %} is-active{% endif %}">ALL</a>
       {% for s in fallback_sizes %}
         {% assign s_clean = s | strip %}
-        <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill{% if active_size == s_clean %} is-active{% endif %}">{{ s_clean }}</a>
+        {% assign s_num = s_clean | times: 1 %}
+        {% if s_num > 0 %}
+          <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill{% if active_size == s_clean %} is-active{% endif %}">{{ s_clean }}</a>
+        {% endif %}
       {% endfor %}
     </div>
   {% endif %}
@@ -329,7 +344,10 @@
       <div class="sidebar-sizes" data-size-fit>
         <a href="{{ size_filter.url_to_remove | default: collection.url }}" class="size-pill{% if size_filter.active_values.size == 0 %} is-active{% endif %}">ALL</a>
         {% for value in size_filter.values %}
-          <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+          {% assign v_num = value.label | times: 1 %}
+          {% if v_num > 0 %}
+            <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="size-pill{% if value.active %} is-active{% endif %}">{{ value.label }}</a>
+          {% endif %}
         {% endfor %}
         <button type="button" class="size-pill size-pill--more" data-size-fit-more hidden>+0</button>
       </div>
@@ -348,7 +366,10 @@
         <a href="{{ collection.url }}" class="size-pill">ALL</a>
         {% for s in sb_sizes %}
           {% assign s_clean = s | strip %}
-          <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill">{{ s_clean }}</a>
+          {% assign s_num = s_clean | times: 1 %}
+          {% if s_num > 0 %}
+            <a href="{{ collection.url }}?filter.v.option.size={{ s_clean | url_encode }}" class="size-pill">{{ s_clean }}</a>
+          {% endif %}
         {% endfor %}
         <button type="button" class="size-pill size-pill--more" data-size-fit-more hidden>+0</button>
       </div>
@@ -718,7 +739,7 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
   "name": "Vamas Collection",
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
-    { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only as a last resort — a native Size filter (Search & Discovery) wins, then size-NN product tags. Neither needs this list.", "default": "32,34,36,38,40,42,44,46,48,50,M,L,XL,XXL" },
+    { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only as a last resort — a native Size filter (Search & Discovery) wins, then size-NN product tags. Neither needs this list.", "default": "32,34,36,38,40,42,44,46,48,50" },
     { "type": "header", "content": "Sleeve & Neckline" },
     { "type": "paragraph", "content": "These use a Search & Discovery filter if one exists (matched by label containing 'sleeve' / 'neck'). If not, the tag lists below are used instead — tags must match the product tags exactly." },
     { "type": "text", "id": "sleeve_tag_list", "label": "Sleeve Tags (comma-separated)", "default": "Sleeveless, Cap Sleeves, Short Sleeves, Elbow Sleeves, Three-Quarter Sleeves, Full Sleeves" },
