@@ -646,8 +646,12 @@ function toggleAcc(head){
     var overflow = pills.filter(function(p){ return p.getBoundingClientRect().top > rowTop + 2; });
     if (!overflow.length) return;
     more.hidden = false;
-    /* Showing "+N" itself takes room, so hide one extra pill if it now wraps. */
+    /* Showing "+N" itself takes room, so hide one extra pill if it now wraps.
+       The label has to be written BEFORE each measurement: "+12" is wider than
+       "+0", so measuring against the placeholder fits a pill that the real
+       label then pushes onto a second line. */
     for (var guard = 0; guard < pills.length; guard++) {
+      more.textContent = '+' + pills.filter(function(p){ return p.hidden; }).length;
       var stillOver = pills.filter(function(p){ return !p.hidden && p.getBoundingClientRect().top > rowTop + 2; });
       var moreWrapped = more.getBoundingClientRect().top > rowTop + 2;
       if (!stillOver.length && !moreWrapped) break;
