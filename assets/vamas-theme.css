@@ -1333,10 +1333,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
    The header was the worst offender site-wide: logo (81) + nav links (620)
    + icons (240) needs ~941px of content inside a 723px bar, so every page
-   scrolled sideways by ~88px. Tightening the link row and dropping the
-   Contact button (still reachable in the menu and the footer) brings it
-   back under the bar without falling back to a hamburger, which would
-   hide the whole nav on a screen wide enough to show it. */
+   scrolled sideways by ~88px. Tightening the link row and the icon gaps
+   brings it back under the bar with the Contact button still showing —
+   no hamburger fallback, which would hide a nav on a screen wide enough
+   to display it. */
 @media (min-width: 769px) and (max-width: 1024px) {
   .vamas-reels { padding: 48px 40px 72px; }
 
@@ -1344,7 +1344,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-nav__links { gap: 13px; }
   .vamas-nav__links a { font-size: 9px; letter-spacing: .6px; }
   .vamas-nav__icons { gap: 10px; }
-  .vamas-nav__contact-btn { display: none; }
 
   /* Homepage collection rails: 4-up left ~185px cards. Three reads better
      at this width and matches the card's own proportions. */

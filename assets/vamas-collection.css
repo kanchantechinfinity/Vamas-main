@@ -775,9 +775,12 @@ a{text-decoration:none;color:inherit;}
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .col-body { padding: 28px 32px 48px; }
-  .sidebar { width: 200px; min-width: 200px; }
-  .prod-grid { grid-template-columns: repeat(3, 1fr); }
+  /* The desktop sidebar (200px) eats 24% of a tablet viewport, squeezing the
+     3-up grid down to 161px cards. Narrowing the rail and the gutters gives
+     the cards back ~23px each without dropping to a 2-up grid. */
+  .col-body { padding: 28px 24px 48px; gap: 24px; }
+  .sidebar { width: 168px; min-width: 168px; }
+  .prod-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
   .dark-footer-grid { grid-template-columns: 2fr 1fr 1fr; }
   .dark-footer { padding: 40px 32px 0; }
 }
