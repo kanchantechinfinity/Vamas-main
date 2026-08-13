@@ -1,5 +1,39 @@
 # Build Log
 
+## 2026-08-13 — Filters apply on APPLY, not on click
+
+**Ask:** filters in the FILTER / FEATURED drawer were applying the instant they were
+clicked; they should stage, and only take effect on APPLY.
+
+**Cause:** every control carried `onchange="this.form.submit()"` — native filter
+checkboxes, colour dots, availability boxes, sort radios and both price sliders. A
+shopper could only ever pick one thing per page load.
+
+**Second, hidden problem:** APPLY read only `.vtag-filter` tag checkboxes. Removing the
+auto-submit alone would have made it silently drop every native filter and the sort. So
+APPLY was rewritten to rebuild the whole URL: tags as a tag path, native filters and
+sort as query params, price only when moved off the full range. It is also scoped to
+its own panel, so the drawer and the desktop sidebar cannot read each other's controls.
+
+Colour dots hide their checkbox behind a coloured span and relied on the reload to show
+a pick, so they now toggle their own active state.
+
+**Verified live**
+- Drawer: staged colour BLACK + availability + sort price-descending → URL unchanged,
+  dot visibly active, 12 products still on screen. APPLY → one navigation to
+  `?filter.v.option.color=BLACK&filter.v.availability=1&sort_by=price-descending`,
+  100 → **43** products.
+- Sidebar: staged BOTTLE-GREEN + availability while the drawer separately held BLACK.
+  APPLY → `?filter.v.option.color=BOTTLE-GREEN&filter.v.availability=1`, 100 → **2**,
+  and the drawer's BLACK did **not** leak.
+- Auto-submit handlers remaining in the drawer: **0**.
+- The desktop topbar sort `<select>` deliberately still submits on change — it is a
+  standalone dropdown outside the drawer, not part of a staged set.
+
+**Not a bug, checked:** with price-descending the last card reads ₹889 after a run of
+₹600s. Shopify sorts by the product's minimum variant price (₹599.50 here) while the
+card shows the selected colour's price. Sorting is correct.
+
 ## 2026-08-13 — Size filter: tag bypass, one-line row, numeric only
 
 **Root cause of the dead filter:** `filter.v.option.size` is silently ignored unless
