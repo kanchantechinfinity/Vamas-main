@@ -1026,7 +1026,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .shopify-section:has(> .vamas-nav-wrapper){display:contents;}
 .vamas-nav-wrapper{position:sticky;top:0;z-index:1000;}
 .vamas-nav-outer{padding:10px 48px;background:transparent;pointer-events:none;}
-.vamas-nav{background:#fff;border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:8px 8px 8px 22px;box-shadow:0 4px 28px rgba(0,0,0,.10),0 1px 6px rgba(0,0,0,.06);pointer-events:all;max-width:1200px;margin:0 auto;}
+/* The right padding was 8px, so the Contact pill's corner sat almost against
+   the nav bar's own 100px curve and the two arcs read as clashing. A little
+   more room lets the pill sit inside the curve. */
+.vamas-nav{background:#fff;border-radius:100px;display:flex;align-items:center;justify-content:space-between;padding:8px 14px 8px 22px;box-shadow:0 4px 28px rgba(0,0,0,.10),0 1px 6px rgba(0,0,0,.06);pointer-events:all;max-width:1200px;margin:0 auto;}
 .vamas-nav__logo{display:flex;align-items:center;gap:10px;border:none;outline:none;text-decoration:none;}
 .vamas-nav__logo-img{height:42px;width:auto;object-fit:contain;display:block;}
 .vamas-nav__brand{color:var(--m,var(--color-maroon));font-size:15px;font-weight:800;letter-spacing:3px;}

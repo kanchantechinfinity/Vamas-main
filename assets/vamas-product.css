@@ -246,9 +246,18 @@
     .sticky-btn--cart{display:inline-block;}
 
     /* ── Lightbox ── */
-    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:8000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    /* z-index was 8000, below the sticky ATC bar's 9991 - so on phones the bar
+       sat on top of the "zoomed" view. */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:10050;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;overflow:hidden;}
     .lightbox.open{opacity:1;pointer-events:all;}
-    .lightbox img{max-width:88vw;max-height:88vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+    /* 88vw on a 375px phone is 330px, and the gallery it opens from is already
+       343px - so "zoom" made the photo SMALLER. Fill the viewport instead, and
+       let a second tap magnify properly. */
+    .lightbox img{max-width:100vw;max-height:100vh;object-fit:contain;cursor:zoom-in;transition:transform .25s ease;transform-origin:center center;touch-action:none;user-select:none;-webkit-user-drag:none;}
+    .lightbox img.is-zoomed{cursor:grab;transition:none;}
+    .lightbox img.is-panning{cursor:grabbing;}
+    body.lightbox-open{overflow:hidden;}
+    body.lightbox-open .sticky-atc{display:none;}
     .lb-close{position:absolute;top:18px;right:22px;color:rgba(255,255,255,0.8);font-size:32px;cursor:pointer;background:none;border:none;line-height:1;}
     .lb-close:hover{color:white;}
     .lb-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.15);border:none;color:white;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}

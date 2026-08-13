@@ -701,11 +701,59 @@
   var lightbox = document.getElementById('lightbox');
   var galleryMain = document.getElementById('gallery-main');
   if (lightbox && galleryMain) {
-    galleryMain.addEventListener('click', function(){ document.getElementById('lb-img').src = mainImg.src; lightbox.classList.add('open'); });
-    document.getElementById('lb-close').addEventListener('click', function(){ lightbox.classList.remove('open'); });
-    lightbox.addEventListener('click', function(e){ if(e.target===lightbox) lightbox.classList.remove('open'); });
-    document.getElementById('lb-prev').addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx-1); document.getElementById('lb-img').src = mainImg.src; });
-    document.getElementById('lb-next').addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx+1); document.getElementById('lb-img').src = mainImg.src; });
+    var lbImg = document.getElementById('lb-img');
+    var zoomed = false, panX = 0, panY = 0, dragging = false, startX = 0, startY = 0;
+    var ZOOM = 2.4;
+
+    /* The gallery renders a _1000x thumbnail. Opening that same file at full
+       screen is not a zoom - strip the size suffix so the lightbox gets the
+       original upload and there is real detail to look at. */
+    function fullRes(src){ return src.replace(/_(\d+)x(\d+)?(_crop_[a-z]+)?(?=\.[a-zA-Z0-9]+(\?|$))/, ''); }
+
+    function applyTransform(){
+      lbImg.style.transform = zoomed
+        ? 'translate(' + panX + 'px,' + panY + 'px) scale(' + ZOOM + ')'
+        : '';
+    }
+    function resetZoom(){ zoomed = false; panX = panY = 0; lbImg.classList.remove('is-zoomed','is-panning'); applyTransform(); }
+    function show(src){ lbImg.src = fullRes(src); resetZoom(); }
+    function openLb(){ show(mainImg.src); lightbox.classList.add('open'); document.body.classList.add('lightbox-open'); }
+    function closeLb(){ lightbox.classList.remove('open'); document.body.classList.remove('lightbox-open'); resetZoom(); }
+
+    galleryMain.addEventListener('click', openLb);
+    document.getElementById('lb-close').addEventListener('click', closeLb);
+    lightbox.addEventListener('click', function(e){ if (e.target === lightbox) closeLb(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLb(); });
+    document.getElementById('lb-prev').addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx-1); show(mainImg.src); });
+    document.getElementById('lb-next').addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx+1); show(mainImg.src); });
+
+    /* Second tap magnifies; drag pans while magnified. */
+    lbImg.addEventListener('click', function(e){
+      e.stopPropagation();
+      if (dragging) return;
+      zoomed = !zoomed;
+      panX = panY = 0;
+      lbImg.classList.toggle('is-zoomed', zoomed);
+      applyTransform();
+    });
+    lbImg.addEventListener('pointerdown', function(e){
+      if (!zoomed) return;
+      dragging = false; startX = e.clientX - panX; startY = e.clientY - panY;
+      lbImg.setPointerCapture(e.pointerId);
+      lbImg.classList.add('is-panning');
+    });
+    lbImg.addEventListener('pointermove', function(e){
+      if (!zoomed || !lbImg.hasPointerCapture(e.pointerId)) return;
+      var nx = e.clientX - startX, ny = e.clientY - startY;
+      if (Math.abs(nx - panX) > 2 || Math.abs(ny - panY) > 2) dragging = true;
+      panX = nx; panY = ny;
+      applyTransform();
+    });
+    lbImg.addEventListener('pointerup', function(e){
+      lbImg.classList.remove('is-panning');
+      if (lbImg.hasPointerCapture(e.pointerId)) lbImg.releasePointerCapture(e.pointerId);
+      setTimeout(function(){ dragging = false; }, 0);
+    });
   }
 
   /* Size chart modal */
