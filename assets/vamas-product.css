@@ -305,7 +305,13 @@
     .sc-measure__title{font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--m);margin-bottom:12px;}
     .sc-measure__img{width:100%;height:auto;border-radius:10px;margin-bottom:14px;border:1px solid rgba(66,0,1,.08);}
     /* The traced diagram is line art on white - a border and tint would fight it. */
-    .sc-measure__img--diagram{border:none;background:transparent;margin-bottom:10px;}
+    .sc-measure__figure{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:10px;}
+    .sc-measure__img--diagram{border:none;background:transparent;margin-bottom:0;display:block;}
+    /* Squeezed into a 335px phone the labels shrink to about 5px and stop being
+       readable, so below 560px the figure keeps its size and scrolls instead. */
+    @media (max-width: 600px){
+      .sc-measure__img--diagram{min-width:560px;}
+    }
     .sc-measure__list{margin:0 0 12px;padding-left:20px;font-size:12px;color:#555;line-height:1.75;}
     .sc-measure__list strong{color:var(--m);}
     .sc-measure__tip{font-size:11px;color:#999;line-height:1.6;}

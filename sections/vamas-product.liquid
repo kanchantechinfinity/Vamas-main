@@ -517,7 +517,9 @@
         {% if section.settings.measure_image != blank %}
           <img class="sc-measure__img" src="{{ section.settings.measure_image | image_url: width: 900 }}" alt="How to measure a padded blouse" loading="lazy">
         {% else %}
-          <img class="sc-measure__img sc-measure__img--diagram" src="{{ 'vamas-measure-diagram.svg' | asset_url }}" alt="How to measure a padded blouse: chest, waist, length and sleeve length" loading="lazy">
+          <div class="sc-measure__figure">
+            <img class="sc-measure__img sc-measure__img--diagram" src="{{ 'vamas-measure-diagram.svg' | asset_url }}" alt="How to measure a padded blouse: chest, waist, length and sleeve length" loading="lazy">
+          </div>
         {% endif %}
         <ol class="sc-measure__list">
           <li><strong>Chest</strong> — around the fullest part of the bust, tape level and snug, not tight.</li>
