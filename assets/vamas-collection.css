@@ -744,11 +744,17 @@ a{text-decoration:none;color:inherit;}
 
   /* Sizes as a 4-across grid: exactly two full rows of four (ALL + 7 sizes),
      Anything past that is hidden until "+N" is tapped, which expands in place. */
-  .col-toolbar__sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 9px 16px; border-bottom: 1px solid rgba(66,0,1,.07); }
-  .col-toolbar__sizes .size-pill { padding: 7px 4px; text-align: center; }
-  .col-toolbar__sizes .size-pill--extra { display: none; }
-  .col-toolbar__sizes.is-expanded .size-pill--extra { display: block; }
-  .col-toolbar__sizes.is-expanded .size-pill--more { display: none; }
+  /* One line, every size, swipe for the rest. This store carries 14 sizes
+     (32-50 plus M-XXL); no legible pill height fits them all across a 375px
+     phone, so the row scrolls rather than truncating behind a "+N". */
+  .col-toolbar__sizes {
+    display: flex; flex-wrap: nowrap; gap: 6px;
+    padding: 9px 16px; border-bottom: 1px solid rgba(66,0,1,.07);
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .col-toolbar__sizes::-webkit-scrollbar { display: none; }
+  .col-toolbar__sizes .size-pill { flex: 0 0 auto; padding: 7px 13px; text-align: center; }
   .size-pill--more { font-family: var(--font-body); cursor: pointer; background: rgba(66,0,1,.06); }
 
   /* Centred when the four tabs fit (the normal case). `safe center` degrades to
