@@ -121,9 +121,30 @@
     .btn-atc.added{background:#2e7d32;color:white;}
     .btn-buy{flex:1;width:100%;height:52px;background:transparent;border:2px solid var(--m);color:var(--m);font-size:14px;font-weight:700;letter-spacing:1px;font-family:var(--font-body);border-radius:12px;cursor:pointer;margin-top:0;transition:all 0.3s;}
     .btn-buy:hover{background:var(--m);color:white;}
+
+    /* NOTIFY ME sits where BUY NOW does on an in-stock variant, so it matches that
+       button's shape - only the colour says "this is the sold-out path". */
+    .btn-notify{flex:1;width:100%;height:52px;background:var(--g);border:2px solid var(--m);color:var(--m);font-size:14px;font-weight:800;letter-spacing:1px;font-family:var(--font-body);border-radius:12px;cursor:pointer;transition:all .3s;}
+    .btn-notify:hover{background:var(--m);color:var(--g);}
+    .btn-atc:disabled{background:rgba(66,0,1,.28);cursor:not-allowed;}
+    .btn-atc:disabled:hover{background:rgba(66,0,1,.28);}
+
+    .notify-modal{position:fixed;inset:0;z-index:10000;display:none;}
+    .notify-modal.is-open{display:block;}
+    .notify-modal__overlay{position:absolute;inset:0;background:rgba(20,0,1,.55);}
+    .notify-modal__panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(420px,calc(100vw - 32px));background:var(--w,#fff);border-radius:16px;padding:28px 24px 24px;box-shadow:0 18px 60px rgba(66,0,1,.28);}
+    .notify-modal__close{position:absolute;top:10px;right:14px;background:none;border:none;font-size:26px;line-height:1;color:rgba(66,0,1,.5);cursor:pointer;}
+    .notify-modal__title{font-family:var(--font-heading);font-size:20px;color:var(--m);letter-spacing:1px;margin-bottom:8px;}
+    .notify-modal__sub{font-size:13px;color:rgba(66,0,1,.7);margin-bottom:16px;line-height:1.5;}
+    .notify-modal__label{display:block;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--m);margin-bottom:6px;}
+    .notify-modal__panel input[type=email]{width:100%;height:46px;padding:0 14px;border:1.5px solid rgba(66,0,1,.2);border-radius:10px;font-family:var(--font-body);font-size:14px;margin-bottom:14px;}
+    .notify-modal__panel input[type=email]:focus{outline:none;border-color:var(--m);}
+    .notify-modal__submit{width:100%;}
+    .notify-modal__ok{font-size:14px;color:#2e7d32;font-weight:600;line-height:1.5;}
+    .notify-modal__err{font-size:12px;color:#c62828;margin-bottom:10px;}
     @media (max-width: 480px) {
       .atc-buy-row{flex-direction:row;gap:8px;}
-      .btn-atc,.btn-buy{height:48px;font-size:12px;letter-spacing:1px;padding:0 6px;}
+      .btn-atc,.btn-buy,.btn-notify{height:48px;font-size:12px;letter-spacing:1px;padding:0 6px;}
     }
 
     /* ── Payment strip ── */

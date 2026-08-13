@@ -208,7 +208,40 @@
         <button type="submit" class="btn-atc" id="atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
           {% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}
         </button>
-        <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} disabled{% endunless %}>&#9889; BUY NOW</button>
+        {% comment %} BUY NOW and NOTIFY ME occupy the same slot - a sold-out variant
+          has nothing to buy, so offering a back-in-stock alert is the only useful
+          action left. The swap is repeated in JS for variant changes. {% endcomment %}
+        <button type="button" class="btn-buy" id="buy-btn"{% unless current_variant.available %} hidden{% endunless %}>&#9889; BUY NOW</button>
+        <button type="button" class="btn-notify" id="notify-btn"{% if current_variant.available %} hidden{% endif %}>&#128276; NOTIFY ME</button>
+      </div>
+
+      {% comment %} Back-in-stock request. There is no back-in-stock app on this store,
+        so the request goes through Shopify's own contact form - it reaches the shop
+        inbox with the product and variant attached, and needs no third party. {% endcomment %}
+      <div class="notify-modal{% if form.posted_successfully? %} is-open{% endif %}" id="notify-modal" aria-hidden="true">
+        <div class="notify-modal__overlay" data-notify-close></div>
+        <div class="notify-modal__panel" role="dialog" aria-modal="true" aria-labelledby="notify-title">
+          <button type="button" class="notify-modal__close" data-notify-close aria-label="Close">&times;</button>
+          <h3 class="notify-modal__title" id="notify-title">NOTIFY ME</h3>
+          {% form 'contact', id: 'notify-form', class: 'notify-form' %}
+            {% if form.posted_successfully? %}
+              <p class="notify-modal__ok">&#10003; Thank you — we'll email you the moment this is back in stock.</p>
+            {% else %}
+              <p class="notify-modal__sub">Leave your email and we'll tell you as soon as <strong>{{ product.title }}</strong> is back.</p>
+              {% if form.errors %}
+                <p class="notify-modal__err">{{ form.errors | default_errors }}</p>
+              {% endif %}
+              <input type="hidden" name="contact[Request]" value="Back in stock alert">
+              <input type="hidden" name="contact[Product]" value="{{ product.title | escape }}">
+              <input type="hidden" name="contact[Product URL]" value="{{ shop.url }}{{ product.url }}">
+              <input type="hidden" name="contact[Variant]" id="notify-variant" value="{{ current_variant.title | escape }}">
+              <input type="hidden" name="contact[body]" value="Please notify me when this product is back in stock.">
+              <label class="notify-modal__label" for="notify-email">Email address</label>
+              <input type="email" id="notify-email" name="contact[email]" required autocomplete="email" placeholder="you@example.com">
+              <button type="submit" class="btn-atc notify-modal__submit">NOTIFY ME</button>
+            {% endif %}
+          {% endform %}
+        </div>
       </div>
 
       {% if section.settings.custom_note != blank %}
@@ -472,7 +505,7 @@
       <div class="sticky-name">{{ product.title }}</div>
       <div class="sticky-price" id="sticky-price">{{ current_variant.price | money }}</div>
     </div>
-    <button class="sticky-btn" id="sticky-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>ADD TO CART</button>
+    <button class="sticky-btn" id="sticky-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>{% if current_variant.available %}ADD TO CART{% else %}SOLD OUT{% endif %}</button>
   </div>
 
   <a href="{{ routes.cart_url }}" class="sticky-atc__state sticky-atc__cart" id="sticky-atc-cart" style="display:none;">
@@ -589,9 +622,34 @@
       document.querySelector('.sticky-thumb img').src = img.src.replace(/(\.[a-zA-Z0-9]+)$/, '_100x$1');
     }
     var available = v.available;
-    [atcBtn, stickyBtn, buyBtn].forEach(function(b){ if(b){ b.disabled = !available; } });
+    [atcBtn, stickyBtn].forEach(function(b){ if(b){ b.disabled = !available; } });
     if (atcBtn) atcBtn.textContent = available ? 'ADD TO CART' : 'SOLD OUT';
+    if (stickyBtn) stickyBtn.textContent = available ? 'ADD TO CART' : 'SOLD OUT';
+
+    /* BUY NOW and NOTIFY ME share the slot beside ADD TO CART: whichever one the
+       shopper can actually act on is the one shown. */
+    var notifyBtn = document.getElementById('notify-btn');
+    if (buyBtn) buyBtn.hidden = !available;
+    if (notifyBtn) notifyBtn.hidden = available;
+    var notifyVariant = document.getElementById('notify-variant');
+    if (notifyVariant) notifyVariant.value = v.title || '';
   }
+
+  /* Back-in-stock modal */
+  (function(){
+    var modal = document.getElementById('notify-modal');
+    if (!modal) return;
+    var openBtn = document.getElementById('notify-btn');
+    function open(){ modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false');
+      var f = document.getElementById('notify-email'); if (f) f.focus(); }
+    function close(){ modal.classList.remove('is-open'); modal.setAttribute('aria-hidden','true'); }
+    if (openBtn) openBtn.addEventListener('click', open);
+    modal.querySelectorAll('[data-notify-close]').forEach(function(el){ el.addEventListener('click', close); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+    /* Shopify bounces back to ?contact_posted=true after the form is sent, so the
+       confirmation is only visible if the modal reopens itself on that return. */
+    if (modal.classList.contains('is-open')) modal.setAttribute('aria-hidden','false');
+  })();
 
   document.querySelectorAll('.swatch, .size-btn').forEach(function(el) {
     el.addEventListener('click', function() {
