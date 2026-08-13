@@ -476,6 +476,22 @@
       {% assign sc_numeric = '32,34,36,38,40,42' | split: ',' %}
       {% assign sc_rows = 'CHEST:32,34,36,38,40,42|LENGTH:13,13.5,14,14.5,14.5,15|WAIST:26,28,30,32,34,36|SHORT SLEEVE:5,5,5,5.5,5.5,6.5|ELBOW SLEEVE:10,10.5,11,11,11,11|3/4 SLEEVE:16,16,16,16,17,17|FULL SLEEVE:21,21,21,21,21,22' | split: '|' %}
 
+      {% comment %} Diagram first, then the chart, then the notes - the same running
+        order as the printed sheet. {% endcomment %}
+      <div class="sc-measure sc-measure--top">
+        <h4 class="sc-measure__title">PADDED BLOUSE MEASUREMENT</h4>
+        {% comment %} The drawing from the brand's own chart, traced out of the PDF as
+          vector paths so it stays sharp at any size and weighs ~7KB. A merchant image
+          overrides it if the artwork is ever redrawn. {% endcomment %}
+        {% if section.settings.measure_image != blank %}
+          <img class="sc-measure__img" src="{{ section.settings.measure_image | image_url: width: 900 }}" alt="How to measure a padded blouse" loading="lazy">
+        {% else %}
+          <div class="sc-measure__figure">
+            <img class="sc-measure__img sc-measure__img--diagram" src="{{ 'vamas-measure-diagram.svg' | asset_url }}" alt="How to measure a padded blouse: chest, waist, length and sleeve length" loading="lazy">
+          </div>
+        {% endif %}
+      </div>
+
       <p class="sc-hint">Measure your body, not a garment. Between two sizes? Take the larger one.</p>
 
       <div class="sc-table-wrap">
@@ -509,18 +525,10 @@
         <li>Measurements may vary depending on fabric and pattern.</li>
       </ul>
 
+      {% comment %} Written steps sit after the sheet's own content - they are extra
+        guidance for shoppers, not part of the printed chart. {% endcomment %}
       <div class="sc-measure">
-        <h4 class="sc-measure__title">PADDED BLOUSE MEASUREMENT</h4>
-        {% comment %} The diagram from the brand's own chart, traced out of the PDF as
-          vector paths so it stays sharp at any size and weighs ~7KB. A merchant image
-          overrides it if the artwork is ever redrawn. {% endcomment %}
-        {% if section.settings.measure_image != blank %}
-          <img class="sc-measure__img" src="{{ section.settings.measure_image | image_url: width: 900 }}" alt="How to measure a padded blouse" loading="lazy">
-        {% else %}
-          <div class="sc-measure__figure">
-            <img class="sc-measure__img sc-measure__img--diagram" src="{{ 'vamas-measure-diagram.svg' | asset_url }}" alt="How to measure a padded blouse: chest, waist, length and sleeve length" loading="lazy">
-          </div>
-        {% endif %}
+        <h4 class="sc-measure__title">HOW TO MEASURE</h4>
         <ol class="sc-measure__list">
           <li><strong>Chest</strong> — around the fullest part of the bust, tape level and snug, not tight.</li>
           <li><strong>Waist</strong> — around the narrowest part of the torso, just above the navel.</li>

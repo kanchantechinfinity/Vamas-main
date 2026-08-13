@@ -302,6 +302,9 @@
     .sc-fineprint strong{color:var(--m);}
 
     .sc-measure{margin-top:20px;padding-top:18px;border-top:1px solid rgba(66,0,1,.08);}
+    /* The diagram opens the popup, so it needs no divider above it. */
+    .sc-measure--top{margin-top:0;padding-top:0;border-top:none;margin-bottom:16px;}
+    .sc-measure--top .sc-measure__title{text-align:center;font-size:13px;}
     .sc-measure__title{font-size:12px;font-weight:800;letter-spacing:1.4px;color:var(--m);margin-bottom:12px;}
     .sc-measure__img{width:100%;height:auto;border-radius:10px;margin-bottom:14px;border:1px solid rgba(66,0,1,.08);}
     /* The traced diagram is line art on white - a border and tint would fight it. */
