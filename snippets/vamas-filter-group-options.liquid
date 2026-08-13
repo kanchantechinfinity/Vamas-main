@@ -2,7 +2,7 @@
   Renders the options for one filter group, supporting BOTH data sources:
 
   1. A native Search & Discovery filter (metafield / variant option / product
-     attribute). Preferred when present - gives real counts and auto-submits.
+     attribute). Preferred when present - gives real counts.
   2. Otherwise, a comma-separated tag list. Uses the same `.vtag-filter`
      mechanism FABRIC/OCCASION already use on this page: the shared
      "APPLY FILTERS" button collects every checked tag and navigates to
@@ -16,7 +16,7 @@
 {% if native_filter != blank %}
   {% for value in native_filter.values %}
     <label class="filter-check-row">
-      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()">
+      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}>
       {{ value.label }} ({{ value.count }})
     </label>
   {% endfor %}

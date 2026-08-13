@@ -18,7 +18,7 @@
       {% assign dot_hex = dot_hex | strip %}
       {% unless dot_hex == 'SKIP' %}
         <label class="color-dot-label" title="{{ value.label | escape }} ({{ value.count }})">
-          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value | escape }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()" style="display:none;">
+          <input type="checkbox" class="color-dot-input" name="{{ value.param_name }}" value="{{ value.value | escape }}" {% if value.active %}checked{% endif %} style="display:none;">
           <span class="c-dot{% if value.active %} active{% endif %}" style="background:{{ dot_hex }};"></span>
         </label>
       {% endunless %}

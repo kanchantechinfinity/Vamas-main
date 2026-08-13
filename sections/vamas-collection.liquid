@@ -273,8 +273,8 @@
                   <div class="price-slider" id="priceSliderT">
                     <div class="price-slider__track"></div>
                     <div class="price-slider__fill" id="priceFillT"></div>
-                    <input type="range" class="price-slider__input" id="rangeMinT" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
-                    <input type="range" class="price-slider__input" id="rangeMaxT" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
+                    <input type="range" class="price-slider__input" id="rangeMinT" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}">
+                    <input type="range" class="price-slider__input" id="rangeMaxT" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}">
                   </div>
                 </div>
               </div>
@@ -286,7 +286,7 @@
             <div class="acc-body open">
               {% if availability_filter != blank %}
                 {% for value in availability_filter.values %}
-                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}> {{ value.label }} ({{ value.count }})</label>
                 {% endfor %}
               {% else %}
                 <p class="filter-empty-note">Availability filter not set up yet.</p>
@@ -315,7 +315,7 @@
           {% endfor %}
           {% for option in collection.sort_options %}
             <label class="filter-check-row">
-              <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %} onchange="this.form.submit()"> {{ option.name }}
+              <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %}> {{ option.name }}
             </label>
           {% endfor %}
         </form>
@@ -429,8 +429,8 @@
             <div class="price-slider" id="priceSlider">
               <div class="price-slider__track"></div>
               <div class="price-slider__fill" id="priceFill"></div>
-              <input type="range" class="price-slider__input" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}" onchange="this.form.submit()">
-              <input type="range" class="price-slider__input" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}" onchange="this.form.submit()">
+              <input type="range" class="price-slider__input" id="rangeMin" name="{{ filter.min_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.min_value.value | default: filter.range_min | divided_by: 100 }}">
+              <input type="range" class="price-slider__input" id="rangeMax" name="{{ filter.max_value.param_name }}" min="{{ filter.range_min | divided_by: 100 }}" max="{{ filter.range_max | divided_by: 100 }}" value="{{ filter.max_value.value | default: filter.range_max | divided_by: 100 }}">
             </div>
           </div>
         </div>
@@ -442,7 +442,7 @@
       <div class="acc-body open">
         {% if availability_filter != blank %}
           {% for value in availability_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} onchange="this.form.submit()"> {{ value.label }} ({{ value.count }})</label>
+            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}> {{ value.label }} ({{ value.count }})</label>
           {% endfor %}
         {% else %}
           <p class="filter-empty-note">Availability filter not set up yet.</p>
@@ -692,18 +692,57 @@ function toggleAcc(head){
   window.addEventListener('load', fit);
   window.addEventListener('resize', fit);
 })();
-function wireVtagApply(id){
+/* Nothing in the filter panels navigates on its own any more - a shopper ticks
+   whatever they want across FILTER and FEATURED, then APPLY sends the lot in a
+   single request. The button therefore has to rebuild the WHOLE query, not just
+   the tag checkboxes it used to read: native filter checkboxes, colour dots,
+   the sort radio and the price sliders all live here now. */
+function wireVtagApply(id, scopeSelector){
   var apply = document.getElementById(id);
   if(!apply) return;
+  var scope = scopeSelector ? document.querySelector(scopeSelector) : document;
+  if(!scope) return;
+
   apply.addEventListener('click', function(){
+    var params = [];
     var tags = [];
-    document.querySelectorAll('.vtag-filter:checked').forEach(function(cb){ tags.push(cb.value.trim().toLowerCase().replace(/\s+/g,'-')); });
-    var base = '/collections/{{ collection.handle | default: "all" }}';
-    window.location.href = tags.length ? (base + '/' + tags.join('+')) : base;
+
+    /* Ticked boxes and the chosen sort. Hidden inputs are skipped on purpose:
+       they only mirror the state these controls already carry, so reading both
+       would send every active filter twice. */
+    scope.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked').forEach(function(el){
+      if (el.classList.contains('vtag-filter')) {
+        tags.push(el.value.trim().toLowerCase().replace(/\s+/g, '-'));
+      } else if (el.name) {
+        params.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
+      }
+    });
+
+    /* Price only counts as a filter once it has been moved off the full range,
+       otherwise every APPLY would pin a price band the shopper never chose. */
+    scope.querySelectorAll('input[type="range"][name]').forEach(function(el){
+      var isMin = el.id.indexOf('rangeMin') === 0;
+      var untouched = isMin ? (el.value === el.min) : (el.value === el.max);
+      if (!untouched) params.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
+    });
+
+    var url = '/collections/{{ collection.handle | default: "all" }}';
+    if (tags.length) url += '/' + tags.join('+');
+    if (params.length) url += '?' + params.join('&');
+    window.location.href = url;
   });
 }
-wireVtagApply('vtag-apply');
-wireVtagApply('vtag-apply-toolbar');
+wireVtagApply('vtag-apply', '#sidebar');
+wireVtagApply('vtag-apply-toolbar', '#col-filter-drawer');
+
+/* The native colour dots hide their checkbox behind a coloured span, so with
+   auto-submit gone nothing showed a pick until the page reloaded. Reflect it. */
+document.querySelectorAll('.color-dot-input').forEach(function(cb){
+  cb.addEventListener('change', function(){
+    var dot = cb.parentElement.querySelector('.c-dot');
+    if (dot) dot.classList.toggle('active', cb.checked);
+  });
+});
 
 function wirePriceSlider(minId, maxId, fillId, minLabelId, maxLabelId){
   var minInput = document.getElementById(minId);
