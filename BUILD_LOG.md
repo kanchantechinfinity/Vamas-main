@@ -1,5 +1,39 @@
 # Build Log
 
+## 2026-08-13 — Tablet breakpoint raised to 1180px; card price row unstuck
+
+**Ask:** on a tablet the price, struck price and discount were crushed together;
+make the three smaller so the card reads cleanly.
+
+**Real cause, and a bug in the earlier tablet fix:** CSS media queries measure the
+viewport **including** the scrollbar, while `document.documentElement.clientWidth`
+excludes it. The user's tablet reports `clientWidth` 1022 but `innerWidth` **1037** —
+above the 1024 ceiling I had used. So every tablet rule was skipped on the real device
+and the desktop 4-up grid ran against a 240px sidebar, leaving **149px** cards. At that
+width `Rs. 1,312.00` at 18px could not fit on one line, so the price wrapped and shoved
+the struck price and discount into it.
+
+Moved all `max-width: 1024px` breakpoints to **1180px** (9 files) so landscape tablets
+are actually covered, and gave the price trio a size step between the phone and desktop
+values with `nowrap`.
+
+**Measured at innerWidth 1037**
+
+| | Before | After |
+| --- | --- | --- |
+| Grid | 4 × 148px | 3 × 241px |
+| Sidebar | 240px | 168px |
+| Price row height | 54px (3 lines) | **23px (1 line)** |
+| Price / struck / discount | 18 / 12 / 10 | 15 / 10 / 9 |
+| Page overflow | — | 0 |
+
+**Regression checks:** 1400px desktop → 4-up, sidebar 240, 18/12/10, all three side by
+side at x = 0 / 86 / 151, overflow 0. 375px phone → 2-up, 12/8/7, x = 0 / 61 / 106,
+overflow 0. Desktop and phone untouched.
+
+**Checked, not a bug:** on desktop the price element measures 54px tall. That is
+`line-height`, not wrapping — the three sit on one line with room to spare.
+
 ## 2026-08-13 — Filters apply on APPLY, not on click
 
 **Ask:** filters in the FILTER / FEATURED drawer were applying the instant they were
