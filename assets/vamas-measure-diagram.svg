@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 775 250" role="img" aria-label="How to measure a padded blouse: chest, waist, length and sleeve length">
+  <style>text{font:600 11px Poppins,Helvetica,Arial,sans-serif;fill:#3a3a3a;paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}</style>
+  <path d="M 189.67 123.08 L 289.37 123.08" fill="none" stroke="#d6b469" stroke-width="0.93" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 55.32 123.08 L 156.04 123.08" fill="none" stroke="#d6b469" stroke-width="0.93" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 279.07 115.36 L 289.37 123.08" fill="none" stroke="#d6b469" stroke-width="0.93" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 289.37 123.08 L 279.07 129.85" fill="none" stroke="#d6b469" stroke-width="0.93" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 65.61 116.31 L 55.32 123.08" fill="none" stroke="#d6b469" stroke-width="0.93" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 55.32 123.08 L 65.61 129.85" fill="none" stroke="#d6b469" stroke-width="0.93" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 188.32 236.59 L 262.23 236.59" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 78.72 236.59 L 153.74 236.59" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 256.41 231.72 L 262.23 236.59" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 262.23 236.59 L 256.41 241.46" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 87.38 230.77 L 78.72 236.59" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 78.72 236.59 L 87.38 242.41" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 380.95 138.16 L 380.95 226.50" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 380.95 7.96 L 380.95 96.11" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 387.72 217.76 L 380.95 226.50" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 380.95 226.50 L 374.19 218.71" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 387.72 16.70 L 380.95 7.96" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 380.95 7.96 L 374.19 16.70" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 370.36 7.96 L 389.07 7.96" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 369.99 226.50 L 390.94 226.50" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 8.29 202.65 L 54.01 211.55 L 67.65 168.96 L 82.93 229.12 L 260.16 229.12 L 275.87 168.96 L 288.24 211.55 L 333.16 204.25 L 270.59 10.13 L 249.74 10.13 C 249.74 10.13 263.60 71.48 176.74 118.04 C 176.74 118.04 97.53 104.64 91.12 9.19 L 72.46 8.96 L 8.29 202.65 Z" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 77.60 9.02 C 77.60 9.02 87.31 64.26 54.16 121.90 L 67.65 168.96" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 265.92 9.02 C 265.92 9.02 256.21 64.26 289.37 121.90 L 275.87 168.96" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 66.54 95.82 C 66.54 95.82 126.07 119.76 121.48 226.54" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 276.62 99.34 C 276.62 99.34 216.35 124.70 221.68 226.54" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 443.44 202.05 L 488.33 210.78 L 503.08 160.89 L 515.90 224.78 L 695.09 226.54 L 709.92 171.09 L 720.97 208.93 L 766.17 200.57 L 703.77 7.96 L 685.84 7.96 C 685.84 7.96 711.96 148.72 607.18 197.15 C 607.18 197.15 515.38 159.98 527.35 7.96 L 507.74 7.96 L 443.44 202.05 Z" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 512.79 7.96 C 512.79 7.96 524.03 60.66 491.48 117.25 L 503.07 160.89" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 699.84 7.96 C 699.84 7.96 691.12 60.70 723.67 117.29 L 709.91 171.09" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 610.17 226.54 L 609.11 196.24" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 609.64 202.13 C 609.64 205.38 607.01 208.01 603.75 208.01 C 600.50 208.01 597.87 205.38 597.87 202.13 C 597.87 198.88 600.50 196.24 603.75 196.24 C 607.01 196.24 609.64 198.88 609.64 202.13 Z" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 609.64 220.65 C 609.64 223.90 607.01 226.54 603.75 226.54 C 600.50 226.54 597.87 223.90 597.87 220.65 C 597.87 217.40 600.50 214.76 603.75 214.76 C 607.01 214.76 609.64 217.40 609.64 220.65 Z" fill="none" stroke="#000000" stroke-width="1.00" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 742.23 147.39 L 759.78 200.08" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 699.59 7.96 L 717.90 66.68" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 763.27 193.94 L 759.78 200.08" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 759.78 200.08 L 753.19 197.03" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 706.74 10.25 L 699.59 7.96" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 699.59 7.96 L 696.10 14.10" fill="none" stroke="#d6b469" stroke-width="0.95" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="172.0" y="128.5" text-anchor="middle">Chest</text>
+  <text x="172.0" y="242.0" text-anchor="middle">Waist</text>
+  <text x="383.0" y="99.0" text-anchor="middle" transform="rotate(-90 383.0 99.0)">Length</text>
+  <text x="718.0" y="76.0" text-anchor="middle" transform="rotate(-90 718.0 76.0)">Sleeve length</text>
+</svg>

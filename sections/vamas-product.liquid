@@ -510,9 +510,14 @@
       </ul>
 
       <div class="sc-measure">
-        <h4 class="sc-measure__title">HOW TO MEASURE</h4>
+        <h4 class="sc-measure__title">PADDED BLOUSE MEASUREMENT</h4>
+        {% comment %} The diagram from the brand's own chart, traced out of the PDF as
+          vector paths so it stays sharp at any size and weighs ~7KB. A merchant image
+          overrides it if the artwork is ever redrawn. {% endcomment %}
         {% if section.settings.measure_image != blank %}
           <img class="sc-measure__img" src="{{ section.settings.measure_image | image_url: width: 900 }}" alt="How to measure a padded blouse" loading="lazy">
+        {% else %}
+          <img class="sc-measure__img sc-measure__img--diagram" src="{{ 'vamas-measure-diagram.svg' | asset_url }}" alt="How to measure a padded blouse: chest, waist, length and sleeve length" loading="lazy">
         {% endif %}
         <ol class="sc-measure__list">
           <li><strong>Chest</strong> — around the fullest part of the bust, tape level and snug, not tight.</li>
@@ -1030,7 +1035,7 @@
     { "type": "checkbox", "id": "show_reviews", "label": "Show Reviews Section", "default": true },
     { "type": "header", "content": "Size Chart Modal" },
     { "type": "checkbox", "id": "show_size_chart", "label": "Enable Size Chart Modal", "default": true },
-    { "type": "image_picker", "id": "measure_image", "label": "How-to-measure diagram", "info": "Optional. Upload the padded-blouse measurement diagram (page 2 of the size chart PDF). The written steps show either way." }
+    { "type": "image_picker", "id": "measure_image", "label": "How-to-measure diagram", "info": "Optional override. The blouse diagram from the brand size chart is built into the theme and shows by default." }
   ],
   "blocks": [
     {
