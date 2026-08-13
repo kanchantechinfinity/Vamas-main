@@ -1,4 +1,35 @@
+
 # Build Log
+
+## 2026-08-13 — Cart's related row uses the shared product card
+
+**Ask:** the product cards under the cart are smaller than normal collection cards;
+make them the same size.
+
+**Cause:** that row used a bespoke `rs-card`, not the shared card. It was actually
+*wider* than a collection card (287px vs 217px) but its image was a fixed **220px
+landscape** box against the real card's **portrait 3:4** — the squat image is what read
+as "small", not the width.
+
+Replaced the markup with `{% render 'vamas-product-card' %}` inside `.vamas-prod-grid`,
+the same as the collection, homepage, search and product pages, and deleted the
+duplicate `rs-*` CSS.
+
+**Verified live**
+
+| | Before | After |
+| --- | --- | --- |
+| Card | 287 × 353 | 285 × 573 |
+| Image | 287 × 220 (landscape) | 283 × 377, aspect **0.750** (3:4) |
+| Features | title, price, ADD TO CART | + colour swatches, size chips, wishlist, discount badge |
+
+Phone 375px → 2-up, aspect 0.750, overflow 0. Tablet 1037px → 3-up, aspect 0.750,
+overflow 0.
+
+**Caught while checking:** the blanket tablet-and-below rule drops `.vamas-prod-grid` to
+2-up. That was fine when the ceiling was 1024, but after moving it to 1180 it left
+**469px** cards on a 1022px tablet. Set to 3-up in the tablet band to match the
+collection grid; rails stay at 303px, overflow 0.
 
 ## 2026-08-13 — Sold-out variants: SOLD OUT + NOTIFY ME
 
