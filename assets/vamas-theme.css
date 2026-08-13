@@ -460,6 +460,23 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 .vamas-prod-card__badge--maroon { background: var(--color-maroon); color: var(--color-gold); }
 .vamas-prod-card__badge--gold { background: var(--color-gold); color: var(--color-maroon); }
+/* On phones the cards are half-width, so a full collection name (BACKLESS,
+   BOUTIQUE, EASY STRETCH…) ran across the model's face. Clamped hard here —
+   width-capped with an ellipsis rather than a fixed truncation in Liquid, so
+   it stays short whatever the collection ends up being called. */
+@media (max-width: 768px) {
+  .vamas-prod-card__badge {
+    top: 6px; left: 6px;
+    font-size: 7px;
+    letter-spacing: .6px;
+    padding: 3px 6px;
+    border-radius: 7px;
+    max-width: 54px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 
 .vamas-prod-card__wishlist {
   position: absolute;
