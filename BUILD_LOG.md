@@ -1,6 +1,33 @@
 
 # Build Log
 
+## 2026-08-13 — Measurement diagram traced out of the size chart PDF
+
+**Ask:** the how-to-measure section should match the supplied document, drawing included.
+
+**The drawing is vector artwork, not a raster image.** Pulling the PDF's 8 embedded
+images gave only the page background, the logo watermark, two soft masks and a gradient
+— no blouse. `pdftoppm`, `mutool` and `gs` are not installed here either.
+
+Two steps got there:
+1. `qlmanage` (built into macOS) rendered the page so the artwork could actually be seen.
+2. Wrote a converter for the page content stream — `q`/`Q`, `cm`, `rg`/`RG`, `m l c v y h
+   re`, `f`/`S` — mapping PDF user space (y-up) into SVG (y-down). 841 path operators in,
+   73 paths out, 37 of them inside the drawing's bounding box.
+
+The result is an **exact reproduction**, not a redrawn approximation: both blouse views,
+the chest / waist / length / sleeve-length arrows, and the back buttons. ~7KB, sharp at
+any size, at `assets/vamas-measure-diagram.svg`. Label positions come from the PDF's own
+text matrices; they get a white halo so the measurement lines do not run through the
+words.
+
+**Verified live:** desktop renders 529×171, phone 543×175 inside a 335px scroller. Fitted
+to the phone width the labels dropped to about 5px and stopped being readable, so below
+600px the figure holds 560px and scrolls sideways, same as the chart table. Modal still
+fits the viewport, page overflow 0.
+
+A merchant `image_picker` setting still overrides the built-in diagram.
+
 ## 2026-08-13 — Size chart popup rebuilt from the brand's own chart
 
 **Ask:** use Vamas's real size chart (supplied as a PDF), add a how-to-measure section,
