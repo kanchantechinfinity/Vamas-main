@@ -1,5 +1,37 @@
 # Build Log
 
+## 2026-08-13 — Sold-out variants: SOLD OUT + NOTIFY ME
+
+**Ask:** in stock → ADD TO CART + BUY NOW. Sold out → SOLD OUT + a NOTIFY ME button.
+
+BUY NOW and NOTIFY ME now share the slot beside the primary button and swap on variant
+change; a disabled BUY NOW previously left a shopper with nothing to do. Also fixed: the
+sticky bottom bar still read ADD TO CART on a sold-out variant.
+
+NOTIFY ME opens a modal that posts through **Shopify's own contact form**, so the
+request reaches the shop inbox with product, variant and URL attached. No back-in-stock
+app is installed and this needs none. After submitting, Shopify returns to
+`?contact_posted=true` and the modal reopens itself to show the confirmation.
+
+**Bug found while testing:** the modal was nested inside `{% form 'product' %}`. Browsers
+drop a nested form outright, so the contact form rendered as *nothing* and NOTIFY ME
+opened an empty box (`formExists: false`). Moved after the product form's `endform`.
+
+**Verified live** on `…elbow-sleeves-saree-blouse-a-66-n` (10 of 12 variants sold out):
+
+| Variant | ADD TO CART | disabled | BUY NOW | NOTIFY ME | sticky bar |
+| --- | --- | --- | --- | --- | --- |
+| BLACK / M (sold out) | SOLD OUT | yes | hidden | shown | SOLD OUT |
+| SILVER / L (in stock) | ADD TO CART | no | shown | hidden | ADD TO CART |
+
+Clicking NOTIFY ME opens the modal with the live variant (`BLACK / M`) and product title
+already in the hidden fields; close and Escape both dismiss it. Form posts to
+`/contact#notify-form` with `contact[email]`, `contact[Product]`, `contact[Variant]`,
+`contact[Product URL]`. No JS errors.
+
+**Not done deliberately:** did not submit the form — that emails the shop owner, so it
+is the merchant's to send. Worth one live test.
+
 ## 2026-08-13 — Tablet breakpoint raised to 1180px; card price row unstuck
 
 **Ask:** on a tablet the price, struck price and discount were crushed together;
