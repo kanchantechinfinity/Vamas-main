@@ -28,6 +28,11 @@ fits the viewport, page overflow 0.
 
 A merchant `image_picker` setting still overrides the built-in diagram.
 
+**Popup now runs in the sheet's own order:** diagram under its PADDED BLOUSE MEASUREMENT
+heading → size chart → the three notes → written measuring steps last (those are extra
+guidance, not part of the printed sheet). Desktop modal 600×810 with the diagram at
+545×176; phone keeps the 560px scroller. Overlay z-index 10040, page overflow 0.
+
 ## 2026-08-13 — Size chart popup rebuilt from the brand's own chart
 
 **Ask:** use Vamas's real size chart (supplied as a PDF), add a how-to-measure section,
