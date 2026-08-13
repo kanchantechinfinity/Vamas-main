@@ -784,7 +784,7 @@ a{text-decoration:none;color:inherit;}
   .dark-nl-btn { border-radius: 12px; padding: 14px; }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1180px) {
   /* The desktop sidebar (200px) eats 24% of a tablet viewport, squeezing the
      3-up grid down to 161px cards. Narrowing the rail and the gutters gives
      the cards back ~23px each without dropping to a 2-up grid. */

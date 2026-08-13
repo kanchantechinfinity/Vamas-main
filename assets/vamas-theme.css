@@ -928,7 +928,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-footer__payments { font-size: 10px; color: rgba(235,211,173,0.3); }
 
 /* ── Responsive ───────────────────────── */
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .vamas-slide__inner { padding: 0 48px; }
   .vamas-section { padding: 52px 48px; }
   .vamas-brand { flex-direction: column; margin: 48px auto; height: auto; }
@@ -1146,7 +1146,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   #vamas-search-toggle{display:none!important;}
   .vamas-nav__icons a[title="Account"]{display:none!important;}
 }
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1180px) {
   .vamas-nav-outer{padding:10px 24px;}
   .vamas-nav__links a{font-size:9px;}
   .vamas-nav__links{gap:16px;}
@@ -1337,7 +1337,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
    brings it back under the bar with the Contact button still showing —
    no hamburger fallback, which would hide a nav on a screen wide enough
    to display it. */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1180px) {
   .vamas-reels { padding: 48px 40px 72px; }
 
   .vamas-nav { padding: 8px 8px 8px 16px; }
@@ -1356,6 +1356,15 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-slide--right .vamas-slide__text { max-width: 480px; }
 
   .vamas-section { padding: 52px 40px; }
+
+  /* Price, struck price and discount ran into each other on tablets: at 18px
+     "Rs. 1,312.00" wrapped inside the card and shoved the other two against
+     it. A step between the phone (12/8/7) and desktop (18/12/10) sizes, with
+     nowrap so none of the three can break mid-figure. */
+  .vamas-prod-card__price { flex-wrap: nowrap; gap: 5px; align-items: baseline; }
+  .vamas-prod-card__price .price { font-size: 15px; white-space: nowrap; flex-shrink: 0; }
+  .vamas-prod-card__price .original { font-size: 10px; white-space: nowrap; }
+  .vamas-prod-card__price .discount { font-size: 9px; white-space: nowrap; flex-shrink: 0; }
 }
 
 /* While any drawer (wishlist/cart) is open, hide the sticky header instead
