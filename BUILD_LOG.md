@@ -1,6 +1,41 @@
 
 # Build Log
 
+## 2026-08-13 — Hero banner sizes (and two sizing bugs found while measuring)
+
+The hero has **no fixed aspect ratio** — JS sets its height from the viewport:
+
+- Desktop (≥769px): `viewportHeight − header(116px)`, minimum 520px
+- Phone (≤768px): `viewportHeight − header(96px) − bottomNav(57px)`, minimum 320px
+
+Measured containers:
+
+| Screen | Container | Aspect |
+| --- | --- | --- |
+| 1920×1080 | 1920 × 964 | 1.99 |
+| 1440×900 | 1440 × 784 | 1.84 |
+| 1366×768 | 1366 × 652 | 2.10 |
+| 1280×800 | 1280 × 684 | 1.87 |
+| Tablet 1024×768 | 1024 × 652 | 1.57 |
+| iPhone 390×844 | 390 × 691 | 0.56 |
+| iPhone 428×926 | 428 × 773 | 0.55 |
+
+**Two bugs found while measuring, both fixed:**
+
+1. Desktop asked Shopify for `1800x760` — a forced 2.37 crop returning only 760px of
+   height for a container up to ~1000px. The hero was upscaled about **1.4×**.
+2. Mobile asked for `900x1200` — a forced 3:4 crop onto a container that is about 9:16,
+   so a square upload was cropped twice and arrived at **480×481**.
+
+Both now request width only (`2400x` / `1200x`) with no crop, so the merchant's framing
+survives and `object-fit` plus the existing per-slide focus settings do the cropping.
+After the fix the desktop upscale dropped from 1.4× to **1.07×** — the remainder is
+because the current upload is only 1600×900.
+
+**Recommended export sizes:** desktop **2400 × 1200** (2:1), phone **1200 × 2100** (≈9:16).
+The current mobile banner is square, which is why the model keeps getting cropped
+sideways on phones.
+
 ## 2026-08-13 — Measurement diagram traced out of the size chart PDF
 
 **Ask:** the how-to-measure section should match the supplied document, drawing included.
