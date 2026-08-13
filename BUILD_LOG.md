@@ -1,6 +1,42 @@
 
 # Build Log
 
+## 2026-08-13 — Desktop card price row
+
+**Ask:** shrink the price, struck price and discount on desktop — the row looks messy.
+
+**Correction to an earlier entry.** Two days of notes said this was `line-height`, not
+wrapping. That was wrong: I had only compared horizontal positions. Counting line boxes
+with `Range.getClientRects()` shows **all three parts wrapped on all 10 cards** —
+`Rs. 440.65` broke into `Rs.` and `440.65`. The flex row was `nowrap` but the *items*
+were not, so each one wrapped inside its own box.
+
+Fixing it took three passes because each fix exposed the next constraint:
+
+1. `nowrap` on the items + 18/12/10 → 16/11/9. Wrapping gone, but four-digit pairs then
+   **spilled 23–27px past the card**.
+2. Gap 6 → 4px, struck price → 9px. No spill, but the struck price **ellipsized on 10 of
+   12 cards** — a clipped price reads as broken.
+3. Price 15 → 14px, discount 9 → 8px, freeing ~9px. Clears the worst pair in the
+   catalogue.
+
+**Final, verified at 1265px on `?sort_by=price-descending` (widest prices in the store)**
+
+| | Before | After |
+| --- | --- | --- |
+| Sizes | 18 / 12 / 10 | 14 / 9 / 8, gap 4px |
+| Row height | 54px (each part on 2 lines) | **21px, one line** |
+| Cards wrapping mid-figure | 10 of 10 | **0 of 12** |
+| Cards spilling past the card | — | **0** |
+| Struck prices clipped | — | **0** |
+
+Worst real pair `Rs. 1,224.65 / Rs. 3,499.00 / 65% off` ends at 173px in a 175px row.
+The ellipsis on the struck price stays as a backstop for anything longer than the
+current catalogue.
+
+**Regression checks:** tablet 1037px → 15px, one line, 0 spill/wrap/clip, overflow 0.
+Phone 375px → 12px, one line, 0 spill/wrap, overflow 0. Both keep their own overrides.
+
 ## 2026-08-13 — Cart's related row uses the shared product card
 
 **Ask:** the product cards under the cart are smaller than normal collection cards;
