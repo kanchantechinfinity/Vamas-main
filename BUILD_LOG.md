@@ -1,6 +1,30 @@
 
 # Build Log
 
+## 2026-08-13 — Product page: wishlist and share relocated
+
+**Ask:** move Add to Wishlist next to the NEW ARRIVAL / TRENDING badges, and move
+Share + its icons next to the payment badges.
+
+Both done. Wishlist now sits at the end of `.prod-badge-row`, pushed to the right edge
+on desktop; Share rides along at the end of `.payment-strip`, so it no longer takes a
+centred row of its own.
+
+**Verified live** — desktop 1265px: badge row one line reading `NEW ARRIVAL | 🔥 TRENDING
+| ♡ Add to Wishlist` with the wishlist right-aligned; payment strip one line reading
+`UPI | Visa | Mastercard | Net Banking | COD | Share: 🔗` with share right-aligned.
+Phone 375px: badge row one line (content 329px in a 343px row), strip two lines, page
+overflow 0. Wishlist toggle still works (`♡ Add to Wishlist` ↔ `♥ Saved to Wishlist`,
+localStorage written and restored) and all its data attributes survived the move; both
+share buttons still present.
+
+**Measurement note:** an intermediate check reported the phone badge row as three lines.
+That was an artifact — the counter grouped by rounded `top`, and the three items sit at
+689/688/693 because their heights differ slightly. Re-measured by vertical overlap it is
+one line. A `margin-left: 0` mobile rule added on the strength of the bad reading is
+kept, since grouping the wishlist with the badges rather than pushing it 14px right
+reads better on a phone either way.
+
 ## 2026-08-13 — Hero slide 1 head clipping; size filter status
 
 **Head clipping.** Slide 1's desktop focus-Y was 30. The image is 1600×900 (aspect 1.78)
