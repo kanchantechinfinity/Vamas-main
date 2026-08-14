@@ -43,6 +43,17 @@
     <div class="prod-badge-row">
       {% if section.settings.badge_text != blank %}<span class="prod-badge">{{ section.settings.badge_text }}</span>{% endif %}
       {% if section.settings.badge_hot_text != blank %}<span class="prod-badge-hot">&#128293; {{ section.settings.badge_hot_text }}</span>{% endif %}
+      {% comment %} Wishlist sits with the badges rather than far below the buy
+        buttons, where it was easy to miss. {% endcomment %}
+      <a href="#" class="wishlist-link" id="wishlist-btn"
+         data-id="{{ product.id }}"
+         data-handle="{{ product.handle }}"
+         data-title="{{ product.title | escape }}"
+         data-type="{{ product.type | escape | default: 'Blouse' }}"
+         data-price="{{ product.selected_or_first_available_variant.price | money }}"
+         data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+         data-url="{{ product.url }}"
+         data-variant="{{ product.selected_or_first_available_variant.id }}">&#9825; Add to Wishlist</a>
     </div>
     <h1 class="prod-name">{{ product.title }}</h1>
     <div class="prod-type">{{ section.settings.subtitle }}</div>
@@ -265,29 +276,21 @@
     </product-form>
 
     {% if section.settings.show_payment_strip %}
+    {% comment %} Share sits on the same line as the payment badges - both are
+      trailing details, and two half-empty rows read worse than one. {% endcomment %}
     <div class="payment-strip">
       <span class="pay-badge">UPI</span><span class="pay-badge">Visa</span><span class="pay-badge">Mastercard</span>
       <span class="pay-badge">Net Banking</span><span class="pay-badge">COD</span>
+
+      <div class="share-row">
+        <span class="share-label">Share:</span>
+        <button class="share-btn" id="share-wa" title="Share on WhatsApp">
+          <svg width="16" height="16" viewBox="0 0 32 32" fill="#25D366"><path d="M16 3C8.832 3 3 8.832 3 16c0 2.625.77 5.074 2.086 7.129L3.05 28.855 9 26.875C10.973 28.023 13.41 29 16 29c7.168 0 13-5.832 13-13S23.168 3 16 3zm0 2c6.086 0 11 4.914 11 11s-4.914 11-11 11c-2.324 0-4.48-.766-6.25-2.063l-.399-.297-3.586.945.992-2.843-.334-.426A10.945 10.945 0 0 1 5 16C5 9.914 9.914 5 16 5zm-4.695 4.852c-.196 0-.504.07-.766.36-.261.292-1 .977-1 2.437s1.063 2.824 1.211 3.028c.148.203 2.121 3.351 5.199 4.585 2.547 1.032 3.082.844 3.656.793.574-.055 1.856-.719 2.106-1.41.25-.695.25-1.285.176-1.41-.074-.125-.277-.199-.578-.348-.3-.148-1.758-.863-2.035-.961-.277-.101-.477-.152-.676.149-.2.297-.773.961-.949 1.16-.176.2-.351.223-.652.075-.3-.149-1.282-.466-2.437-1.496-.9-.813-1.508-1.813-1.684-2.114-.176-.305-.02-.469.133-.617.136-.133.3-.348.45-.52.148-.175.197-.3.296-.5.098-.199.05-.372-.026-.52-.074-.149-.625-1.617-.875-2.207-.25-.574-.5-.492-.676-.5a12.71 12.71 0 0 0-.574-.008 1.1 1.1 0 0 0-.25 0z"/></svg>
+        </button>
+        <button class="share-btn" id="share-copy" title="Copy link">&#128279;</button>
+      </div>
     </div>
     {% endif %}
-
-    <a href="#" class="wishlist-link" id="wishlist-btn"
-       data-id="{{ product.id }}"
-       data-handle="{{ product.handle }}"
-       data-title="{{ product.title | escape }}"
-       data-type="{{ product.type | escape | default: 'Blouse' }}"
-       data-price="{{ product.selected_or_first_available_variant.price | money }}"
-       data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
-       data-url="{{ product.url }}"
-       data-variant="{{ product.selected_or_first_available_variant.id }}">&#9825; Add to Wishlist</a>
-
-    <div class="share-row">
-      <span class="share-label">Share:</span>
-      <button class="share-btn" id="share-wa" title="Share on WhatsApp">
-        <svg width="16" height="16" viewBox="0 0 32 32" fill="#25D366"><path d="M16 3C8.832 3 3 8.832 3 16c0 2.625.77 5.074 2.086 7.129L3.05 28.855 9 26.875C10.973 28.023 13.41 29 16 29c7.168 0 13-5.832 13-13S23.168 3 16 3zm0 2c6.086 0 11 4.914 11 11s-4.914 11-11 11c-2.324 0-4.48-.766-6.25-2.063l-.399-.297-3.586.945.992-2.843-.334-.426A10.945 10.945 0 0 1 5 16C5 9.914 9.914 5 16 5zm-4.695 4.852c-.196 0-.504.07-.766.36-.261.292-1 .977-1 2.437s1.063 2.824 1.211 3.028c.148.203 2.121 3.351 5.199 4.585 2.547 1.032 3.082.844 3.656.793.574-.055 1.856-.719 2.106-1.41.25-.695.25-1.285.176-1.41-.074-.125-.277-.199-.578-.348-.3-.148-1.758-.863-2.035-.961-.277-.101-.477-.152-.676.149-.2.297-.773.961-.949 1.16-.176.2-.351.223-.652.075-.3-.149-1.282-.466-2.437-1.496-.9-.813-1.508-1.813-1.684-2.114-.176-.305-.02-.469.133-.617.136-.133.3-.348.45-.52.148-.175.197-.3.296-.5.098-.199.05-.372-.026-.52-.074-.149-.625-1.617-.875-2.207-.25-.574-.5-.492-.676-.5a12.71 12.71 0 0 0-.574-.008 1.1 1.1 0 0 0-.25 0z"/></svg>
-      </button>
-      <button class="share-btn" id="share-copy" title="Copy link">&#128279;</button>
-    </div>
 
     {% if section.settings.show_trust_grid %}
     <div class="trust-grid">

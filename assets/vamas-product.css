@@ -29,7 +29,10 @@
 
     /* ── Product info ── */
     .prod-info{flex:1;min-width:0;}
-    .prod-badge-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+    /* Wishlist now lives in this row, pushed to the far end so the badges keep
+       reading as a group on the left. */
+    .prod-badge-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+    .prod-badge-row .wishlist-link{margin:0 0 0 auto;text-align:right;white-space:nowrap;}
     .prod-badge{display:inline-block;background:rgba(235,211,173,0.2);border:1px solid var(--g);color:var(--gd);font-size:10px;letter-spacing:1.5px;border-radius:20px;padding:4px 12px;font-weight:600;}
     .prod-badge-hot{background:#fff3e0;border:1px solid #ffcc80;color:#e65100;font-size:10px;letter-spacing:1px;border-radius:20px;padding:4px 12px;font-weight:600;}
     .prod-name{font-size:26px;font-weight:800;color:var(--m);line-height:1.2;margin-bottom:6px;}
@@ -148,13 +151,16 @@
     }
 
     /* ── Payment strip ── */
-    .payment-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;margin-bottom:4px;}
+    .payment-strip{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;margin-bottom:16px;}
     .pay-badge{border:1px solid #e0e0e0;border-radius:5px;padding:4px 9px;font-size:10px;font-weight:600;color:#555;background:white;}
 
     /* ── Wishlist + Share ── */
     .wishlist-link{display:block;text-align:center;font-size:12px;color:#999;text-decoration:none;margin-top:10px;margin-bottom:10px;}
     .wishlist-link:hover{color:var(--m);}
-    .share-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:center;}
+    /* Share rides along at the end of the payment strip, so it no longer needs its
+       own centred row or bottom margin. */
+    .share-row{display:flex;align-items:center;gap:8px;margin:0 0 0 auto;}
+    .share-row .share-btn{width:26px;height:26px;font-size:13px;}
     .share-label{font-size:11px;color:#aaa;}
     .share-btn{width:30px;height:30px;border-radius:50%;border:1px solid #eee;background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.2s;}
     .share-btn:hover{background:#f0f0f0;border-color:#ddd;}
