@@ -33,6 +33,11 @@
        reading as a group on the left. */
     .prod-badge-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
     .prod-badge-row .wishlist-link{margin:0 0 0 auto;text-align:right;white-space:nowrap;}
+    /* On a phone the auto margin makes the wishlist claim a line of its own, so the
+       row ran to three lines. Let it flow straight after the badges instead. */
+    @media (max-width: 600px){
+      .prod-badge-row .wishlist-link{margin-left:0;}
+    }
     .prod-badge{display:inline-block;background:rgba(235,211,173,0.2);border:1px solid var(--g);color:var(--gd);font-size:10px;letter-spacing:1.5px;border-radius:20px;padding:4px 12px;font-weight:600;}
     .prod-badge-hot{background:#fff3e0;border:1px solid #ffcc80;color:#e65100;font-size:10px;letter-spacing:1px;border-radius:20px;padding:4px 12px;font-weight:600;}
     .prod-name{font-size:26px;font-weight:800;color:var(--m);line-height:1.2;margin-bottom:6px;}
