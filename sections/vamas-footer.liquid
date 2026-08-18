@@ -47,36 +47,43 @@
 </div>
 {% endif %}
 
-{% comment %} ── Meaning band ─── the name, its dictionary sense and the line
-  that goes with it, sitting just above the footer proper. {% endcomment %}
-{% if section.settings.show_meaning %}
-<section class="vamas-meaning">
-  <div class="vamas-meaning__inner">
-    <div class="vamas-meaning__left">
-      <h2 class="vamas-meaning__word">{{ section.settings.meaning_word | default: 'VAMAS' }}</h2>
-      <div class="vamas-meaning__pos">
-        {% if section.settings.meaning_pronounce != blank %}<span class="vamas-meaning__pron">({{ section.settings.meaning_pronounce }})</span>{% endif %}
-        <span>{{ section.settings.meaning_pos | default: 'Noun' }}</span>
-        <span class="vamas-meaning__rule" aria-hidden="true"></span>
-      </div>
-      {% if section.settings.meaning_def != blank %}
-        <p class="vamas-meaning__def">{{ section.settings.meaning_def }}</p>
-      {% endif %}
-      {% if section.settings.meaning_line2 != blank %}
-        <p class="vamas-meaning__def vamas-meaning__def--second">{{ section.settings.meaning_line2 }}</p>
-      {% endif %}
-    </div>
-    <div class="vamas-meaning__right">
-      <div class="vamas-meaning__mark">{{ section.settings.meaning_word | default: 'VAMAS' }}</div>
-      {% if section.settings.meaning_tagline != blank %}
-        <p class="vamas-meaning__tag">{{ section.settings.meaning_tagline | newline_to_br }}</p>
-      {% endif %}
-    </div>
-  </div>
-</section>
-{% endif %}
-
 <footer class="vamas-footer">
+
+  {% comment %} ── Meaning band ─── the mark and what the name means on the left,
+    the tagline on the right. Sits where the newsletter used to. {% endcomment %}
+  {% if section.settings.show_meaning %}
+  <section class="vamas-meaning">
+    <div class="vamas-meaning__inner">
+      <div class="vamas-meaning__left">
+        <div class="vamas-meaning__logo">
+          {% if section.settings.logo != blank %}
+            <img src="{{ section.settings.logo | img_url: '360x' }}" alt="{{ section.settings.brand_name | default: 'Vamas' }}">
+          {% else %}
+            <img src="{{ section.settings.logo_asset | default: 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }}">
+          {% endif %}
+        </div>
+        <div class="vamas-meaning__pos">
+          {% if section.settings.meaning_pronounce != blank %}<span class="vamas-meaning__pron">({{ section.settings.meaning_pronounce }})</span>{% endif %}
+          <span>{{ section.settings.meaning_pos | default: 'Noun' }}</span>
+          <span class="vamas-meaning__rule" aria-hidden="true"></span>
+        </div>
+        {% if section.settings.meaning_def != blank %}
+          <p class="vamas-meaning__def">{{ section.settings.meaning_def }}</p>
+        {% endif %}
+        {% if section.settings.meaning_line2 != blank %}
+          <p class="vamas-meaning__def vamas-meaning__def--second">{{ section.settings.meaning_line2 }}</p>
+        {% endif %}
+      </div>
+      <div class="vamas-meaning__right">
+        <div class="vamas-meaning__mark">{{ section.settings.meaning_word | default: 'VAMAS' }}</div>
+        {% if section.settings.meaning_tagline != blank %}
+          <p class="vamas-meaning__tag">{{ section.settings.meaning_tagline | newline_to_br }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
 
   {% if section.settings.show_shop_links %}
   <div class="vamas-shopby">
@@ -117,14 +124,27 @@
   <div class="vamas-footer__grid">
 
     <div>
-      <div class="vamas-footer__logo">
-        {% if section.settings.logo != blank %}
-          <img src="{{ section.settings.logo | img_url: '200x' }}" alt="{{ section.settings.brand_name | default: 'Vamas' }} Logo" class="vamas-footer__logo-img">
-        {% else %}
-          <img src="{{ section.settings.logo_asset | default: 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }} Logo" class="vamas-footer__logo-img">
-        {% endif %}
+      {% comment %} The logo and blurb that used to open this column now live in
+        the meaning band above; the newsletter takes their place, with the social
+        icons left exactly where they were. {% endcomment %}
+      {% if section.settings.show_newsletter %}
+      <div class="vamas-footer__newsletter">
+        <div class="vamas-footer__nl-eye">EXCLUSIVE UPDATES</div>
+        <h2 class="vamas-footer__nl-heading">Stay in <em>style.</em></h2>
+        <p class="vamas-footer__nl-sub">Subscribe for new arrivals, exclusive offers &amp; style inspiration</p>
+        {% form 'customer', id: 'vamas-footer-nl' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="vamas-footer__nl-form">
+            <input class="vamas-footer__nl-input" type="email" name="contact[email]" placeholder="Enter your email address" required>
+            <button type="submit" class="vamas-footer__nl-btn">SUBSCRIBE</button>
+          </div>
+          {% if form.posted_successfully? %}
+            <p class="vamas-footer__nl-success">Thank you for subscribing! &#10022;</p>
+          {% endif %}
+        {% endform %}
       </div>
-      <p class="vamas-footer__desc">{{ section.settings.brand_desc }}</p>
+      {% endif %}
+
       <div class="vamas-footer__socials">
         {% if section.settings.instagram != blank %}
           <a href="{{ section.settings.instagram }}" class="vamas-footer__social" aria-label="Instagram" target="_blank" rel="noopener">
@@ -142,24 +162,6 @@
           </a>
         {% endif %}
       </div>
-
-  {% if section.settings.show_newsletter %}
-      <div class="vamas-footer__newsletter">
-        <div class="vamas-footer__nl-eye">EXCLUSIVE UPDATES</div>
-        <h2 class="vamas-footer__nl-heading">Stay in <em>style.</em></h2>
-        <p class="vamas-footer__nl-sub">Subscribe for new arrivals, exclusive offers &amp; style inspiration</p>
-        {% form 'customer', id: 'vamas-footer-nl' %}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <div class="vamas-footer__nl-form">
-            <input class="vamas-footer__nl-input" type="email" name="contact[email]" placeholder="Enter your email address" required>
-            <button type="submit" class="vamas-footer__nl-btn">SUBSCRIBE</button>
-          </div>
-          {% if form.posted_successfully? %}
-            <p class="vamas-footer__nl-success">Thank you for subscribing! ✦</p>
-          {% endif %}
-        {% endform %}
-      </div>
-      {% endif %}
     </div>
 
     <div>
