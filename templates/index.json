@@ -70,54 +70,54 @@
           "type": "category",
           "settings": {
             "image_asset": "prod-darkmaroon.jpg",
-            "cat_name": "CLASSIC V",
+            "cat_name": "THE PLAIN EDIT",
             "cat_count": "",
-            "cat_url": "/collections/classic-v"
+            "cat_url": "/collections/the-plain-edit"
           }
         },
         "cat-2": {
           "type": "category",
           "settings": {
             "image_asset": "casual.jpg",
-            "cat_name": "EASY STRETCH",
+            "cat_name": "SUMMER ESSENTIALS",
             "cat_count": "",
-            "cat_url": "/collections/easy-stretch"
+            "cat_url": "/collections/summer-essentials"
           }
         },
         "cat-3": {
           "type": "category",
           "settings": {
             "image_asset": "prod-cobalt.jpg",
-            "cat_name": "PLAIN ONLY",
+            "cat_name": "BROCADE BOHEMIA",
             "cat_count": "",
-            "cat_url": "/collections/plain-only"
+            "cat_url": "/collections/brocade-bohemia"
           }
         },
         "cat-4": {
           "type": "category",
           "settings": {
             "image_asset": "slide-pink.jpg",
-            "cat_name": "SLEEVE OFF",
+            "cat_name": "FESTIVE GLAM",
             "cat_count": "",
-            "cat_url": "/collections/sleeve-off"
+            "cat_url": "/collections/festive-glam"
           }
         },
         "cat-5": {
           "type": "category",
           "settings": {
             "image_asset": "prod-maroon2.jpg",
-            "cat_name": "SUPER BASIC",
+            "cat_name": "RE-VERSE BY VAMAS",
             "cat_count": "",
-            "cat_url": "/collections/super-basic"
+            "cat_url": "/collections/re-verse-by-vamas"
           }
         },
         "cat-6": {
           "type": "category",
           "settings": {
             "image_asset": "prod-indigo.jpg",
-            "cat_name": "BOUTIQUE",
+            "cat_name": "SIDE STRETCH BLOUSES",
             "cat_count": "",
-            "cat_url": "/collections/boutique"
+            "cat_url": "/collections/side-stretch-blouses"
           }
         },
         "stat-1": {
@@ -235,6 +235,20 @@
             "reel_url": "",
             "reel_product": ""
           }
+        },
+        "cat-7": {
+          "type": "category",
+          "settings": {
+            "cat_name": "BRIDGERTON INSPIRED",
+            "cat_url": "/collections/bridgerton-inspired"
+          }
+        },
+        "cat-8": {
+          "type": "category",
+          "settings": {
+            "cat_name": "CORSETS",
+            "cat_url": "/collections/corsets"
+          }
         }
       },
       "block_order": [
@@ -246,6 +260,8 @@
         "cat-4",
         "cat-5",
         "cat-6",
+        "cat-7",
+        "cat-8",
         "stat-1",
         "stat-2",
         "stat-3",

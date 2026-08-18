@@ -801,3 +801,27 @@ a{text-decoration:none;color:inherit;}
   .dark-footer-grid { grid-template-columns: 1fr; }
   .prod-topbar { align-items: flex-start; }
 }
+
+/* ── SUB-CATEGORY TABS ─────────────────────────────────────────────────
+   Sits under the collection title. One scrolling line on phones, same as
+   the size row - a parent like THE PLAIN EDIT carries seven of these and
+   none of them shrink to a readable size across 375px. */
+.col-subcats{
+  display:flex;flex-wrap:nowrap;gap:8px;
+  padding:14px var(--page-gutter);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;-ms-overflow-style:none;
+  border-bottom:1px solid rgba(66,0,1,.07);
+}
+.col-subcats::-webkit-scrollbar{display:none;}
+.col-subcat{
+  flex:0 0 auto;padding:8px 16px;border:1px solid rgba(66,0,1,.18);
+  border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.6px;
+  color:rgba(66,0,1,.75);text-decoration:none;white-space:nowrap;transition:all .18s;
+}
+.col-subcat:hover{border-color:var(--m);color:var(--m);}
+.col-subcat.is-active{background:var(--m);border-color:var(--m);color:var(--g);}
+@media (max-width: 768px){
+  .col-subcats{padding:12px 16px;gap:6px;}
+  .col-subcat{padding:7px 13px;font-size:10px;}
+}

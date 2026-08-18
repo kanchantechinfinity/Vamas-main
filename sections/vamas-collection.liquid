@@ -134,6 +134,59 @@
 </div>
 
 {%- comment -%}
+  Sub-category tabs for the parent categories (THE PLAIN EDIT, FESTIVE GLAM, ...).
+
+  A sub-category is a TAG on the products inside the parent collection, not a
+  separate collection - Shopify's built-in tag routes filter server-side with no
+  app involved, one product can sit in several sub-categories, and adding a new
+  one is just a tag rather than a new collection to build and maintain.
+
+  The mapping lives in one section setting because every collection shares this
+  template: one line per collection, "handle | Tag One, Tag Two".
+{%- endcomment -%}
+{%- assign subcat_tags = '' -%}
+{%- if section.settings.subcat_map != blank -%}
+  {%- assign subcat_lines = section.settings.subcat_map | newline_to_br | split: '<br />' -%}
+  {%- for line in subcat_lines -%}
+    {%- assign parts = line | split: '|' -%}
+    {%- if parts.size >= 2 -%}
+      {%- assign line_handle = parts[0] | strip | downcase -%}
+      {%- if line_handle == collection.handle -%}
+        {%- assign subcat_tags = parts[1] | split: ',' -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if subcat_tags != '' and subcat_tags.size > 0 -%}
+  {%- comment -%} Keep any non-sub-category tag already active (a size, say) so
+    switching sub-category does not silently drop the shopper's other choice. {%- endcomment -%}
+  {%- assign sub_other = '' -%}
+  {%- assign active_sub = '' -%}
+  {%- for ct in current_tags -%}
+    {%- assign is_sub = false -%}
+    {%- for t in subcat_tags -%}
+      {%- assign t_clean = t | strip -%}
+      {%- if ct == t_clean -%}{%- assign is_sub = true -%}{%- assign active_sub = ct -%}{%- endif -%}
+    {%- endfor -%}
+    {%- unless is_sub -%}{%- assign sub_other = sub_other | append: ct | append: '+' -%}{%- endunless -%}
+  {%- endfor -%}
+  {%- assign sub_base = collection.url -%}
+  {%- if sub_other != '' -%}
+    {%- assign sub_base = collection.url | append: '/' | append: sub_other | split: '+' | join: '+' -%}
+  {%- endif -%}
+  <nav class="col-subcats" aria-label="Sub-categories">
+    <a href="{{ sub_base }}" class="col-subcat{% if active_sub == '' %} is-active{% endif %}">ALL</a>
+    {% for t in subcat_tags %}
+      {% assign t_clean = t | strip %}
+      {% if t_clean != '' %}
+        <a href="{% if t_clean == active_sub %}{{ sub_base }}{% else %}{{ sub_base }}/{{ t_clean | handleize }}{% endif %}"
+           class="col-subcat{% if t_clean == active_sub %} is-active{% endif %}">{{ t_clean }}</a>
+      {% endif %}
+    {% endfor %}
+  </nav>
+{%- endif -%}
+
+{%- comment -%}
   Sticky mobile/responsive filter+sort toolbar.
   Row 1: ALL SIZES (only renders once a Size filter is set up in Search & Discovery).
   Row 2: FILTERS | FEATURED tabs - mutually exclusive panels, don't interfere.
@@ -778,6 +831,8 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
   "name": "Vamas Collection",
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
+    { "type": "header", "content": "Sub-category tabs" },
+    { "type": "textarea", "id": "subcat_map", "label": "Sub-categories per collection", "info": "One line per collection: collection-handle | Tag One, Tag Two. Each tag must exist on the products inside that collection.", "default": "the-plain-edit | Signature Round Neck Sleeveless, Silk Elbow Length, Side Stretch Plains, Cotton Plains, Collar Necks, Tissue Plains, Corsets Plain\nsummer-essentials | Cotton Casuals, Linen Light, Sleeveless Summer\nbrocade-bohemia | Classic Brocade, Zari Brocade, Boho Prints\nfestive-glam | Sequin Shine, Velvet Festive, Mirror Work\nre-verse-by-vamas | Reversible Classics, Two-in-One Prints\nside-stretch-blouses | Cotton Stretch, Shimmer Stretch, Everyday Stretch\nbridgerton-inspired | Corset Bodice, Puff Sleeves, Pearl Detail\ncorsets | Classic Corsets, Embellished Corsets, Corset Crop" },
     { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only as a last resort — a native Size filter (Search & Discovery) wins, then size-NN product tags. Neither needs this list.", "default": "32,34,36,38,40,42,44,46,48,50" },
     { "type": "header", "content": "Sleeve & Neckline" },
     { "type": "paragraph", "content": "These use a Search & Discovery filter if one exists (matched by label containing 'sleeve' / 'neck'). If not, the tag lists below are used instead — tags must match the product tags exactly." },
