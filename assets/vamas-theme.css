@@ -891,20 +891,23 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 /* ── Footer ───────────────────────────── */
 .vamas-footer { background: var(--color-maroon); padding: 64px var(--page-gutter) 32px; }
-.vamas-footer__newsletter { text-align: center; padding: 16px 0 56px; margin-bottom: 48px; border-bottom: 1px solid rgba(235,211,173,0.08); }
+/* The newsletter now sits inside the footer's first column, under the logo,
+   rather than as a full-width band above the grid - so it is left-aligned and
+   sized for a column, not the page. */
+.vamas-footer__newsletter { text-align: left; padding: 26px 0 0; margin: 0; border-top: 1px solid rgba(235,211,173,0.12); }
 .vamas-footer__nl-eye { font-size: 10px; font-weight: 700; letter-spacing: 3.5px; color: rgba(235,211,173,0.4); margin-bottom: 18px; }
-.vamas-footer__nl-heading { font-family: var(--font-heading); font-size: 44px; font-weight: 700; color: var(--color-gold); line-height: 1.2; margin-bottom: 10px; }
+.vamas-footer__nl-heading { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--color-gold); line-height: 1.25; margin-bottom: 8px; }
 .vamas-footer__nl-heading em { font-style: italic; color: var(--color-gold-dark); }
 .vamas-footer__nl-sub { font-size: 13px; color: rgba(235,211,173,0.45); margin-bottom: 34px; }
-.vamas-footer__nl-form { display: flex; max-width: 460px; margin: 0 auto; background: rgba(255,255,255,0.05); border: 1px solid rgba(235,211,173,0.18); border-radius: 100px; padding: 6px 6px 6px 22px; gap: 8px; }
+.vamas-footer__nl-form { display: flex; max-width: 100%; margin: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(235,211,173,0.18); border-radius: 100px; padding: 5px 5px 5px 16px; gap: 6px; }
 .vamas-footer__nl-input { flex: 1; background: none; border: none; outline: none; font-size: 13px; color: var(--color-gold); font-family: var(--font-body); }
 .vamas-footer__nl-input::placeholder { color: rgba(235,211,173,0.3); }
 .vamas-footer__nl-btn { background: var(--color-gold); color: var(--color-maroon); border: none; padding: 10px 22px; border-radius: 12px; font-size: 10px; font-weight: 800; letter-spacing: 2px; cursor: pointer; font-family: var(--font-body); white-space: nowrap; transition: background 0.2s; }
 .vamas-footer__nl-btn:hover { background: var(--color-gold-dark); }
 .vamas-footer__nl-success { color: var(--color-gold); margin-top: 16px; font-size: 13px; font-weight: 700; }
 @media (max-width: 768px) {
-  .vamas-footer__newsletter { padding: 8px 0 40px; margin-bottom: 32px; }
-  .vamas-footer__nl-heading { font-size: 30px; }
+  .vamas-footer__newsletter { padding: 22px 0 0; margin: 0; }
+  .vamas-footer__nl-heading { font-size: 22px; }
   .vamas-footer__nl-form { flex-direction: column; border-radius: 12px; padding: 12px; }
   .vamas-footer__nl-btn { width: 100%; padding: 12px; text-align: center; }
 }

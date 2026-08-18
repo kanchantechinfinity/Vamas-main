@@ -78,24 +78,6 @@
 
 <footer class="vamas-footer">
 
-  {% if section.settings.show_newsletter %}
-  <div class="vamas-footer__newsletter">
-    <div class="vamas-footer__nl-eye">EXCLUSIVE UPDATES</div>
-    <h2 class="vamas-footer__nl-heading">Stay in <em>style.</em></h2>
-    <p class="vamas-footer__nl-sub">Subscribe for new arrivals, exclusive offers &amp; style inspiration</p>
-    {% form 'customer', id: 'vamas-footer-nl' %}
-      <input type="hidden" name="contact[tags]" value="newsletter">
-      <div class="vamas-footer__nl-form">
-        <input class="vamas-footer__nl-input" type="email" name="contact[email]" placeholder="Enter your email address" required>
-        <button type="submit" class="vamas-footer__nl-btn">SUBSCRIBE</button>
-      </div>
-      {% if form.posted_successfully? %}
-        <p class="vamas-footer__nl-success">Thank you for subscribing! ✦</p>
-      {% endif %}
-    {% endform %}
-  </div>
-  {% endif %}
-
   {% if section.settings.show_shop_links %}
   <div class="vamas-shopby">
     {% assign shopby_cat = "Sarees | Kurtas for Women | Short Kurtas for Women | Blouse | Kurta Sets for Women | Co-Ord Sets | Dress Materials | Suits for Women | Tunics | Dresses for Women | Kaftans | Shrugs | Ethnic Gowns | Jumpsuits | Lehenga | Chudidars | Dupatta | Petticoats | Pants | Palazzos | Sharara Suits | Anarkali Suits | Kurta Pant Sets | Palazzo Kurta Sets | Dhoti Sets | Collar Kurtas and Sets | Punjabi Suits | Sleeveless Kurta Sets | Indo-Western Wear for Women | Lehenga Choli for Women | Crop Top Lehenga | Long Dresses" | split: "|" %}
@@ -160,6 +142,24 @@
           </a>
         {% endif %}
       </div>
+
+  {% if section.settings.show_newsletter %}
+      <div class="vamas-footer__newsletter">
+        <div class="vamas-footer__nl-eye">EXCLUSIVE UPDATES</div>
+        <h2 class="vamas-footer__nl-heading">Stay in <em>style.</em></h2>
+        <p class="vamas-footer__nl-sub">Subscribe for new arrivals, exclusive offers &amp; style inspiration</p>
+        {% form 'customer', id: 'vamas-footer-nl' %}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <div class="vamas-footer__nl-form">
+            <input class="vamas-footer__nl-input" type="email" name="contact[email]" placeholder="Enter your email address" required>
+            <button type="submit" class="vamas-footer__nl-btn">SUBSCRIBE</button>
+          </div>
+          {% if form.posted_successfully? %}
+            <p class="vamas-footer__nl-success">Thank you for subscribing! ✦</p>
+          {% endif %}
+        {% endform %}
+      </div>
+      {% endif %}
     </div>
 
     <div>
