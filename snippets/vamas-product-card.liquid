@@ -371,9 +371,8 @@
       </div>
     {% endif %}
 
-    {% if badge_title != blank %}
-      <span class="vamas-prod-card__badge vamas-prod-card__badge--maroon">{{ badge_title_short | upcase }}</span>
-    {% endif %}
+    {% comment %} The collection badge that used to sit here is gone - the image
+      carries only the wishlist heart and the rating now. {% endcomment %}
 
     <button class="vamas-prod-card__wishlist" aria-label="Add to wishlist"
             data-product-id="{{ product.id }}"
@@ -388,8 +387,8 @@
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
 
-    {% comment %} Discount badge, stacked below the wishlist heart, themed (maroon/gold), independent of the wishlist button's own data attributes {% endcomment %}
-    <span class="vamas-prod-card__discount-badge" data-discount-badge{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}%</span>
+    {% comment %} The discount circle that used to sit under the heart is gone too.
+      The "% off" beside the price still carries the same information. {% endcomment %}
 
     <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
 
