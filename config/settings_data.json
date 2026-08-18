@@ -10,7 +10,7 @@
 {
   "current": {
     "color_maroon": "#924444",
-    "color_maroon_light": "#a85a5a",
+    "color_maroon_light": "#924444",
     "color_gold": "#EBD3AD",
     "color_gold_dark": "#c9a96e",
     "color_bg": "#FEF9F2",
@@ -68,7 +68,7 @@
   "presets": {
     "Default": {
       "color_maroon": "#924444",
-      "color_maroon_light": "#a85a5a",
+      "color_maroon_light": "#924444",
       "color_gold": "#EBD3AD",
       "color_gold_dark": "#c9a96e",
       "color_bg": "#FEF9F2",

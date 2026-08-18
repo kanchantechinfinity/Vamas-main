@@ -1,6 +1,6 @@
     :root {
       --m: var(--color-maroon, #924444);
-      --ml: var(--color-maroon-light, #a85a5a);
+      --ml: var(--color-maroon-light, #924444);
       --g: var(--color-gold, #EBD3AD);
       --gd: var(--color-gold-dark, #c9a96e);
       --w: #ffffff;
