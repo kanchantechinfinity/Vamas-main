@@ -47,6 +47,35 @@
 </div>
 {% endif %}
 
+{% comment %} ── Meaning band ─── the name, its dictionary sense and the line
+  that goes with it, sitting just above the footer proper. {% endcomment %}
+{% if section.settings.show_meaning %}
+<section class="vamas-meaning">
+  <div class="vamas-meaning__inner">
+    <div class="vamas-meaning__left">
+      <h2 class="vamas-meaning__word">{{ section.settings.meaning_word | default: 'VAMAS' }}</h2>
+      <div class="vamas-meaning__pos">
+        {% if section.settings.meaning_pronounce != blank %}<span class="vamas-meaning__pron">({{ section.settings.meaning_pronounce }})</span>{% endif %}
+        <span>{{ section.settings.meaning_pos | default: 'Noun' }}</span>
+        <span class="vamas-meaning__rule" aria-hidden="true"></span>
+      </div>
+      {% if section.settings.meaning_def != blank %}
+        <p class="vamas-meaning__def">{{ section.settings.meaning_def }}</p>
+      {% endif %}
+      {% if section.settings.meaning_line2 != blank %}
+        <p class="vamas-meaning__def vamas-meaning__def--second">{{ section.settings.meaning_line2 }}</p>
+      {% endif %}
+    </div>
+    <div class="vamas-meaning__right">
+      <div class="vamas-meaning__mark">{{ section.settings.meaning_word | default: 'VAMAS' }}</div>
+      {% if section.settings.meaning_tagline != blank %}
+        <p class="vamas-meaning__tag">{{ section.settings.meaning_tagline | newline_to_br }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <footer class="vamas-footer">
 
   {% if section.settings.show_newsletter %}
@@ -283,6 +312,14 @@
     { "type": "checkbox", "id": "show_newsletter", "label": "Show Newsletter", "default": true },
     { "type": "checkbox", "id": "show_shop_links", "label": "Show Shop By Links", "default": true },
     { "type": "checkbox", "id": "show_faq", "label": "Show FAQ Accordion", "default": true },
+    { "type": "header", "content": "Meaning Band" },
+    { "type": "checkbox", "id": "show_meaning", "label": "Show Meaning Band", "default": true },
+    { "type": "text", "id": "meaning_word", "label": "Word", "default": "VAMAS" },
+    { "type": "text", "id": "meaning_pronounce", "label": "Pronunciation", "default": "vaa \u00b7 mas" },
+    { "type": "text", "id": "meaning_pos", "label": "Part of speech", "default": "Noun" },
+    { "type": "textarea", "id": "meaning_def", "label": "Definition", "default": "VAMAS is a Sanskrit word which means a beautiful woman, or Goddess Parvati." },
+    { "type": "textarea", "id": "meaning_line2", "label": "Second line (optional)", "default": "" },
+    { "type": "textarea", "id": "meaning_tagline", "label": "Tagline (right side)", "default": "BE YOU.\nBE BEAUTIFUL" },
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "text", "id": "logo_asset", "label": "Or theme asset filename", "info": "e.g. vamas-logo.avif", "default": "vamas-logo.avif" },
     { "type": "text", "id": "brand_name", "label": "Brand Name", "default": "VAMAS" },

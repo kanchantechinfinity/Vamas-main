@@ -1516,3 +1516,81 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   .vamas-auth__title { font-size: 24px; }
   .vamas-auth__row { flex-direction: column; gap: 0; }
 }
+
+/* ── MEANING BAND ──────────────────────────────────────────────────────
+   The name, its dictionary sense on the left and the tagline on the right,
+   sitting between the FAQ and the footer. Laid on the brand ground rather
+   than the reference's yellow so it reads as part of this site. */
+.vamas-meaning {
+  background: var(--color-maroon);
+  padding: 56px var(--page-gutter);
+}
+.vamas-meaning__inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+.vamas-meaning__left { max-width: 620px; }
+.vamas-meaning__word {
+  font-family: var(--font-heading);
+  font-size: 68px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--color-gold);
+  margin: 0 0 12px;
+}
+.vamas-meaning__pos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(235,211,173,.75);
+  margin-bottom: 20px;
+}
+.vamas-meaning__pron { font-style: italic; }
+/* The short rule that trails the part of speech in the reference */
+.vamas-meaning__rule { flex: 0 0 44px; height: 1px; background: rgba(235,211,173,.45); }
+.vamas-meaning__def {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.85;
+  color: rgba(255,255,255,.9);
+  margin: 0 0 12px;
+}
+.vamas-meaning__def:last-child { margin-bottom: 0; }
+.vamas-meaning__def--second { color: rgba(255,255,255,.72); }
+
+.vamas-meaning__right { text-align: right; flex: 0 0 auto; }
+.vamas-meaning__mark {
+  font-family: var(--font-heading);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.vamas-meaning__tag {
+  margin: 0;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.7;
+  color: rgba(235,211,173,.85);
+}
+
+@media (max-width: 768px) {
+  /* Stacked, left-aligned - the two-column split leaves the tagline stranded
+     in a narrow column on a phone. */
+  .vamas-meaning { padding: 40px 20px; }
+  .vamas-meaning__inner { flex-direction: column; align-items: flex-start; gap: 26px; }
+  .vamas-meaning__word { font-size: 44px; letter-spacing: 1px; }
+  .vamas-meaning__pos { font-size: 11px; margin-bottom: 16px; }
+  .vamas-meaning__def { font-size: 12.5px; line-height: 1.8; }
+  .vamas-meaning__right { text-align: left; }
+  .vamas-meaning__mark { font-size: 22px; letter-spacing: 4px; }
+  .vamas-meaning__tag { font-size: 12px; }
+}
