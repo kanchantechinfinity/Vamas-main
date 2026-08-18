@@ -205,22 +205,22 @@
 </div>
 
 <style>
-  .vamas-sizeguide-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(42,0,1,0.6); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
+  .vamas-sizeguide-overlay { position: fixed; inset: 0; z-index: 3000; background: rgba(146,68,68,0.6); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.25s, visibility 0.25s; }
   .vamas-sizeguide-overlay.open { opacity: 1; visibility: visible; }
   .vamas-sizeguide { position: relative; background: #fff; border-radius: 16px; padding: 32px; width: min(520px, 94vw); box-shadow: 0 24px 64px rgba(0,0,0,0.3); transform: translateY(-12px); transition: transform 0.25s; }
   .vamas-sizeguide-overlay.open .vamas-sizeguide { transform: translateY(0); }
-  .vamas-sizeguide__close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 26px; line-height: 1; color: rgba(66,0,1,0.5); cursor: pointer; }
+  .vamas-sizeguide__close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 26px; line-height: 1; color: rgba(146,68,68,0.5); cursor: pointer; }
   .vamas-sizeguide__close:hover { color: var(--color-maroon); }
   .vamas-sizeguide__title { font-family: var(--font-heading); font-size: 26px; font-weight: 700; color: var(--color-maroon); margin-bottom: 6px; }
-  .vamas-sizeguide__sub { font-size: 12px; color: rgba(66,0,1,0.55); margin-bottom: 20px; line-height: 1.6; }
+  .vamas-sizeguide__sub { font-size: 12px; color: rgba(146,68,68,0.55); margin-bottom: 20px; line-height: 1.6; }
   .vamas-sizeguide__scroll { overflow-x: auto; }
   .vamas-sizeguide__table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .vamas-sizeguide__table th { background: var(--color-maroon); color: var(--color-gold); padding: 10px; font-weight: 700; text-align: center; }
   .vamas-sizeguide__table th:first-child { border-top-left-radius: 8px; }
   .vamas-sizeguide__table th:last-child { border-top-right-radius: 8px; }
-  .vamas-sizeguide__table td { padding: 9px 10px; text-align: center; border-bottom: 1px solid rgba(66,0,1,0.08); color: rgba(66,0,1,0.75); }
+  .vamas-sizeguide__table td { padding: 9px 10px; text-align: center; border-bottom: 1px solid rgba(146,68,68,0.08); color: rgba(146,68,68,0.75); }
   .vamas-sizeguide__table tbody tr:nth-child(even) { background: var(--color-bg); }
-  .vamas-sizeguide__note { margin-top: 16px; font-size: 12px; color: rgba(66,0,1,0.6); line-height: 1.6; }
+  .vamas-sizeguide__note { margin-top: 16px; font-size: 12px; color: rgba(146,68,68,0.6); line-height: 1.6; }
 
   /* Shop By mega links */
   .vamas-shopby { max-width: 1280px; margin: 0 auto; padding: 8px var(--page-gutter) 32px; border-bottom: 1px solid rgba(235,211,173,0.18); }
@@ -238,13 +238,13 @@
   .vamas-faq__eye { font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--color-gold-dark); text-align: center; margin-bottom: 10px; }
   .vamas-faq__heading { font-family: var(--font-heading); font-size: clamp(26px, 4vw, 38px); font-weight: 700; color: var(--color-maroon); text-align: center; margin: 0 0 32px; }
   .vamas-faq__heading span { color: var(--color-gold-dark); }
-  .vamas-faq__item { border-bottom: 1px solid rgba(66,0,1,0.1); }
+  .vamas-faq__item { border-bottom: 1px solid rgba(146,68,68,0.1); }
   .vamas-faq__q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; background: none; border: none; cursor: pointer; text-align: left; padding: 20px 4px; font-family: var(--font-heading); font-size: 17px; font-weight: 600; color: var(--color-maroon); }
   .vamas-faq__chev { font-size: 24px; line-height: 1; color: var(--color-gold-dark); transition: transform 0.3s; transform: rotate(90deg); flex-shrink: 0; }
   .vamas-faq__item.open .vamas-faq__chev { transform: rotate(-90deg); }
   .vamas-faq__a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
   .vamas-faq__item.open .vamas-faq__a { max-height: 240px; }
-  .vamas-faq__a p { margin: 0; padding: 0 4px 20px; font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: rgba(66,0,1,0.7); }
+  .vamas-faq__a p { margin: 0; padding: 0 4px 20px; font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: rgba(146,68,68,0.7); }
 
   @media (max-width: 768px) {
     .vamas-shopby { padding: 8px 0 24px; }

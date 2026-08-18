@@ -24,7 +24,7 @@
         {%- assign focus_y = block.settings.image_focus_y | default: 8 -%}
         {%- assign m_focus_x = block.settings.mobile_image_focus_x | default: 50 -%}
         {%- assign m_focus_y = block.settings.mobile_image_focus_y | default: 8 -%}
-        <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}{% if has_mobile_bg %} vamas-slide--has-mobile-bg{% endif %}" style="background: {{ block.settings.slide_bg | default: '#420001' }};">
+        <div class="vamas-slide vamas-slide--{{ block.settings.text_align | default: 'left' }}{% if has_mobile_bg %} vamas-slide--has-mobile-bg{% endif %}" style="background: {{ block.settings.slide_bg | default: '#924444' }};">
           {% if block.settings.video != blank %}
             <video class="vamas-slide__bg vamas-slide__bg--desktop" autoplay muted loop playsinline preload="metadata"{% if block.settings.slide_image != blank %} poster="{{ block.settings.slide_image | img_url: '2400x' }}"{% endif %}>
               {% for source in block.settings.video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
@@ -778,9 +778,14 @@
       {% endif %}
     {% endfor %}
   </ul>
-  {% if section.settings.promise_note != blank %}
-    <p class="vamas-promise__note">{{ section.settings.promise_note | newline_to_br }}</p>
-  {% endif %}
+</div>
+{% endif %}
+
+{% comment %} ── Thank-you note ─── its own slim band, separate from the promise
+  strip above so the claims and the sign-off do not read as one block. {% endcomment %}
+{% if section.settings.promise_note != blank %}
+<div class="vamas-thanks">
+  <p class="vamas-thanks__text">{{ section.settings.promise_note | newline_to_br }}</p>
 </div>
 {% endif %}
 
@@ -863,7 +868,7 @@
       "type": "slide",
       "name": "Hero Slide",
       "settings": [
-        { "type": "color", "id": "slide_bg", "label": "Background Color", "default": "#420001" },
+        { "type": "color", "id": "slide_bg", "label": "Background Color", "default": "#924444" },
         { "type": "image_picker", "id": "slide_image", "label": "Background Image" },
         { "type": "text", "id": "image_asset", "label": "Or theme asset filename", "info": "e.g. slide-pink.jpg (used if no image uploaded above)" },
         { "type": "video", "id": "video", "label": "Background Video (uploaded)", "info": "Shows instead of the image. Autoplays muted & looped." },
@@ -941,7 +946,7 @@
     {
       "name": "Vamas Homepage",
       "blocks": [
-        { "type": "slide", "settings": { "slide_bg": "#420001", "image_asset": "slide-pink.jpg", "eyebrow": "NEW COLLECTION 2026", "line1": "Craft Your", "line2_accent": "Perfect", "line3": "Silhouette", "btn1_text": "SHOP NOW", "btn2_text": "VIEW LOOKBOOK" } },
+        { "type": "slide", "settings": { "slide_bg": "#924444", "image_asset": "slide-pink.jpg", "eyebrow": "NEW COLLECTION 2026", "line1": "Craft Your", "line2_accent": "Perfect", "line3": "Silhouette", "btn1_text": "SHOP NOW", "btn2_text": "VIEW LOOKBOOK" } },
         { "type": "slide", "settings": { "slide_bg": "#1a0a00", "image_asset": "slide-maroon.jpg", "eyebrow": "BRIDAL COLLECTION", "line1": "Elegance", "line2_accent": "Woven in", "line3": "Every Thread", "btn1_text": "BRIDAL EDIT", "btn2_text": "EXPLORE MORE" } },
         { "type": "slide", "settings": { "slide_bg": "#2d0001", "image_asset": "slide-green.jpg", "eyebrow": "FESTIVE SEASON EDIT", "line1": "Celebrate in", "line2_accent": "Colour", "line3": "& Style", "btn1_text": "SHOP FESTIVE", "btn2_text": "VIEW OFFERS" } },
         { "type": "category", "settings": { "cat_name": "BRIDAL", "cat_count": "120+", "image_asset": "bridal.jpg", "cat_url": "/collections/all" } },
