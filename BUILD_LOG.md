@@ -1,6 +1,32 @@
 
 # Build Log
 
+## 2026-08-13 — Card size chips: 32-42 only, rest behind a +N
+
+Products run to 44/46/48/50, and half the catalogue still carries M/L/XL/XXL on its SIZE
+option from an old import. The card now shows **numeric 32-42 only**; anything above 42
+collapses into one `+N` chip linking to the product page, and non-numeric values are
+skipped entirely. When a product has no numeric size at all the row is dropped rather
+than rendering empty.
+
+**Verified across 5 pages of the served HTML (65 cards):**
+
+| | |
+| --- | --- |
+| numeric-only size rows | 40 |
+| rows showing letter sizes | **0** |
+| chips above 42 | **0** |
+| cards with no size row (letter-only products) | 25 |
+| `+N` chips | +1 ×1, +2 ×5, +3 ×1, +4 ×2 |
+
+One line is structural rather than measured: `flex-wrap: nowrap` with `flex: 1 1 0`
+chips, confirmed present in the live CSS, so they shrink instead of wrapping.
+
+**Verification note:** the in-app browser pane was serving a stale cached render
+throughout this stretch - still reporting 12 collection badges and the old font weights
+after the server had stopped sending them. Everything above was checked against the
+served HTML and the exact CSS version the page links, not the pane's DOM.
+
 ## 2026-08-13 — Homepage copy, new category set, product card cleanup
 
 **Copy** (all verified live): announce lines are now "LOVED BY 2M+ WOMEN WORLDWIDE" and
