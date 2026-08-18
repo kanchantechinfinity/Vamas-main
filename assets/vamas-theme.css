@@ -268,24 +268,28 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-promise__label {
   font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 1.3px;
+  letter-spacing: 1.1px;
   line-height: 1.5;
   color: #1a1a1a;
-  max-width: 170px;
+  /* The 170px cap broke "SHIPPING AND DELIVERABLES" over two lines; the cell is
+     235px wide, so let the label use it and keep every claim on one line. */
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 /* Thank-you band - deliberately slim, just the sign-off */
 .vamas-thanks {
-  padding: 26px var(--page-gutter);
+  padding: 30px var(--page-gutter);
   border-top: 1px solid rgba(146,68,68,.08);
   border-bottom: 1px solid rgba(146,68,68,.08);
-  background: rgba(146,68,68,.035);
+  /* Same ground as the FAQ block below it */
+  background: var(--color-bg);
   text-align: center;
 }
 .vamas-thanks__text {
   margin: 0;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 1.6px;
   line-height: 2;
   color: var(--color-maroon);
@@ -999,9 +1003,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-promise__item { flex: 0 0 auto; width: 100%; flex-direction: row; text-align: left; padding: 0; gap: 13px; }
   .vamas-promise__icon { width: 34px; height: 34px; }
   .vamas-promise__icon svg { width: 16px; height: 16px; }
-  .vamas-promise__label { font-size: 10.5px; letter-spacing: .8px; max-width: none; }
+  .vamas-promise__label { font-size: 10.5px; letter-spacing: .8px; max-width: none; white-space: normal; }
   .vamas-thanks { padding: 22px 20px; }
-  .vamas-thanks__text { font-size: 10.5px; letter-spacing: 1.1px; }
+  .vamas-thanks__text { font-size: 11.5px; letter-spacing: 1.1px; }
   .vamas-tags { padding: 16px 24px; }
   .vamas-tag { pointer-events: none; cursor: default; }
   .vamas-footer { padding: 44px 24px 24px; }
