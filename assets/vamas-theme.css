@@ -227,43 +227,52 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
    with an explicit 4-column grid - the 7th would otherwise sit alone on a
    second row wherever it fell. Phones stack one per line. */
 .vamas-promise {
-  padding: 34px var(--page-gutter);
+  padding: 38px var(--page-gutter);
   border-top: 1px solid rgba(66,0,1,.08);
   border-bottom: 1px solid rgba(66,0,1,.08);
-  text-align: center;
 }
+/* Equal-width items in a centred flex row rather than a grid: four fit a
+   1100px line and the remaining three centre themselves underneath, so both
+   rows stay aligned without hand-placing anything. */
 .vamas-promise__list {
   list-style: none;
   margin: 0 auto;
   padding: 0;
   max-width: 1100px;
-  display: grid;
-  /* 12 columns so row one holds 4 (3 each) and row two holds 3 (4 each) -
-     both rows fill the width, no orphan tile and no margin nudging. */
-  grid-template-columns: repeat(12, 1fr);
-  gap: 14px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px 0;
 }
-.vamas-promise__item:nth-child(-n+4) { grid-column: span 3; }
-.vamas-promise__item:nth-child(n+5)  { grid-column: span 4; }
 .vamas-promise__item {
+  flex: 0 0 250px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 9px;
-  font-size: 12px;
+  gap: 12px;
+  padding: 0 10px;
+}
+.vamas-promise__icon {
+  flex: 0 0 auto;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: rgba(66,0,1,.05);
+  display: flex; align-items: center; justify-content: center;
+}
+.vamas-promise__icon svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: var(--color-maroon); stroke-width: 1.6;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.vamas-promise__label {
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 1.2px;
+  letter-spacing: 1px;
+  line-height: 1.4;
   color: #1a1a1a;
 }
-.vamas-promise__item::before {
-  content: '';
-  flex: 0 0 auto;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--color-gold-dark);
-}
 .vamas-promise__note {
-  margin: 26px auto 0;
+  margin: 30px auto 0;
+  text-align: center;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 1.4px;
@@ -972,13 +981,14 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__stats { gap: 24px; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
-  /* One claim per line on phones */
-  .vamas-promise { padding: 26px 20px; }
-  .vamas-promise__list { grid-template-columns: 1fr; gap: 11px; max-width: 320px; }
-  .vamas-promise__item { font-size: 11px; letter-spacing: .8px; }
-  .vamas-promise__item:nth-child(-n+4),
-  .vamas-promise__item:nth-child(n+5) { grid-column: span 1; }
-  .vamas-promise__note { font-size: 11px; margin-top: 20px; }
+  /* One claim per line on phones, left-aligned so the icons form a column */
+  .vamas-promise { padding: 28px 20px; }
+  .vamas-promise__list { flex-direction: column; align-items: flex-start; gap: 14px; max-width: 280px; }
+  .vamas-promise__item { flex: 0 0 auto; width: 100%; padding: 0; gap: 11px; }
+  .vamas-promise__icon { width: 32px; height: 32px; }
+  .vamas-promise__icon svg { width: 15px; height: 15px; }
+  .vamas-promise__label { font-size: 10.5px; letter-spacing: .7px; }
+  .vamas-promise__note { font-size: 11px; margin-top: 24px; }
   .vamas-tags { padding: 16px 24px; }
   .vamas-tag { pointer-events: none; cursor: default; }
   .vamas-footer { padding: 44px 24px 24px; }

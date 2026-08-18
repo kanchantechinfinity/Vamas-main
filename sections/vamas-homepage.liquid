@@ -741,10 +741,11 @@
 {% endif %}
 
 {% comment %} ── Promise strip ─────────────────────────────────────────────
-  Seven short claims instead of the four icon+blurb tiles that used to sit
-  here. Desktop lays them 4 over 3; phones stack them one per line. Both
-  the list and the closing note are settings so the copy can be reworded
-  without touching the section.
+  Seven claims with an icon each, in the same visual language as the trust
+  tiles this replaced. Icons are assigned by position, so the copy stays
+  editable in the settings without breaking the pairing.
+
+  Desktop lays them 4 over 3; phones stack one per line.
 {% endcomment %}
 {% assign promise_lines = section.settings.promise_lines | default: 'MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, SHIPPING AND DELIVERABLES' | split: ',' %}
 {% if promise_lines.size > 0 %}
@@ -753,7 +754,27 @@
     {% for line in promise_lines %}
       {% assign line_clean = line | strip %}
       {% if line_clean != '' %}
-        <li class="vamas-promise__item">{{ line_clean }}</li>
+        <li class="vamas-promise__item">
+          <span class="vamas-promise__icon">
+            {% case forloop.index %}
+              {% when 1 %}{% comment %}map pin - made in India{% endcomment %}
+                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {% when 2 %}{% comment %}leaf - vegan silk{% endcomment %}
+                <svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/></svg>
+              {% when 3 %}{% comment %}price tag - pocket friendly{% endcomment %}
+                <svg viewBox="0 0 24 24"><path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H4a1 1 0 0 0-1 1v5.59a2 2 0 0 0 .59 1.41l9.58 9.59a2 2 0 0 0 2.83 0l4.59-4.59a2 2 0 0 0 0-2.83z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>
+              {% when 4 %}{% comment %}scissors - seam margin{% endcomment %}
+                <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+              {% when 5 %}{% comment %}shield - skin friendly{% endcomment %}
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              {% when 6 %}{% comment %}ruler - tailored cuts{% endcomment %}
+                <svg viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="1"/><line x1="7" y1="8" x2="7" y2="12"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="17" y1="8" x2="17" y2="12"/></svg>
+              {% else %}{% comment %}truck - shipping{% endcomment %}
+                <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            {% endcase %}
+          </span>
+          <span class="vamas-promise__label">{{ line_clean }}</span>
+        </li>
       {% endif %}
     {% endfor %}
   </ul>
