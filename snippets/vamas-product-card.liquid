@@ -473,16 +473,32 @@
       {% comment %} Mobile-only: tapping a size lands straight on the product page with that
         variant preselected (Shopify auto-honours ?variant=<id> via selected_or_first_available_variant),
         replacing Add to Cart on the card for mobile. {% endcomment %}
+      {% comment %} The card shows 32-42 only. Anything above that (44, 46, 48, 50)
+        collapses into a single "+" chip that opens the product page, where the full
+        run is listed - six chips is what fits a card column at a readable size. {% endcomment %}
+      {% assign sz_shown = 0 %}
+      {% assign sz_extra = 0 %}
+      {% for value in size_values %}
+        {% assign sz_num = value | times: 1 %}
+        {% if sz_num > 42 %}{% assign sz_extra = sz_extra | plus: 1 %}{% endif %}
+      {% endfor %}
       <div class="vamas-prod-card__sizes">
         {% for value in size_values %}
-          {% assign sz_key = value | downcase | strip | replace: ' ', '' %}
-          {% assign sz_probe = '~' | append: sz_key | append: '~' %}
-          {% assign sz_variant_id = '' %}
-          {% if size_variant_map contains sz_probe %}
-            {% assign sz_variant_id = size_variant_map | split: sz_probe | last | split: '§' | first %}
+          {% assign sz_num = value | times: 1 %}
+          {% if sz_num <= 42 %}
+            {% assign sz_key = value | downcase | strip | replace: ' ', '' %}
+            {% assign sz_probe = '~' | append: sz_key | append: '~' %}
+            {% assign sz_variant_id = '' %}
+            {% if size_variant_map contains sz_probe %}
+              {% assign sz_variant_id = size_variant_map | split: sz_probe | last | split: '§' | first %}
+            {% endif %}
+            <a href="{{ product.url }}{% if sz_variant_id != blank %}?variant={{ sz_variant_id }}{% endif %}" class="vamas-prod-card__size">{{ value }}</a>
+            {% assign sz_shown = sz_shown | plus: 1 %}
           {% endif %}
-          <a href="{{ product.url }}{% if sz_variant_id != blank %}?variant={{ sz_variant_id }}{% endif %}" class="vamas-prod-card__size">{{ value }}</a>
         {% endfor %}
+        {% if sz_extra > 0 %}
+          <a href="{{ product.url }}" class="vamas-prod-card__size vamas-prod-card__size--more" aria-label="{{ sz_extra }} more sizes on the product page">+{{ sz_extra }}</a>
+        {% endif %}
       </div>
     {% endif %}
 
