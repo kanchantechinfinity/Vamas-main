@@ -740,33 +740,28 @@
 </section>
 {% endif %}
 
-{% comment %} ── Trust Bar (moved to bottom, right above FAQ) ── {% endcomment %}
-<div class="vamas-trust">
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Quality Materials</div><div class="vamas-trust__sub">Quality guaranteed, every time</div></div>
-  </div>
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Free Shipping</div><div class="vamas-trust__sub">7–8 business days, pan-India</div></div>
-  </div>
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Easy Returns</div><div class="vamas-trust__sub">7-day hassle-free</div></div>
-  </div>
-  <div class="vamas-trust__item">
-    <div class="vamas-trust__icon">
-      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-    </div>
-    <div><div class="vamas-trust__title">Secure Payment</div><div class="vamas-trust__sub">UPI · Card · Net Banking · COD</div></div>
-  </div>
+{% comment %} ── Promise strip ─────────────────────────────────────────────
+  Seven short claims instead of the four icon+blurb tiles that used to sit
+  here. Desktop lays them 4 over 3; phones stack them one per line. Both
+  the list and the closing note are settings so the copy can be reworded
+  without touching the section.
+{% endcomment %}
+{% assign promise_lines = section.settings.promise_lines | default: 'MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, SHIPPING AND DELIVERABLES' | split: ',' %}
+{% if promise_lines.size > 0 %}
+<div class="vamas-promise">
+  <ul class="vamas-promise__list">
+    {% for line in promise_lines %}
+      {% assign line_clean = line | strip %}
+      {% if line_clean != '' %}
+        <li class="vamas-promise__item">{{ line_clean }}</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  {% if section.settings.promise_note != blank %}
+    <p class="vamas-promise__note">{{ section.settings.promise_note | newline_to_br }}</p>
+  {% endif %}
 </div>
+{% endif %}
 
 {% comment %} Browse Tags moved to vamas-footer (after FAQ) so it appears below the FAQ on the homepage {% endcomment %}
 
@@ -777,6 +772,9 @@
   "name": "Vamas Homepage",
   "tag": "div",
   "settings": [
+    { "type": "header", "content": "Promise Strip" },
+    { "type": "textarea", "id": "promise_lines", "label": "Lines (comma separated)", "info": "Laid out 4 over 3 on desktop, one per line on phones.", "default": "MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, SHIPPING AND DELIVERABLES" },
+    { "type": "textarea", "id": "promise_note", "label": "Closing note", "default": "WE ARE GRATEFUL TO HAVE YOU AS A CUSTOMER.\nHAPPY SHOPPING!!" },
     { "type": "header", "content": "Categories Section" },
     { "type": "checkbox", "id": "show_categories", "label": "Show Categories", "default": true },
     { "type": "text", "id": "made_with_love_text", "label": "\"Made with Love\" line", "info": "Shown in a script font with a heart on each side, above the categories heading. Leave blank to hide.", "default": "Made with Love" },

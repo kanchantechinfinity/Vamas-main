@@ -222,34 +222,54 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-brand__text .btn-outline, .vamas-brand__text .btn-primary { display: inline-block; width: auto; margin: 0; }
 
 /* ── Trust Bar ────────────────────────── */
-.vamas-trust {
-  background: var(--color-bg);
-  border-top: 1px solid rgba(235, 211, 173, 0.4);
-  border-bottom: 1px solid rgba(235, 211, 173, 0.4);
-  padding: 0 var(--page-gutter);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+/* ── PROMISE STRIP ─────────────────────────────────────────────────────
+   Replaces the four icon tiles. Seven claims, laid out 4 over 3 on desktop
+   with an explicit 4-column grid - the 7th would otherwise sit alone on a
+   second row wherever it fell. Phones stack one per line. */
+.vamas-promise {
+  padding: 34px var(--page-gutter);
+  border-top: 1px solid rgba(66,0,1,.08);
+  border-bottom: 1px solid rgba(66,0,1,.08);
+  text-align: center;
 }
-
-.vamas-trust__item { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
-
-.vamas-trust__icon {
-  width: 44px;
-  height: 44px;
-  background: rgba(66, 0, 1, 0.07);
-  border-radius: 50%;
+.vamas-promise__list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1100px;
+  display: grid;
+  /* 12 columns so row one holds 4 (3 each) and row two holds 3 (4 each) -
+     both rows fill the width, no orphan tile and no margin nudging. */
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px 18px;
+}
+.vamas-promise__item:nth-child(-n+4) { grid-column: span 3; }
+.vamas-promise__item:nth-child(n+5)  { grid-column: span 4; }
+.vamas-promise__item {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  color: #1a1a1a;
 }
-
-.vamas-trust__icon svg { width: 20px; height: 20px; fill: none; stroke: var(--color-maroon); stroke-width: 1.6; }
-.vamas-trust__title { font-size: 12px; font-weight: 700; color: var(--color-maroon); }
-.vamas-trust__sub { font-size: 10px; color: rgba(66, 0, 1, 0.5); }
+.vamas-promise__item::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-gold-dark);
+}
+.vamas-promise__note {
+  margin: 26px auto 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  line-height: 1.9;
+  color: var(--color-maroon);
+}
 
 /* ── Section ──────────────────────────── */
 .vamas-section { padding: 64px var(--page-gutter); }
@@ -910,7 +930,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__text { padding: 48px; }
   .vamas-brand__image { width: 100%; height: 320px; }
   .vamas-newsletter { padding: 52px 48px; }
-  .vamas-trust { padding: 0 48px; }
+  .vamas-promise { padding: 30px 48px; }
   .vamas-tags { padding: 18px 48px; }
   .vamas-footer { padding: 52px 48px 28px; }
   .vamas-footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -952,7 +972,13 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__stats { gap: 24px; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
-  .vamas-trust { flex-direction: column; align-items: flex-start; padding: 20px 24px; gap: 0; }
+  /* One claim per line on phones */
+  .vamas-promise { padding: 26px 20px; }
+  .vamas-promise__list { grid-template-columns: 1fr; gap: 11px; max-width: 320px; }
+  .vamas-promise__item { font-size: 11px; letter-spacing: .8px; }
+  .vamas-promise__item:nth-child(-n+4),
+  .vamas-promise__item:nth-child(n+5) { grid-column: span 1; }
+  .vamas-promise__note { font-size: 11px; margin-top: 20px; }
   .vamas-tags { padding: 16px 24px; }
   .vamas-tag { pointer-events: none; cursor: default; }
   .vamas-footer { padding: 44px 24px 24px; }
