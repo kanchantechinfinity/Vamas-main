@@ -1,6 +1,43 @@
 
 # Build Log
 
+## 2026-08-13 — Homepage copy, new category set, product card cleanup
+
+**Copy** (all verified live): announce lines are now "LOVED BY 2M+ WOMEN WORLDWIDE" and
+"SELLING FAST - 1 BLOUSE / EVERY 60 SECS"; categories heading is "Explore by Category /
+Your Dream Blouse is Just a Click Away"; picks heading is "Shop Our Picks / Fresh In,
+Loved Always". Both headings were hardcoded in the section and are settings now.
+
+The BLOUSE / KIDS / SHAPEWEAR mobile strip is switched **off**, not deleted, so labels and
+URLs survive if it is wanted back.
+
+**Categories** rebuilt to the eight new ones (The Plain Edit ... Corsets). Six existing
+tiles were renamed and re-pointed; two new tiles have no image yet.
+
+**Sub-categories are TAGS, not collections.** Tag routes filter server-side with no app,
+one product can sit in several sub-categories, and adding one is a tag rather than a
+collection to build. Every collection shares one template, so the mapping lives in a
+single section setting: one line per collection, `handle | Tag One, Tag Two`. The Plain
+Edit carries its seven real sub-categories; the other seven have placeholders.
+
+Verified end to end with a temporary mapping on `/collections/all`: tabs rendered, hrefs
+were correct tag routes, and `/collections/all/elbow-sleeves` returned **6 of 100**
+products. Found and fixed a case bug while testing - Shopify stores tags as typed
+("ELBOW SLEEVES") while the map reads "Elbow Sleeves", so the active tab never
+highlighted. Temporary mapping removed.
+
+**Product card**: collection badge and % discount circle removed from the image (their
+CSS went too); only the wishlist heart and the rating remain. Text dropped from 700/800
+weight and maroon to **400/500 and near-black (#1a1a1a)**. Size chips were wrapping to
+two rows, making cards taller than their neighbours - now one `nowrap` row of
+`flex: 1 1 0` chips at 9px (8px phones, 9px tablet), so 32-42 cannot wrap at any width.
+
+**Verification note:** the browser pane went unresponsive partway through, and its DOM
+reads were showing a cached render (reporting badges still present after they were gone).
+Confirmed against the served HTML and the exact CSS version the page links instead:
+badge 0, discount circle 0, heart 13, rating 12, name weight 400 / #1a1a1a, price weight
+500, `.vamas-prod-card__sizes{flex-wrap:nowrap}`.
+
 ## 2026-08-13 — Product page: wishlist and share relocated
 
 **Ask:** move Add to Wishlist next to the NEW ARRIVAL / TRENDING badges, and move
