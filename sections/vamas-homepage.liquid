@@ -220,8 +220,8 @@
   {% endif %}
   <div class="vamas-section__header">
     <div>
-      <h2 class="vamas-section__title">Choice <span>For You</span></h2>
-      <p class="vamas-section__subtitle">Pick your fit, your style</p>
+      <h2 class="vamas-section__title">{{ section.settings.cat_heading | default: 'Explore by' }} <span>{{ section.settings.cat_heading_accent | default: 'Category' }}</span></h2>
+      <p class="vamas-section__subtitle">{{ section.settings.cat_subtitle | default: 'Your Dream Blouse is Just a Click Away' }}</p>
     </div>
     <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
   </div>
@@ -399,8 +399,8 @@
 <section class="vamas-section vamas-section--alt vamas-tabbed-collections">
   <div class="vamas-section__header vamas-section__header--center">
     <div>
-      <h2 class="vamas-section__title">Shop <span>Our Picks</span></h2>
-      <p class="vamas-section__subtitle">Fresh styles, fan favorites</p>
+      <h2 class="vamas-section__title">{{ section.settings.picks_heading | default: 'Shop' }} <span>{{ section.settings.picks_heading_accent | default: 'Our Picks' }}</span></h2>
+      <p class="vamas-section__subtitle">{{ section.settings.picks_subtitle | default: 'Fresh In, Loved Always' }}</p>
     </div>
   </div>
 
@@ -779,8 +779,15 @@
   "settings": [
     { "type": "header", "content": "Categories Section" },
     { "type": "checkbox", "id": "show_categories", "label": "Show Categories", "default": true },
-    { "type": "text", "id": "made_with_love_text", "label": "\"Made with Love\" line", "info": "Shown in a script font with a heart on each side, above the Choice For You heading. Leave blank to hide.", "default": "Made with Love" },
+    { "type": "text", "id": "made_with_love_text", "label": "\"Made with Love\" line", "info": "Shown in a script font with a heart on each side, above the categories heading. Leave blank to hide.", "default": "Made with Love" },
+    { "type": "text", "id": "cat_heading", "label": "Heading", "default": "Explore by" },
+    { "type": "text", "id": "cat_heading_accent", "label": "Heading (accent word)", "default": "Category" },
+    { "type": "text", "id": "cat_subtitle", "label": "Subtitle", "default": "Your Dream Blouse is Just a Click Away" },
     { "type": "url", "id": "cat_view_all", "label": "View All URL" },
+    { "type": "header", "content": "Shop Our Picks (tabbed section)" },
+    { "type": "text", "id": "picks_heading", "label": "Heading", "default": "Shop" },
+    { "type": "text", "id": "picks_heading_accent", "label": "Heading (accent word)", "default": "Our Picks" },
+    { "type": "text", "id": "picks_subtitle", "label": "Subtitle", "default": "Fresh In, Loved Always" },
     { "type": "header", "content": "New Arrivals" },
     { "type": "checkbox", "id": "show_new_arrivals", "label": "Show New Arrivals", "default": true },
     { "type": "collection", "id": "new_arrivals_collection", "label": "New Arrivals Collection" },

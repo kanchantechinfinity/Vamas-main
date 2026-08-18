@@ -31,8 +31,8 @@
           "announce_marquee": false,
           "announce_speed": 22,
           "announce_switch_seconds": 3,
-          "announce_text_1": "Loved by 10 Lakh+ Women",
-          "announce_text_2": "Selling 1 Blouse Per Minute",
+          "announce_text_1": "LOVED BY 2M+ WOMEN WORLDWIDE",
+          "announce_text_2": "SELLING FAST \u2014 1 BLOUSE / EVERY 60 SECS",
           "announce_text_3": "100% Vegan Silk",
           "announce_text": ""
         }
@@ -40,7 +40,7 @@
       "vamas-quicknav": {
         "type": "vamas-quicknav",
         "settings": {
-          "show_quicknav": true,
+          "show_quicknav": false,
           "quicknav_labels": "BLOUSE, KIDS, SHAPEWEAR",
           "quicknav_urls": "/collections/all, /collections/all, /collections/all"
         }
