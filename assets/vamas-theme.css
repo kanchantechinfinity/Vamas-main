@@ -451,28 +451,36 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 /* Collection badge removed from the cards - the image carries only the
    wishlist heart and the rating. Its rules went with it. */
 
+/* No chip behind the heart - the heart itself carries the state: outline when
+   unsaved, filled maroon when saved. A drop-shadow keeps it legible over a
+   light patch of the photo now that there is no white disc under it. */
 .vamas-prod-card__wishlist {
   position: absolute;
   top: 10px;
   right: 10px;
   width: 32px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 50%;
+  background: none;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border: none;
-  transition: background 0.2s;
+  padding: 0;
+  transition: transform 0.15s;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .vamas-prod-card__wishlist:hover { background: var(--color-gold); }
+  .vamas-prod-card__wishlist:hover { background: none; transform: scale(1.12); }
 }
-.vamas-prod-card__wishlist svg { width: 15px; height: 15px; fill: none; stroke: var(--color-maroon); stroke-width: 1.8; }
-.vamas-prod-card__wishlist.active { background: var(--color-maroon); }
-.vamas-prod-card__wishlist.active svg { fill: var(--color-gold); stroke: var(--color-gold); }
+.vamas-prod-card__wishlist svg {
+  width: 19px; height: 19px;
+  fill: none; stroke: #1a1a1a; stroke-width: 1.7;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+}
+.vamas-prod-card__wishlist.active { background: none; }
+.vamas-prod-card__wishlist.active svg { fill: var(--color-maroon); stroke: var(--color-maroon); }
 
 /* The % discount circle is gone too; "% off" beside the price says it. */
 
