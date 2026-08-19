@@ -584,7 +584,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-prod-card__body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
 .vamas-prod-card__name { font-size: 13px; font-weight: 400; color: #1a1a1a; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35; }
-.vamas-prod-card__type { font-size: 11px; font-weight: 400; color: rgba(26,26,26,0.55); margin-bottom: 10px; }
+/* The product-type line ("Blouse") is gone from the card - it repeated on every
+   card and said nothing the title did not. */
 
 .vamas-prod-card__meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .vamas-prod-card__colors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -1035,7 +1036,6 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
   /* Product card: reclaim space by hiding the type label and stacking
      swatches/rating/price for narrow columns (badge is short on all sizes). */
-  .vamas-prod-card__type { display: none; }
   .vamas-prod-card__meta-row { flex-direction: column; align-items: flex-start; gap: 6px; }
 
   /* Keep price/compare/discount on one line on mobile too (was a 2-row grid) */
