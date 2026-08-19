@@ -640,7 +640,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   width: 100%;
   height: 100%;
   scrollbar-width: none;
+  cursor: grab;
 }
+/* Snapping fights a JS-driven drag, so it is off while the pointer is down. */
+.vamas-prod-card__gallery.is-dragging { scroll-snap-type: none; cursor: grabbing; }
+.vamas-prod-card__gallery.is-dragging img { pointer-events: none; }
 .vamas-prod-card__gallery::-webkit-scrollbar { display: none; }
 .vamas-prod-card__gallery-slide { flex: 0 0 100%; scroll-snap-align: start; display: block; }
 .vamas-prod-card__gallery-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -651,9 +655,22 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   display: flex;
   justify-content: center;
   gap: 4px;
+  /* The row itself stays click-through so it does not block the image link;
+     the dots take pointer events so they can be tapped. */
   pointer-events: none;
 }
-.vamas-prod-card__dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.6); }
+/* A 5px target is not tappable - the dot keeps its size but sits inside a
+   padded box that catches the press. */
+.vamas-prod-card__dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  pointer-events: auto;
+  cursor: pointer;
+  box-sizing: content-box;
+  border: 5px solid transparent;
+  background-clip: padding-box;
+  margin: -5px;
+}
 .vamas-prod-card__dot.active { background: #fff; width: 6px; height: 6px; }
 .vamas-prod-card__rating-badge {
   position: absolute;

@@ -531,19 +531,80 @@
 
 <script>
 (function(){
-  /* Mobile-only: sync the pagination dots to the swipeable gallery's scroll position */
+  /* Card image strip.
+
+     The dots only ever REFLECTED scroll position, and on desktop nothing could
+     scroll the strip - no touch swipe, and a wheel scrolls the page not the row -
+     so every card sat on its first photo and the dots never moved. Two additions:
+     the dots are clickable, and the strip can be dragged with a mouse.
+
+     Delegated once for the whole page, since cards are rendered in eight places. */
   if (!window.__vamasCardGalleryInit) {
     window.__vamasCardGalleryInit = true;
-    document.addEventListener('scroll', function(e){
-      var gallery = e.target.closest && e.target.closest('[data-gallery]');
-      if (!gallery) return;
+
+    function galleryOf(el){ return el && el.closest ? el.closest('[data-gallery]') : null; }
+    function dotsOf(gallery){
       var card = gallery.closest('.vamas-prod-card');
-      var dotsWrap = card && card.querySelector('[data-gallery-dots]');
-      if (!dotsWrap) return;
+      return card && card.querySelector('[data-gallery-dots]');
+    }
+    function syncDots(gallery){
+      var wrap = dotsOf(gallery);
+      if (!wrap || !gallery.clientWidth) return;
       var idx = Math.round(gallery.scrollLeft / gallery.clientWidth);
-      var dots = dotsWrap.querySelectorAll('.vamas-prod-card__dot');
-      dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+      wrap.querySelectorAll('.vamas-prod-card__dot').forEach(function(d, i){
+        d.classList.toggle('active', i === idx);
+      });
+    }
+
+    document.addEventListener('scroll', function(e){
+      var g = galleryOf(e.target);
+      if (g) syncDots(g);
     }, { capture: true, passive: true });
+
+    /* Click a dot to jump to that photo */
+    document.addEventListener('click', function(e){
+      var dot = e.target.closest && e.target.closest('.vamas-prod-card__dot');
+      if (!dot) return;
+      var card = dot.closest('.vamas-prod-card');
+      var gallery = card && card.querySelector('[data-gallery]');
+      if (!gallery) return;
+      e.preventDefault();
+      var dots = Array.prototype.slice.call(dot.parentNode.querySelectorAll('.vamas-prod-card__dot'));
+      gallery.scrollTo({ left: dots.indexOf(dot) * gallery.clientWidth, behavior: 'smooth' });
+    });
+
+    /* Drag the strip with a mouse. Slides are links, so a drag has to suppress
+       the click that follows it - otherwise every drag opens the product. */
+    var drag = null;
+    document.addEventListener('pointerdown', function(e){
+      if (e.pointerType === 'touch') return;      /* touch already scrolls natively */
+      var g = galleryOf(e.target);
+      if (!g) return;
+      drag = { g: g, x: e.clientX, left: g.scrollLeft, moved: 0 };
+      g.classList.add('is-dragging');
+    });
+    document.addEventListener('pointermove', function(e){
+      if (!drag) return;
+      var dx = e.clientX - drag.x;
+      drag.moved = Math.max(drag.moved, Math.abs(dx));
+      drag.g.scrollLeft = drag.left - dx;
+      if (drag.moved > 4) e.preventDefault();
+    });
+    function endDrag(){
+      if (!drag) return;
+      var g = drag.g, moved = drag.moved;
+      g.classList.remove('is-dragging');
+      if (g.clientWidth) {
+        g.scrollTo({ left: Math.round(g.scrollLeft / g.clientWidth) * g.clientWidth, behavior: 'smooth' });
+      }
+      if (moved > 4) {
+        var kill = function(ev){ ev.preventDefault(); ev.stopPropagation(); };
+        document.addEventListener('click', kill, { capture: true, once: true });
+      }
+      drag = null;
+    }
+    document.addEventListener('pointerup', endDrag);
+    document.addEventListener('pointercancel', endDrag);
   }
 
   function handleSwatchActivate(swatch){
