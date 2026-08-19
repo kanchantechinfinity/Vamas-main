@@ -590,6 +590,8 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-prod-card__colors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .vamas-prod-card__colors--single { display: none; }
 .vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: box-shadow 0.15s, transform 0.15s; }
+/* Beats the swatches' own display rules, which [hidden] does not. */
+.vamas-prod-card__colors .is-swatch-hidden { display: none !important; }
 .vamas-prod-card__color.active { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--color-maroon); transform: scale(1.05); }
 /* Image thumbnail swatches — softly rounded rather than a hard box */
 .vamas-prod-card__color--img { width: 30px; height: 38px; border-radius: 6px; object-fit: cover; object-position: center 15%; background: #f6efe6; display: block; }

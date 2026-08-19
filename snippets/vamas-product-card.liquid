@@ -450,7 +450,7 @@
           {% assign swatch_overflow = valid_color_count | minus: swatches_rendered %}
           <a href="{{ product.url }}" class="vamas-prod-card__color-more" data-color-more
              data-hidden-extra="{{ swatch_overflow }}"
-             title="More colours"{% if swatch_overflow <= 0 %} hidden{% endif %}>+{{ swatch_overflow }}</a>
+             title="More colours">+{{ swatch_overflow }}</a>
         </div>
       {% else %}
         <span></span>
@@ -703,52 +703,55 @@
      double-binds the same swatch. */
   function wireSwatches(){
     /* How many colour swatches stay on screen: as many as fit the row on desktop,
-     six on tablet, three on phones. The count has to be measured rather than set
-     in Liquid, because it depends on the rendered card width - and any swatch
-     beyond the 12 rendered is added back into the "+N". */
+     six on tablet, three on phones. It has to be measured rather than capped in
+     Liquid, because it depends on the rendered card width.
+
+     Hiding uses a class, not the `hidden` property: these swatches carry display
+     rules of their own, which beat the UA's [hidden] and left them laid out while
+     JS believed they were gone - so the loop kept trimming until nothing was left. */
   (function(){
-    function capFor(w){
-      if (w <= 768) return 3;
-      if (w <= 1180) return 6;
-      return Infinity;
-    }
+    var HIDE = 'is-swatch-hidden';
+    function capFor(w){ return w <= 768 ? 3 : (w <= 1180 ? 6 : Infinity); }
+
     function fitOne(row){
       var more = row.querySelector('[data-color-more]');
-      var swatches = Array.prototype.slice.call(row.querySelectorAll('.vamas-prod-card__color'));
-      if (!more || !swatches.length) return;
-      var beyondRendered = parseInt(more.getAttribute('data-hidden-extra') || '0', 10);
+      var sw = Array.prototype.slice.call(row.querySelectorAll('.vamas-prod-card__color'));
+      if (!more || !sw.length) return;
+      var beyond = parseInt(more.getAttribute('data-hidden-extra') || '0', 10);
       var cap = capFor(window.innerWidth);
 
-      swatches.forEach(function(s){ s.hidden = false; });
-      more.hidden = true;
+      sw.forEach(function(s){ s.classList.remove(HIDE); });
+      more.classList.remove(HIDE);
+      for (var i = 0; i < sw.length; i++) if (i >= cap) sw[i].classList.add(HIDE);
 
-      /* Trim to the tablet/phone cap first, then to whatever the line holds. */
-      for (var i = 0; i < swatches.length; i++) if (i >= cap) swatches[i].hidden = true;
+      function shown(){ return sw.filter(function(s){ return !s.classList.contains(HIDE); }); }
+      function hiddenCount(){ return sw.length - shown().length + beyond; }
+      function setLabel(){
+        var n = hiddenCount();
+        more.textContent = '+' + n;
+        more.classList.toggle(HIDE, n === 0);
+      }
+      function wraps(){
+        var v = shown();
+        if (!v.length) return false;
+        var top = v[0].getBoundingClientRect().top;
+        var els = v.concat(more.classList.contains(HIDE) ? [] : [more]);
+        return els.some(function(e){ return e.getBoundingClientRect().top > top + 2; });
+      }
 
-      var rowTop = swatches[0].getBoundingClientRect().top;
-      function overflowing(){
-        return swatches.some(function(s){
-          return !s.hidden && s.getBoundingClientRect().top > rowTop + 2;
-        }) || (!more.hidden && more.getBoundingClientRect().top > rowTop + 2);
+      setLabel();
+      /* Trim until the row holds one line, but never below a single swatch -
+         a card showing only "+9" tells a shopper nothing. */
+      for (var guard = 0; guard < sw.length; guard++) {
+        if (!wraps() || shown().length <= 1) break;
+        var v = shown();
+        v[v.length - 1].classList.add(HIDE);
+        setLabel();
       }
-      function hiddenCount(){
-        return swatches.filter(function(s){ return s.hidden; }).length + beyondRendered;
-      }
-      if (overflowing() || hiddenCount() > 0) { more.hidden = false; }
-      for (var guard = 0; guard < swatches.length; guard++) {
-        more.textContent = '+' + hiddenCount();
-        if (!overflowing()) break;
-        for (var j = swatches.length - 1; j >= 0; j--) {
-          if (!swatches[j].hidden) { swatches[j].hidden = true; break; }
-        }
-        more.hidden = false;
-      }
-      more.textContent = '+' + hiddenCount();
-      more.hidden = hiddenCount() === 0;
+      setLabel();
     }
-    function fitAll(){
-      document.querySelectorAll('.vamas-prod-card__colors').forEach(fitOne);
-    }
+
+    function fitAll(){ document.querySelectorAll('.vamas-prod-card__colors').forEach(fitOne); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitAll);
     else fitAll();
     window.addEventListener('load', fitAll);
