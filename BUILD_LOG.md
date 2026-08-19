@@ -502,3 +502,30 @@ button showing, so the rule went rather than gaining specificity it did not need
 environment renders stale frames after JS-driven DOM mutation.
 
 **Commits:** tablet media-query fix + `Tablet: widen collection cards, drop the dead contact-btn hide rule`
+
+## Card gallery: swiping scrolled the strip but never changed the photo
+
+**Symptom (reported repeatedly):** on mobile, swiping left/right on a product
+card's image in any grid did nothing.
+
+**Root cause — CSS, not the touch handler.** `.vamas-prod-card__img img` sets
+`position: absolute; inset: 0`. That rule also matched the images inside the
+swipeable strip, so all five slide images were pinned to the same spot. The
+strip genuinely scrolled (measured `scrollLeft = 667`, four slides across) but
+every image stayed put, so the visible picture never changed.
+
+Three earlier attempts targeted the touch layer instead and all failed; one of
+them (`touchmove` + `preventDefault`, plus `touch-action: pan-y`) actively took
+horizontal panning away from the browser and made it worse. Those are reverted.
+
+**Fix:** slide images stay in normal flow — `position: relative; inset: auto`
+on `.vamas-prod-card__gallery-slide img`.
+
+**Verified live** (teamgfxbandits, 375px): slide image lefts are 17/184/351/517/684
+(previously all 17), and scrolling one viewport width swaps the visible file from
+`-HF` to `-HB`. Fixes the dots and the swatch-click image swap too, since both
+drive the same scroller. Commit `15f26d8`.
+
+Note: Shopify minifies served CSS, so a comment cannot be used to confirm a
+deploy — compare the theme file's `checksumMd5` (Admin API) against the local
+file instead.
