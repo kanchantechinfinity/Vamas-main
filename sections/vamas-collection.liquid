@@ -57,6 +57,24 @@
     {%- endif -%}
   {%- endif -%}
 {%- endfor -%}
+{%- comment -%}
+  On /collections/all Shopify returns only a short slice of all_tags, so the
+  bigger sizes go missing from the row even though their tag routes work. The
+  catalog carries every numeric size, so fall back to the configured list there.
+{%- endcomment -%}
+{%- if collection.handle == blank or collection.handle == 'all' -%}
+  {%- if section.settings.size_list != blank -%}
+    {%- assign size_tag_list = '' -%}
+    {%- assign size_list_values = section.settings.size_list | split: ',' -%}
+    {%- for s in size_list_values -%}
+      {%- assign s_clean = s | strip -%}
+      {%- assign s_num = s_clean | times: 1 -%}
+      {%- if s_num > 0 -%}
+        {%- assign size_tag_list = size_tag_list | append: 'size-' | append: s_clean | append: ',' -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
 {%- assign size_tags = size_tag_list | split: ',' -%}
 
 {%- comment -%} Tags already on screen that aren't sizes, so picking a size adds to
