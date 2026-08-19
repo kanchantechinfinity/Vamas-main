@@ -561,6 +561,19 @@
       if (g) syncDots(g);
     }, { capture: true, passive: true });
 
+    /* Hover a dot to change the photo - a 5px dot is a poor click target, and on
+       desktop the pointer is already there. Click still works for tap devices. */
+    document.addEventListener('pointerover', function(e){
+      if (e.pointerType === 'touch') return;
+      var dot = e.target.closest && e.target.closest('.vamas-prod-card__dot');
+      if (!dot) return;
+      var card = dot.closest('.vamas-prod-card');
+      var gallery = card && card.querySelector('[data-gallery]');
+      if (!gallery || !gallery.clientWidth) return;
+      var dots = Array.prototype.slice.call(dot.parentNode.querySelectorAll('.vamas-prod-card__dot'));
+      gallery.scrollTo({ left: dots.indexOf(dot) * gallery.clientWidth, behavior: 'smooth' });
+    });
+
     /* Click a dot to jump to that photo */
     document.addEventListener('click', function(e){
       var dot = e.target.closest && e.target.closest('.vamas-prod-card__dot');

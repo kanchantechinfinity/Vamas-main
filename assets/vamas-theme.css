@@ -654,22 +654,22 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   z-index: 3;
   display: flex;
   justify-content: center;
-  gap: 4px;
+  align-items: center;
+  gap: 7px;
+  height: 14px;
   /* The row itself stays click-through so it does not block the image link;
      the dots take pointer events so they can be tapped. */
   pointer-events: none;
 }
-/* A 5px target is not tappable - the dot keeps its size but sits inside a
-   padded box that catches the press. */
+/* Dots stay small. An earlier attempt gave them a transparent border to widen
+   the hit area, which just rendered as a large blob - on desktop the pointer is
+   precise enough, and hovering a dot changes the photo anyway. */
 .vamas-prod-card__dot {
   width: 5px; height: 5px; border-radius: 50%;
   background: rgba(255,255,255,0.6);
   pointer-events: auto;
   cursor: pointer;
-  box-sizing: content-box;
-  border: 5px solid transparent;
-  background-clip: padding-box;
-  margin: -5px;
+  transition: background .15s, width .15s, height .15s;
 }
 .vamas-prod-card__dot.active { background: #fff; width: 6px; height: 6px; }
 .vamas-prod-card__rating-badge {
