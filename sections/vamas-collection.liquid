@@ -136,51 +136,55 @@
 {%- comment -%}
   Sub-category tabs for the parent categories (THE PLAIN EDIT, FESTIVE GLAM, ...).
 
-  A sub-category is a TAG on the products inside the parent collection, not a
-  separate collection - Shopify's built-in tag routes filter server-side with no
-  app involved, one product can sit in several sub-categories, and adding a new
-  one is just a tag rather than a new collection to build and maintain.
+  A sub-category is its own COLLECTION. The tabs appear on the parent and on every
+  child, with the one you are looking at marked active, so a shopper can move
+  across siblings without going back up.
 
   The mapping lives in one section setting because every collection shares this
-  template: one line per collection, "handle | Tag One, Tag Two".
+  template: one line per parent, "parent-handle | child-handle, child-handle".
+  Labels come from each collection's own title, so renaming a collection in admin
+  renames its tab.
 {%- endcomment -%}
-{%- assign subcat_tags = '' -%}
+{%- assign subcat_parent = '' -%}
+{%- assign subcat_children = '' -%}
 {%- if section.settings.subcat_map != blank -%}
   {%- assign subcat_lines = section.settings.subcat_map | newline_to_br | split: '<br />' -%}
   {%- for line in subcat_lines -%}
     {%- assign parts = line | split: '|' -%}
     {%- if parts.size >= 2 -%}
-      {%- assign line_handle = parts[0] | strip | downcase -%}
-      {%- if line_handle == collection.handle -%}
-        {%- assign subcat_tags = parts[1] | split: ',' -%}
+      {%- assign line_parent = parts[0] | strip | downcase -%}
+      {%- assign line_children = parts[1] | split: ',' -%}
+      {%- comment -%} match the parent itself... {%- endcomment -%}
+      {%- if line_parent == collection.handle -%}
+        {%- assign subcat_parent = line_parent -%}
+        {%- assign subcat_children = line_children -%}
       {%- endif -%}
+      {%- comment -%} ...or any of its children, so the row follows you down {%- endcomment -%}
+      {%- for c in line_children -%}
+        {%- assign c_handle = c | strip | downcase -%}
+        {%- if c_handle == collection.handle -%}
+          {%- assign subcat_parent = line_parent -%}
+          {%- assign subcat_children = line_children -%}
+        {%- endif -%}
+      {%- endfor -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
-{%- if subcat_tags != '' and subcat_tags.size > 0 -%}
-  {%- comment -%} Keep any non-sub-category tag already active (a size, say) so
-    switching sub-category does not silently drop the shopper's other choice. {%- endcomment -%}
-  {%- assign sub_other = '' -%}
-  {%- assign active_sub = '' -%}
-  {%- for ct in current_tags -%}
-    {%- assign is_sub = false -%}
-    {%- for t in subcat_tags -%}
-      {%- assign t_clean = t | strip -%}
-      {%- if ct | downcase == t_clean | downcase -%}{%- assign is_sub = true -%}{%- assign active_sub = t_clean -%}{%- endif -%}
-    {%- endfor -%}
-    {%- unless is_sub -%}{%- assign sub_other = sub_other | append: ct | append: '+' -%}{%- endunless -%}
-  {%- endfor -%}
-  {%- assign sub_base = collection.url -%}
-  {%- if sub_other != '' -%}
-    {%- assign sub_base = collection.url | append: '/' | append: sub_other | split: '+' | join: '+' -%}
-  {%- endif -%}
+{%- if subcat_children != '' and subcat_children.size > 0 -%}
+  {%- assign parent_col = collections[subcat_parent] -%}
   <nav class="col-subcats" aria-label="Sub-categories">
-    <a href="{{ sub_base }}" class="col-subcat{% if active_sub == '' %} is-active{% endif %}">ALL</a>
-    {% for t in subcat_tags %}
-      {% assign t_clean = t | strip %}
-      {% if t_clean != '' %}
-        <a href="{% if t_clean == active_sub %}{{ sub_base }}{% else %}{{ sub_base }}/{{ t_clean | handleize }}{% endif %}"
-           class="col-subcat{% if t_clean == active_sub %} is-active{% endif %}">{{ t_clean }}</a>
+    <a href="/collections/{{ subcat_parent }}" class="col-subcat{% if collection.handle == subcat_parent %} is-active{% endif %}">
+      {{ parent_col.title | default: 'ALL' | upcase }}
+    </a>
+    {% for c in subcat_children %}
+      {% assign c_handle = c | strip | downcase %}
+      {% if c_handle != '' %}
+        {% assign child = collections[c_handle] %}
+        {%- comment -%} A handle that has no collection yet would render a dead tab,
+          so only list the ones that actually exist. {%- endcomment -%}
+        {% if child != blank and child.handle %}
+          <a href="{{ child.url }}" class="col-subcat{% if collection.handle == c_handle %} is-active{% endif %}">{{ child.title | upcase }}</a>
+        {% endif %}
       {% endif %}
     {% endfor %}
   </nav>
@@ -832,7 +836,7 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
     { "type": "header", "content": "Sub-category tabs" },
-    { "type": "textarea", "id": "subcat_map", "label": "Sub-categories per collection", "info": "One line per collection: collection-handle | Tag One, Tag Two. Each tag must exist on the products inside that collection.", "default": "the-plain-edit | Signature Round Neck Sleeveless, Silk Elbow Length, Side Stretch Plains, Cotton Plains, Collar Necks, Tissue Plains, Corsets Plain\nsummer-essentials | Cotton Casuals, Linen Light, Sleeveless Summer\nbrocade-bohemia | Classic Brocade, Zari Brocade, Boho Prints\nfestive-glam | Sequin Shine, Velvet Festive, Mirror Work\nre-verse-by-vamas | Reversible Classics, Two-in-One Prints\nside-stretch-blouses | Cotton Stretch, Shimmer Stretch, Everyday Stretch\nbridgerton-inspired | Corset Bodice, Puff Sleeves, Pearl Detail\ncorsets | Classic Corsets, Embellished Corsets, Corset Crop" },
+    { "type": "textarea", "id": "subcat_map", "label": "Sub-collections per category", "info": "One line per category: parent-handle | child-handle, child-handle. Use collection HANDLES (the bit after /collections/). A child that does not exist yet is skipped, so you can list them ahead of creating them.", "default": "the-plain-edit | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains, collar-necks, tissue-plains, corsets-plain\nsummer-essentials | \nbrocade-bohemia | \nfestive-glam | \nre-verse-by-vamas | \nside-stretch-blouses | \nbridgerton-inspired | \ncorsets | " },
     { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only as a last resort — a native Size filter (Search & Discovery) wins, then size-NN product tags. Neither needs this list.", "default": "32,34,36,38,40,42,44,46,48,50" },
     { "type": "header", "content": "Sleeve & Neckline" },
     { "type": "paragraph", "content": "These use a Search & Discovery filter if one exists (matched by label containing 'sleeve' / 'neck'). If not, the tag lists below are used instead — tags must match the product tags exactly." },
