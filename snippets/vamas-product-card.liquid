@@ -594,6 +594,38 @@
        left the strip dead to a real finger. The CSS keeps touch-action at
        pan-x pan-y so both axes stay native. */
 
+    /* Scrolling over the image moves through the photos.
+
+       On a desktop an overflow-x strip only pans natively with shift+wheel or a
+       trackpad's horizontal gesture - a plain wheel scrolls the page, so hovering
+       a card and scrolling did nothing to the photos.
+
+       A vertical wheel over the strip is mapped to it, but only while it still
+       has room to move that way; at either end the event is left alone so the
+       page keeps scrolling and the pointer is never trapped. */
+    document.addEventListener('wheel', function(e){
+      var g = galleryOf(e.target);
+      if (!g) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;   /* already horizontal */
+      var max = g.scrollWidth - g.clientWidth;
+      if (max <= 1) return;
+      var atStart = g.scrollLeft <= 0, atEnd = g.scrollLeft >= max - 1;
+      if ((e.deltaY < 0 && atStart) || (e.deltaY > 0 && atEnd)) return;  /* hand back to the page */
+      e.preventDefault();
+      wheelTo(g, g.scrollLeft + (e.deltaY > 0 ? g.clientWidth : -g.clientWidth));
+    }, { passive: false });
+
+    /* One photo per gesture: a trackpad fires a burst of wheel events and would
+       otherwise fly past several. */
+    var wheelLock = new WeakMap();
+    function wheelTo(g, left){
+      if (wheelLock.get(g)) return;
+      wheelLock.set(g, true);
+      var max = g.scrollWidth - g.clientWidth;
+      g.scrollTo({ left: Math.max(0, Math.min(max, Math.round(left / g.clientWidth) * g.clientWidth)), behavior: 'smooth' });
+      setTimeout(function(){ wheelLock.set(g, false); }, 320);
+    }
+
     /* Drag the strip with a mouse. Slides are links, so a drag has to suppress
        the click that follows it - otherwise every drag opens the product. */
     var drag = null;
