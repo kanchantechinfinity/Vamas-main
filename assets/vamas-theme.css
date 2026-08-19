@@ -641,6 +641,12 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   height: 100%;
   scrollbar-width: none;
   cursor: grab;
+  /* Same lesson as the product page gallery: with touch-action:auto the browser
+     claims the gesture as it starts scrolling, touchmove stops being cancelable
+     and preventDefault is ignored, so the page scrolled and the photo never
+     moved. pan-y hands vertical to the browser and keeps horizontal for the JS
+     that drives this strip. */
+  touch-action: pan-y;
 }
 /* Snapping fights a JS-driven drag, so it is off while the pointer is down. */
 .vamas-prod-card__gallery.is-dragging { scroll-snap-type: none; cursor: grabbing; }
