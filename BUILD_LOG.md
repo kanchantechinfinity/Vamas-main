@@ -529,3 +529,27 @@ drive the same scroller. Commit `15f26d8`.
 Note: Shopify minifies served CSS, so a comment cannot be used to confirm a
 deploy — compare the theme file's `checksumMd5` (Admin API) against the local
 file instead.
+
+## Header menu links pointed at the category page, not collections
+
+**Cause: admin navigation data, not theme code.** The header renders whatever
+`main_menu` holds. Both header menus (`main-menu-2-header` and its Responsive
+copy) still carried demo-theme links: items typed `COLLECTIONS` resolve to
+`/collections` (the category/list page) and items typed `FRONTPAGE` resolve to
+`/` (the homepage). "All Blouses", "The Plain Edits", "Wedding Wear" and a dozen
+others were among them.
+
+**Fix:** rewrote both menus with `menuUpdate`, every shopping item now typed
+`COLLECTION` (bound to a real collection by resourceId) or `CATALOG`
+(`/collections/all`). No `COLLECTIONS`- or `FRONTPAGE`-typed shopping items
+remain; only "Home" still points at `/`.
+
+Mapping applied: Boutique Collection→boutique, The Plain Edits→the-plain-edit,
+Our Iconic V-Neck Blouses & V-Neck Collection→classic-v, Stretchable
+Blouses→easy-stretch (user's pick over side-stretch), Wedding Wear→bridal,
+Festive Weae→festive-glam, Fresh Product Collection & Latest Designs→jackets
+(New Arrivals), All Blouses / All Collections / Vikri Kids / More→/collections/all.
+
+**Open:** the "Sale Blouse" tiers (65%/50%/80%/Clearance/Sale) all point at
+/collections/all because no sale collections exist yet — user chose this over
+removing the menu. "Festive Weae" is a typo in the menu title; left as-is.
