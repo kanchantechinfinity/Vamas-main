@@ -137,11 +137,6 @@
         {% if option_down contains 'colour' or option_down contains 'color' %}
           <div class="color-section">
             <div class="selector-label">SELECT {{ option.name | upcase }}</div>
-            {%- comment -%} The option's own index, held before the values loop starts.
-              Inside it forloop.index0 counts VALUES, so comparing against
-              current_variant.options[opt_idx] matched the wrong option and
-              nothing ever came up selected. {%- endcomment -%}
-            {%- assign opt_idx = forloop.index0 -%}
             <div class="color-swatches" data-option-index="{{ forloop.index0 }}">
               {% assign pdp_swatch_seen_keys = '' %}
               {% for value in option.values %}
