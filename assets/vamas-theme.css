@@ -641,12 +641,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   height: 100%;
   scrollbar-width: none;
   cursor: grab;
-  /* Same lesson as the product page gallery: with touch-action:auto the browser
-     claims the gesture as it starts scrolling, touchmove stops being cancelable
-     and preventDefault is ignored, so the page scrolled and the photo never
-     moved. pan-y hands vertical to the browser and keeps horizontal for the JS
-     that drives this strip. */
-  touch-action: pan-y;
+  /* Both axes native: the browser pans this strip horizontally and the page
+     vertically. pan-y here would have handed horizontal to JS, which is what
+     broke it for a real finger. */
+  touch-action: pan-x pan-y;
 }
 /* Snapping fights a JS-driven drag, so it is off while the pointer is down. */
 .vamas-prod-card__gallery.is-dragging { scroll-snap-type: none; cursor: grabbing; }
@@ -671,11 +669,20 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
    the hit area, which just rendered as a large blob - on desktop the pointer is
    precise enough, and hovering a dot changes the photo anyway. */
 .vamas-prod-card__dot {
+  position: relative;
   width: 5px; height: 5px; border-radius: 50%;
   background: rgba(255,255,255,0.6);
   pointer-events: auto;
   cursor: pointer;
   transition: background .15s, width .15s, height .15s;
+}
+/* A 5px dot cannot be hit with a finger. The tap area is widened with a
+   pseudo-element so the dot itself still looks 5px - the earlier attempt grew
+   the dot with a transparent border and rendered as a blob. */
+.vamas-prod-card__dot::before {
+  content: '';
+  position: absolute;
+  top: -9px; right: -6px; bottom: -9px; left: -6px;
 }
 .vamas-prod-card__dot.active { background: #fff; width: 6px; height: 6px; }
 .vamas-prod-card__rating-badge {

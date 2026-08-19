@@ -586,53 +586,13 @@
       gallery.scrollTo({ left: dots.indexOf(dot) * gallery.clientWidth, behavior: 'smooth' });
     });
 
-    /* Explicit touch swiping.
+    /* Touch is left to the browser on purpose.
 
-       The strip is overflow-x:auto with touch-action:auto, so a phone SHOULD pan
-       it natively - but inside a narrow card in a vertically scrolling grid the
-       browser often resolves the gesture as a page scroll and the photo never
-       moves. Driving it here removes that guess: the first few pixels decide the
-       axis, and only a horizontal intent takes over the gesture.
-
-       touchmove must be non-passive, otherwise preventDefault is ignored. */
-    var tdrag = null;
-    document.addEventListener('touchstart', function(e){
-      if (e.touches.length !== 1) return;
-      var g = galleryOf(e.target);
-      if (!g) return;
-      /* Homepage rails scroll horizontally themselves - taking the gesture here
-         would stop the rail moving between products, which is what it is for. */
-      if (g.closest('.vamas-prod-grid--scroll')) return;
-      var t = e.touches[0];
-      tdrag = { g: g, x: t.clientX, y: t.clientY, left: g.scrollLeft, axis: null, moved: 0 };
-    }, { passive: true });
-
-    document.addEventListener('touchmove', function(e){
-      if (!tdrag || e.touches.length !== 1) return;
-      var t = e.touches[0];
-      var dx = t.clientX - tdrag.x, dy = t.clientY - tdrag.y;
-      if (!tdrag.axis) {
-        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
-        tdrag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-      }
-      if (tdrag.axis !== 'x') return;          /* leave vertical scrolling alone */
-      tdrag.moved = Math.max(tdrag.moved, Math.abs(dx));
-      tdrag.g.scrollLeft = tdrag.left - dx;
-      if (e.cancelable) e.preventDefault();
-    }, { passive: false });
-
-    document.addEventListener('touchend', function(){
-      if (!tdrag) return;
-      var g = tdrag.g, moved = tdrag.moved, axis = tdrag.axis;
-      if (axis === 'x' && g.clientWidth) {
-        g.scrollTo({ left: Math.round(g.scrollLeft / g.clientWidth) * g.clientWidth, behavior: 'smooth' });
-        if (moved > 8) {
-          var kill = function(ev){ ev.preventDefault(); ev.stopPropagation(); };
-          document.addEventListener('click', kill, { capture: true, once: true });
-        }
-      }
-      tdrag = null;
-    }, { passive: true });
+       This strip is a real overflow-x scroller with scroll-snap, which phones
+       pan natively. An earlier attempt drove it from touchmove with
+       preventDefault; that fought the native scroller instead of helping it and
+       left the strip dead to a real finger. The CSS keeps touch-action at
+       pan-x pan-y so both axes stay native. */
 
     /* Drag the strip with a mouse. Slides are links, so a drag has to suppress
        the click that follows it - otherwise every drag opens the product. */
