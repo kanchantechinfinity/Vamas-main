@@ -600,6 +600,9 @@
       if (e.touches.length !== 1) return;
       var g = galleryOf(e.target);
       if (!g) return;
+      /* Homepage rails scroll horizontally themselves - taking the gesture here
+         would stop the rail moving between products, which is what it is for. */
+      if (g.closest('.vamas-prod-grid--scroll')) return;
       var t = e.touches[0];
       tdrag = { g: g, x: t.clientX, y: t.clientY, left: g.scrollLeft, axis: null, moved: 0 };
     }, { passive: true });
