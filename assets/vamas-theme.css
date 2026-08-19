@@ -925,7 +925,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 
 .vamas-footer__desc { font-size: 11px; color: rgba(235,211,173,0.5); line-height: 1.8; margin-bottom: 22px; }
 
-.vamas-footer__socials { display: flex; gap: 10px; }
+/* The newsletter sits directly above these now, so they need clearance -
+   before, the logo and blurb were between them. */
+.vamas-footer__socials { display: flex; gap: 10px; margin-top: 22px; }
 
 .vamas-footer__social {
   width: 34px;
