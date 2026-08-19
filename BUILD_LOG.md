@@ -553,3 +553,33 @@ Festive Weae→festive-glam, Fresh Product Collection & Latest Designs→jackets
 **Open:** the "Sale Blouse" tiers (65%/50%/80%/Clearance/Sale) all point at
 /collections/all because no sale collections exist yet — user chose this over
 removing the menu. "Festive Weae" is a typo in the menu title; left as-is.
+
+## Size filter now actually filters (tag routes, no app needed)
+
+**Cause:** `filter.v.option.size` is silently ignored unless a Size filter is
+enabled in Search & Discovery. The store has Color/Price/Availability enabled but
+not Size, so the size pills were dead links — proved live: `?filter.v.option.size=44`
+returned all 10 products, while `?filter.v.option.color=BLACK` correctly cut 10→5.
+There is no Admin API to enable a Search & Discovery filter.
+
+**Fix:** tagged all 50 numeric-size products with `size-32`…`size-50` matching
+each product's real SIZE option values, which turns on the theme's already-written
+tier-2 path (Shopify's built-in tag routes, server-side, pagination-correct, no app).
+
+Verified on /collections/all: 100 → 50 (size-32) → 12 (size-44) → 5 (size-48)
+→ 6 (size-50). On THE PLAIN EDIT: 10 → 2 (size-44) → 0 (size-48, not stocked).
+
+Two bugs fixed alongside:
+- The section fell back to `collections.all` whenever `products_count` was 0, so
+  a tag route matching nothing showed all 100 products and read as a broken
+  filter. It now falls back only when there is genuinely no collection.
+- `collection.all_tags` returns only a short slice on /collections/all, so 44-50
+  vanished from the row there; that page now takes the row from the size_list
+  setting (every numeric size exists somewhere in the catalog).
+
+**Open:** the other 50 products still carry M/L/XL/XXL on their SIZE option, which
+the brand does not sell. They carry no size tag, so they never appear under a
+numeric size — selecting any size shows at most 50 products until that product
+data is corrected. Tags are also product-level, so this filters "offers this size",
+not "this size is in stock"; enabling Size in Search & Discovery would upgrade it
+to variant-level with no theme change (tier 1 is already written).
