@@ -689,6 +689,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 /* The "+N" chip stands slightly apart so it reads as "more", not as a size. */
 .vamas-prod-card__size--more { background: rgba(26,26,26,0.05); color: rgba(26,26,26,0.65); }
+/* Sold out in the colour the shopper has picked - still tappable, since the
+   product page explains it better than a dead chip would. */
+.vamas-prod-card__size.is-unavailable { opacity: .38; text-decoration: line-through; }
 
 @media (hover: hover) and (pointer: fine) {
   .vamas-prod-card__size:hover { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }

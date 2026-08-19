@@ -337,7 +337,7 @@
   {% endfor %}
 ]{% endcapture %}
 
-<div class="vamas-prod-card" data-color-option="{{ color_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'center' }}"{% endif %}>
+<div class="vamas-prod-card" data-color-option="{{ color_option_position }}" data-size-option="{{ size_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'center' }}"{% endif %}>
   <div class="vamas-prod-card__img{% if gallery_slot_count > 1 %} has-gallery{% endif %}">
     <a href="{{ product.url }}" class="vamas-prod-card__img-desktop-link">
       {% if default_card_image %}
@@ -501,7 +501,7 @@
             {% if size_variant_map contains sz_probe %}
               {% assign sz_variant_id = size_variant_map | split: sz_probe | last | split: '§' | first %}
             {% endif %}
-            <a href="{{ product.url }}{% if sz_variant_id != blank %}?variant={{ sz_variant_id }}{% endif %}" class="vamas-prod-card__size">{{ value }}</a>
+            <a href="{{ product.url }}{% if sz_variant_id != blank %}?variant={{ sz_variant_id }}{% endif %}" class="vamas-prod-card__size" data-size="{{ value | escape }}">{{ value }}</a>
           {% endif %}
         {% endfor %}
         {% if sz_extra > 0 %}
@@ -564,6 +564,34 @@
 
     card.querySelectorAll('.vamas-prod-card__color').forEach(function(s){ s.classList.remove('active'); });
     swatch.classList.add('active');
+
+    /* Re-point the size chips at THIS colour. They are rendered for the default
+       colour, so without this a shopper who picked GREEN and then tapped 40 landed
+       on the product page with the default colour's 40 selected. Each chip now
+       carries the variant that matches colour + size together. */
+    (function(){
+      var sizeOpt = parseInt(card.getAttribute('data-size-option') || '0', 10);
+      var colorOpt = parseInt(card.getAttribute('data-color-option') || '0', 10);
+      if (!sizeOpt) return;
+      var chosenColor = colorOpt ? match['option' + colorOpt] : null;
+      card.querySelectorAll('.vamas-prod-card__size[data-size]').forEach(function(chip){
+        var wanted = chip.getAttribute('data-size');
+        var exact = null, anySize = null;
+        for (var i = 0; i < variants.length; i++) {
+          var v = variants[i];
+          if (v['option' + sizeOpt] !== wanted) continue;
+          if (!anySize) anySize = v;
+          if (chosenColor && v['option' + colorOpt] !== chosenColor) continue;
+          /* prefer one that is actually in stock for this colour */
+          if (v.available) { exact = v; break; }
+          if (!exact) exact = v;
+        }
+        var pick = exact || anySize;
+        if (!pick) return;
+        chip.href = chip.getAttribute('href').split('?')[0] + '?variant=' + pick.id;
+        chip.classList.toggle('is-unavailable', !pick.available);
+      });
+    })();
 
     var img = card.querySelector('[data-primary-img]');
     if (img) {
