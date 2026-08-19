@@ -127,10 +127,21 @@
       {% endfor %}
 
       {% for option in product.options_with_values %}
+        {%- comment -%} This option's own index, taken before any values loop starts.
+          Inside a values loop forloop.index0 counts VALUES, so comparing against
+          current_variant.options[forloop.index0] matched the wrong option and
+          nothing ever showed as selected. Assigned here so the colour and size
+          branches below both read the right one. {%- endcomment -%}
+        {%- assign opt_idx = forloop.index0 -%}
         {% assign option_down = option.name | downcase %}
         {% if option_down contains 'colour' or option_down contains 'color' %}
           <div class="color-section">
             <div class="selector-label">SELECT {{ option.name | upcase }}</div>
+            {%- comment -%} The option's own index, held before the values loop starts.
+              Inside it forloop.index0 counts VALUES, so comparing against
+              current_variant.options[opt_idx] matched the wrong option and
+              nothing ever came up selected. {%- endcomment -%}
+            {%- assign opt_idx = forloop.index0 -%}
             <div class="color-swatches" data-option-index="{{ forloop.index0 }}">
               {% assign pdp_swatch_seen_keys = '' %}
               {% for value in option.values %}
@@ -152,12 +163,12 @@
                       {% assign pdp_swatch_thumb = pdp_color_img_map | split: pdp_swatch_probe | last | split: '§' | first %}
                     {% endif %}
                     {% if pdp_swatch_thumb != '' %}
-                      <img class="swatch swatch--img{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
+                      <img class="swatch swatch--img{% if value == current_variant.options[opt_idx] %} active{% endif %}"
                            src="{{ pdp_swatch_thumb }}"
                            data-value="{{ value | escape }}" alt="{{ value | escape }}" title="{{ value | escape }}"
                            loading="lazy" width="120" height="150">
                     {% else %}
-                      <div class="swatch{% if value == current_variant.options[forloop.index0] %} active{% endif %}"
+                      <div class="swatch{% if value == current_variant.options[opt_idx] %} active{% endif %}"
                            style="background:{{ swatch_hex }};"
                            data-value="{{ value | escape }}" title="{{ value | escape }}"></div>
                     {% endif %}
@@ -166,7 +177,7 @@
                 {% endunless %}
               {% endfor %}
             </div>
-            <div class="color-name-label">{{ option.name }}: <strong id="color-name-text">{{ current_variant.options[forloop.index0] }}</strong></div>
+            <div class="color-name-label">{{ option.name }}: <strong id="color-name-text">{{ current_variant.options[opt_idx] }}</strong></div>
           </div>
         {% elsif option_down contains 'size' %}
           <div class="size-section">
@@ -177,7 +188,7 @@
             <div class="size-buttons" data-option-index="{{ forloop.index0 }}">
               {% for value in option.values %}
                 {% capture size_label %}{% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product %}{% endcapture %}
-                <button type="button" class="size-btn{% if value == current_variant.options[forloop.index0] %} active{% endif %}" data-value="{{ value | escape }}">{{ size_label | strip }}</button>
+                <button type="button" class="size-btn{% if value == current_variant.options[opt_idx] %} active{% endif %}" data-value="{{ value | escape }}">{{ size_label | strip }}</button>
               {% endfor %}
             </div>
             <div class="stock-row">
@@ -198,7 +209,7 @@
             <div class="selector-label">{{ option.name | upcase }}</div>
             <div class="size-buttons" data-option-index="{{ forloop.index0 }}">
               {% for value in option.values %}
-                <button type="button" class="size-btn{% if value == current_variant.options[forloop.index0] %} active{% endif %}" data-value="{{ value | escape }}">{{ value }}</button>
+                <button type="button" class="size-btn{% if value == current_variant.options[opt_idx] %} active{% endif %}" data-value="{{ value | escape }}">{{ value }}</button>
               {% endfor %}
             </div>
           </div>
