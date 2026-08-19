@@ -1,7 +1,12 @@
 {{ 'vamas-collection.css' | asset_url | stylesheet_tag }}
 
-{%- comment -%} On the /collections list page there is no single collection — show all products {%- endcomment -%}
-{%- unless collection and collection.products_count > 0 -%}
+{%- comment -%}
+  On the /collections list page there is no single collection - show all products.
+  Test the handle, NOT products_count: on a tag route that matches nothing (say
+  /collections/the-plain-edit/size-48) the count is 0, and falling back there
+  replaced an honest "no products" with all 100, which reads as a broken filter.
+{%- endcomment -%}
+{%- unless collection.handle != blank -%}
   {%- assign collection = collections.all -%}
 {%- endunless -%}
 
