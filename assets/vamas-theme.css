@@ -651,7 +651,16 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-prod-card__gallery.is-dragging img { pointer-events: none; }
 .vamas-prod-card__gallery::-webkit-scrollbar { display: none; }
 .vamas-prod-card__gallery-slide { flex: 0 0 100%; scroll-snap-align: start; display: block; }
-.vamas-prod-card__gallery-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* The card's generic image rule pins every img with position:absolute;inset:0.
+   Inside the strip that stacked all slides on one spot, so swiping scrolled the
+   strip but the visible photo never changed. Slide images must stay in flow. */
+.vamas-prod-card__gallery-slide img {
+  position: relative;
+  inset: auto;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .vamas-prod-card__dots {
   position: absolute;
   left: 0; right: 0; bottom: 8px;
