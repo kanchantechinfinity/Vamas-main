@@ -230,7 +230,16 @@
       {% for dup in (1..2) %}
         {% for block in section.blocks %}
           {% if block.type == 'category' %}
-            <a href="{{ block.settings.cat_url | default: '/collections/all' }}" class="vamas-cat-circle" draggable="false">
+            {%- comment -%} A tile pointing at a collection that has not been created
+              yet would 404. Check it exists and fall back to the full catalogue until
+              it does, so the tile keeps working and flips over on its own the moment
+              the collection appears. {%- endcomment -%}
+            {%- assign cat_handle = block.settings.cat_url | default: '' | split: '/collections/' | last | split: '?' | first | strip -%}
+            {%- assign cat_target = block.settings.cat_url | default: '/collections/all' -%}
+            {%- if cat_handle != '' and collections[cat_handle] == blank -%}
+              {%- assign cat_target = '/collections/all' -%}
+            {%- endif -%}
+            <a href="{{ cat_target }}" class="vamas-cat-circle" draggable="false">
               <div class="vamas-cat-circle__ring">
                 {% if block.settings.cat_image != blank %}
                   <img src="{{ block.settings.cat_image | img_url: '300x300', crop: 'top' }}"
