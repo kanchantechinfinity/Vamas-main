@@ -410,7 +410,10 @@
         <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
           {% assign swatch_seen_keys = '' %}
           {% assign swatches_rendered = 0 %}
-          {% assign card_swatch_limit = 3 %}
+          {%- comment -%} Render a generous set and let JS decide how many stay:
+            how many fit the line on desktop, six on tablet, three on phones.
+            A fixed Liquid cap could not know the rendered width. {%- endcomment -%}
+          {% assign card_swatch_limit = 12 %}
           {% for value in color_values %}
             {% if swatches_rendered >= card_swatch_limit %}{% break %}{% endif %}
             {% capture swatch_hex %}{% render 'vamas-color-hex', name: value %}{% endcapture %}
@@ -442,9 +445,12 @@
               {% endunless %}
             {% endunless %}
           {% endfor %}
-          {% if valid_color_count > card_swatch_limit %}
-            <a href="{{ product.url }}" class="vamas-prod-card__color-more" title="{{ valid_color_count | minus: card_swatch_limit }} more blouses">+{{ valid_color_count | minus: card_swatch_limit }}</a>
-          {% endif %}
+          {%- comment -%} Count is written by JS once it knows how many fit; the
+            Liquid value covers anything beyond the 12 rendered. {%- endcomment -%}
+          {% assign swatch_overflow = valid_color_count | minus: swatches_rendered %}
+          <a href="{{ product.url }}" class="vamas-prod-card__color-more" data-color-more
+             data-hidden-extra="{{ swatch_overflow }}"
+             title="More colours"{% if swatch_overflow <= 0 %} hidden{% endif %}>+{{ swatch_overflow }}</a>
         </div>
       {% else %}
         <span></span>
@@ -696,7 +702,60 @@
      re-running this block (e.g. if the snippet renders many times) never
      double-binds the same swatch. */
   function wireSwatches(){
-    document.querySelectorAll('.vamas-prod-card__color').forEach(function(swatch){
+    /* How many colour swatches stay on screen: as many as fit the row on desktop,
+     six on tablet, three on phones. The count has to be measured rather than set
+     in Liquid, because it depends on the rendered card width - and any swatch
+     beyond the 12 rendered is added back into the "+N". */
+  (function(){
+    function capFor(w){
+      if (w <= 768) return 3;
+      if (w <= 1180) return 6;
+      return Infinity;
+    }
+    function fitOne(row){
+      var more = row.querySelector('[data-color-more]');
+      var swatches = Array.prototype.slice.call(row.querySelectorAll('.vamas-prod-card__color'));
+      if (!more || !swatches.length) return;
+      var beyondRendered = parseInt(more.getAttribute('data-hidden-extra') || '0', 10);
+      var cap = capFor(window.innerWidth);
+
+      swatches.forEach(function(s){ s.hidden = false; });
+      more.hidden = true;
+
+      /* Trim to the tablet/phone cap first, then to whatever the line holds. */
+      for (var i = 0; i < swatches.length; i++) if (i >= cap) swatches[i].hidden = true;
+
+      var rowTop = swatches[0].getBoundingClientRect().top;
+      function overflowing(){
+        return swatches.some(function(s){
+          return !s.hidden && s.getBoundingClientRect().top > rowTop + 2;
+        }) || (!more.hidden && more.getBoundingClientRect().top > rowTop + 2);
+      }
+      function hiddenCount(){
+        return swatches.filter(function(s){ return s.hidden; }).length + beyondRendered;
+      }
+      if (overflowing() || hiddenCount() > 0) { more.hidden = false; }
+      for (var guard = 0; guard < swatches.length; guard++) {
+        more.textContent = '+' + hiddenCount();
+        if (!overflowing()) break;
+        for (var j = swatches.length - 1; j >= 0; j--) {
+          if (!swatches[j].hidden) { swatches[j].hidden = true; break; }
+        }
+        more.hidden = false;
+      }
+      more.textContent = '+' + hiddenCount();
+      more.hidden = hiddenCount() === 0;
+    }
+    function fitAll(){
+      document.querySelectorAll('.vamas-prod-card__colors').forEach(fitOne);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitAll);
+    else fitAll();
+    window.addEventListener('load', fitAll);
+    var t; window.addEventListener('resize', function(){ clearTimeout(t); t = setTimeout(fitAll, 120); });
+  })();
+
+  document.querySelectorAll('.vamas-prod-card__color').forEach(function(swatch){
       if (swatch.dataset.swatchWired) return;
       swatch.dataset.swatchWired = '1';
 
