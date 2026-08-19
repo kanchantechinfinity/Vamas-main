@@ -763,6 +763,48 @@
   if (galNext) galNext.addEventListener('click', function(e){ e.stopPropagation(); setGalleryImg(curIdx+1); });
   thumbs.forEach(function(t){ t.addEventListener('click', function(){ setGalleryImg(parseInt(this.dataset.idx,10)); }); });
 
+  /* Swipe the main image on a phone.
+
+     This gallery only ever had arrow buttons and thumbnails - no touch handling
+     at all - so swiping the big photo did nothing. Worse, a tap here opens the
+     lightbox, so a swipe that the browser rounded to a tap opened it instead of
+     changing the photo.
+
+     The first few pixels decide the axis: horizontal changes the photo and takes
+     the gesture, vertical is left alone so the page still scrolls. A real swipe
+     also suppresses the click that follows, so the lightbox stays shut. */
+  (function(){
+    var gal = document.getElementById('gallery-main');
+    if (!gal || thumbs.length < 2) return;
+    var t0 = null;
+    gal.addEventListener('touchstart', function(e){
+      if (e.touches.length !== 1) return;
+      t0 = { x: e.touches[0].clientX, y: e.touches[0].clientY, axis: null, dx: 0 };
+    }, { passive: true });
+
+    gal.addEventListener('touchmove', function(e){
+      if (!t0 || e.touches.length !== 1) return;
+      var dx = e.touches[0].clientX - t0.x, dy = e.touches[0].clientY - t0.y;
+      if (!t0.axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        t0.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+      if (t0.axis !== 'x') return;
+      t0.dx = dx;
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+
+    gal.addEventListener('touchend', function(){
+      if (!t0) return;
+      var dx = t0.dx, axis = t0.axis;
+      t0 = null;
+      if (axis !== 'x' || Math.abs(dx) < 40) return;
+      setGalleryImg(dx < 0 ? curIdx + 1 : curIdx - 1);
+      var kill = function(ev){ ev.preventDefault(); ev.stopPropagation(); };
+      document.addEventListener('click', kill, { capture: true, once: true });
+    }, { passive: true });
+  })();
+
   /* Lightbox */
   var lightbox = document.getElementById('lightbox');
   var galleryMain = document.getElementById('gallery-main');
