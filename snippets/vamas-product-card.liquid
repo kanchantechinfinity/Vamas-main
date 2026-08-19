@@ -594,6 +594,43 @@
        left the strip dead to a real finger. The CSS keeps touch-action at
        pan-x pan-y so both axes stay native. */
 
+    /* Swipe support that cannot break native scrolling.
+
+       The strip is a real overflow-x scroller, so a phone may pan it on its own.
+       An earlier attempt drove it from touchmove with preventDefault, which
+       fought that scroller and left the strip dead to a finger.
+
+       This version never calls preventDefault and has no touchmove handler at
+       all: it only measures where the finger went down and came up, and finishes
+       the motion on the nearest photo. If the browser already panned the strip,
+       this just completes it; if the browser did nothing, this moves it. Either
+       way nothing is blocked, and vertical swipes are ignored outright. */
+    var tstart = null;
+    document.addEventListener('touchstart', function(e){
+      if (e.touches.length !== 1) return;
+      var g = galleryOf(e.target);
+      if (!g) return;
+      var t = e.touches[0];
+      tstart = { g: g, x: t.clientX, y: t.clientY, left: g.scrollLeft };
+    }, { passive: true });
+
+    document.addEventListener('touchend', function(e){
+      var st = tstart; tstart = null;
+      if (!st || !e.changedTouches.length) return;
+      var t = e.changedTouches[0];
+      var dx = t.clientX - st.x, dy = t.clientY - st.y;
+      if (Math.abs(dx) < 35 || Math.abs(dx) <= Math.abs(dy)) return;   /* not a horizontal swipe */
+      var g = st.g;
+      if (!g.clientWidth) return;
+      /* Work from where the strip started, so this lands one photo along whether
+         or not the browser moved it in the meantime. */
+      var from = Math.round(st.left / g.clientWidth);
+      var to = dx < 0 ? from + 1 : from - 1;
+      var max = Math.round((g.scrollWidth - g.clientWidth) / g.clientWidth);
+      to = Math.max(0, Math.min(max, to));
+      g.scrollTo({ left: to * g.clientWidth, behavior: 'smooth' });
+    }, { passive: true });
+
     /* Scrolling over the image moves through the photos.
 
        On a desktop an overflow-x strip only pans natively with shift+wheel or a
