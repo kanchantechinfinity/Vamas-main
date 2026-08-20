@@ -703,3 +703,25 @@ real image dimensions and cropping the file, not by screenshot.
 Verified from server output: the page renders `(vama-s)`, the served CSS has
 `color:#d0b068` on `.vamas-meaning__word-hi`, and the 768px block carries
 `.vamas-meaning__right{align-self:flex-end;text-align:right}`.
+
+## Tagline and "Made with Love" set in Cormorant Garamond
+
+Both reference images are the same classical serif — one upright, one italic — so
+both lines now come from one family.
+
+- `.vamas-meaning__tag` had **no font-family of its own**, so it was inheriting the
+  body Poppins in italic. It is now upright Cormorant Garamond, weight 500,
+  17px desktop / 15px phone.
+- `.vamas-made-love` moves from Playfair italic to Cormorant Garamond italic,
+  27px desktop / 21px phone. Garamond's small x-height needs the extra point size
+  to hold the previous optical size.
+
+Verified at 375px against the live stylesheet: both compute to Cormorant Garamond
+(italic 400 for Made with Love, normal 500 for the tagline), the webfont really
+loads (`document.fonts.check` true for the italic and the 500 face), each is one
+line, the tagline needs 162px of 327px available, and its right edge sits flush
+with the band at 351px. No page overflow.
+
+Open: the reference art is sentence case ("Be you. Be Beautiful."); the site copy
+is still uppercase. Only the typeface was changed — the wording is the merchant's
+call.
