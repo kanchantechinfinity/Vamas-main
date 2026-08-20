@@ -1721,19 +1721,31 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
 }
 
 @media (max-width: 768px) {
-  /* Stacked, left-aligned - the two-column split leaves the tagline stranded
-     in a narrow column on a phone. */
+  /* Phones keep the headword and the logo side by side, with the pronunciation
+     and definition running full width beneath both. A plain column stack sent
+     the logo to the bottom, far from the word it belongs beside.
+     `display: contents` on __left promotes its three children into this grid so
+     the word can share a row with __right while its siblings span the whole
+     width - the wrapper has no box of its own to fight. */
   .vamas-meaning { padding: 4px 0 32px; margin-bottom: 28px; }
-  .vamas-meaning__inner { flex-direction: column; align-items: flex-start; gap: 26px; }
+  .vamas-meaning__inner {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    column-gap: 14px;
+    row-gap: 0;
+  }
+  .vamas-meaning__left { display: contents; }
+  .vamas-meaning__word-hi { grid-column: 1; grid-row: 1; }
+  .vamas-meaning__right { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
+  .vamas-meaning__pos { grid-column: 1 / -1; }
+  .vamas-meaning__def { grid-column: 1 / -1; }
   .vamas-meaning__logo img { height: 54px; }
   .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 12px; padding-bottom: 9px; letter-spacing: .5px; }
   .vamas-meaning__mark img { height: 54px; }
   .vamas-meaning__pos { font-size: 11px; margin-bottom: 16px; }
   .vamas-meaning__def { font-size: 12.5px; line-height: 1.8; }
-  /* The band stacks on phones, but the logo still belongs on the right - it
-     reads as the counterweight to the headword, not as another left-aligned
-     list item. */
-  .vamas-meaning__right { align-self: flex-end; text-align: right; }
+  .vamas-meaning__right { text-align: right; }
   .vamas-meaning__mark { font-size: 22px; letter-spacing: 4px; }
   /* Garamond is narrower than the Poppins that used to sit here, so 15px still
      keeps BE YOU. BE BEAUTIFUL on one nowrap line at 375px. */
