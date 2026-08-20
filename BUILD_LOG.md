@@ -618,3 +618,18 @@ against 359px available — 102px of headroom.
 
 Caveat: `nowrap` means a message longer than that headroom will clip rather than
 wrap. Marquee mode is the right choice for anything that long.
+
+## Brand story photo: stock sari portrait replaced with a Vamas shoot
+
+The photo above the "As Seen on Instagram" heading belonged to the OUR STORY
+(`.vamas-brand`) section, not the Instagram carousel — and it was not a Vamas
+image: `brand_image` pointed at a Freepik file
+(`portrait-young-woman-wearing-tradition-sari-garment_52683-90225.avif`).
+
+Cleared `brand_image` and set `brand_image_asset` to `full-look.jpg`, the brand's
+own portrait full-look shoot, which is already this setting's theme default and
+fits the 500x640 slot.
+
+**Verified from server output:** the served homepage renders
+`assets/full-look.jpg` inside `.vamas-brand__image`, and the stock filename no
+longer appears anywhere on the page (0 occurrences).
