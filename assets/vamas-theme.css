@@ -963,7 +963,17 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-newsletter__btn:hover { background: var(--color-maroon-light); }
 
 /* ── Footer ───────────────────────────── */
-.vamas-footer { background: var(--color-maroon); padding: 64px var(--page-gutter) 32px; }
+.vamas-footer { background: var(--color-maroon); padding: 64px var(--page-gutter) 32px; position: relative; }
+/* Curved top edge. The path fills the page ground over the maroon, so the seam
+   reads as a wave; `preserveAspectRatio: none` lets it stretch to any width. */
+.vamas-footer__wave {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 46px;
+  display: block;
+  pointer-events: none;
+}
+.vamas-footer__wave path { fill: var(--color-bg); }
 /* The newsletter now sits inside the footer's first column, under the logo,
    rather than as a full-width band above the grid - so it is left-aligned and
    sized for a column, not the page. */
@@ -1124,6 +1134,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-tags { padding: 16px 24px; }
   .vamas-tag { pointer-events: none; cursor: default; }
   .vamas-footer { padding: 44px 24px 24px; }
+  .vamas-footer__wave { height: 26px; }
   .vamas-footer__grid { grid-template-columns: 1fr; }
   .vamas-prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .vamas-slide__coupon { flex-wrap: wrap; }

@@ -48,6 +48,14 @@
 {% endif %}
 
 <footer class="vamas-footer">
+  {% comment %} Wave that turns the footer's top edge into a curve. It paints the
+    page ground (--color-bg) OVER the footer's maroon rather than trying to bulge
+    the maroon upward - that way it never covers the section above, and every page
+    works with one fill because both possible predecessors (the tag row on the
+    homepage, the FAQ everywhere else) sit on the same #FEF9F2. {% endcomment %}
+  <svg class="vamas-footer__wave" viewBox="0 0 1440 46" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M0,0 H1440 V16 C1200,44 980,0 720,18 C500,33 230,44 0,12 Z"/>
+  </svg>
 
   {% comment %} ── Meaning band ─── the mark and what the name means on the left,
     the tagline on the right. Sits where the newsletter used to. {% endcomment %}
