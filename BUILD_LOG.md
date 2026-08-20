@@ -774,3 +774,32 @@ and `Rs. ` appears 0 times on /collections/all.
 
 Note: the About page timeline still says "Crossed 5,000 happy customers" — left
 alone, flagged to the merchant as inconsistent with 2M+.
+
+## Curved footer edge; meaning band reads as two blocks on phones
+
+**Footer wave.** The footer's top edge is now a curve. The SVG paints the page
+ground (`--color-bg`) *over* the footer's maroon rather than bulging the maroon
+upward — that way it never covers the section above, and one fill works on every
+page because both possible predecessors sit on the same `#FEF9F2` (checked: the
+homepage tag row, and the FAQ on every other template). 46px desktop / 26px phone,
+`preserveAspectRatio="none"` so it stretches to any width.
+
+**Meaning band.** Dissolving only `__left` into the mobile grid left the right
+column as one tall cell, so the tagline drifted down level with the pronunciation
+and read as a third item floating in the middle. Both wrappers now use
+`display: contents`, giving a clean row-for-row split; the 44px decorative rule
+after "Noun" is hidden on phones since that row now also carries the tagline.
+
+Verified at 375px against the live stylesheet:
+
+| check | result |
+|---|---|
+| grid columns | 95px + 218px |
+| row 1 — वामास / logo | same row (top 5779), no overlap (95 → 246) |
+| row 2 — (vama-s) Noun / tagline | same row (top 5845), no overlap (119 → 189) |
+| row 2 below row 1 | yes |
+| definition | full width 327px, below both |
+| logo and tagline right edges | both flush at 351 |
+| decorative rule hidden on phone | yes |
+| wave | 26px tall, fill rgb(254,249,242) |
+| page overflow | none |
