@@ -331,16 +331,22 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-section__header--center { flex-direction: column; align-items: center; text-align: center; }
 
 /* "Made with Love" line above the categories heading */
+/* Was set in Rubik Dirt - a heavy grunge display face that read as a blunt
+   block above the section heading. Playfair Display italic at 400 is already
+   loaded for the theme's headings, so this is quieter, on-brand and costs no
+   extra font request. */
 .vamas-made-love {
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  font-family: 'Rubik Dirt', var(--font-heading), serif;
-  font-size: 26px; line-height: 1.25; color: var(--color-maroon);
-  letter-spacing: 0.5px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--font-heading), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px; line-height: 1.3; color: var(--color-maroon);
+  letter-spacing: 0.2px;
   margin-bottom: 8px;
 }
 .vamas-made-love__heart { width: 18px; height: 18px; color: var(--color-maroon); flex-shrink: 0; }
 @media (max-width: 768px) {
-  .vamas-made-love { font-size: 20px; gap: 9px; margin-bottom: 6px; }
+  .vamas-made-love { font-size: 17px; gap: 8px; margin-bottom: 6px; }
   .vamas-made-love__heart { width: 14px; height: 14px; }
 }
 .vamas-section__title { font-size: 30px; font-weight: 800; color: var(--color-maroon); line-height: 1.2; }
@@ -817,7 +823,11 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   height: 100%;
 }
 
-.vamas-brand__image img { width: 100%; height: 100%; object-fit: cover; object-position: bottom 5%; display: block; }
+/* Anchored to the top, not the bottom. `bottom 5%` was tuned for the old stock
+   portrait; on the Vamas full-look shoot it cropped the model's face away -
+   the short 220px band on phones shows only the first 44% of the scaled image,
+   and her face sits in the first 17%. */
+.vamas-brand__image img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
 
 /* ── Tags ─────────────────────────────── */
 .vamas-tags {
