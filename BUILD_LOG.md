@@ -583,3 +583,23 @@ numeric size — selecting any size shows at most 50 products until that product
 data is corrected. Tags are also product-level, so this filters "offers this size",
 not "this size is in stock"; enabling Size in Search & Discovery would upgrade it
 to variant-level with no theme change (tier 1 is already written).
+
+## Meaning band: Devanagari headword left, logo right
+
+Swapped what each column carries. The left column, which opened with the logo
+image, now opens with the name in Devanagari (`वामस`, editable via a new
+`meaning_word_hi` setting). The right column, which showed the word "VAMAS" set
+in the heading font, now carries the logo above the BE YOU. BE BEAUTIFUL tagline.
+
+`.vamas-meaning__mark` keeps its own metrics (font-size, letter-spacing,
+margin-bottom) so the tagline underneath sits exactly where it did; only an
+`img` rule was added inside it. New `.vamas-meaning__word-hi` is sized off the
+Latin mark opposite it (46px desktop / 34px phone) rather than off the logo it
+replaced, so the two columns read as a matched pair.
+
+**Verified from server output** (curl with the storefront password cookie):
+the served homepage has `<div class="vamas-meaning__word-hi" lang="hi">वामस</div>`
+on the left and the logo `<img>` inside `__mark` on the right, with zero
+remaining `vamas-meaning__logo`; the served CSS carries both new rules and their
+768px overrides. The in-app browser kept showing the old markup throughout —
+that pane caches the page, so trust curl or the theme checksum, not it.
