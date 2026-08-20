@@ -33,7 +33,12 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 /* Switching (non-marquee) announcement messages */
 .vamas-announce--switch { position: relative; overflow: hidden; }
 .vamas-announce--switch .vamas-announce__msg {
-  display: block;
+  /* Flex + nowrap keeps the line intact: as a block, the closing heart broke
+     onto a second row on narrow phones. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
   opacity: 0;
   visibility: hidden;
   transform: translateY(6px);
@@ -47,14 +52,19 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-announce--switch .vamas-announce__msg:not(.is-active) {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 /* Hearts bracketing each announcement line. The bar sits on gold, so the
    hearts take the maroon brand colour rather than a generic red. SVG (not the
    ❤ glyph) so the colour actually applies on phones. */
 .vamas-announce__heart { width: 11px; height: 11px; color: var(--color-maroon); margin: 0 3px; vertical-align: -1px; flex-shrink: 0; }
+/* Phones: the longest message ("SELLING FAST - 1 BLOUSE / EVERY 40 SECS" with a
+   heart each side) needs ~400px at the desktop metrics but has ~343px on a
+   375px screen. Tightening the tracking and type, and trimming the side
+   padding, brings it to roughly 300px so it holds one line. */
+@media (max-width: 480px) {
+  .vamas-announce { padding: 9px 8px; font-size: 9.5px; letter-spacing: 1px; }
+  .vamas-announce__heart { width: 9px; height: 9px; margin: 0 2px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .vamas-announce--switch .vamas-announce__msg { transition: none; }
 }
