@@ -847,8 +847,12 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   background: var(--color-bg);
   border-top: 1px solid rgba(235, 211, 173, 0.35);
   border-bottom: 1px solid rgba(235, 211, 173, 0.35);
-  scrollbar-width: thin;
+  /* No visible bar - the row is swipeable and the chips already signal that it
+     continues. `thin` here was the grey bar showing under the strip. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.vamas-tags::-webkit-scrollbar { display: none; }
 
 .vamas-tag {
   background: rgba(235, 211, 173, 0.15);
