@@ -603,3 +603,18 @@ on the left and the logo `<img>` inside `__mark` on the right, with zero
 remaining `vamas-meaning__logo`; the served CSS carries both new rules and their
 768px overrides. The in-app browser kept showing the old markup throughout —
 that pane caches the page, so trust curl or the theme checksum, not it.
+
+## Announcement bar wrapped to two lines on phones
+
+The active switch message was `display: block`, so at 375px the closing heart
+fell to a second row. It is now a `nowrap` flex row, and under 480px the type
+tightens (11px/2px tracking → 9.5px/1px), the hearts shrink 11px → 9px and the
+side padding drops 16px → 8px.
+
+**Verified at 375px** (in-app browser, mobile preset): all three messages report
+one text line, both hearts share the same `top` (18/18), no horizontal overflow,
+and the bar is 33px tall instead of 38px. The longest message now measures 257px
+against 359px available — 102px of headroom.
+
+Caveat: `nowrap` means a message longer than that headroom will clip rather than
+wrap. Marquee mode is the right choice for anything that long.
