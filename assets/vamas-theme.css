@@ -1748,17 +1748,27 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
     column-gap: 14px;
     row-gap: 0;
   }
-  .vamas-meaning__left { display: contents; }
+  /* Both wrappers dissolve into the grid so the two sides stay two distinct
+     blocks: name + pronunciation on the left, logo + tagline on the right, each
+     in its own column. With only __left dissolved, the right column was one tall
+     cell whose tagline drifted down level with the pronunciation and read as a
+     third thing floating in the middle. */
+  .vamas-meaning__left,
+  .vamas-meaning__right { display: contents; }
   .vamas-meaning__word-hi { grid-column: 1; grid-row: 1; }
-  .vamas-meaning__right { grid-column: 2; grid-row: 1; justify-self: end; align-self: start; }
-  .vamas-meaning__pos { grid-column: 1 / -1; }
-  .vamas-meaning__def { grid-column: 1 / -1; }
+  .vamas-meaning__mark    { grid-column: 2; grid-row: 1; justify-self: end; }
+  .vamas-meaning__pos     { grid-column: 1; grid-row: 2; }
+  .vamas-meaning__tag     { grid-column: 2; grid-row: 2; justify-self: end; }
+  .vamas-meaning__def     { grid-column: 1 / -1; }
+  /* The 44px rule after "Noun" is decoration the row cannot spare once the
+     tagline shares it. */
+  .vamas-meaning__rule { display: none; }
   .vamas-meaning__logo img { height: 54px; }
   .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 12px; padding-bottom: 9px; letter-spacing: .5px; }
   .vamas-meaning__mark img { height: 54px; }
   .vamas-meaning__pos { font-size: 11px; margin-bottom: 16px; }
   .vamas-meaning__def { font-size: 12.5px; line-height: 1.8; }
-  .vamas-meaning__right { text-align: right; }
+
   .vamas-meaning__mark { font-size: 22px; letter-spacing: 4px; }
   /* Garamond is narrower than the Poppins that used to sit here, so 15px still
      keeps BE YOU. BE BEAUTIFUL on one nowrap line at 375px. */
