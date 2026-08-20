@@ -57,7 +57,7 @@
       <div class="vamas-meaning__left">
         {% comment %} The dictionary entry heads with the name in Devanagari; the
           logo itself now anchors the right-hand column. {% endcomment %}
-        <div class="vamas-meaning__word-hi" lang="hi">{{ section.settings.meaning_word_hi | default: 'वामस' }}</div>
+        <div class="vamas-meaning__word-hi" lang="hi">{{ section.settings.meaning_word_hi | default: 'वामास' }}</div>
         <div class="vamas-meaning__pos">
           {% if section.settings.meaning_pronounce != blank %}<span class="vamas-meaning__pron">({{ section.settings.meaning_pronounce }})</span>{% endif %}
           <span>{{ section.settings.meaning_pos | default: 'Noun' }}</span>
@@ -319,12 +319,12 @@
     { "type": "header", "content": "Meaning Band" },
     { "type": "checkbox", "id": "show_meaning", "label": "Show Meaning Band", "default": true },
     { "type": "text", "id": "meaning_word", "label": "Word", "default": "VAMAS" },
-    { "type": "text", "id": "meaning_word_hi", "label": "Word in Hindi (left of the meaning band)", "default": "वामस" },
+    { "type": "text", "id": "meaning_word_hi", "label": "Word in Hindi (left of the meaning band)", "default": "वामास" },
     { "type": "text", "id": "meaning_pronounce", "label": "Pronunciation", "default": "vaa \u00b7 mas" },
     { "type": "text", "id": "meaning_pos", "label": "Part of speech", "default": "Noun" },
     { "type": "textarea", "id": "meaning_def", "label": "Definition", "default": "VAMAS is a Sanskrit word which means a beautiful woman, or Goddess Parvati." },
     { "type": "textarea", "id": "meaning_line2", "label": "Second line (optional)" },
-    { "type": "textarea", "id": "meaning_tagline", "label": "Tagline (right side)", "default": "BE YOU.\nBE BEAUTIFUL" },
+    { "type": "textarea", "id": "meaning_tagline", "label": "Tagline (right side)", "default": "BE YOU. BE BEAUTIFUL" },
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "text", "id": "logo_asset", "label": "Or theme asset filename", "info": "e.g. vamas-logo.avif", "default": "vamas-logo.avif" },
     { "type": "text", "id": "brand_name", "label": "Brand Name", "default": "VAMAS" },
