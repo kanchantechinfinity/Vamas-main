@@ -725,3 +725,30 @@ with the band at 351px. No page overflow.
 Open: the reference art is sentence case ("Be you. Be Beautiful."); the site copy
 is still uppercase. Only the typeface was changed — the wording is the merchant's
 call.
+
+## Announcement bar uppercased in CSS; logo moved beside the headword on phones
+
+**Announcement bar.** "100% Vegan Silk" was typed in mixed case while the rest of
+the bar is tracked caps. `text-transform: uppercase` on `.vamas-announce` keeps
+every message consistent whatever case is typed into the setting, rather than
+fixing the one string in settings_data.json.
+
+**Meaning band on phones.** The column stack sent the logo and tagline to the
+bottom of the band, away from the word they answer. The mobile band is now a
+two-column grid — headword left, logo and tagline right — with the pronunciation
+and definition spanning both columns beneath. `display: contents` on
+`.vamas-meaning__left` promotes its three children into that grid so the headword
+can share a row with `__right` while its siblings still span full width.
+
+Verified at 375px against the live stylesheet:
+
+| check | result |
+|---|---|
+| inner display / left display | grid / contents |
+| grid columns | 93.5px + 219.5px |
+| headword and logo column on one row | yes (both top 5837) |
+| columns do not overlap | word ends 118, right starts 189 |
+| logo flush with the band's right edge | both at 351 |
+| pronunciation + definition below both, full width | yes, 327px each |
+| tagline still one line | yes |
+| page overflow | none |
