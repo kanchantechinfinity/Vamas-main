@@ -842,8 +842,8 @@ function wirePriceSlider(minId, maxId, fillId, minLabelId, maxLabelId){
     var pctHi = ((hi - min) / (max - min)) * 100;
     fill.style.left = pctLo + '%';
     fill.style.width = (pctHi - pctLo) + '%';
-    if (minLabel) minLabel.textContent = 'Rs. ' + parseFloat(minInput.value).toFixed(2);
-    if (maxLabel) maxLabel.textContent = 'Rs. ' + parseFloat(maxInput.value).toFixed(2);
+    if (minLabel) minLabel.textContent = '\u20B9' + parseFloat(minInput.value).toFixed(2);
+    if (maxLabel) maxLabel.textContent = '\u20B9' + parseFloat(maxInput.value).toFixed(2);
   }
   minInput.addEventListener('input', update);
   maxInput.addEventListener('input', update);
