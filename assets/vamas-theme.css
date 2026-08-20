@@ -1063,14 +1063,42 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-brand__stats { gap: 24px; }
   .vamas-newsletter { padding: 48px 24px; }
   .vamas-newsletter__form { flex-direction: column; }
-  /* One claim per line on phones - icon beside the label, left-aligned, so the
-     icons form a single column instead of seven stacked pairs. */
-  .vamas-promise { padding: 26px 20px; }
-  .vamas-promise__list { flex-direction: column; align-items: flex-start; gap: 15px; max-width: 300px; }
-  .vamas-promise__item { flex: 0 0 auto; width: 100%; flex-direction: row; text-align: left; padding: 0; gap: 13px; }
+  /* Two-up cards on phones. A single stacked column read as a bare list; a
+     grid gives the seven claims a shape, and each cell is a bordered tile so
+     the icon and its label stay visibly paired. */
+  .vamas-promise { padding: 26px 16px; }
+  .vamas-promise__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    max-width: none;
+  }
+  .vamas-promise__item {
+    flex: initial;
+    width: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: 9px;
+    padding: 14px 8px;
+    border: 1px solid rgba(146,68,68,.12);
+    border-radius: 10px;
+    background: #fff;
+  }
+  /* Seven items leave the last one alone on its row - let it take the full
+     width instead of sitting lopsided next to a gap. Scoped to an odd count so
+     an even list is untouched. */
+  .vamas-promise__item:nth-child(odd):last-child { grid-column: 1 / -1; }
   .vamas-promise__icon { width: 34px; height: 34px; }
   .vamas-promise__icon svg { width: 16px; height: 16px; }
-  .vamas-promise__label { font-size: 10.5px; letter-spacing: .8px; max-width: none; white-space: normal; }
+  .vamas-promise__label {
+    font-size: 9.5px;
+    letter-spacing: .6px;
+    line-height: 1.55;
+    max-width: none;
+    white-space: normal;
+  }
   .vamas-thanks { padding: 22px 20px; }
   /* Sized so the 42-character sentence clears a 335px phone line without
      wrapping into a third row. */
