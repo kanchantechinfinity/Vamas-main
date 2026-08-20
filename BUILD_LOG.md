@@ -666,3 +666,25 @@ Note: the in-app browser served stale HTML for several of these checks (it showe
 वामस and the two-line tagline after deploy). Server output via curl is the
 authority; where the DOM was stale, the deployed strings were injected before
 measuring so the layout numbers reflect what is actually live.
+
+## "Made with Love" lightened; brand image no longer crops the face
+
+**Made with Love** was set in Rubik Dirt, a heavy grunge display face, which read
+as a blunt block above the section heading. It now uses the theme's own Playfair
+Display in italic at weight 400 (22px desktop / 17px phone). Nothing else used
+Rubik Dirt, so its Google Fonts request was dropped from layout/theme.liquid.
+
+**Face crop.** `.vamas-brand__image img` carried `object-position: bottom 5%`,
+tuned for the old stock portrait. On the Vamas full-look shoot that removed the
+model's head entirely: at 375x220 the image scales to 375x500, so only a 220px
+band shows, and `bottom 5%` put that band at source y 766-1400 of 1440 (53-97%)
+while her face sits in the top ~18%. Anchored `center top` now.
+
+Verified: served CSS has `object-position:center top`, `.vamas-made-love` computes
+to Playfair Display italic 400, and `Rubik+Dirt` appears 0 times in the page.
+Cropping full-look.jpg to the exact visible band (top 634px of 1440 on phones,
+top 927px on desktop) shows her face and blouse fully in frame.
+
+Note: the in-app browser both served stale HTML and returned blank frames from
+`zoom` after DOM mutation, so the crop was verified by computing the band from the
+real image dimensions and cropping the file, not by screenshot.
