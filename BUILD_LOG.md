@@ -752,3 +752,25 @@ Verified at 375px against the live stylesheet:
 | pronunciation + definition below both, full width | yes, 327px each |
 | tagline still one line | yes |
 | page overflow | none |
+
+## Rupee sign, bright rating star, bolder card title, reviews subtitle
+
+- **₹ instead of Rs.** The store's money format is `Rs. {{amount}}`. All 41 money
+  filter call sites across 10 files, plus the `shop.money_format` string handed to
+  the cart/PDP JS, now map `"Rs. "` to `₹`, so prices read `₹600.00`. Two
+  hardcoded `'Rs. '` strings in the price-slider JS were also rewriting the old
+  prefix into the labels as the handles moved — fixed.
+  **This is storefront-only.** Checkout, order emails and admin still show "Rs."
+  because those come from the shop setting (Settings → General → Currency
+  formatting), which has no Admin API mutation.
+- **Rating star** `#FFC400` instead of `var(--color-gold-dark)` — the muted brand
+  gold did not read as a star at 11px over a photo.
+- **Card title** 13px/400 → 12px/700.
+- **Reviews subtitle** "Over 10,000 happy customers" → "Over 2M+ Happy customers".
+
+Verified from served output: prices render `₹556.15` / `₹440.65` / `₹654.15`,
+`rating-badge svg{color:#ffc400}`, `prod-card__name{font-size:12px;font-weight:700…}`,
+and `Rs. ` appears 0 times on /collections/all.
+
+Note: the About page timeline still says "Crossed 5,000 happy customers" — left
+alone, flagged to the merchant as inconsistent with 2M+.
