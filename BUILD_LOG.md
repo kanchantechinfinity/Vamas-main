@@ -688,3 +688,18 @@ top 927px on desktop) shows her face and blouse fully in frame.
 Note: the in-app browser both served stale HTML and returned blank frames from
 `zoom` after DOM mutation, so the crop was verified by computing the band from the
 real image dimensions and cropping the file, not by screenshot.
+
+## Meaning band: gold matched to the logo, logo right-aligned on phones, (vama-s)
+
+- **Colour.** The Devanagari word used the theme cream `#EBD3AD` while the logo's
+  own ink is `#D0B068` — sampled from vamas-logo.avif, where that shade accounts
+  for 1550 of its non-white pixels. The word now uses `#D0B068` so the two match.
+  (The logo is a raster asset, so recolouring it was not the reliable direction.)
+- **Layout.** On phones the band stacks and the logo column was left-aligned; it
+  now takes `align-self: flex-end; text-align: right`, so the logo stays opposite
+  the headword as it does on desktop.
+- **Pronunciation.** `(vaa · mas)` → `(vama-s)`.
+
+Verified from server output: the page renders `(vama-s)`, the served CSS has
+`color:#d0b068` on `.vamas-meaning__word-hi`, and the 768px block carries
+`.vamas-meaning__right{align-self:flex-end;text-align:right}`.
