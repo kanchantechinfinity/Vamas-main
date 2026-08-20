@@ -1588,6 +1588,15 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
    wordmark rather than setting the name in type. */
 .vamas-meaning__logo { margin-bottom: 14px; }
 .vamas-meaning__logo img { height: 78px; width: auto; display: block; }
+/* Devanagari headword. Sized off the Latin mark opposite it rather than the
+   logo it replaced, so the two columns read as a matched pair. */
+.vamas-meaning__word-hi {
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-gold, #EBD3AD);
+  margin-bottom: 12px;
+}
 .vamas-meaning__pos {
   display: flex;
   align-items: center;
@@ -1610,6 +1619,8 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
 .vamas-meaning__def--second { color: rgba(255,255,255,.72); }
 
 .vamas-meaning__right { text-align: right; flex: 0 0 auto; }
+/* Holds the logo now, not the word - keep the block metrics so the tagline
+   underneath sits exactly where it did. */
 .vamas-meaning__mark {
   font-family: var(--font-heading);
   font-size: 30px;
@@ -1618,6 +1629,12 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   color: #fff;
   line-height: 1;
   margin-bottom: 12px;
+}
+.vamas-meaning__mark img {
+  height: 78px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
 }
 .vamas-meaning__tag {
   margin: 0;
@@ -1633,6 +1650,8 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   .vamas-meaning { padding: 4px 0 32px; margin-bottom: 28px; }
   .vamas-meaning__inner { flex-direction: column; align-items: flex-start; gap: 26px; }
   .vamas-meaning__logo img { height: 54px; }
+  .vamas-meaning__word-hi { font-size: 34px; margin-bottom: 10px; }
+  .vamas-meaning__mark img { height: 54px; }
   .vamas-meaning__pos { font-size: 11px; margin-bottom: 16px; }
   .vamas-meaning__def { font-size: 12.5px; line-height: 1.8; }
   .vamas-meaning__right { text-align: left; }

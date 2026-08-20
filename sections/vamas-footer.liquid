@@ -55,13 +55,9 @@
   <section class="vamas-meaning">
     <div class="vamas-meaning__inner">
       <div class="vamas-meaning__left">
-        <div class="vamas-meaning__logo">
-          {% if section.settings.logo != blank %}
-            <img src="{{ section.settings.logo | img_url: '360x' }}" alt="{{ section.settings.brand_name | default: 'Vamas' }}">
-          {% else %}
-            <img src="{{ section.settings.logo_asset | default: 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }}">
-          {% endif %}
-        </div>
+        {% comment %} The dictionary entry heads with the name in Devanagari; the
+          logo itself now anchors the right-hand column. {% endcomment %}
+        <div class="vamas-meaning__word-hi" lang="hi">{{ section.settings.meaning_word_hi | default: 'वामस' }}</div>
         <div class="vamas-meaning__pos">
           {% if section.settings.meaning_pronounce != blank %}<span class="vamas-meaning__pron">({{ section.settings.meaning_pronounce }})</span>{% endif %}
           <span>{{ section.settings.meaning_pos | default: 'Noun' }}</span>
@@ -75,7 +71,13 @@
         {% endif %}
       </div>
       <div class="vamas-meaning__right">
-        <div class="vamas-meaning__mark">{{ section.settings.meaning_word | default: 'VAMAS' }}</div>
+        <div class="vamas-meaning__mark">
+          {% if section.settings.logo != blank %}
+            <img src="{{ section.settings.logo | img_url: '360x' }}" alt="{{ section.settings.brand_name | default: 'Vamas' }}">
+          {% else %}
+            <img src="{{ section.settings.logo_asset | default: 'vamas-logo.avif' | asset_url }}" alt="{{ section.settings.brand_name | default: 'Vamas' }}">
+          {% endif %}
+        </div>
         {% if section.settings.meaning_tagline != blank %}
           <p class="vamas-meaning__tag">{{ section.settings.meaning_tagline | newline_to_br }}</p>
         {% endif %}
@@ -317,6 +319,7 @@
     { "type": "header", "content": "Meaning Band" },
     { "type": "checkbox", "id": "show_meaning", "label": "Show Meaning Band", "default": true },
     { "type": "text", "id": "meaning_word", "label": "Word", "default": "VAMAS" },
+    { "type": "text", "id": "meaning_word_hi", "label": "Word in Hindi (left of the meaning band)", "default": "वामस" },
     { "type": "text", "id": "meaning_pronounce", "label": "Pronunciation", "default": "vaa \u00b7 mas" },
     { "type": "text", "id": "meaning_pos", "label": "Part of speech", "default": "Noun" },
     { "type": "textarea", "id": "meaning_def", "label": "Definition", "default": "VAMAS is a Sanskrit word which means a beautiful woman, or Goddess Parvati." },
