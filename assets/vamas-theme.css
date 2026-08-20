@@ -605,7 +605,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 }
 
 .vamas-prod-card__body { padding: 16px; display: flex; flex-direction: column; flex: 1; }
-.vamas-prod-card__name { font-size: 13px; font-weight: 400; color: #1a1a1a; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35; }
+.vamas-prod-card__name { font-size: 12px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35; }
 /* The product-type line ("Blouse") is gone from the card - it repeated on every
    card and said nothing the title did not. */
 
@@ -731,7 +731,9 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   border-radius: 20px;
   text-decoration: none;
 }
-.vamas-prod-card__rating-badge svg { color: var(--color-gold-dark); }
+/* Bright yellow, not the muted brand gold - a rating star has to read as a
+   star at 11px on a photo. */
+.vamas-prod-card__rating-badge svg { color: #FFC400; }
 
 /* Size pills replace Add to Cart on the card, site-wide - tapping a size lands on the PDP with that variant */
 /* All sizes on ONE line. They used to wrap to two or three rows, which made

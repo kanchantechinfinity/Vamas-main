@@ -44,7 +44,7 @@
   var empty = document.getElementById('vamas-cart-drawer-empty');
   var footer = document.getElementById('vamas-cart-drawer-footer');
   var subtotalEl = document.getElementById('vamas-cart-drawer-subtotal');
-  var moneyFormat = {{ shop.money_format | json }};
+  var moneyFormat = {{ shop.money_format | replace: 'Rs. ', '₹' | json }};
 
   function esc(s){ return (s == null ? '' : String(s)).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 

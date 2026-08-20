@@ -293,11 +293,11 @@
 {% comment %} Minimal per-variant data for instant color-swap on the card (image/price/ATC) {% endcomment %}
 {% capture variants_json %}[
   {% for v in product.variants %}
-    {% assign v_price_html = v.price | money %}
+    {% assign v_price_html = v.price | money | replace: 'Rs. ', '₹' %}
     {% assign v_compare_html = '' %}
     {% assign v_discount = 0 %}
     {% if v.compare_at_price > v.price %}
-      {% assign v_compare_html = v.compare_at_price | money %}
+      {% assign v_compare_html = v.compare_at_price | money | replace: 'Rs. ', '₹' %}
       {% assign v_discount = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price | round %}
     {% endif %}
     {% assign v_image_url = '' %}
@@ -379,8 +379,8 @@
             data-handle="{{ product.handle }}"
             data-title="{{ product.title | escape }}"
             data-type="{{ product.type | escape | default: 'Blouse' }}"
-            data-wish-price="{{ first_variant.price | money }}"
-            {% if on_sale %}data-wish-compare="{{ first_variant.compare_at_price | money }}" data-wish-discount="{{ discount_pct }}"{% endif %}
+            data-wish-price="{{ first_variant.price | money | replace: 'Rs. ', '₹' }}"
+            {% if on_sale %}data-wish-compare="{{ first_variant.compare_at_price | money | replace: 'Rs. ', '₹' }}" data-wish-discount="{{ discount_pct }}"{% endif %}
             data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
             data-url="{{ product.url }}"
             data-variant="{{ first_variant.id }}">
@@ -469,8 +469,8 @@
     </div>
 
     <div class="vamas-prod-card__price">
-      <span class="price" data-price>{{ first_variant.price | money }}</span>
-      <span class="original" data-compare{% unless on_sale %} style="display:none;"{% endunless %}>{{ first_variant.compare_at_price | money }}</span>
+      <span class="price" data-price>{{ first_variant.price | money | replace: 'Rs. ', '₹' }}</span>
+      <span class="original" data-compare{% unless on_sale %} style="display:none;"{% endunless %}>{{ first_variant.compare_at_price | money | replace: 'Rs. ', '₹' }}</span>
       <span class="discount" data-discount{% unless on_sale %} style="display:none;"{% endunless %}>{{ discount_pct }}% off</span>
     </div>
 

@@ -20,9 +20,9 @@
   <div class="va-shop__body">
     <a href="{{ product.url }}" class="va-shop__title">{{ product.title }}</a>
     <div class="va-shop__price-row">
-      <span class="va-shop__price">{{ pv.price | money }}</span>
+      <span class="va-shop__price">{{ pv.price | money | replace: 'Rs. ', '₹' }}</span>
       {% if pv.compare_at_price > pv.price %}
-        <span class="va-shop__compare">{{ pv.compare_at_price | money }}</span>
+        <span class="va-shop__compare">{{ pv.compare_at_price | money | replace: 'Rs. ', '₹' }}</span>
         <span class="va-shop__off">{{ pv.compare_at_price | minus: pv.price | times: 100.0 | divided_by: pv.compare_at_price | round }}% off</span>
       {% endif %}
     </div>

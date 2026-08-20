@@ -28,7 +28,7 @@
     {% if free_threshold_cents > 0 %}
     <div class="free-del-box" id="free-del-box" {% if cart.total_price >= free_threshold_cents %}style="display:none;"{% endif %}>
       <div class="fdel-top">
-        <div class="fdel-label">Add <strong id="fdel-amount">{{ free_threshold_cents | minus: cart.total_price | money }}</strong> more for free delivery!</div>
+        <div class="fdel-label">Add <strong id="fdel-amount">{{ free_threshold_cents | minus: cart.total_price | money | replace: 'Rs. ', '₹' }}</strong> more for free delivery!</div>
       </div>
       <div class="fdel-track"><div class="fdel-fill" id="fdel-fill" style="width:{{ cart.total_price | times: 100.0 | divided_by: free_threshold_cents | at_most: 100 }}%"></div></div>
     </div>
@@ -66,15 +66,15 @@
               </div>
             </div>
           </div>
-          <div class="ci-price">{{ item.original_price | money }}
-            {% if item.original_price > item.final_price %}<div class="ci-orig">{{ item.original_price | money }}</div><div class="ci-save">{{ item.original_price | minus: item.final_price | times: 100.0 | divided_by: item.original_price | round }}% off</div>{% endif %}
+          <div class="ci-price">{{ item.original_price | money | replace: 'Rs. ', '₹' }}
+            {% if item.original_price > item.final_price %}<div class="ci-orig">{{ item.original_price | money | replace: 'Rs. ', '₹' }}</div><div class="ci-save">{{ item.original_price | minus: item.final_price | times: 100.0 | divided_by: item.original_price | round }}% off</div>{% endif %}
           </div>
           <div class="ci-qty">
             <button class="ci-qty-btn" data-line="{{ forloop.index }}" data-delta="-1">&#8722;</button>
             <span class="ci-qty-num" id="qtynum-{{ forloop.index }}">{{ item.quantity }}</span>
             <button class="ci-qty-btn" data-line="{{ forloop.index }}" data-delta="1">+</button>
           </div>
-          <div class="ci-subtotal" id="sub-{{ forloop.index }}">{{ item.final_line_price | money }}</div>
+          <div class="ci-subtotal" id="sub-{{ forloop.index }}">{{ item.final_line_price | money | replace: 'Rs. ', '₹' }}</div>
           <div class="ci-remove"><button class="ci-remove-btn" data-remove-line="{{ forloop.index }}" title="Remove"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
         </div>
         {% endfor %}
@@ -108,16 +108,16 @@
         })();
       </script>
 
-    <div class="os-row"><span>MRP Total (<span id="os-item-count">{{ cart.item_count }} items</span>)</span><span id="os-mrp">{{ cart.original_total_price | money }}</span></div>
+    <div class="os-row"><span>MRP Total (<span id="os-item-count">{{ cart.item_count }} items</span>)</span><span id="os-mrp">{{ cart.original_total_price | money | replace: 'Rs. ', '₹' }}</span></div>
     {% for discount in cart.cart_level_discount_applications %}
-    <div class="os-row green"><span>Discount ({{ discount.title }})</span><span>− {{ discount.total_allocated_amount | money }}</span></div>
+    <div class="os-row green"><span>Discount ({{ discount.title }})</span><span>− {{ discount.total_allocated_amount | money | replace: 'Rs. ', '₹' }}</span></div>
     {% endfor %}
     {% if cart.total_discount > 0 and cart.cart_level_discount_applications.size == 0 %}
-    <div class="os-row green"><span>Discount</span><span id="os-discount">− {{ cart.total_discount | money }}</span></div>
+    <div class="os-row green"><span>Discount</span><span id="os-discount">− {{ cart.total_discount | money | replace: 'Rs. ', '₹' }}</span></div>
     {% endif %}
     <div class="os-row"><span>Delivery Charges</span><span id="os-delivery">{% if free_threshold_cents > 0 and cart.total_price >= free_threshold_cents %}FREE{% else %}Calculated at checkout{% endif %}</span></div>
     <div class="os-divider"></div>
-    <div class="os-total"><span>TOTAL PAYABLE</span><span id="os-total">{{ cart.total_price | money }}</span></div>
+    <div class="os-total"><span>TOTAL PAYABLE</span><span id="os-total">{{ cart.total_price | money | replace: 'Rs. ', '₹' }}</span></div>
 
     {% form 'cart', cart %}
       <button class="btn-checkout" type="submit" name="checkout">
@@ -198,7 +198,7 @@
     }
     return match ? formatString.replace(placeholderRegex, value) : formatString + value;
   }
-  function fmtMoney(cents){ return vamasFormatMoney(cents, {{ shop.money_format | json }}); }
+  function fmtMoney(cents){ return vamasFormatMoney(cents, {{ shop.money_format | replace: 'Rs. ', '₹' | json }}); }
 
   document.querySelectorAll('[data-line][data-delta]').forEach(function(btn){
     btn.addEventListener('click', function(){

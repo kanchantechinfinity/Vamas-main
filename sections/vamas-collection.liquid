@@ -347,8 +347,8 @@
               <div class="acc-body open">
                 <div class="price-range">
                   <div class="price-labels">
-                    <span id="priceMinT">{{ filter.min_value.value | default: filter.range_min | money }}</span>
-                    <span id="priceMaxT">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+                    <span id="priceMinT">{{ filter.min_value.value | default: filter.range_min | money | replace: 'Rs. ', '₹' }}</span>
+                    <span id="priceMaxT">{{ filter.max_value.value | default: filter.range_max | money | replace: 'Rs. ', '₹' }}</span>
                   </div>
                   <div class="price-slider" id="priceSliderT">
                     <div class="price-slider__track"></div>
@@ -503,8 +503,8 @@
         <div class="acc-body open">
           <div class="price-range">
             <div class="price-labels">
-              <span id="priceMin">{{ filter.min_value.value | default: filter.range_min | money }}</span>
-              <span id="priceMax">{{ filter.max_value.value | default: filter.range_max | money }}</span>
+              <span id="priceMin">{{ filter.min_value.value | default: filter.range_min | money | replace: 'Rs. ', '₹' }}</span>
+              <span id="priceMax">{{ filter.max_value.value | default: filter.range_max | money | replace: 'Rs. ', '₹' }}</span>
             </div>
             <div class="price-slider" id="priceSlider">
               <div class="price-slider__track"></div>

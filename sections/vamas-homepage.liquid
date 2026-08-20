@@ -670,7 +670,7 @@
                   </span>
                   <span class="vamas-reel-product__body">
                     <span class="vamas-reel-product__name">{{ rp.title }}</span>
-                    <span class="vamas-reel-product__price">{{ rp.price | money }}</span>
+                    <span class="vamas-reel-product__price">{{ rp.price | money | replace: 'Rs. ', '₹' }}</span>
                   </span>
                   <span class="vamas-reel-product__cta">View</span>
                 </a>

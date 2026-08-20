@@ -44,9 +44,9 @@
     </a>
 
     <div class="vamas-prod-card__price">
-      <span class="price">{{ first_variant.price | money }}</span>
+      <span class="price">{{ first_variant.price | money | replace: 'Rs. ', '₹' }}</span>
       {% if on_sale %}
-        <span class="original">{{ first_variant.compare_at_price | money }}</span>
+        <span class="original">{{ first_variant.compare_at_price | money | replace: 'Rs. ', '₹' }}</span>
         <span class="discount">{{ discount_pct }}% off</span>
       {% endif %}
     </div>

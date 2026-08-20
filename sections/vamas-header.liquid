@@ -136,7 +136,7 @@
                         {% endif %}
                       </span>
                       <span class="vamas-nav__feature-title">{{ feature_product.title }}</span>
-                      <span class="vamas-nav__feature-price">{{ feature_product.price | money }}</span>
+                      <span class="vamas-nav__feature-price">{{ feature_product.price | money | replace: 'Rs. ', '₹' }}</span>
                     </a>
                   </div>
                 {% elsif group_looks %}
@@ -176,7 +176,7 @@
                             {% endif %}
                           </span>
                           <span class="vamas-nav__feature-title">{{ mega_bestseller_product.title }}</span>
-                          <span class="vamas-nav__feature-price">{{ mega_bestseller_product.price | money }}</span>
+                          <span class="vamas-nav__feature-price">{{ mega_bestseller_product.price | money | replace: 'Rs. ', '₹' }}</span>
                         </a>
                       </div>
                     {% endif %}

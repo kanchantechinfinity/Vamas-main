@@ -574,7 +574,7 @@
               {% endif %}
               <div class="va-prod-info">
                 <div class="va-prod-title">{{ p.title }}</div>
-                <div class="va-prod-price">{{ p.price | money }}</div>
+                <div class="va-prod-price">{{ p.price | money | replace: 'Rs. ', '₹' }}</div>
               </div>
             </a>
           {% endfor %}
