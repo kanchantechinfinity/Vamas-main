@@ -633,3 +633,36 @@ fits the 500x640 slot.
 **Verified from server output:** the served homepage renders
 `assets/full-look.jpg` inside `.vamas-brand__image`, and the stock filename no
 longer appears anywhere on the page (0 occurrences).
+
+## Promise claims as two-up tiles; meaning band spelling, script and tagline
+
+**Promise strip (phones).** The seven claims were a plain stacked column. They now
+sit in a two-column grid of bordered tiles, and an odd last item spans the full
+width (`:nth-child(odd):last-child`) so it is not left beside a gap; the rule is
+scoped to odd counts so an even list is untouched.
+Verified at 375px: three rows of two 167px tiles plus SHIPPING AND DELIVERABLES
+at 343px full width, no page overflow.
+
+**Meaning band.**
+- Spelling: वामस was missing its long vowel - corrected to वामास.
+- Script: the word was set in Poppins, which has no Devanagari, so it fell back to
+  a flat system face - that is why it looked off-theme. It now uses Tiro Devanagari
+  Sanskrit (same calligraphic contrast as the theme's Playfair Display), italic,
+  over the same hairline gold rule already used beside "Noun". Added to the Google
+  Fonts link in layout/theme.liquid.
+- Tagline: BE YOU. BE BEAUTIFUL is one line (`nowrap`, default no longer carries a
+  newline).
+
+Verified: `document.fonts.check('italic 52px "Tiro Devanagari Sanskrit"')` is true
+and the computed family is Tiro - the webfont really loads, not a fallback.
+Desktop 52px / phone 38px, one line each; tagline one line at both sizes
+(123px needed against 327px available at 375px).
+
+Trap: a later `.vamas-meaning__tag { font-size: 12px }` in the same 768px block
+would have overridden a new size rule added above it - the existing rule had to be
+edited instead of adding another.
+
+Note: the in-app browser served stale HTML for several of these checks (it showed
+वामस and the two-line tagline after deploy). Server output via curl is the
+authority; where the DOM was stale, the deployed strings were injected before
+measuring so the layout numbers reflect what is actually live.
