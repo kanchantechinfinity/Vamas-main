@@ -837,3 +837,22 @@ Verified from served output:
 
 (The one `vamas-prod-card` string on the parent is inside the cart-drawer JS
 template, not rendered markup.)
+
+## Sub-category tab row removed; every category calls the same four sub-collections
+
+The `col-subcats` tab row is gone — the circle page is that list now, so the row
+was duplicating it. `subcat_parent` / `subcat_children` are still parsed because
+the category page itself is built from them.
+
+Every parent except THE PLAIN EDIT pointed at its own placeholder duplicate
+collections; they now all call four of the real Plain Edit sub-collections:
+SIGNATURE ROUND NECK SLEEVELESS, SILK ELBOW LENGTH, SIDE STRETCH PLAINS,
+COTTON PLAINS. THE PLAIN EDIT keeps its own seven.
+
+Verified from served output: tab row 0 occurrences on a child page; circles = 7 on
+the-plain-edit and 4 on summer-essentials / festive-glam / corsets /
+bridgerton-inspired with the expected labels; a child collection
+(silk-elbow-length) still renders its 11 product cards.
+
+Schema JSON is parsed as part of the check before every push, since a bad schema
+default once stalled the GitHub sync for ~40 minutes.
