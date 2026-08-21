@@ -140,6 +140,53 @@
   {% endif %}
 </section>
 
+{%- comment -%}
+  Parsed HERE, above the first use below: Liquid is top-down, so computing
+  is_category_page next to the tab row left it nil at the branch and BOTH the
+  circles and the tab row disappeared.
+{%- endcomment -%}
+{%- assign subcat_parent = '' -%}
+{%- assign subcat_children = '' -%}
+{%- if section.settings.subcat_map != blank -%}
+  {%- assign subcat_lines = section.settings.subcat_map | newline_to_br | split: '<br />' -%}
+  {%- for line in subcat_lines -%}
+    {%- assign parts = line | split: '|' -%}
+    {%- if parts.size >= 2 -%}
+      {%- assign line_parent = parts[0] | strip | downcase -%}
+      {%- assign line_children = parts[1] | split: ',' -%}
+      {%- comment -%} match the parent itself... {%- endcomment -%}
+      {%- if line_parent == collection.handle -%}
+        {%- assign subcat_parent = line_parent -%}
+        {%- assign subcat_children = line_children -%}
+      {%- endif -%}
+      {%- comment -%} ...or any of its children, so the row follows you down {%- endcomment -%}
+      {%- for c in line_children -%}
+        {%- assign c_handle = c | strip | downcase -%}
+        {%- if c_handle == collection.handle -%}
+          {%- assign subcat_parent = line_parent -%}
+          {%- assign subcat_children = line_children -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- comment -%}
+  A parent collection is a CATEGORY page, not a product grid: it lists its
+  sub-categories as circles and each of those opens the real collection. Only
+  treat it as one when at least one child collection actually exists, so a parent
+  whose children have not been created yet still shows its own products instead
+  of an empty page.
+{%- endcomment -%}
+{%- assign is_category_page = false -%}
+{%- if collection.handle == subcat_parent and subcat_children != '' -%}
+  {%- for c in subcat_children -%}
+    {%- assign c_handle = c | strip | downcase -%}
+    {%- if c_handle != '' and collections[c_handle] != blank and collections[c_handle].handle -%}
+      {%- assign is_category_page = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 {% if is_category_page %}
 {%- comment -%} CATEGORY PAGE - sub-category circles, no filters and no product
   grid. Each circle opens the child collection, which renders normally. {%- endcomment -%}
@@ -204,47 +251,6 @@
   Labels come from each collection's own title, so renaming a collection in admin
   renames its tab.
 {%- endcomment -%}
-{%- assign subcat_parent = '' -%}
-{%- assign subcat_children = '' -%}
-{%- if section.settings.subcat_map != blank -%}
-  {%- assign subcat_lines = section.settings.subcat_map | newline_to_br | split: '<br />' -%}
-  {%- for line in subcat_lines -%}
-    {%- assign parts = line | split: '|' -%}
-    {%- if parts.size >= 2 -%}
-      {%- assign line_parent = parts[0] | strip | downcase -%}
-      {%- assign line_children = parts[1] | split: ',' -%}
-      {%- comment -%} match the parent itself... {%- endcomment -%}
-      {%- if line_parent == collection.handle -%}
-        {%- assign subcat_parent = line_parent -%}
-        {%- assign subcat_children = line_children -%}
-      {%- endif -%}
-      {%- comment -%} ...or any of its children, so the row follows you down {%- endcomment -%}
-      {%- for c in line_children -%}
-        {%- assign c_handle = c | strip | downcase -%}
-        {%- if c_handle == collection.handle -%}
-          {%- assign subcat_parent = line_parent -%}
-          {%- assign subcat_children = line_children -%}
-        {%- endif -%}
-      {%- endfor -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
-{%- comment -%}
-  A parent collection is a CATEGORY page, not a product grid: it lists its
-  sub-categories as circles and each of those opens the real collection. Only
-  treat it as one when at least one child collection actually exists, so a parent
-  whose children have not been created yet still shows its own products instead
-  of an empty page.
-{%- endcomment -%}
-{%- assign is_category_page = false -%}
-{%- if collection.handle == subcat_parent and subcat_children != '' -%}
-  {%- for c in subcat_children -%}
-    {%- assign c_handle = c | strip | downcase -%}
-    {%- if c_handle != '' and collections[c_handle] != blank and collections[c_handle].handle -%}
-      {%- assign is_category_page = true -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
 
 {%- if subcat_children != '' and subcat_children.size > 0 and is_category_page == false -%}
   {%- assign parent_col = collections[subcat_parent] -%}
