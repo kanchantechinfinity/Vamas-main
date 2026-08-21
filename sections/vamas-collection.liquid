@@ -140,6 +140,42 @@
   {% endif %}
 </section>
 
+{% if is_category_page %}
+{%- comment -%} CATEGORY PAGE - sub-category circles, no filters and no product
+  grid. Each circle opens the child collection, which renders normally. {%- endcomment -%}
+<div class="col-cats">
+  <h1 class="col-cats__title">{{ collection.title }}</h1>
+  {% if collection.description != blank %}
+    <div class="col-cats__desc">{{ collection.description }}</div>
+  {% endif %}
+  <div class="col-cats__grid">
+    {% for c in subcat_children %}
+      {% assign c_handle = c | strip | downcase %}
+      {% if c_handle != '' %}
+        {% assign child = collections[c_handle] %}
+        {% if child != blank and child.handle %}
+          {%- comment -%} Prefer the collection's own image, then its first
+            product's photo, so a circle is never empty just because nobody set
+            a collection image in admin. {%- endcomment -%}
+          {%- assign circle_img = child.image -%}
+          {%- if circle_img == blank -%}{%- assign circle_img = child.products.first.featured_image -%}{%- endif -%}
+          <a href="{{ child.url }}" class="col-cat">
+            <span class="col-cat__ring">
+              {% if circle_img != blank %}
+                <img src="{{ circle_img | img_url: '360x360', crop: 'center' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </span>
+            <span class="col-cat__label">{{ child.title }}</span>
+            <span class="col-cat__count">{{ child.products_count }} Products</span>
+          </a>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% else %}
 {%- comment -%} Mobile-only collection header: title, count {%- endcomment -%}
 <div class="col-mhead">
   <h1 class="col-mhead__title">{{ collection.title }}</h1>
@@ -193,7 +229,24 @@
     {%- endif -%}
   {%- endfor -%}
 {%- endif -%}
-{%- if subcat_children != '' and subcat_children.size > 0 -%}
+{%- comment -%}
+  A parent collection is a CATEGORY page, not a product grid: it lists its
+  sub-categories as circles and each of those opens the real collection. Only
+  treat it as one when at least one child collection actually exists, so a parent
+  whose children have not been created yet still shows its own products instead
+  of an empty page.
+{%- endcomment -%}
+{%- assign is_category_page = false -%}
+{%- if collection.handle == subcat_parent and subcat_children != '' -%}
+  {%- for c in subcat_children -%}
+    {%- assign c_handle = c | strip | downcase -%}
+    {%- if c_handle != '' and collections[c_handle] != blank and collections[c_handle].handle -%}
+      {%- assign is_category_page = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if subcat_children != '' and subcat_children.size > 0 and is_category_page == false -%}
   {%- assign parent_col = collections[subcat_parent] -%}
   <nav class="col-subcats" aria-label="Sub-categories">
     <a href="/collections/{{ subcat_parent }}" class="col-subcat{% if collection.handle == subcat_parent %} is-active{% endif %}">
@@ -599,6 +652,7 @@
     {% endpaginate %}
   </div>
 </div>
+{% endif %}
 
 <script>
 function toggleAcc(head){

@@ -846,3 +846,86 @@ a{text-decoration:none;color:inherit;}
 #vtag-apply:hover,
 #vtag-apply-toolbar:hover,
 .col-filter-drawer__apply:hover { background: var(--ml); color: var(--g) !important; }
+
+
+/* ── Category page ─────────────────────
+   A parent collection lists its sub-categories as circles instead of products.
+   Four across on desktop, two on phones, so a circle is always big enough to
+   read the garment in it. */
+.col-cats {
+  padding: 28px var(--page-gutter) 56px;
+}
+.col-cats__title {
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--color-maroon);
+  text-align: center;
+  margin: 0 0 8px;
+}
+.col-cats__desc {
+  max-width: 620px;
+  margin: 0 auto 34px;
+  text-align: center;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: #4a4a4a;
+}
+.col-cats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 34px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.col-cat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.col-cat__ring {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(235,211,173,.18);
+  border: 1px solid rgba(146,68,68,.14);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.col-cat__ring img,
+.col-cat__ring svg {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+@media (hover: hover) and (pointer: fine) {
+  .col-cat:hover .col-cat__ring { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(146,68,68,.18); }
+}
+.col-cat__label {
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-maroon);
+  text-align: center;
+  line-height: 1.35;
+}
+.col-cat__count {
+  font-size: 11px;
+  letter-spacing: .5px;
+  color: #8a8a8a;
+}
+@media (max-width: 1180px) {
+  .col-cats__grid { grid-template-columns: repeat(3, 1fr); gap: 28px 20px; }
+}
+@media (max-width: 768px) {
+  .col-cats { padding: 20px 16px 40px; }
+  .col-cats__title { font-size: 22px; }
+  .col-cats__desc { font-size: 12.5px; margin-bottom: 24px; }
+  .col-cats__grid { grid-template-columns: repeat(2, 1fr); gap: 22px 14px; }
+  .col-cat__label { font-size: 12.5px; }
+  .col-cat__count { font-size: 10px; }
+}
