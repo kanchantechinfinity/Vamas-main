@@ -252,25 +252,11 @@
   renames its tab.
 {%- endcomment -%}
 
-{%- if subcat_children != '' and subcat_children.size > 0 and is_category_page == false -%}
-  {%- assign parent_col = collections[subcat_parent] -%}
-  <nav class="col-subcats" aria-label="Sub-categories">
-    <a href="/collections/{{ subcat_parent }}" class="col-subcat{% if collection.handle == subcat_parent %} is-active{% endif %}">
-      {{ parent_col.title | default: 'ALL' | upcase }}
-    </a>
-    {% for c in subcat_children %}
-      {% assign c_handle = c | strip | downcase %}
-      {% if c_handle != '' %}
-        {% assign child = collections[c_handle] %}
-        {%- comment -%} A handle that has no collection yet would render a dead tab,
-          so only list the ones that actually exist. {%- endcomment -%}
-        {% if child != blank and child.handle %}
-          <a href="{{ child.url }}" class="col-subcat{% if collection.handle == c_handle %} is-active{% endif %}">{{ child.title | upcase }}</a>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-  </nav>
-{%- endif -%}
+{%- comment -%}
+  The sub-category tab row used to sit here. The category page of circles is now
+  that list, so the row is gone; subcat_parent / subcat_children are still parsed
+  above because the category page itself is built from them.
+{%- endcomment -%}
 
 {%- comment -%}
   Sticky mobile/responsive filter+sort toolbar.
@@ -919,7 +905,7 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
   "settings": [
     { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products Per Page", "default": 12 },
     { "type": "header", "content": "Sub-category tabs" },
-    { "type": "textarea", "id": "subcat_map", "label": "Sub-collections per category", "info": "One line per category: parent-handle | child-handle, child-handle. Use collection HANDLES. A child with no collection behind it is skipped, so the list can be written before they exist.", "default": "the-plain-edit | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains, collar-necks, tissue-plains, corsets-plain\nsummer-essentials | summer-essentials-signature-round-neck-sleeveless, summer-essentials-silk-elbow-length, summer-essentials-side-stretch-plains\nbrocade-bohemia | brocade-bohemia-signature-round-neck-sleeveless, brocade-bohemia-silk-elbow-length, brocade-bohemia-side-stretch-plains\nfestive-glam | festive-glam-signature-round-neck-sleeveless, festive-glam-silk-elbow-length, festive-glam-side-stretch-plains\nre-verse-by-vamas | re-verse-by-vamas-signature-round-neck-sleeveless, re-verse-by-vamas-silk-elbow-length, re-verse-by-vamas-side-stretch-plains\nside-stretch-blouses | side-stretch-blouses-signature-round-neck-sleeveless, side-stretch-blouses-silk-elbow-length, side-stretch-blouses-side-stretch-plains\nbridgerton-inspired | bridgerton-inspired-signature-round-neck-sleeveless, bridgerton-inspired-silk-elbow-length, bridgerton-inspired-side-stretch-plains\ncorsets | corsets-signature-round-neck-sleeveless, corsets-silk-elbow-length, corsets-side-stretch-plains" },
+    { "type": "textarea", "id": "subcat_map", "label": "Sub-collections per category", "info": "One line per category: parent-handle | child-handle, child-handle. Use collection HANDLES. A child with no collection behind it is skipped, so the list can be written before they exist.", "default": "the-plain-edit | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains, collar-necks, tissue-plains, corsets-plain\nsummer-essentials | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains\nbrocade-bohemia | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains\nfestive-glam | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains\nre-verse-by-vamas | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains\nside-stretch-blouses | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains\nbridgerton-inspired | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains\ncorsets | signature-round-neck-sleeveless, silk-elbow-length, side-stretch-plains, cotton-plains" },
     { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only as a last resort — a native Size filter (Search & Discovery) wins, then size-NN product tags. Neither needs this list.", "default": "32,34,36,38,40,42,44,46,48,50" },
     { "type": "header", "content": "Sleeve & Neckline" },
     { "type": "paragraph", "content": "These use a Search & Discovery filter if one exists (matched by label containing 'sleeve' / 'neck'). If not, the tag lists below are used instead — tags must match the product tags exactly." },
