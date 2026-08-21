@@ -803,3 +803,37 @@ Verified at 375px against the live stylesheet:
 | decorative rule hidden on phone | yes |
 | wave | 26px tall, fill rgb(254,249,242) |
 | page overflow | none |
+
+## Parent collections are now category pages of sub-category circles
+
+Clicking a parent (THE PLAIN EDIT, FESTIVE GLAM, …) lists its sub-categories as
+image circles instead of dropping into a product grid; each circle opens the child
+collection, which renders normally. Four across on desktop, three on tablet, two
+on phones. Circle images fall back to the child's first product photo when the
+collection has no image set in admin. The sub-category tab row is suppressed on
+the category page itself (the circles already are that list) and still shows on
+every child.
+
+Detected in the theme from the existing `subcat_map` setting rather than a Shopify
+template suffix, because the Shopify connector is pointed at an unrelated store
+(`0ww0zm-c1.myshopify.com`), so per-collection template assignment was not
+possible. Upside: adding a parent is one line in that setting.
+
+Guard: a parent whose child collections do not exist yet keeps showing its own
+products, so nothing becomes an empty page.
+
+**Bug found and fixed in the same change.** Liquid runs top-down and the
+`is_category_page` assigns sat next to the tab row, far below the branch that used
+them — so the flag was nil at the branch: the circles never rendered *and*
+`nil == false` also hid the tab row, which is why the page looked untouched. The
+assigns were moved above the branch.
+
+Verified from served output:
+
+| page | circles | subcat tabs | product cards | grid / toolbar |
+|---|---|---|---|---|
+| /collections/the-plain-edit (parent) | 7, correctly labelled | 0 | 0 | none |
+| /collections/signature-round-neck-sleeveless (child) | 0 | 1 | 11 | present |
+
+(The one `vamas-prod-card` string on the parent is inside the cart-drawer JS
+template, not rendered markup.)
