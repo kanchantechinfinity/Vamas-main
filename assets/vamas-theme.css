@@ -1780,14 +1780,12 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   font-weight: 500;
   line-height: 1.6;
   letter-spacing: .4px;
-  color: rgba(235,211,173,.9);
-  /* Two lines - "BE YOU." over "BE BEAUTIFUL." - centred under the logo. The
-     <br> makes the break, so nowrap stays: it only stops AUTOMATIC wrapping.
-     Without it the column shrank to fit and broke "BE BEAUTIFUL." across two
-     more lines, giving three. */
   text-align: center;
-  white-space: nowrap;
 }
+/* Each typed line is its own block so "BE YOU." and "BE BEAUTIFUL." always
+   stack as two centred lines, in the same gold tone as the rest of the
+   band - not white, and not dependent on container width to force the break. */
+.vamas-meaning__tag-line { display: block; color: rgba(235,211,173,.9); white-space: nowrap; }
 
 @media (max-width: 768px) {
   /* Phones keep the headword and the logo side by side, with the pronunciation
@@ -1800,7 +1798,7 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   .vamas-meaning__inner {
     display: grid;
     grid-template-columns: auto 1fr;
-    align-items: start;
+    align-items: center;
     column-gap: 14px;
     row-gap: 0;
   }
@@ -1821,9 +1819,12 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   .vamas-meaning__rule { display: none; }
   .vamas-meaning__logo img { height: 54px; }
   .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 12px; padding-bottom: 9px; letter-spacing: .5px; }
-  .vamas-meaning__mark img { height: 54px; }
+  /* Matched to the Hindi headword's own glyph height (excluding its
+     decorative underline) so the mark reads as the same size, on the
+     same line, rather than dwarfing the word beside it. */
+  .vamas-meaning__mark img { height: 42px; }
   .vamas-meaning__pos { font-size: 11px; margin-bottom: 16px; }
-  .vamas-meaning__def { font-size: 11.5px; line-height: 1.8; }
+  .vamas-meaning__def { font-size: 10.5px; line-height: 1.8; }
   .vamas-meaning__br { display: inline; }
 
   .vamas-meaning__mark { font-size: 22px; letter-spacing: 4px; }

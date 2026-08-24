@@ -90,7 +90,15 @@
           {% endif %}
         </div>
         {% if section.settings.meaning_tagline != blank %}
-          <p class="vamas-meaning__tag">{{ section.settings.meaning_tagline | newline_to_br }}</p>
+          {%- comment -%} Each typed line gets its own block-level span so the
+            two lines always stack (never collapse onto one line regardless
+            of container width), matching "BE YOU." over "BE BEAUTIFUL." {%- endcomment -%}
+          <p class="vamas-meaning__tag">
+            {%- assign tag_lines = section.settings.meaning_tagline | newline_to_br | split: '<br />' -%}
+            {%- for tag_line in tag_lines -%}
+              <span class="vamas-meaning__tag-line">{{ tag_line | strip }}</span>
+            {%- endfor -%}
+          </p>
         {% endif %}
       </div>
     </div>
