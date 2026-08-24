@@ -1774,12 +1774,6 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   width: auto;
   display: inline-block;
   vertical-align: middle;
-  /* The logo file itself carries extra transparent margin on its left
-     (the flourish sits right of centre in the asset), so centring the
-     bounding box still left the visible glyph starting right of the
-     tagline's left edge. Nudge the visible mark left to compensate -
-     desktop only, the mobile logo sits beside the Hindi word instead. */
-  transform: translateX(-14px);
 }
 .vamas-meaning__tag {
   margin: 0;
@@ -1834,7 +1828,7 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
      decorative underline) so the mark reads as the same size, on the
      same line, rather than dwarfing the word beside it. Nudged up a
      touch (relative top) so it doesn't sit low against the headword. */
-  .vamas-meaning__mark img { height: 42px; transform: none; }
+  .vamas-meaning__mark img { height: 42px; }
   .vamas-meaning__mark { position: relative; top: -5px; }
   .vamas-meaning__pos { font-size: 11px; margin-bottom: 10px; }
   .vamas-meaning__def { font-size: 10.5px; line-height: 1.65; margin-bottom: 8px; }
