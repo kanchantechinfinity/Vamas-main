@@ -278,7 +278,7 @@
       "settings": {
         "show_categories": true,
         "made_with_love_text": "Made with Love",
-        "cat_view_all": "/collections/all",
+        "cat_view_all": "/collections",
         "show_new_arrivals": true,
         "new_arrivals_collection": "jackets",
         "show_bestsellers": true,
