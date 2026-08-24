@@ -1741,11 +1741,12 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   font-size: 13px;
   font-weight: 400;
   line-height: 1.85;
-  color: rgba(255,255,255,.9);
+  /* Same gold tone as the "BE YOU. / BE BEAUTIFUL." tagline, not white. */
+  color: rgba(235,211,173,.9);
   margin: 0 0 12px;
 }
 .vamas-meaning__def:last-child { margin-bottom: 0; }
-.vamas-meaning__def--second { color: rgba(255,255,255,.72); }
+.vamas-meaning__def--second { color: rgba(235,211,173,.72); }
 /* Breaks typed into the definition setting are phone-only; the desktop column is
    wide enough to flow the sentence on its own. */
 .vamas-meaning__br { display: none; }
@@ -1794,7 +1795,7 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
      `display: contents` on __left promotes its three children into this grid so
      the word can share a row with __right while its siblings span the whole
      width - the wrapper has no box of its own to fight. */
-  .vamas-meaning { padding: 4px 0 32px; margin-bottom: 28px; }
+  .vamas-meaning { padding: 4px 0 20px; margin-bottom: 18px; }
   .vamas-meaning__inner {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -1818,13 +1819,15 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
      tagline shares it. */
   .vamas-meaning__rule { display: none; }
   .vamas-meaning__logo img { height: 54px; }
-  .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 12px; padding-bottom: 9px; letter-spacing: .5px; }
+  .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 8px; padding-bottom: 6px; letter-spacing: .5px; }
   /* Matched to the Hindi headword's own glyph height (excluding its
      decorative underline) so the mark reads as the same size, on the
-     same line, rather than dwarfing the word beside it. */
+     same line, rather than dwarfing the word beside it. Nudged up a
+     touch (relative top) so it doesn't sit low against the headword. */
   .vamas-meaning__mark img { height: 42px; }
-  .vamas-meaning__pos { font-size: 11px; margin-bottom: 16px; }
-  .vamas-meaning__def { font-size: 10.5px; line-height: 1.8; }
+  .vamas-meaning__mark { position: relative; top: -5px; }
+  .vamas-meaning__pos { font-size: 11px; margin-bottom: 10px; }
+  .vamas-meaning__def { font-size: 10.5px; line-height: 1.65; margin-bottom: 8px; }
   .vamas-meaning__br { display: inline; }
 
   .vamas-meaning__mark { font-size: 22px; letter-spacing: 4px; }
