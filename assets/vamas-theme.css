@@ -1740,9 +1740,12 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   line-height: 1.6;
   letter-spacing: .4px;
   color: rgba(235,211,173,.9);
-  /* Two lines now - "BE YOU." over "BE BEAUTIFUL." - centred under the logo, so
-     nowrap is gone. */
+  /* Two lines - "BE YOU." over "BE BEAUTIFUL." - centred under the logo. The
+     <br> makes the break, so nowrap stays: it only stops AUTOMATIC wrapping.
+     Without it the column shrank to fit and broke "BE BEAUTIFUL." across two
+     more lines, giving three. */
   text-align: center;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {
