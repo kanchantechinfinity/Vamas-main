@@ -903,3 +903,31 @@ Verified from served CSS: `align-items:flex-start`, `mark img{height:62px}`,
 Caveat: the in-app browser reported `innerWidth`/`clientWidth` as 0 during this
 pass, so breakpoint-specific geometry could not be trusted — the 62px/52px match
 is calculated, not measured on a device.
+
+## "Made with Love" + category heading spacing; category "View All" now the circle page
+
+- **Made with Love** bigger and clearly separated from the heading below it:
+  27px/21px -> 31px/24px, `margin-bottom` 8px/6px -> 22px/16px.
+- The whole "Made with Love + Explore by Category" block sits closer to the hero
+  slider above it - `.vamas-section--cats` now has its own smaller top padding
+  (34px desktop / 22px phone) instead of the generic section gap.
+- "Explore by Category" at the 30px base wrapped mid-word on a 384-395px phone
+  (Galaxy S24 and similar). Fixed with a 480px override scoped to this section
+  only: `.vamas-section--cats .vamas-section__title { font-size: 22px }`.
+- Both VIEW ALL links (top and bottom of the carousel) now go to `/collections`
+  instead of `/collections/all` - the category circle page, not a product grid.
+  **Trap:** the Liquid default alone did not take effect, because
+  `templates/index.json` had `cat_view_all` explicitly saved as
+  `/collections/all` from a previous admin edit, which overrides a `default:`
+  filter. Had to update the saved setting value too.
+- `/collections` (`vamas-categories.liquid`) is rewritten from square tiles to
+  circles matching the homepage carousel, and its no-blocks-picked fallback now
+  lists the same eight parent categories the homepage and
+  `vamas-collection.liquid`'s `subcat_map` both use (previously it fell back to
+  *every* collection in the store - roughly 44, including sub-collections).
+
+Verified from served output: homepage VIEW ALL both link to `/collections`;
+`/collections` renders exactly 8 circles labelled THE PLAIN EDIT, SUMMER
+ESSENTIALS, BROCADE BOHEMIA, FESTIVE GLAM, RE-VERSE BY VAMAS, SIDE STRETCH
+BLOUSES, BRIDGERTON INSPIRED, CORSETS; served CSS has the new made-love sizes/
+margins, the section's own top padding, and the 480px title override.
