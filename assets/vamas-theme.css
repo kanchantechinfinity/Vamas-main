@@ -1819,7 +1819,7 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
      tagline shares it. */
   .vamas-meaning__rule { display: none; }
   .vamas-meaning__logo img { height: 54px; }
-  .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 8px; padding-bottom: 6px; letter-spacing: .5px; }
+  .vamas-meaning__word-hi { font-size: 38px; margin-bottom: 3px; padding-bottom: 2px; letter-spacing: .5px; }
   /* Matched to the Hindi headword's own glyph height (excluding its
      decorative underline) so the mark reads as the same size, on the
      same line, rather than dwarfing the word beside it. Nudged up a
