@@ -371,7 +371,7 @@
           <div class="acc-item" data-filter-group="color">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% render 'vamas-color-filter-dots', color_filter: color_filter, current_tags: collection.current_tags %}
+              {% render 'vamas-filter-group-options', native_filter: color_filter, tag_list: 'Black,Maroon,Gold,Green,Navy Blue,Red,Pink,White', current_tags: collection.current_tags, empty_note: 'Colour filter not set up yet.' %}
             </div>
           </div>
 
@@ -522,7 +522,7 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% render 'vamas-color-filter-dots', color_filter: color_filter, current_tags: collection.current_tags %}
+        {% render 'vamas-filter-group-options', native_filter: color_filter, tag_list: 'Black,Maroon,Gold,Green,Navy Blue,Red,Pink,White', current_tags: collection.current_tags, empty_note: 'Colour filter not set up yet.' %}
       </div>
     </div>
 
@@ -861,14 +861,6 @@ function wireVtagApply(id, scopeSelector){
 wireVtagApply('vtag-apply', '#sidebar');
 wireVtagApply('vtag-apply-toolbar', '#col-filter-drawer');
 
-/* The native colour dots hide their checkbox behind a coloured span, so with
-   auto-submit gone nothing showed a pick until the page reloaded. Reflect it. */
-document.querySelectorAll('.color-dot-input').forEach(function(cb){
-  cb.addEventListener('change', function(){
-    var dot = cb.parentElement.querySelector('.c-dot');
-    if (dot) dot.classList.toggle('active', cb.checked);
-  });
-});
 
 function wirePriceSlider(minId, maxId, fillId, minLabelId, maxLabelId){
   var minInput = document.getElementById(minId);
