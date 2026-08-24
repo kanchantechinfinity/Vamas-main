@@ -1762,10 +1762,10 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   color: #fff;
   line-height: 1;
   margin-bottom: 12px;
-  /* .vamas-meaning__right is text-align:right; left-align here instead so
-     the logo's left edge lines up with where "BE YOU."/"BE BEAUTIFUL."
-     start, rather than each sitting at a different alignment. */
-  text-align: left;
+  /* Right-aligned to match .vamas-meaning__right and the tagline below -
+     both sit on the same shrink-wrapped width so their right edges line
+     up, rather than each sitting at a different alignment. */
+  text-align: right;
 }
 /* 62px matches the headword's rendered glyph height (52px at 1.15 line-height),
    so the two sides look the same weight rather than the logo dwarfing the word. */
@@ -1785,10 +1785,10 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   font-weight: 500;
   line-height: 1.6;
   letter-spacing: .4px;
-  text-align: left;
+  text-align: right;
 }
 /* Each typed line is its own block so "BE YOU." and "BE BEAUTIFUL." always
-   stack as two left-aligned lines (starting at the same point as the logo
+   stack as two right-aligned lines (ending at the same point as the logo
    above them), in the same gold tone as the rest of the band - not white,
    and not dependent on container width to force the break. */
 .vamas-meaning__tag-line { display: block; color: rgba(235,211,173,.9); white-space: nowrap; }
