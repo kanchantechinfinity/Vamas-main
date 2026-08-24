@@ -540,11 +540,13 @@ a{text-decoration:none;color:inherit;}
   }
   .col-filter-drawer.open .col-filter-drawer__panel{transform:translateX(0);}
   .col-filter-drawer__head{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid rgba(146,68,68,.08);}
-  .col-filter-drawer__title{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--m);}
-  .col-filter-drawer__close{background:none;border:none;font-size:26px;line-height:1;color:var(--m);cursor:pointer;padding:0 4px;}
+  /* Phone drawer chrome in black, matching the group headings and filter rows
+     below it - the maroon read as a second accent competing with APPLY. */
+  .col-filter-drawer__title{font-size:12px;font-weight:700;letter-spacing:.12em;color:#1a1a1a;}
+  .col-filter-drawer__close{background:none;border:none;font-size:26px;line-height:1;color:#1a1a1a;cursor:pointer;padding:0 4px;}
   .col-filter-drawer__tabs{flex-shrink:0;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(146,68,68,.1);}
-  .col-filter-drawer__tab{padding:12px 6px;background:none;border:none;font-family:var(--font-body);font-size:11.5px;font-weight:700;letter-spacing:1.5px;color:rgba(146,68,68,.5);cursor:pointer;border-bottom:2px solid transparent;}
-  .col-filter-drawer__tab.is-active{color:var(--m);border-bottom-color:var(--m);}
+  .col-filter-drawer__tab{padding:12px 6px;background:none;border:none;font-family:var(--font-body);font-size:11.5px;font-weight:700;letter-spacing:1.5px;color:rgba(26,26,26,.45);cursor:pointer;border-bottom:2px solid transparent;}
+  .col-filter-drawer__tab.is-active{color:#1a1a1a;border-bottom-color:#1a1a1a;}
   .col-filter-drawer__body{flex:1;min-height:0;overflow-y:auto;padding:0 18px;}
   .col-filter-drawer__panel-inner{display:none;padding:8px 0 16px;}
   .col-filter-drawer__panel-inner.is-active{display:block;}
