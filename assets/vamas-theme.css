@@ -1815,7 +1815,10 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
      each independently right-aligning to a different width and ending up
      with mismatched left edges. */
   .vamas-meaning__left { display: contents; }
-  .vamas-meaning__right { grid-column: 2; grid-row: 1 / 3; justify-self: end; align-self: center; }
+  /* margin-right pulls the whole logo+tagline block in from the true right
+     edge, shifting both further left together while keeping them aligned
+     with each other. */
+  .vamas-meaning__right { grid-column: 2; grid-row: 1 / 3; justify-self: end; align-self: center; margin-right: 24px; }
   .vamas-meaning__word-hi { grid-column: 1; grid-row: 1; }
   .vamas-meaning__pos     { grid-column: 1; grid-row: 2; }
   .vamas-meaning__def     { grid-column: 1 / -1; }
