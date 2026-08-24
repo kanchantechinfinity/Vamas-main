@@ -1,11 +1,16 @@
 {{ 'vamas-collection.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
-  Category grid page — image tiles with a label, 3-up on mobile and wider on
-  desktop. Uses the section's own picked collections when the merchant has
-  chosen any, otherwise falls back to every collection in the store.
+  Category grid page — circles matching the homepage "Explore by Category" row,
+  so /collections (this page) reads as the full, non-scrolling version of that
+  carousel rather than a different design. Uses the section's own picked
+  collections when the merchant has chosen any; otherwise falls back to the same
+  eight parent categories the homepage carousel and vamas-collection.liquid's
+  subcat_map both use, so all three stay in sync without duplicating the list a
+  fourth way.
 {%- endcomment -%}
 {%- assign picked = section.blocks | where: 'type', 'category' -%}
+{%- assign fallback_handles = 'the-plain-edit,summer-essentials,brocade-bohemia,festive-glam,re-verse-by-vamas,side-stretch-blouses,bridgerton-inspired,corsets' | split: ',' -%}
 
 <section class="vcats">
   <div class="vcats__head">
@@ -24,35 +29,35 @@
         {%- assign c = collections[block.settings.collection] -%}
         {%- assign tile_label = block.settings.label | default: c.title -%}
         {%- assign tile_url = c.url | default: '/collections/all' -%}
+        {%- assign circle_img = block.settings.image -%}
+        {%- if circle_img == blank -%}{%- assign circle_img = c.image -%}{%- endif -%}
+        {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="{{ tile_url }}" {{ block.shopify_attributes }}>
-          <span class="vcat__frame">
-            {% if block.settings.image != blank %}
-              <img src="{{ block.settings.image | image_url: width: 500 }}" alt="{{ tile_label | escape }}" loading="lazy" width="500" height="500">
-            {% elsif c.featured_image != blank %}
-              <img src="{{ c.featured_image | image_url: width: 500 }}" alt="{{ tile_label | escape }}" loading="lazy" width="500" height="500">
-            {% elsif c.products.first.featured_image != blank %}
-              <img src="{{ c.products.first.featured_image | image_url: width: 500 }}" alt="{{ tile_label | escape }}" loading="lazy" width="500" height="500">
+          <span class="vcat__ring">
+            {% if circle_img != blank %}
+              <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ tile_label | escape }}" loading="lazy" width="180" height="180">
             {% else %}
               {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
             {% endif %}
-            <span class="vcat__label">{{ tile_label }}</span>
           </span>
+          <span class="vcat__label">{{ tile_label }}</span>
         </a>
       {% endfor %}
     {% else %}
-      {% for c in collections %}
-        {% if c.handle != 'frontpage' %}
+      {% for handle in fallback_handles %}
+        {%- assign c = collections[handle] -%}
+        {% if c != blank and c.handle %}
+          {%- assign circle_img = c.image -%}
+          {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
           <a class="vcat" href="{{ c.url }}">
-            <span class="vcat__frame">
-              {% if c.featured_image != blank %}
-                <img src="{{ c.featured_image | image_url: width: 500 }}" alt="{{ c.title | escape }}" loading="lazy" width="500" height="500">
-              {% elsif c.products.first.featured_image != blank %}
-                <img src="{{ c.products.first.featured_image | image_url: width: 500 }}" alt="{{ c.title | escape }}" loading="lazy" width="500" height="500">
+            <span class="vcat__ring">
+              {% if circle_img != blank %}
+                <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ c.title | escape }}" loading="lazy" width="180" height="180">
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
               {% endif %}
-              <span class="vcat__label">{{ c.title }}</span>
             </span>
+            <span class="vcat__label">{{ c.title }}</span>
           </a>
         {% endif %}
       {% endfor %}
@@ -67,48 +72,44 @@
   .vcats__title { font-family: var(--font-heading); font-size: 34px; font-weight: 700; color: var(--color-maroon, #924444); margin: 0 0 8px; line-height: 1.2; text-wrap: balance; }
   .vcats__sub { font-size: 13.5px; color: rgba(146,68,68,.55); margin: 0 auto; max-width: 60ch; line-height: 1.6; }
 
-  .vcats__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
-  .vcat { text-decoration: none; display: block; }
-  .vcat__frame {
-    position: relative;
+/* Circles, matching the homepage "Explore by Category" row - this page is the
+     full version of that carousel, so it should look like the same design, not
+     a second one. */
+  .vcats__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px 24px; max-width: 1100px; margin: 0 auto; }
+  .vcat { text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .vcat__ring {
     display: block;
-    aspect-ratio: 1 / 1;
-    border-radius: 10px;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
     overflow: hidden;
-    border: 3px solid var(--color-gold, #EBD3AD);
-    outline: 1px solid rgba(201,169,110,.45);
-    outline-offset: 3px;
-    background: #f6efe6;
-    transition: transform .25s, box-shadow .25s;
+    background: rgba(235,211,173,.18);
+    border: 1px solid rgba(146,68,68,.14);
+    transition: transform .2s ease, box-shadow .2s ease;
   }
-  .vcat:hover .vcat__frame { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(146,68,68,.16); }
-  .vcat__frame img,
-  .vcat__frame .vcat__ph { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; display: block; }
+  @media (hover: hover) and (pointer: fine) {
+    .vcat:hover .vcat__ring { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(146,68,68,.18); }
+  }
+  .vcat__ring img,
+  .vcat__ring .vcat__ph { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
   .vcat__label {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    padding: 26px 10px 12px;
-    background: linear-gradient(to top, rgba(146,68,68,.82) 0%, rgba(146,68,68,.34) 55%, transparent 100%);
-    color: #fff;
     font-family: var(--font-heading);
     font-size: 14px;
     font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    color: var(--color-maroon, #924444);
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.35;
   }
 
   @media (max-width: 1180px) {
-    .vcats__grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .vcats__grid { grid-template-columns: repeat(3, 1fr); gap: 28px 20px; }
   }
   @media (max-width: 768px) {
     .vcats { padding: 24px 16px 40px; }
     .vcats__title { font-size: 24px; }
     .vcats__sub { font-size: 12.5px; }
-    .vcats__grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .vcat__frame { border-width: 2px; outline-offset: 2px; border-radius: 8px; }
-    .vcat__label { font-size: 10px; letter-spacing: .5px; padding: 18px 5px 8px; }
+    .vcats__grid { grid-template-columns: repeat(2, 1fr); gap: 22px 14px; }
+    .vcat__label { font-size: 12.5px; }
   }
 </style>
 

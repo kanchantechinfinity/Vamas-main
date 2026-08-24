@@ -319,7 +319,10 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 /* ── Section ──────────────────────────── */
 .vamas-section { padding: 64px var(--page-gutter); }
 .vamas-section--alt { background: var(--color-bg); }
-.vamas-section--cats { padding-left: 24px; padding-right: 24px; }
+/* Sits right under the hero slider - a shorter top padding pulls it up closer
+   to the banner instead of floating it in the same generic gap every section
+   uses. */
+.vamas-section--cats { padding-left: 24px; padding-right: 24px; padding-top: 34px; }
 .vamas-section--cats .vamas-section__header,
 .vamas-section--cats .vamas-cat-circle-row { max-width: 1600px; margin-left: auto; margin-right: auto; }
 .vamas-section--cats .vamas-section__header { flex-direction: column; align-items: center; text-align: center; position: relative; }
@@ -346,16 +349,24 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   font-weight: 400;
   /* Garamond runs small on the body, so it needs more point size than the
      Playfair it replaced to read at the same optical size. */
-  font-size: 27px; line-height: 1.25; color: var(--color-maroon);
+  font-size: 31px; line-height: 1.25; color: var(--color-maroon);
   letter-spacing: 0.2px;
-  margin-bottom: 8px;
+  /* Wider gap than a normal heading eyebrow - this and the heading below it
+     read as one cramped block otherwise, when they are two separate lines. */
+  margin-bottom: 22px;
 }
-.vamas-made-love__heart { width: 18px; height: 18px; color: var(--color-maroon); flex-shrink: 0; }
+.vamas-made-love__heart { width: 19px; height: 19px; color: var(--color-maroon); flex-shrink: 0; }
 @media (max-width: 768px) {
-  .vamas-made-love { font-size: 21px; gap: 8px; margin-bottom: 6px; }
-  .vamas-made-love__heart { width: 14px; height: 14px; }
+  .vamas-made-love { font-size: 24px; gap: 8px; margin-bottom: 16px; }
+  .vamas-made-love__heart { width: 15px; height: 15px; }
 }
 .vamas-section__title { font-size: 30px; font-weight: 800; color: var(--color-maroon); line-height: 1.2; }
+/* "Explore by Category" at the base 30px does not fit one line on a 384-395px
+   phone (Galaxy S24 and similar) - it wraps mid-word. Scoped to this section so
+   other headings are untouched. */
+@media (max-width: 480px) {
+  .vamas-section--cats .vamas-section__title { font-size: 22px; }
+}
 .vamas-section__title span { color: var(--color-gold-dark); }
 .vamas-section__subtitle { font-size: 12px; color: rgba(146,68,68, 0.5); margin-top: 5px; }
 
@@ -1083,6 +1094,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-slide__sub { font-size: 13px; margin-bottom: 22px; }
   .vamas-slide__eyebrow { font-size: 11px; letter-spacing: 3px; margin-bottom: 12px; }
   .vamas-section { padding: 44px 24px; }
+  .vamas-section--cats { padding-top: 22px; }
   .vamas-section__header { flex-direction: column; align-items: flex-start; gap: 12px; }
   .vamas-section__header--center { align-items: center; text-align: center; }
   .vamas-view-all--top { display: none; }

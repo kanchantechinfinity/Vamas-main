@@ -223,7 +223,7 @@
       <h2 class="vamas-section__title">{{ section.settings.cat_heading | default: 'Explore by' }} <span>{{ section.settings.cat_heading_accent | default: 'Category' }}</span></h2>
       <p class="vamas-section__subtitle">{{ section.settings.cat_subtitle | default: 'Your Dream Blouse is Just a Click Away' }}</p>
     </div>
-    <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
+    <a href="{{ section.settings.cat_view_all | default: '/collections' }}" class="vamas-view-all vamas-view-all--top">VIEW ALL</a>
   </div>
   <div class="vamas-cat-carousel" data-cat-carousel data-count="{{ cat_blocks.size }}" data-speed="0.6">
     <div class="vamas-cat-circle-row" data-cat-track>
@@ -259,7 +259,7 @@
     </div>
   </div>
   <div class="vamas-cat-dots" data-cat-dots></div>
-  <a href="{{ section.settings.cat_view_all | default: '/collections/all' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
+  <a href="{{ section.settings.cat_view_all | default: '/collections' }}" class="vamas-view-all vamas-view-all--bottom">VIEW ALL</a>
 </section>
 {% endif %}
 
@@ -816,7 +816,7 @@
     { "type": "text", "id": "cat_heading", "label": "Heading", "default": "Explore by" },
     { "type": "text", "id": "cat_heading_accent", "label": "Heading (accent word)", "default": "Category" },
     { "type": "text", "id": "cat_subtitle", "label": "Subtitle", "default": "Your Dream Blouse is Just a Click Away" },
-    { "type": "url", "id": "cat_view_all", "label": "View All URL" },
+    { "type": "url", "id": "cat_view_all", "label": "View All URL", "info": "Defaults to /collections - the category circle page, not a product grid." },
     { "type": "header", "content": "Shop Our Picks (tabbed section)" },
     { "type": "text", "id": "picks_heading", "label": "Heading", "default": "Shop" },
     { "type": "text", "id": "picks_heading_accent", "label": "Heading (accent word)", "default": "Our Picks" },
