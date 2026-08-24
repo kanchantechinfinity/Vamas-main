@@ -856,3 +856,20 @@ bridgerton-inspired with the expected labels; a child collection
 
 Schema JSON is parsed as part of the check before every push, since a bad schema
 default once stalled the GitHub sync for ~40 minutes.
+
+## Colour filter: names instead of swatch dots
+
+A grid of ~40 dots was hard to read a colour from — many near-identical golds and
+maroons. COLOR now renders through `vamas-filter-group-options`, the same
+checkbox-and-name rows as SLEEVE and NECKLINE, with real variant counts. The
+`.color-dot-input` reflect handler was deleted with it (no hidden checkbox left to
+mirror), and an `empty_note` was added so the group is not blank if the native
+Color filter is ever turned off.
+
+Verified from served output on /collections/silk-elbow-length: 19 named colour
+rows (BLACK (6), COBALT-BLUE (1), GOLD (5), …), and `c-dot` / `color-dots` appear
+0 times on the page.
+
+Note: `vamas-color-filter-dots.liquid` and the `.color-dots` / `.c-dot` CSS are
+now unused but left in place — the swatch mapping is still useful if the dots are
+ever wanted back.
