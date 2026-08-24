@@ -42,7 +42,9 @@
     .prod-name{font-size:26px;font-weight:500;color:#1a1a1a;line-height:1.2;margin-bottom:6px;}
     .prod-type{font-size:12px;font-weight:400;color:rgba(26,26,26,.6);margin-bottom:12px;}
     .prod-rating{display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:14px;flex-wrap:wrap;}
-    .stars{color:#c9a96e;letter-spacing:2px;}
+    /* Same bright yellow as the card rating badge - the muted brand gold did not
+       read as a star. */
+    .stars{color:#FFC400;letter-spacing:2px;}
     .rating-num{font-weight:500;color:#1a1a1a;}
     .rating-count,.rating-sold{color:#aaa;font-size:12px;}
     .prod-price{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
@@ -213,7 +215,7 @@
     .rev-heading{font-size:26px;font-weight:500;color:#1a1a1a;margin-bottom:40px;}
     .reviews-grid{display:grid;grid-template-columns:1fr 2fr;gap:48px;}
     .rev-big-score{font-size:68px;font-family:var(--font-heading);font-weight:600;color:#1a1a1a;line-height:1;}
-    .rev-stars-big{font-size:20px;color:var(--gd);letter-spacing:2px;}
+    .rev-stars-big{font-size:20px;color:#FFC400;letter-spacing:2px;}
     .rev-count{font-size:13px;color:#888;margin-top:4px;}
     .rev-bars{margin-top:20px;}
     .rev-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
@@ -226,7 +228,7 @@
     .rev-top{display:flex;justify-content:space-between;align-items:flex-start;}
     .rev-name{font-size:13px;font-weight:500;color:#1a1a1a;}
     .rev-verified{font-size:10px;color:#2e7d32;margin-left:8px;}
-    .rev-stars-sm{color:var(--gd);font-size:14px;}
+    .rev-stars-sm{color:#FFC400;font-size:14px;}
     .rev-date{font-size:11px;color:#aaa;margin-top:2px;text-align:right;}
     .rev-title{font-size:14px;font-weight:500;color:#1a1a1a;margin-top:10px;}
     .rev-text{font-size:13px;color:#555;line-height:1.6;margin-top:5px;}
