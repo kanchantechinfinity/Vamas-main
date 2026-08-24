@@ -168,7 +168,7 @@ a{text-decoration:none;color:inherit;}
   font-size:12px;
   font-weight:600;
   letter-spacing:.12em;
-  color:#1a1a1a;
+  color:var(--m);
 }
 .clear-all{
   font-size:11px;
