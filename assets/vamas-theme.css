@@ -887,7 +887,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 /* ── Testimonials ─────────────────────── */
 .vamas-test-section { overflow: hidden; padding-left: 0; padding-right: 0; width: 100%; }
 .vamas-test-section .vamas-section__header { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
-.vamas-test-marquee-row { width: 100%; }
+.vamas-test-marquee-row { width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
 
 .vamas-test-card {
   display: flex;
@@ -925,7 +925,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
 .vamas-test-card__verified { font-size: 10px; color: #2e7d32; font-weight: 600; margin-top: 2px; }
 
 /* ── Testimonials marquee ─────────────── */
-.vamas-test-marquee-row { overflow: hidden; margin-top: 16px; width: 100%; }
+.vamas-test-marquee-row { overflow: hidden; margin-top: 16px; }
 .vamas-test-marquee-row:first-of-type { margin-top: 8px; }
 .vamas-test-marquee-track {
   display: flex;
