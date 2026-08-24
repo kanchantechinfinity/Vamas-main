@@ -873,3 +873,33 @@ rows (BLACK (6), COBALT-BLUE (1), GOLD (5), …), and `c-dot` / `color-dots` app
 Note: `vamas-color-filter-dots.liquid` and the `.color-dots` / `.c-dot` CSS are
 now unused but left in place — the swatch mapping is still useful if the dots are
 ever wanted back.
+
+## Meaning band alignment pass; colour-name filters; black drawer chrome; yellow PDP stars
+
+**Meaning band**
+- `align-items` was `flex-end`, bottom-aligning the two columns, which pushed the
+  logo about a third of its height below the headword — they never read as one
+  line. Tops are aligned now.
+- Logo 78px → 62px, matching the headword's rendered glyph height (52px at 1.15
+  line-height), so neither side dwarfs the other.
+- Definition one size down: 14px → 13px desktop, 12.5px → 11.5px phone.
+- Tagline is `BE YOU.` over `BE BEAUTIFUL.`, both with full stops, centred under
+  the logo.
+
+**Trap, self-inflicted:** I removed `white-space: nowrap` thinking two lines
+needed it gone. `<br>` supplies the break; nowrap only stops *automatic* wrapping.
+Without it the shrink-to-fit column broke `BE BEAUTIFUL.` again, rendering three
+lines (measured: "BE YOU." 56px / "BE" 17px / "BEAUTIFUL." 84px). nowrap restored.
+
+**Other changes in this stretch**
+- Colour filter shows names with counts instead of ~40 swatch dots.
+- Phone filter drawer chrome (FILTER & SORT, tabs, close) is black, matching the
+  group headings already below it.
+- PDP rating stars and review stars now `#FFC400`, same as the card badge.
+
+Verified from served CSS: `align-items:flex-start`, `mark img{height:62px}`,
+`def{font-size:13px}` / `11.5px` on phone, `tag{…text-align:center;white-space:nowrap}`.
+
+Caveat: the in-app browser reported `innerWidth`/`clientWidth` as 0 during this
+pass, so breakpoint-specific geometry could not be trusted — the 62px/52px match
+is calculated, not measured on a device.
