@@ -1502,7 +1502,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
   .vamas-full-banner__title { font-size: 26px; }
   .vamas-full-banner__sub { display: none; }
   .vamas-full-banner__btn { padding: 10px 18px; font-size: 9px; }
-  .vamas-reels { padding: 32px 16px 56px; }
+  .vamas-reels { padding: 32px 24px 56px; }
   .vamas-reel-card { flex: 0 0 160px; }
   .vamas-reel__handle, .vamas-reel__stats { font-size: 9px; }
 }
@@ -1516,7 +1516,7 @@ body { font-family: var(--font-primary); color: var(--color-maroon); background:
    no hamburger fallback, which would hide a nav on a screen wide enough
    to display it. */
 @media (min-width: 769px) and (max-width: 1180px) {
-  .vamas-reels { padding: 48px 40px 72px; }
+  .vamas-reels { padding: 48px 48px 72px; }
 
   .vamas-nav { padding: 8px 8px 8px 16px; }
   .vamas-nav__links { gap: 13px; }
