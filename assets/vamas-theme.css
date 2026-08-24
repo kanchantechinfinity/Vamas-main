@@ -1762,6 +1762,10 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   color: #fff;
   line-height: 1;
   margin-bottom: 12px;
+  /* .vamas-meaning__right is text-align:right, but the tagline below is
+     centered - without this the logo sat right-aligned while "BE YOU. /
+     BE BEAUTIFUL." centered under it, visibly off from one another. */
+  text-align: center;
 }
 /* 62px matches the headword's rendered glyph height (52px at 1.15 line-height),
    so the two sides look the same weight rather than the logo dwarfing the word. */
