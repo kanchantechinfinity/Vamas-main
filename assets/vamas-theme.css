@@ -638,8 +638,12 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
    card and said nothing the title did not. */
 
 .vamas-prod-card__meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-.vamas-prod-card__colors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.vamas-prod-card__colors--single { display: none; }
+/* min-height keeps every card's colours row the same height whether it holds
+   image thumbs (22px), flat dots (14px), a single colour, or no colour option
+   at all (--empty) - otherwise cards without it sit shorter and the price/size
+   rows misalign across a grid row. */
+.vamas-prod-card__colors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 22px; }
+.vamas-prod-card__colors--empty { visibility: hidden; }
 .vamas-prod-card__color { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,0.12); cursor: pointer; flex-shrink: 0; transition: box-shadow 0.15s, transform 0.15s; }
 /* Beats the swatches' own display rules, which [hidden] does not. */
 .vamas-prod-card__colors .is-swatch-hidden { display: none !important; }
