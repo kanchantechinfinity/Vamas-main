@@ -311,6 +311,17 @@
 
     <div class="accordion">
       {% assign detail_rows = section.blocks | where: 'type', 'detail_row' %}
+      {%- comment -%}
+        These rows were pure section-block text: the SAME fabric/neck/closure
+        etc. on every product using this template, since a block's value has no
+        connection to which product is on screen. A CSV import can only vary
+        data that is stored ON the product, so each label here maps to a
+        product metafield (Settings > Custom data > Products, namespace
+        "custom") - when it is set on the product it wins, otherwise the block's
+        text is still the fallback, so existing product pages render unchanged
+        until someone fills the metafield.
+      {%- endcomment -%}
+      {%- assign detail_meta_map = "Fabric:fabric|Work:work|Blouse Type:blouse_type|Neck Style:neck_style|Back Design:back_design|Sleeve Length:sleeve_length|Lining:lining|Closure:closure|Blouse Length:blouse_length|Fabric Weight:fabric_weight|Occasion:occasion|Care:care_instructions|Origin:origin" | split: '|' -%}
       <div class="acc-item open">
         <div class="acc-header">PRODUCT DETAILS <span class="acc-icon">&#8722;</span></div>
         <div class="acc-body">
@@ -319,9 +330,17 @@
             <table class="detail-table">
               <tbody>
                 {% for block in detail_rows %}
+                {%- assign row_value = block.settings.value -%}
+                {%- for pair in detail_meta_map -%}
+                  {%- assign pair_parts = pair | split: ':' -%}
+                  {%- if pair_parts.first == block.settings.label -%}
+                    {%- assign meta_val = product.metafields.custom[pair_parts.last].value -%}
+                    {%- if meta_val != blank -%}{%- assign row_value = meta_val -%}{%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
                 <tr class="detail-row">
                   <td class="detail-label">{{ block.settings.label }}</td>
-                  <td class="detail-value">{{ block.settings.value }}</td>
+                  <td class="detail-value">{{ row_value }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
