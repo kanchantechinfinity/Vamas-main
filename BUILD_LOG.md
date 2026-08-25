@@ -931,3 +931,53 @@ Verified from served output: homepage VIEW ALL both link to `/collections`;
 ESSENTIALS, BROCADE BOHEMIA, FESTIVE GLAM, RE-VERSE BY VAMAS, SIDE STRETCH
 BLOUSES, BRIDGERTON INSPIRED, CORSETS; served CSS has the new made-love sizes/
 margins, the section's own top padding, and the 480px title override.
+
+## OUR STORY box width, Customer Reviews full-width, Instagram alignment, scrollbar, product-card row heights, meaning-band mobile fixes
+
+Eight small fixes in one stretch, each pushed as its own commit:
+
+- **OUR STORY box (`.vamas-brand`)** used `var(--page-gutter)` (min 48px) for its
+  width even though `.vamas-section` drops to 24px padding at the 768px
+  breakpoint, so the box sat narrower than every other section on phones.
+  Added a matching `width: calc(100% - 48px)` override at 768px (and the
+  already-correct 48px case at 1024px needed no change).
+- **Customer Reviews marquee** wasn't actually edge-to-edge: a later duplicate
+  `.vamas-test-marquee-row { width:100% }` rule was cancelling the section's
+  zeroed padding. Switched to the `100vw` + `margin-left/right: calc(50% - 50vw)`
+  bleed technique so it's guaranteed full-bleed regardless of ancestor padding.
+- **Instagram heading (`.vamas-reels`)** used 16px/40px side padding at
+  mobile/tablet vs. 24px/48px on every other section header - aligned to match,
+  and fixed the mobile carousel's `-24px` bleed margin, which had been
+  over-cancelling the old 16px padding by 8px.
+- **Instagram reel carousel itself** was capped inside the section's own
+  `page-gutter` padding on desktop/tablet, leaving unused space on wide
+  screens. Added `.vamas-reels .vamas-cat-carousel { margin: 0 calc(-1 * var(--page-gutter)) }`
+  (with `-48px`/`-24px` equivalents at tablet/mobile) so the cards bleed to the
+  true viewport edge; the heading stays inset.
+- **Page scrollbar hidden** site-wide (`scrollbar-width:none` +
+  `::-webkit-scrollbar{display:none}` on `html`/`body`) - scrolling still works
+  via wheel/touch/keyboard, only the native track/thumb chrome is suppressed.
+- **"Made with Love"** enlarged again (31px/24px -> 40px/30px) and turned into
+  its own full-bleed cream band (`100vw` bleed, pulled up by the section's own
+  top padding via negative margin) so it reads as a distinct strip instead of
+  sharing the "Explore by Category" section's background.
+- **Product-card grid alignment**: a single-colour product hid its entire
+  swatch row (`display:none` via `.vamas-prod-card__colors--single`, now
+  removed), and a zero-colour product rendered a bare `<span>` - both sat
+  shorter than multi-colour cards, misaligning price/size rows across a grid
+  row. Fixed by always rendering the swatch for one colour, adding an
+  `.vamas-prod-card__colors--empty` placeholder for the no-colour case, and
+  giving the row a `min-height: 22px` (matching the swatch thumb) so every
+  card reserves identical height.
+- **Meaning band, mobile only**: logo mark shrunk 54px -> 42px and the grid row
+  switched to `align-items: center` so it reads as the same size on the same
+  line as the Hindi headword (previously visibly larger and top-aligned above
+  it); tagline now renders as two explicit `<span>` lines (`BE YOU.` /
+  `BE BEAUTIFUL.`) always in the band's gold tone rather than depending on
+  `white-space:nowrap` width and never white; description text one size
+  smaller (11.5px -> 10.5px).
+
+Not verified against the live store this pass - `teamgfxbandits.myshopify.com`
+was password-protected and no credentials were available, so these are
+code-level fixes checked by reading the cascade/specificity, not by measuring
+the rendered page.

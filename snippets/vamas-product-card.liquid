@@ -406,7 +406,7 @@
 
     <div class="vamas-prod-card__meta-row">
       {% if color_values.size > 0 %}
-        <div class="vamas-prod-card__colors{% if valid_color_count <= 1 %} vamas-prod-card__colors--single{% endif %}">
+        <div class="vamas-prod-card__colors">
           {% assign swatch_seen_keys = '' %}
           {% assign swatches_rendered = 0 %}
           {%- comment -%} Render a generous set and let JS decide how many stay:
@@ -452,7 +452,10 @@
              title="More colours">+{{ swatch_overflow }}</a>
         </div>
       {% else %}
-        <span></span>
+        {%- comment -%} No color option at all - still reserve the swatch
+          row's height so this card lines up with siblings that do have
+          colors, instead of pulling its price/size row up. {%- endcomment -%}
+        <div class="vamas-prod-card__colors vamas-prod-card__colors--empty"></div>
       {% endif %}
 
       {% if product.metafields.reviews.rating.value %}
