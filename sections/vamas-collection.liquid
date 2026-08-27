@@ -291,12 +291,29 @@
   {%- endfor -%}
   <script>
     (function () {
-      var slug = new URLSearchParams(location.search).get('group');
-      if (!slug) return;
-      var hub = document.querySelector('[data-group-hub="' + CSS.escape(slug) + '"]');
-      if (!hub) return;
-      document.querySelectorAll('[data-view-default]').forEach(function (el) { el.hidden = true; });
-      hub.hidden = false;
+      /* Two traps already hit once here, both fixed:
+         1. This script used to sit ABOVE the [data-view-default] wrapper in
+            the DOM, so it ran before that element existed - querySelectorAll
+            found nothing and the product grid never hid.
+         2. The `hidden` attribute lost to .col-cats's own `display` rule (an
+            author stylesheet rule always beats the browser's [hidden]
+            default), so a "hidden" hub still rendered. style.display is set
+            directly instead, which nothing can outrank. */
+      function run() {
+        var slug = new URLSearchParams(location.search).get('group');
+        if (!slug) return;
+        var hub = document.querySelector('[data-group-hub="' + CSS.escape(slug) + '"]');
+        if (!hub) return;
+        document.querySelectorAll('[data-group-hub]').forEach(function (el) { el.style.display = 'none'; });
+        document.querySelectorAll('[data-view-default]').forEach(function (el) { el.style.display = 'none'; });
+        hub.style.display = '';
+        hub.removeAttribute('hidden');
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', run);
+      } else {
+        run();
+      }
     })();
   </script>
 {%- endif -%}

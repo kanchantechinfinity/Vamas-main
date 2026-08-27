@@ -857,6 +857,12 @@ a{text-decoration:none;color:inherit;}
 .col-cats {
   padding: 28px var(--page-gutter) 56px;
 }
+/* Group hubs on /collections/all render up front, before the toggler script
+   runs - without this they'd flash visible (stacked on top of the product
+   grid) for a moment on every load, and stay that way if JS is off. Author
+   CSS always outranks the browser's own [hidden] default, so this needs its
+   own rule rather than relying on the attribute. */
+[data-group-hub] { display: none; }
 .col-cats__title {
   font-family: var(--font-heading), Georgia, serif;
   font-size: 30px;
