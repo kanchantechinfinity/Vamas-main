@@ -13,38 +13,26 @@
 {%- comment -%}
   GROUP HUB PAGES - Explore by Category groupings (THE PLAIN EDIT, SUMMER
   ESSENTIALS, FESTIVE WEAR, MORE CATEGORIES) are not real Shopify collections,
-  just a heading over a handful of real ones. Rather than requiring a live
-  collection to exist for the heading itself, a tile links to
-  /collections/all/group-<slug> - the existing tag-route mechanism (same one
-  size-NN filtering already uses) - and current_tags carries the slug here so
-  this can detect it and switch to a circle grid instead of the product list.
-  group_map is "slug | Display Name | handle,handle,..." one per line, so
-  adding a fifth group later is a one-line settings edit, no code change.
+  just a heading over a handful of real ones.
+
+  This used to detect the group from a /collections/all/group-<slug> TAG route,
+  but Shopify 301-redirects a tag segment away the moment that exact tag
+  matches zero products ANYWHERE in the store (confirmed live: size-32 now
+  does this too, since the current product catalogue was fully replaced and
+  none of the new products carry size-NN tags any more - the same redirect,
+  not something specific to this feature). A tag that will never exist on a
+  real product can't ride that mechanism at all.
+
+  So: every group's circles are rendered into the page (server-side, always,
+  hidden by default), and a tiny script reads ?group=<slug> from the URL and
+  swaps visibility client-side - no tag, no dependency on product data.
+  group_map is "slug | Display Name | handle,handle,..." one per line.
 {%- endcomment -%}
-{%- assign group_slug = '' -%}
-{%- assign group_title = '' -%}
-{%- assign group_children = '' -%}
-{%- if collection.handle == 'all' -%}
-  {%- for ct in collection.current_tags -%}
-    {%- assign ct_down = ct | downcase -%}
-    {%- if ct_down contains 'group-' -%}
-      {%- assign group_slug = ct_down | remove_first: 'group-' -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
-{%- if group_slug != '' and section.settings.group_map != blank -%}
+{%- assign all_groups = '' -%}
+{%- if section.settings.group_map != blank -%}
   {%- assign group_lines = section.settings.group_map | newline_to_br | split: '<br />' -%}
-  {%- for line in group_lines -%}
-    {%- assign gparts = line | split: '|' -%}
-    {%- if gparts.size >= 3 and gparts[0] | strip | downcase == group_slug -%}
-      {%- assign group_title = gparts[1] | strip -%}
-      {%- assign group_children = gparts[2] | split: ',' -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
-{%- assign is_group_hub = false -%}
-{%- if group_title != '' and group_children != '' -%}
-  {%- assign is_group_hub = true -%}
+{%- else -%}
+  {%- assign group_lines = '' | split: '|' -%}
 {%- endif -%}
 
 {%- comment -%}
@@ -224,37 +212,7 @@
   {%- endfor -%}
 {%- endif -%}
 
-{% if is_group_hub %}
-{%- comment -%} GROUP HUB - same circle layout as a real category page, but the
-  heading itself (e.g. "THE PLAIN EDIT") is not a Shopify collection, so the
-  title and children come from group_map instead of collection/subcat data. {%- endcomment -%}
-<div class="col-cats">
-  <h1 class="col-cats__title">{{ group_title }}</h1>
-  <div class="col-cats__grid">
-    {% for c in group_children %}
-      {% assign c_handle = c | strip | downcase %}
-      {% if c_handle != '' %}
-        {% assign child = collections[c_handle] %}
-        {% if child != blank and child.handle %}
-          {%- assign circle_img = child.image -%}
-          {%- if circle_img == blank -%}{%- assign circle_img = child.products.first.featured_image -%}{%- endif -%}
-          <a href="{{ child.url }}" class="col-cat">
-            <span class="col-cat__ring">
-              {% if circle_img != blank %}
-                <img src="{{ circle_img | img_url: '360x360', crop: 'center' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
-              {% else %}
-                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-              {% endif %}
-            </span>
-            <span class="col-cat__label">{{ child.title }}</span>
-            <span class="col-cat__count">{{ child.products_count }} Products</span>
-          </a>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-  </div>
-</div>
-{% elsif is_category_page %}
+{% if is_category_page %}
 {%- comment -%} CATEGORY PAGE - sub-category circles, no filters and no product
   grid. Each circle opens the child collection, which renders normally. {%- endcomment -%}
 <div class="col-cats">
@@ -290,6 +248,59 @@
   </div>
 </div>
 {% else %}
+{%- if collection.handle == 'all' -%}
+  {%- comment -%}
+    Every group rendered up front, hidden - vamas-group-toggle.js below reads
+    ?group=<slug> and swaps which one (if any) is visible. data-view-default
+    marks the normal product-browsing markup so the script has one thing to
+    hide, regardless of how much markup that is.
+  {%- endcomment -%}
+  {%- for line in group_lines -%}
+    {%- assign gparts = line | split: '|' -%}
+    {%- if gparts.size >= 3 -%}
+      {%- assign g_slug = gparts[0] | strip -%}
+      {%- assign g_title = gparts[1] | strip -%}
+      {%- assign g_children = gparts[2] | split: ',' -%}
+      <div class="col-cats" data-group-hub="{{ g_slug }}" hidden>
+        <h1 class="col-cats__title">{{ g_title }}</h1>
+        <div class="col-cats__grid">
+          {% for c in g_children %}
+            {% assign c_handle = c | strip | downcase %}
+            {% if c_handle != '' %}
+              {% assign child = collections[c_handle] %}
+              {% if child != blank and child.handle %}
+                {%- assign circle_img = child.image -%}
+                {%- if circle_img == blank -%}{%- assign circle_img = child.products.first.featured_image -%}{%- endif -%}
+                <a href="{{ child.url }}" class="col-cat">
+                  <span class="col-cat__ring">
+                    {% if circle_img != blank %}
+                      <img src="{{ circle_img | img_url: '360x360', crop: 'center' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
+                    {% else %}
+                      {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    {% endif %}
+                  </span>
+                  <span class="col-cat__label">{{ child.title }}</span>
+                  <span class="col-cat__count">{{ child.products_count }} Products</span>
+                </a>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+  <script>
+    (function () {
+      var slug = new URLSearchParams(location.search).get('group');
+      if (!slug) return;
+      var hub = document.querySelector('[data-group-hub="' + CSS.escape(slug) + '"]');
+      if (!hub) return;
+      document.querySelectorAll('[data-view-default]').forEach(function (el) { el.hidden = true; });
+      hub.hidden = false;
+    })();
+  </script>
+{%- endif -%}
+<div data-view-default>
 {%- comment -%} Mobile-only collection header: title, count {%- endcomment -%}
 <div class="col-mhead">
   <h1 class="col-mhead__title">{{ collection.title }}</h1>
@@ -710,6 +721,7 @@
     {% endif %}
     {% endpaginate %}
   </div>
+</div>
 </div>
 {% endif %}
 

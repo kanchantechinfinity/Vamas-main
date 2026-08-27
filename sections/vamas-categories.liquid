@@ -14,7 +14,7 @@
 {%- endcomment -%}
 {%- assign picked = section.blocks | where: 'type', 'category' -%}
 {%- assign fallback_direct = 'occasion-wear-copy|Dual Neck Blouses,dual-neck-blouses-copy|Side Stretch Blouses,side-stretch-blouses-copy|Re-Verse By Vamas,re-verse-by-vamas-copy|Brocade Bohemia,brocade-bohemia-copy|The Kanjivaram Companion,the-kanjivaram-companion-copy|Brigerton Inspired Series,brigerton-inspired-series-copy|Party Wear' | split: ',' -%}
-{%- assign fallback_groups = 'group-plain-edit|THE PLAIN EDIT|royal-collar-necks-copy,group-summer-essentials|SUMMER ESSENTIALS|brezzy-prints-copy,group-festive-wear|FESTIVE WEAR|wedding-wear-copy,group-more-categories|MORE CATEGORIES|one-of-a-kind-blouses-copy' | split: ',' -%}
+{%- assign fallback_groups = 'plain-edit|THE PLAIN EDIT|royal-collar-necks-copy,summer-essentials|SUMMER ESSENTIALS|brezzy-prints-copy,festive-wear|FESTIVE WEAR|wedding-wear-copy,more-categories|MORE CATEGORIES|one-of-a-kind-blouses-copy' | split: ',' -%}
 
 <section class="vcats">
   <div class="vcats__head">
@@ -73,7 +73,7 @@
         {%- assign img_source = collections[parts[2] | strip] -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
-        <a class="vcat" href="/collections/all/{{ group_slug }}">
+        <a class="vcat" href="/collections/all?group={{ group_slug }}">
           <span class="vcat__ring">
             {% if circle_img != blank %}
               <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ group_label | escape }}" loading="lazy" width="180" height="180">

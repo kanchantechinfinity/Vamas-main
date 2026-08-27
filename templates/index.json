@@ -72,7 +72,7 @@
             "image_asset": "prod-darkmaroon.jpg",
             "cat_name": "THE PLAIN EDIT",
             "cat_count": "",
-            "cat_url": "/collections/all/group-plain-edit"
+            "cat_url": "/collections/all?group=plain-edit"
           }
         },
         "cat-2": {
@@ -81,7 +81,7 @@
             "image_asset": "casual.jpg",
             "cat_name": "SUMMER ESSENTIALS",
             "cat_count": "",
-            "cat_url": "/collections/all/group-summer-essentials"
+            "cat_url": "/collections/all?group=summer-essentials"
           }
         },
         "cat-3": {
@@ -135,7 +135,7 @@
             "image_asset": "prod-brinjal.jpg",
             "cat_name": "FESTIVE WEAR",
             "cat_count": "",
-            "cat_url": "/collections/all/group-festive-wear"
+            "cat_url": "/collections/all?group=festive-wear"
           }
         },
         "cat-11": {
@@ -153,7 +153,7 @@
             "image_asset": "bridal.jpg",
             "cat_name": "MORE CATEGORIES",
             "cat_count": "",
-            "cat_url": "/collections/all/group-more-categories"
+            "cat_url": "/collections/all?group=more-categories"
           }
         },
         "stat-1": {
