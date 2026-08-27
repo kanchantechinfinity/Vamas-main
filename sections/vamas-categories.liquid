@@ -1,16 +1,20 @@
 {{ 'vamas-collection.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
-  Category grid page — circles matching the homepage "Explore by Category" row,
+  Category grid page - circles matching the homepage "Explore by Category" row,
   so /collections (this page) reads as the full, non-scrolling version of that
-  carousel rather than a different design. Uses the section's own picked
-  collections when the merchant has chosen any; otherwise falls back to the same
-  eight parent categories the homepage carousel and vamas-collection.liquid's
-  subcat_map both use, so all three stay in sync without duplicating the list a
-  fourth way.
+  carousel. Uses the section's own picked collections when the merchant has
+  chosen any; otherwise falls back to the current 11-tile structure - 7 tiles
+  are real collections (linked directly), 4 are group headings with no
+  collection of their own (linked to the /collections/all/group-<slug> hub
+  handled in vamas-collection.liquid). Handles carry -copy because that is
+  what actually exists right now (duplicated collections whose slug was never
+  cleaned up) - update this list, and vamas-collection.liquid's group_map
+  setting, once the real handles are renamed.
 {%- endcomment -%}
 {%- assign picked = section.blocks | where: 'type', 'category' -%}
-{%- assign fallback_handles = 'the-plain-edit,summer-essentials,brocade-bohemia,festive-glam,re-verse-by-vamas,side-stretch-blouses,bridgerton-inspired,corsets' | split: ',' -%}
+{%- assign fallback_direct = 'occasion-wear-copy|Dual Neck Blouses,dual-neck-blouses-copy|Side Stretch Blouses,side-stretch-blouses-copy|Re-Verse By Vamas,re-verse-by-vamas-copy|Brocade Bohemia,brocade-bohemia-copy|The Kanjivaram Companion,the-kanjivaram-companion-copy|Brigerton Inspired Series,brigerton-inspired-series-copy|Party Wear' | split: ',' -%}
+{%- assign fallback_groups = 'group-plain-edit|THE PLAIN EDIT|royal-collar-necks-copy,group-summer-essentials|SUMMER ESSENTIALS|brezzy-prints-copy,group-festive-wear|FESTIVE WEAR|wedding-wear-copy,group-more-categories|MORE CATEGORIES|one-of-a-kind-blouses-copy' | split: ',' -%}
 
 <section class="vcats">
   <div class="vcats__head">
@@ -44,22 +48,41 @@
         </a>
       {% endfor %}
     {% else %}
-      {% for handle in fallback_handles %}
-        {%- assign c = collections[handle] -%}
+      {% for entry in fallback_direct %}
+        {%- assign parts = entry | split: '|' -%}
+        {%- assign c = collections[parts[0] | strip] -%}
         {% if c != blank and c.handle %}
           {%- assign circle_img = c.image -%}
           {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
           <a class="vcat" href="{{ c.url }}">
             <span class="vcat__ring">
               {% if circle_img != blank %}
-                <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ c.title | escape }}" loading="lazy" width="180" height="180">
+                <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ parts[1] | strip | escape }}" loading="lazy" width="180" height="180">
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
               {% endif %}
             </span>
-            <span class="vcat__label">{{ c.title }}</span>
+            <span class="vcat__label">{{ parts[1] | strip }}</span>
           </a>
         {% endif %}
+      {% endfor %}
+      {% for entry in fallback_groups %}
+        {%- assign parts = entry | split: '|' -%}
+        {%- assign group_slug = parts[0] | strip -%}
+        {%- assign group_label = parts[1] | strip -%}
+        {%- assign img_source = collections[parts[2] | strip] -%}
+        {%- assign circle_img = img_source.image -%}
+        {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
+        <a class="vcat" href="/collections/all/{{ group_slug }}">
+          <span class="vcat__ring">
+            {% if circle_img != blank %}
+              <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ group_label | escape }}" loading="lazy" width="180" height="180">
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
+            {% endif %}
+          </span>
+          <span class="vcat__label">{{ group_label }}</span>
+        </a>
       {% endfor %}
     {% endif %}
   </div>
