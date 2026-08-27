@@ -312,35 +312,40 @@
     <div class="accordion">
       {% assign detail_rows = section.blocks | where: 'type', 'detail_row' %}
       {%- comment -%}
-        These rows were pure section-block text: the SAME fabric/neck/closure
-        etc. on every product using this template, since a block's value has no
-        connection to which product is on screen. A CSV import can only vary
-        data that is stored ON the product, so each label here maps to a
-        product metafield (Settings > Custom data > Products, namespace
-        "custom") - when it is set on the product it wins, otherwise the block's
-        text is still the fallback, so existing product pages render unchanged
-        until someone fills the metafield.
+        Every label here maps to a product metafield (Settings > Custom data >
+        Products, namespace "custom"). No hardcoded fallback text any more - a
+        row only renders when the PRODUCT's own metafield is filled in, so a
+        product nobody has entered specs for shows no fake data instead of
+        someone else's fabric/neckline. Rows with a blank metafield are skipped
+        entirely rather than printing an empty cell.
       {%- endcomment -%}
-      {%- assign detail_meta_map = "Fabric:fabric|Work:work|Blouse Type:blouse_type|Neck Style:neck_style|Back Design:back_design|Sleeve Length:sleeve_length|Lining:lining|Closure:closure|Blouse Length:blouse_length|Fabric Weight:fabric_weight|Occasion:occasion|Care:care_instructions|Origin:origin" | split: '|' -%}
+      {%- assign detail_meta_map = "Style Name:style_name|Fabric:fabric|Work:work|Blouse Type:blouse_type|Neck Style:neck_style|Sleeve Length:sleeve_length|Lining:lining|Closure:closure|Care:care_instructions|Origin:origin" | split: '|' -%}
+      {%- assign filled_rows = '' -%}
+      {%- for block in detail_rows -%}
+        {%- assign row_value = '' -%}
+        {%- for pair in detail_meta_map -%}
+          {%- assign pair_parts = pair | split: ':' -%}
+          {%- if pair_parts.first == block.settings.label -%}
+            {%- assign row_value = product.metafields.custom[pair_parts.last].value -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if row_value != blank -%}
+          {%- assign filled_rows = filled_rows | append: block.settings.label | append: '¤' | append: row_value | append: '§' -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- assign filled_rows = filled_rows | split: '§' -%}
       <div class="acc-item open">
         <div class="acc-header">PRODUCT DETAILS <span class="acc-icon">&#8722;</span></div>
         <div class="acc-body">
           <div class="acc-content">
-            {% if detail_rows.size > 0 %}
+            {% if filled_rows.size > 0 %}
             <table class="detail-table">
               <tbody>
-                {% for block in detail_rows %}
-                {%- assign row_value = block.settings.value -%}
-                {%- for pair in detail_meta_map -%}
-                  {%- assign pair_parts = pair | split: ':' -%}
-                  {%- if pair_parts.first == block.settings.label -%}
-                    {%- assign meta_val = product.metafields.custom[pair_parts.last].value -%}
-                    {%- if meta_val != blank -%}{%- assign row_value = meta_val -%}{%- endif -%}
-                  {%- endif -%}
-                {%- endfor -%}
+                {% for entry in filled_rows %}
+                {%- assign entry_parts = entry | split: '¤' -%}
                 <tr class="detail-row">
-                  <td class="detail-label">{{ block.settings.label }}</td>
-                  <td class="detail-value">{{ row_value }}</td>
+                  <td class="detail-label">{{ entry_parts.first }}</td>
+                  <td class="detail-value">{{ entry_parts.last }}</td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -1183,19 +1188,16 @@
     {
       "name": "Vamas Product",
       "blocks": [
-        { "type": "detail_row", "settings": { "label": "Fabric", "value": "100% Banarasi Silk" } },
-        { "type": "detail_row", "settings": { "label": "Work", "value": "Hand Mirror Embroidery (Shisha Work)" } },
-        { "type": "detail_row", "settings": { "label": "Blouse Type", "value": "Readymade / Pre-Stitched" } },
-        { "type": "detail_row", "settings": { "label": "Neck Style", "value": "Boat Neck (Front)" } },
-        { "type": "detail_row", "settings": { "label": "Back Design", "value": "Deep V Back with Tie-Up Strings" } },
-        { "type": "detail_row", "settings": { "label": "Sleeve Length", "value": "3/4 Sleeve (Elbow Length)" } },
-        { "type": "detail_row", "settings": { "label": "Lining", "value": "Soft Cotton Inner Lining" } },
-        { "type": "detail_row", "settings": { "label": "Closure", "value": "Hook & Eye (5 Hooks)" } },
-        { "type": "detail_row", "settings": { "label": "Blouse Length", "value": "14.5 - 15.5 inches (size dependent)" } },
-        { "type": "detail_row", "settings": { "label": "Fabric Weight", "value": "110 GSM" } },
-        { "type": "detail_row", "settings": { "label": "Occasion", "value": "Bridal / Festive / Wedding" } },
-        { "type": "detail_row", "settings": { "label": "Care", "value": "Dry Clean Only" } },
-        { "type": "detail_row", "settings": { "label": "Origin", "value": "Handcrafted in India" } },
+        { "type": "detail_row", "settings": { "label": "Style Name", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Fabric", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Work", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Blouse Type", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Neck Style", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Sleeve Length", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Lining", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Closure", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Care", "value": "" } },
+        { "type": "detail_row", "settings": { "label": "Origin", "value": "" } },
         { "type": "size_row", "settings": { "size": "32", "bust": "32", "waist": "26", "hip": "34", "length": "14.5" } },
         { "type": "size_row", "settings": { "size": "34", "bust": "34", "waist": "28", "hip": "36", "length": "15" } },
         { "type": "size_row", "settings": { "size": "36", "bust": "36", "waist": "30", "hip": "38", "length": "15.5" } },
