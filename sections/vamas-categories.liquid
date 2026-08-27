@@ -51,20 +51,27 @@
       {% for entry in fallback_direct %}
         {%- assign parts = entry | split: '|' -%}
         {%- assign c = collections[parts[0] | strip] -%}
-        {% if c != blank and c.handle %}
-          {%- assign circle_img = c.image -%}
-          {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
-          <a class="vcat" href="{{ c.url }}">
-            <span class="vcat__ring">
-              {% if circle_img != blank %}
-                <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ parts[1] | strip | escape }}" loading="lazy" width="180" height="180">
-              {% else %}
-                {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
-              {% endif %}
-            </span>
-            <span class="vcat__label">{{ parts[1] | strip }}</span>
-          </a>
-        {% endif %}
+        {%- comment -%}
+          Always render the tile, same as the homepage carousel - if its
+          collection was deleted/renamed, fall through to /collections/all
+          instead of silently vanishing from this page. Whoever is missing
+          still shows up (with a placeholder image if needed) as a visible
+          signal that its link needs pointing at the new handle, rather than
+          quietly dropping a tile with no trace.
+        {%- endcomment -%}
+        {%- assign tile_url = c.url | default: '/collections/all' -%}
+        {%- assign circle_img = c.image -%}
+        {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
+        <a class="vcat" href="{{ tile_url }}">
+          <span class="vcat__ring">
+            {% if circle_img != blank %}
+              <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ parts[1] | strip | escape }}" loading="lazy" width="180" height="180">
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
+            {% endif %}
+          </span>
+          <span class="vcat__label">{{ parts[1] | strip }}</span>
+        </a>
       {% endfor %}
       {% for entry in fallback_groups %}
         {%- assign parts = entry | split: '|' -%}
