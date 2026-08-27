@@ -239,6 +239,18 @@
             {%- if cat_handle != '' and collections[cat_handle] == blank -%}
               {%- assign cat_target = '/collections/all' -%}
             {%- endif -%}
+            {%- comment -%}
+              A tile with no cat_image and no image_asset used to fall straight
+              to a generic placeholder icon (a bag/luggage glyph) - fine while
+              nobody had set one, but wrong once the collection is real and has
+              products. Borrow that collection's own first product photo before
+              giving up to the placeholder, same as /collections and the group
+              hubs already do. Only reached when both fields are genuinely
+              blank, so every tile that already has an image is untouched. {%- endcomment -%}
+            {%- assign cat_fallback_img = blank -%}
+            {%- if block.settings.cat_image == blank and block.settings.image_asset == blank and cat_handle != '' -%}
+              {%- assign cat_fallback_img = collections[cat_handle].products.first.featured_image -%}
+            {%- endif -%}
             <a href="{{ cat_target }}" class="vamas-cat-circle" draggable="false">
               <div class="vamas-cat-circle__ring">
                 {% if block.settings.cat_image != blank %}
@@ -246,6 +258,9 @@
                        alt="{{ block.settings.cat_name }}" loading="lazy" width="150" height="150" draggable="false">
                 {% elsif block.settings.image_asset != blank %}
                   <img src="{{ block.settings.image_asset | asset_url }}"
+                       alt="{{ block.settings.cat_name | escape }}" loading="lazy" width="150" height="150" draggable="false">
+                {% elsif cat_fallback_img != blank %}
+                  <img src="{{ cat_fallback_img | img_url: '300x300', crop: 'top' }}"
                        alt="{{ block.settings.cat_name | escape }}" loading="lazy" width="150" height="150" draggable="false">
                 {% else %}
                   {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
