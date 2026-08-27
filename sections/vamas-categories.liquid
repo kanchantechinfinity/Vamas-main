@@ -50,7 +50,8 @@
     {% else %}
       {% for entry in fallback_direct %}
         {%- assign parts = entry | split: '|' -%}
-        {%- assign c = collections[parts[0] | strip] -%}
+        {%- assign entry_handle = parts[0] | strip -%}
+        {%- assign c = collections[entry_handle] -%}
         {%- comment -%}
           Always render the tile, same as the homepage carousel - if its
           collection was deleted/renamed, fall through to /collections/all
@@ -77,7 +78,8 @@
         {%- assign parts = entry | split: '|' -%}
         {%- assign group_slug = parts[0] | strip -%}
         {%- assign group_label = parts[1] | strip -%}
-        {%- assign img_source = collections[parts[2] | strip] -%}
+        {%- assign img_source_handle = parts[2] | strip -%}
+        {%- assign img_source = collections[img_source_handle] -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="/collections/all?group={{ group_slug }}">
