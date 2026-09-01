@@ -13,6 +13,33 @@
 {% assign is_kids_product = false %}
 {% if product_type_lower contains 'kid' %}{% assign is_kids_product = true %}{% endif %}
 
+{%- comment -%}
+  Which of the 5 size charts this product shows: an explicit per-product
+  metafield wins when set (Settings > Custom data > Products, namespace
+  "custom", key "size_chart_type" - a dropdown of padded_blouse / shapewear /
+  stretchable / boys / girls). With nothing set, fall back to auto-detecting
+  from data every product already has (type/tags), so the whole catalog
+  works with zero manual tagging on day one and only needs the metafield set
+  on the handful of products auto-detect can't tell apart (e.g. boys vs
+  girls kidswear, which share no distinguishing tag yet).
+{%- endcomment -%}
+{%- assign chart_type = product.metafields.custom.size_chart_type.value -%}
+{%- assign product_tags_lower = product.tags | join: '|' | downcase -%}
+{%- if chart_type == blank -%}
+  {%- if product_type_lower contains 'kid' -%}
+    {%- if product_tags_lower contains 'boy' -%}
+      {%- assign chart_type = 'boys' -%}
+    {%- elsif product_tags_lower contains 'girl' -%}
+      {%- assign chart_type = 'girls' -%}
+    {%- endif -%}
+  {%- elsif product_tags_lower contains 'shapewear' or product_tags_lower contains 'corset' -%}
+    {%- assign chart_type = 'shapewear' -%}
+  {%- elsif product_tags_lower contains 'stretch' -%}
+    {%- assign chart_type = 'stretchable' -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if chart_type == blank -%}{%- assign chart_type = 'padded_blouse' -%}{%- endif -%}
+
 <section class="product-section">
 
   <!-- ═══ LEFT: Gallery ═══ -->
@@ -472,22 +499,47 @@
       <button class="sc-close" id="sc-close">&times;</button>
     </div>
     <div class="sc-body">
-      {% comment %}
-        Vamas's own padded-blouse chart. Measurements run down the side and sizes
-        across the top, matching the printed chart the team works from, so the two
-        can be checked against each other line by line.
-
-        The numeric sizes sold on site ARE the chest measurement - 32 is XS, 42 is
-        XXL - so both labels sit in the header rather than making shoppers guess.
-      {% endcomment %}
-      {% assign sc_letters = 'XS,S,M,L,XL,XXL' | split: ',' %}
-      {% assign sc_numeric = '32,34,36,38,40,42' | split: ',' %}
-      {% assign sc_rows = 'CHEST:32,34,36,38,40,42|LENGTH:13,13.5,14,14.5,14.5,15|WAIST:26,28,30,32,34,36|SHORT SLEEVE:5,5,5,5.5,5.5,6.5|ELBOW SLEEVE:10,10.5,11,11,11,11|3/4 SLEEVE:16,16,16,16,17,17|FULL SLEEVE:21,21,21,21,21,22' | split: '|' %}
+      {%- comment -%}
+        5 real charts (Vamas's own printed sheets - PADDED BLOUSE, SHAPEWEAR,
+        STRETCHABLE, BOYS, GIRLS), keyed by chart_type (resolved above from
+        the size_chart_type metafield, or auto-detected). Same modal chrome
+        (title/toggle/table/fineprint) for every type - only the column
+        headers and row data change. Header entries are "label" or, for the
+        blouse chart, "label|sub" (the small numeric size under the letter).
+        Row entries are "LABEL:val1,val2,...".
+      {%- endcomment -%}
+      {%- case chart_type -%}
+        {%- when 'shapewear' or 'stretchable' -%}
+          {%- assign sc_headers = 'S-M,L-XL,2XL-3XL' | split: ',' -%}
+          {%- assign sc_rows_in = 'WAIST:30 (28-32),34 (32-36),38 (36-40)|HIP:36 (34-40),40 (38-44),44 (42-48)|LENGTH:37,37,37' | split: '|' -%}
+          {%- assign sc_rows_cm = 'WAIST:76.2 (71.12-81.28),86.36 (81.28-91.44),96.52 (91.44-101.6)|HIP:91.44 (86.36-101.6),101.6 (96.52-111.76),111.76 (106.68-121.92)|LENGTH:93.98,93.98,93.98' | split: '|' -%}
+          {%- if chart_type == 'shapewear' -%}{%- assign sc_title = 'SHAPEWEAR MEASUREMENT' -%}{%- else -%}{%- assign sc_title = 'STRETCHABLE MEASUREMENT' -%}{%- endif -%}
+        {%- when 'boys' -%}
+          {%- assign sc_headers = '1-2 Years,2-3 Years,3-4 Years,4-5 Years,5-6 Years,6-7 Years' | split: ',' -%}
+          {%- assign sc_rows_in = 'TOP LENGTH:19,21,23,25,27,29|CHEST:25.5,26.5,27.5,28.5,29.5,30.5|SLEEVE:12,13,14,15,16,17|BOTTOM LENGTH:20.5,22,23.5,25,26.5,28|WAIST:16.5,17,17.5,18,18.5,19|HIP:25,26,27,28,29,30|JACKET LENGTH:13.75,14.5,15.25,16,16.75,17.5' | split: '|' -%}
+          {%- assign sc_rows_cm = 'TOP LENGTH:48,53,58,63,68,73|CHEST:65,67,70,72,75,77|SLEEVE:30.5,33,35.5,38,40.5,43|BOTTOM LENGTH:52,56,60,63,67,71|WAIST:42,43,44,46,47,48|HIP:63,66,69,71,74,76|JACKET LENGTH:35,37,39,41,43,45' | split: '|' -%}
+          {%- assign sc_title = 'BOYS MEASUREMENT' -%}
+        {%- when 'girls' -%}
+          {%- assign sc_headers = '1-2 Years,2-3 Years,3-4 Years,4-5 Years,5-6 Years,6-7 Years' | split: ',' -%}
+          {%- assign sc_rows_in = 'TOP LENGTH:19,20.5,23,24.5,26.5,29|CHEST:26,27,28,29,30,31|SLEEVE:12,13,14,15,16,17|BOTTOM LENGTH:19,20.5,22,24.5,26,28|WAIST:16.5,17,17.5,18,18.5,19|JACKET CHEST:25,26,27,28,29,30' | split: '|' -%}
+          {%- assign sc_rows_cm = 'TOP LENGTH:48.26,52.07,58.42,62.23,67.31,73.66|CHEST:66.04,68.58,71.12,73.66,76.2,78.74|SLEEVE:30.48,33.02,35.56,38.1,40.64,43.18|BOTTOM LENGTH:48.26,52.07,55.88,62.23,66.04,71.12|WAIST:41.91,43.18,44.45,45.72,46.99,48.26|JACKET CHEST:63.5,66.04,68.58,71.12,73.66,76.2' | split: '|' -%}
+          {%- assign sc_title = 'GIRLS MEASUREMENT' -%}
+        {%- else -%}
+          {%- comment -%} padded_blouse - the numeric sizes sold on site ARE
+            the chest measurement (32 is XS, 50 is 6XL), so both labels sit
+            in the header rather than making shoppers guess. {%- endcomment -%}
+          {%- assign sc_headers = 'XS|32,S|34,M|36,L|38,XL|40,XXL|42,3XL|44,4XL|46,5XL|48,6XL|50' | split: ',' -%}
+          {%- assign sc_rows_in = 'CHEST:32,34,36,38,40,42,44,46,48,50|LENGTH:13,13.5,14,14.5,15,15.5,16,16.5,17,17.5|WAIST:26,28,30,32,34,36,38,40,42,44|SHORT SLEEVE:5,5,5,5.5,5.5,6.5,6.5,6.5,6.5,6.5|3/4 SLEEVE:10,10.5,11,11,11,11,11.5,11.5,11.5,11.5|FULL SLEEVE:21,21,21,21,21,22,22,22,22,22' | split: '|' -%}
+          {%- assign sc_rows_cm = 'CHEST:81.28,86.36,91.44,96.52,101.6,106.68,111.76,116.84,121.92,127|LENGTH:33.02,34.29,35.56,36.83,38.1,39.37,40.64,41.91,43.18,44.45|WAIST:66.04,71.12,76.2,81.28,86.36,91.44,96.52,101.6,106.68,111.76|SHORT SLEEVE:12.7,12.7,12.7,13.97,13.97,16.51,16.51,16.51,16.51,16.51|3/4 SLEEVE:25.4,26.67,27.94,27.94,27.94,27.94,29.21,29.21,29.21,29.21|FULL SLEEVE:53.34,53.34,53.34,53.34,53.34,55.88,55.88,55.88,55.88,55.88' | split: '|' -%}
+          {%- assign sc_title = 'PADDED BLOUSE MEASUREMENT' -%}
+      {%- endcase -%}
 
       {% comment %} Diagram first, then the chart, then the notes - the same running
-        order as the printed sheet. {% endcomment %}
+        order as the printed sheet. Only the padded blouse chart has Vamas's own
+        measuring diagram; the others skip straight to the table. {% endcomment %}
+      {% if chart_type == 'padded_blouse' %}
       <div class="sc-measure sc-measure--top">
-        <h4 class="sc-measure__title">PADDED BLOUSE MEASUREMENT</h4>
+        <h4 class="sc-measure__title">{{ sc_title }}</h4>
         {% comment %} The drawing from the brand's own chart, traced out of the PDF as
           vector paths so it stays sharp at any size and weighs ~7KB. A merchant image
           overrides it if the artwork is ever redrawn. {% endcomment %}
@@ -499,6 +551,11 @@
           </div>
         {% endif %}
       </div>
+      {% else %}
+      <div class="sc-measure sc-measure--top">
+        <h4 class="sc-measure__title">{{ sc_title }}</h4>
+      </div>
+      {% endif %}
 
       <p class="sc-hint">Measure your body, not a garment. Between two sizes? Take the larger one.</p>
 
@@ -507,19 +564,23 @@
           <thead>
             <tr>
               <th>SIZE</th>
-              {% for l in sc_letters %}
-                <th>{{ l }}<span class="sc-num">{{ sc_numeric[forloop.index0] }}</span></th>
+              {% for h in sc_headers %}
+                {% assign h_parts = h | split: '|' %}
+                <th>{{ h_parts[0] }}{% if h_parts[1] %}<span class="sc-num">{{ h_parts[1] }}</span>{% endif %}</th>
               {% endfor %}
             </tr>
           </thead>
           <tbody>
-            {% for row in sc_rows %}
-              {% assign parts = row | split: ':' %}
-              {% assign vals = parts[1] | split: ',' %}
+            {% for row_in in sc_rows_in %}
+              {% assign parts_in = row_in | split: ':' %}
+              {% assign vals_in = parts_in[1] | split: ',' %}
+              {% assign row_cm = sc_rows_cm[forloop.index0] %}
+              {% assign parts_cm = row_cm | split: ':' %}
+              {% assign vals_cm = parts_cm[1] | split: ',' %}
               <tr>
-                <th scope="row">{{ parts[0] }}</th>
-                {% for v in vals %}
-                  <td class="sc-val" data-in="{{ v }}" data-cm="{{ v | times: 2.54 | round: 1 }}">{{ v }}</td>
+                <th scope="row">{{ parts_in[0] }}</th>
+                {% for v in vals_in %}
+                  <td class="sc-val" data-in="{{ v }}" data-cm="{{ vals_cm[forloop.index0] }}">{{ v }}</td>
                 {% endfor %}
               </tr>
             {% endfor %}
@@ -528,13 +589,21 @@
       </div>
 
       <ul class="sc-fineprint">
-        <li>All garments come with <strong>1.5 inches seam allowance</strong> on both sides.</li>
-        <li>You can easily open up the margin to fit your size.</li>
+        {% if chart_type == 'padded_blouse' %}
+          <li>All garments come with <strong>1.5 inches seam allowance</strong> on both sides.</li>
+          <li>You can easily open up the margin to fit your size.</li>
+        {% elsif chart_type == 'shapewear' or chart_type == 'stretchable' %}
+          <li><strong>Fit range</strong> shown beside each size is how far the fabric comfortably stretches - pick the size whose actual measurement is closest to yours.</li>
+        {% endif %}
         <li>Measurements may vary depending on fabric and pattern.</li>
       </ul>
 
       {% comment %} Written steps sit after the sheet's own content - they are extra
-        guidance for shoppers, not part of the printed chart. {% endcomment %}
+        guidance for shoppers, not part of the printed chart. Only written out for
+        the padded blouse chart, where Vamas has given the exact technique per
+        measurement; the other charts keep the general tip below instead of
+        guessing at instructions nobody's provided. {% endcomment %}
+      {% if chart_type == 'padded_blouse' %}
       <div class="sc-measure">
         <h4 class="sc-measure__title">HOW TO MEASURE</h4>
         <ol class="sc-measure__list">
@@ -545,6 +614,9 @@
         </ol>
         <p class="sc-measure__tip">Use a soft measuring tape and keep it parallel to the floor. Measure over your innerwear, not over clothing.</p>
       </div>
+      {% else %}
+        <p class="sc-measure__tip">Use a soft measuring tape and keep it parallel to the floor. Measure over your innerwear, not over clothing.</p>
+      {% endif %}
     </div>
   </div>
 </div>
