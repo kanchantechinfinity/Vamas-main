@@ -448,17 +448,16 @@
   reviews, star-percentage bars, and non-functional "Write a Review" button
   that used to render here are gone.
 
-  This is Judge.me's standard widget div, not the .metafields.judgeme.widget
-  metafield - that metafield only populates once a product already HAS a
-  review, so gating on it left no way for a customer to write the FIRST
-  review. This div always renders; Judge.me's own script (loaded via its App
-  Embed - must be turned on in Theme Editor > App embeds) finds it and fills
-  in the summary, existing reviews if any, and a working "write a review"
-  form even at zero reviews. {% endcomment %}
-  <!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->
+  This is Judge.me's own official snippet (added via their app's "Add the
+  widget code" step, NOT the .metafields.judgeme.widget metafield alone -
+  that metafield only populates once a product already HAS a review, which
+  left no way for a customer to write the FIRST one). Wrapped in
+  .reviews-section for the site's usual side padding/spacing; no separate
+  "Customer Reviews" <h2> here since the widget renders its own title
+  ("Show widget title" is on in Judge.me's settings) - a second heading
+  duplicated it. {% endcomment %}
 <section class="reviews-section" id="reviews">
-  <h2 class="rev-heading">Customer Reviews</h2>
-  <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}">{{ product.metafields.judgeme.widget }}</div>
+  <!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->
 </section>
 
 {% if section.settings.show_size_chart %}

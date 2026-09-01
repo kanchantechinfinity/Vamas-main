@@ -220,6 +220,17 @@
     /* ── Reviews ── */
     .reviews-section{background:var(--bg);padding:60px 40px;}
     .rev-heading{font-size:26px;font-weight:500;color:#1a1a1a;margin-bottom:40px;}
+
+    /* Judge.me widget - the color fields set in its own app settings cover
+       the star/button/text colors; these fill the gaps their settings don't
+       reach (heading font, button shape/casing) so it reads as part of the
+       theme rather than a bolted-on plugin. */
+    .jdgm-rev-widg__title,
+    .jdgm-widget-title,
+    .jdgm-rev-widg__summary-title{font-family:var(--font-heading)!important;font-weight:600!important;}
+    .jdgm-write-rev-link,
+    .jdgm-rev-widg__btn{border-radius:12px!important;font-family:var(--font-body)!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;}
+    .jdgm-rev-widg{font-family:var(--font-body);}
     .reviews-grid{display:grid;grid-template-columns:1fr 2fr;gap:48px;}
     .rev-big-score{font-size:68px;font-family:var(--font-heading);font-weight:600;color:#1a1a1a;line-height:1;}
     .rev-stars-big{font-size:20px;color:#FFC400;letter-spacing:2px;}
