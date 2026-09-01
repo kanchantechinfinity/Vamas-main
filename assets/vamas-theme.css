@@ -488,7 +488,15 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 }
 
 /* ── Product Grid ─────────────────────── */
-.vamas-prod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+/* auto-fill instead of a fixed repeat(4,...) - shared by cart's "You May
+   Also Like", the wishlist page/drawer, search results and the product
+   page's related grid, so all of them add columns on a wider screen
+   instead of the same 4 cards just stretching. Tablet/phone breakpoints
+   below still pin it to fewer columns. */
+.vamas-prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+/* Wishlist page only - fixed side padding instead of the .vamas-section
+   default's var(--page-gutter), same growing-width fix as elsewhere. */
+.vamas-wishlist-section { padding-left: 40px; padding-right: 40px; max-width: 1900px; margin-left: auto; margin-right: auto; }
 
 /* Homepage collection sections: horizontal scroll instead of wrapping rows -
    4 cards in view on desktop, 2 on mobile, rest reachable by scrolling right. */
