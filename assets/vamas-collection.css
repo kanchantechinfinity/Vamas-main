@@ -122,8 +122,13 @@ a{text-decoration:none;color:inherit;}
 .col-body{
   display:flex;
   gap:0;
-  padding:40px var(--page-gutter) 64px;
-  max-width:none;
+  /* Fixed side padding, not var(--page-gutter) - that variable grows with
+     the viewport specifically to pin content at a constant ~1200px reading
+     width everywhere else, which was quietly capping the product area at
+     the same width on any screen bigger than ~1300px and keeping the grid
+     stuck at 4 columns no matter how large the monitor. */
+  padding:40px 40px 64px;
+  max-width:1900px;
   margin:0 auto;
   align-items:flex-start;
 }
@@ -376,7 +381,11 @@ a{text-decoration:none;color:inherit;}
 /* -- PRODUCT GRID -- */
 .prod-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
+  /* auto-fill instead of a fixed repeat(4,...) - columns keep adding as the
+     window grows past a laptop screen (4 -> 5 -> 6+) instead of the same 4
+     cards just stretching wider forever. Card breakpoints below still pin
+     it to 3/2/1 on tablet and phone. */
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
   gap:20px;
   margin-bottom:40px;
 }
