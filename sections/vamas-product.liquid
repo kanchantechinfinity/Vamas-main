@@ -457,7 +457,7 @@
   form even at zero reviews. {% endcomment %}
 <section class="reviews-section" id="reviews">
   <h2 class="rev-heading">Customer Reviews</h2>
-  <div class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
+  <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}">{{ product.metafields.judgeme.widget }}</div>
 </section>
 
 {% if section.settings.show_size_chart %}
