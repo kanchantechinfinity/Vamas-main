@@ -320,6 +320,13 @@
         entirely rather than printing an empty cell.
       {%- endcomment -%}
       {%- assign detail_meta_map = "Style Name:style_name|Fabric:fabric|Work:work|Blouse Type:blouse_type|Neck Style:neck_style|Sleeve Length:sleeve_length|Lining:lining|Closure:closure|Care:care_instructions|Origin:origin" | split: '|' -%}
+      {%- comment -%}
+        Style Name is the exception: it always shows, blank value or not,
+        because it is meant to be the product's own short code/name up top -
+        useful as a heading even before every product has one filled in. The
+        other nine still hide completely when blank, per the no-fake-data
+        rule above.
+      {%- endcomment -%}
       {%- assign filled_rows = '' -%}
       {%- for block in detail_rows -%}
         {%- assign row_value = '' -%}
@@ -329,7 +336,7 @@
             {%- assign row_value = product.metafields.custom[pair_parts.last].value -%}
           {%- endif -%}
         {%- endfor -%}
-        {%- if row_value != blank -%}
+        {%- if row_value != blank or block.settings.label == 'Style Name' -%}
           {%- assign filled_rows = filled_rows | append: block.settings.label | append: '¤' | append: row_value | append: '§' -%}
         {%- endif -%}
       {%- endfor -%}
