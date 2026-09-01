@@ -234,7 +234,7 @@
           <a href="{{ child.url }}" class="col-cat">
             <span class="col-cat__ring">
               {% if circle_img != blank %}
-                <img src="{{ circle_img | img_url: '360x360', crop: 'center' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
+                <img src="{{ circle_img | img_url: '360x360', crop: 'top' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
               {% endif %}
@@ -274,7 +274,7 @@
                 <a href="{{ child.url }}" class="col-cat">
                   <span class="col-cat__ring">
                     {% if circle_img != blank %}
-                      <img src="{{ circle_img | img_url: '360x360', crop: 'center' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
+                      <img src="{{ circle_img | img_url: '360x360', crop: 'top' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
                     {% else %}
                       {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
                     {% endif %}
