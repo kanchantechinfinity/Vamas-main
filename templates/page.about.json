@@ -29,8 +29,8 @@
         "stat-3": {
           "type": "stat",
           "settings": {
-            "stat_num": "15+",
-            "stat_label": "States"
+            "stat_num": "100+",
+            "stat_label": "Stores Across India"
           }
         },
         "stat-4": {
@@ -44,91 +44,24 @@
           "type": "value",
           "settings": {
             "icon": "craft",
-            "title": "Quality, Guaranteed",
-            "desc": "We source like hawks and stitch with love, ensuring your Vamas blouse becomes a treasured story in your wardrobe — not a fabric faux pas."
+            "title": "Craftsmanship First",
+            "desc": "What goes into a garment is just as important as what you see. We obsess over the little things — the fall of a fabric, the softness of a lining, the finishing of a stitch, the comfort of a fit."
           }
         },
         "val-2": {
           "type": "value",
           "settings": {
             "icon": "sustain",
-            "title": "Classic With a Twist",
-            "desc": "We take timeless silhouettes for a spin, adding a dash of modern magic — think peplums and off-the-shoulder styles — to make your saree the envy of the room."
+            "title": "Kind by Design",
+            "desc": "We consciously use vegan silk, choosing beauty without compromising kindness. And we believe in quality without unnecessary extravagance — designer-wear blouses accessible across sizes, colours and fabrics, at a reasonable price."
           }
         },
         "val-3": {
           "type": "value",
           "settings": {
             "icon": "authentic",
-            "title": "Confidence, Worn",
-            "desc": "A saree deserves a partner in crime, not a wallflower. We design blouses that unleash your inner boss lady — because confidence is the ultimate accessory."
-          }
-        },
-        "member-1": {
-          "type": "member",
-          "settings": {
-            "initials": "MS",
-            "name": "Meera Sharma",
-            "role": "Founder",
-            "bio": "Visionary behind Vamas, passionate about preserving Indian textile heritage. Meera started the brand after a decade of working with karigars across Rajasthan and UP."
-          }
-        },
-        "member-2": {
-          "type": "member",
-          "settings": {
-            "initials": "PN",
-            "name": "Priya Nair",
-            "role": "Head Designer",
-            "bio": "Brings 12 years of design expertise to every collection. Priya blends contemporary aesthetics with classical motifs, creating pieces that are timeless yet modern."
-          }
-        },
-        "member-3": {
-          "type": "member",
-          "settings": {
-            "initials": "RK",
-            "name": "Ramesh Kumar",
-            "role": "Master Artisan",
-            "bio": "Trained in traditional embroidery techniques from Varanasi, Ramesh leads our karigar network and ensures every piece meets Vamas' signature quality standard."
-          }
-        },
-        "ms-1": {
-          "type": "milestone",
-          "settings": {
-            "year": "2018",
-            "desc": "Founded in Jaipur with just 10 designs and a single karigar workshop. The first collection sold out in 3 weeks.",
-            "align_right": false
-          }
-        },
-        "ms-2": {
-          "type": "milestone",
-          "settings": {
-            "year": "2020",
-            "desc": "Expanded to 200+ designs and launched our online store, bringing handcrafted blouses to customers across India.",
-            "align_right": true
-          }
-        },
-        "ms-3": {
-          "type": "milestone",
-          "settings": {
-            "year": "2022",
-            "desc": "Crossed 5,000 happy customers and partnered with artisan clusters in Varanasi, Lucknow, and Bhopal.",
-            "align_right": false
-          }
-        },
-        "ms-4": {
-          "type": "milestone",
-          "settings": {
-            "year": "2024",
-            "desc": "Featured in Vogue India's \"Brands Celebrating Indian Craft\" spotlight. A proud moment for our entire karigar community.",
-            "align_right": true
-          }
-        },
-        "ms-5": {
-          "type": "milestone",
-          "settings": {
-            "year": "2026",
-            "desc": "10,000+ customers, 500+ designs, and shipping to 15+ states. The journey continues — one blouse at a time.",
-            "align_right": false
+            "title": "People, Always",
+            "desc": "Vamas has been built stitch by stitch, with the love and hard work of our team and our karigars. Customer satisfaction remains at the heart of everything we do — the greatest compliment isn't that you bought a Vamas blouse, it's that you came back for another."
           }
         }
       },
@@ -139,35 +72,27 @@
         "stat-4",
         "val-1",
         "val-2",
-        "val-3",
-        "member-1",
-        "member-2",
-        "member-3",
-        "ms-1",
-        "ms-2",
-        "ms-3",
-        "ms-4",
-        "ms-5"
+        "val-3"
       ],
       "settings": {
-        "hero_eyebrow": "WHO WE ARE",
+        "hero_eyebrow": "ABOUT US",
         "hero_heading": "Our Story",
-        "hero_sub": "We put the \"extra\" in \"extra blouse.\"",
+        "hero_sub": "A legacy that began with fabric. A journey that found its way to you.",
         "hero_bg_image": "shopify://shop_images/Artboard_1_5804b263-b659-4223-9352-a3a39321b525.png",
         "hero_bg_mobile": "shopify://shop_images/Artboard_1_5804b263-b659-4223-9352-a3a39321b525.png",
         "story_eyebrow": "THE VAMAS STORY",
-        "story_heading": "<p>Where sarees<br/><em>get obsessed.</em></p>",
-        "story_body": "<p>It started in Mumbai in the 1960s, a time when sarees swirled like magic carpets. Vamas began not just as a brand, but as a mission to elevate the saree — crafting blouses that turn it into a masterpiece. Five decades on, Vamas is a family tradition, and our love for quality, craftsmanship, and understanding what makes a woman feel special hasn't changed.</p><p>A saree deserves a partner in crime, not just any old blouse. Our blouses are a symphony of fabrics — the silky whisper of silk, the rich drape of brocade, the comfy coolness of cotton, the modern edge of velvet — meticulously crafted by artisans who pour their heritage into every stitch.</p><p>We're all about tradition with a modern twist: classic silhouettes like halter necks and sweetheart necklines reimagined for today, alongside new-age styles like peplums, off-the-shoulder cuts, and capes — so you find the perfect match for your saree, family heirloom or brand new.</p>",
+        "story_heading": "<p>Where a cloth store<br/><em>became a legacy.</em></p>",
+        "story_body": "<p>Long before Vamas became a name in readymade blouses, there was a little cloth store, a love for textiles, and a family that believed in doing things with heart.</p><p>Our story began in the early 1960s with Jalaram Cloth Store, founded and run by the late Shri Vinodchandra Parekh. What started as a humble textile business slowly became a family legacy — one that would travel across generations.</p><p>In 2009, his son, Jayesh Parekh, with the support of his wife Alka Parekh, noticed an everyday problem that every saree-loving woman knew too well. A saree blouse had to be stitched separately — find a tailor, choose a fabric, explain the design, wait for it, try it on, fix the fitting. And sometimes, even after all that, it still wasn't quite right.</p><p>So we wondered — what if finding the perfect blouse could be as easy as finding the perfect saree? And that simple thought became Vamas.</p><p>We began creating ready-to-wear blouses in a world where almost every blouse was made to order. Different sizes. Beautiful fabrics. Endless colours. Thoughtful designs. All ready to mix, match and make your own. From a size 32 to a size 52, we wanted every woman to find a blouse that felt like it was made just for her — because we believe a ready-made blouse should never feel ready-made.</p><p>What began as a wholesale business, supplying ethnic retailers across India and overseas, gradually grew into retail and online. Today, Vamas has five stores across Mumbai and is available through 100+ stores across India, as well as on many online platforms.</p><p>Today, Vamas is looked after by the third generation of the Parekh family — Chintan Parekh and Khushboo Parekh — carrying forward a legacy that began more than six decades ago. Three generations. One love for textiles. And a whole lot of love stitched in between.</p><h3>Our Vision</h3><p>To make every woman feel like the blouse was made for her. We want Vamas to become the place every woman thinks of when she thinks of a blouse — whatever her size, whatever her style, whatever her saree, whatever her occasion. We want her to walk into a Vamas store and think, \"There is something here for me.\"</p><p>We want to continue bringing the beauty of Indian textiles and contemporary design to women everywhere, while making quality, comfort and thoughtful design accessible to more people. And as Vamas grows, we want our impact to grow with us — more women empowered, more livelihoods supported, more opportunities created, more Indian textiles celebrated. Our dream isn't simply to grow bigger. It is to grow better, with every generation.</p><h3>Our Philosophy</h3><p>A blouse is more than what you wear. It's how you feel when you wear it. We don't believe fashion should ask you to choose between beauty and comfort — we believe you deserve both. The saree already has its own personality; we don't want the blouse to compete with it, we want it to complete it — sometimes quietly, sometimes boldly, but always with you at the centre.</p><p>We design for every woman who loves to dress her way — the woman who loves classics, the woman who loves colour, the woman who experiments, the woman who wants to feel beautiful, and the woman who simply wants to feel comfortable. She shouldn't have to choose between the two. Beauty should feel comfortable. Comfort should feel beautiful.</p><p>And perhaps our simplest philosophy is this: don't make women fit the blouse — make the blouse fit the woman. Because at Vamas, our clothes are not meant to define you. They are meant to let you shine through. Be you. Be beautiful.</p><h3>And Finally, You</h3><p>After all these years, generations and thousands of stitches, there is one person at the centre of our story — you. The woman who walks in looking for something for a wedding. The woman searching for a blouse for her favourite saree. The woman who needs a size 32, and the woman who needs a size 52. The woman who wants something classic, and the woman who wants something completely different.</p><p>You are the reason we keep designing, the reason we keep improving, the reason a little textile legacy from the 1960s became Vamas. As we move into our next generation, we carry with us the legacy of our family, the hands of our karigars, the strength of our team, our love for textiles, and the women who have trusted us over the years — because Vamas was never meant to be just a blouse brand. It was built to make beautiful things easier, to make women feel good, to create with purpose, and to carry a little piece of our love for Indian textiles into your wardrobe.</p><p><em>With love,<br/>VAMAS</em></p>",
         "story_image_asset": "slide-pink.jpg",
         "values_eyebrow": "WHAT WE STAND FOR",
         "values_heading": "Our Values",
-        "values_sub": "Quality shouldn't be a mystery — here's what guides every blouse we make.",
+        "values_sub": "Beautiful things begin with the way you make them.",
         "team_eyebrow": "THE PEOPLE BEHIND VAMAS",
         "team_heading": "Meet Our Team",
         "team_sub": "Passionate individuals united by a love for Indian textiles and a mission to celebrate our artisans.",
         "tl_eyebrow": "OUR JOURNEY",
         "tl_heading": "Milestones That Define Us",
-        "tl_sub": "From a small Jaipur studio to India's trusted blouse brand — here is how we grew."
+        "tl_sub": "From a small cloth store in 1960s Mumbai to India's trusted blouse brand — here is how we grew."
       }
     }
   },
