@@ -3,13 +3,20 @@
     body{font-family:var(--font-body);background:var(--bg);color:#333;}
 
     /* ── Breadcrumb ── */
-    .breadcrumb{padding:14px var(--page-gutter);font-size:11px;color:#888;display:flex;align-items:center;gap:6px;}
+    .breadcrumb{padding:14px 40px;font-size:11px;color:#888;display:flex;align-items:center;gap:6px;}
     .breadcrumb a{color:#888;text-decoration:none;}
     .breadcrumb a:hover{color:var(--m);}
     .breadcrumb span{color:#aaa;}
 
     /* ── Product layout ── */
-    .product-section{display:flex;gap:56px;padding:24px var(--page-gutter) 64px;align-items:flex-start;max-width:none;margin:0 auto;}
+    /* Fixed side padding, not var(--page-gutter) - that variable grows with
+       the viewport to pin content at a constant ~1200px reading width
+       everywhere else, which was quietly capping this page at the same
+       width on any monitor bigger than ~1300px: the gallery is a fixed
+       620px, so all that extra room should have gone to .prod-info, and
+       instead nothing changed at all. max-width matches the collection
+       page's cap so it doesn't grow without bound on ultrawide screens. */
+    .product-section{display:flex;gap:56px;padding:24px 40px 64px;align-items:flex-start;max-width:1900px;margin:0 auto;}
 
     /* ── Gallery ── */
     .prod-gallery{width:620px;flex-shrink:0;position:sticky;top:90px;display:flex;gap:12px;}
@@ -208,10 +215,10 @@
     .related-section{padding:56px 0;background:var(--w);}
     .rel-eyebrow{text-align:center;font-size:10px;letter-spacing:3px;font-weight:700;color:var(--gd);margin-bottom:10px;}
     .rel-heading{text-align:center;font-family:var(--font-heading);font-size:30px;font-weight:500;color:#1a1a1a;margin-bottom:0;}
-    .related-section .vamas-prod-grid{padding:36px var(--page-gutter) 0;}
+    .related-section .vamas-prod-grid{padding:36px 40px 0;}
 
     /* ── Reviews ── */
-    .reviews-section{background:var(--bg);padding:60px var(--page-gutter);}
+    .reviews-section{background:var(--bg);padding:60px 40px;}
     .rev-heading{font-size:26px;font-weight:500;color:#1a1a1a;margin-bottom:40px;}
     .reviews-grid{display:grid;grid-template-columns:1fr 2fr;gap:48px;}
     .rev-big-score{font-size:68px;font-family:var(--font-heading);font-weight:600;color:#1a1a1a;line-height:1;}
