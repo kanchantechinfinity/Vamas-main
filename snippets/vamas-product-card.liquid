@@ -10,12 +10,13 @@
   {% assign discount_pct = diff | times: 100 | divided_by: first_variant.compare_at_price | round %}
 {% endif %}
 
-{% comment %} Rating value for the mobile on-image badge (e.g. "4.8") {% endcomment %}
+{% comment %} Rating value for the mobile on-image badge (e.g. "4.8") - real
+  reviews only (via the legacy reviews.rating metafield some review apps
+  write to). Left blank, not fabricated, when a product has none yet; the
+  badge itself is skipped further down when this is blank. {% endcomment %}
+{% assign rating_num = '' %}
 {% if product.metafields.reviews.rating.value %}
   {% assign rating_num = product.metafields.reviews.rating.value.rating %}
-{% else %}
-  {% assign rating_seed = product.id | modulo: 6 %}
-  {% assign rating_num = rating_seed | times: 0.1 | plus: 4.4 | round: 1 %}
 {% endif %}
 
 {% comment %} Find the product's actual Color option (not assumed to be option1) {% endcomment %}
@@ -392,11 +393,14 @@
 
     <a href="{{ product.url }}" class="vamas-prod-card__quickshop">QUICK SHOP</a>
 
-    {% comment %} Mobile-only: rating badge overlaid on the image, bottom-right {% endcomment %}
+    {% comment %} Mobile-only: rating badge overlaid on the image, bottom-right -
+      only when there's a real rating to show. {% endcomment %}
+    {% if rating_num != blank %}
     <a href="{{ product.url }}#reviews" class="vamas-prod-card__rating-badge">
       <span>{{ rating_num }}</span>
       <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7-6.3-3.9-6.3 3.9 1.7-7L2 9.5l7.1-.6z"/></svg>
     </a>
+    {% endif %}
   </div>
 
   <div class="vamas-prod-card__body">
@@ -458,7 +462,11 @@
         <div class="vamas-prod-card__colors vamas-prod-card__colors--empty"></div>
       {% endif %}
 
-      {% if product.metafields.reviews.rating.value %}
+      {% if product.metafields.judgeme.badge != blank %}
+        {%- comment -%} Real reviews via Judge.me - its own ready-made
+          star-badge widget, populated once the product has a synced review. {%- endcomment -%}
+        <div class="vamas-prod-card__stars">{{ product.metafields.judgeme.badge }}</div>
+      {% elsif product.metafields.reviews.rating.value %}
         <div class="vamas-prod-card__stars">
           {% assign rating_val = product.metafields.reviews.rating.value.rating | floor %}
           {% for i in (1..5) %}{% if i <= rating_val %}★{% else %}☆{% endif %}{% endfor %}
@@ -466,9 +474,10 @@
             ({{ product.metafields.reviews.rating_count.value | default: '0' }})
           </span>
         </div>
-      {% else %}
-        <div class="vamas-prod-card__stars">★★★★★ <span class="vamas-prod-card__review-count">({{ product.id | modulo: 50 | plus: 10 }})</span></div>
       {% endif %}
+      {%- comment -%} No fake fallback here on purpose - a product with no
+        real reviews yet just shows no stars, rather than a fabricated
+        count derived from the product id. {%- endcomment -%}
     </div>
 
     <div class="vamas-prod-card__price">

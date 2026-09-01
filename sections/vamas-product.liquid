@@ -60,11 +60,22 @@
 
     {% if section.settings.show_rating %}
     <div class="prod-rating">
-      <span class="stars">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
-      <span class="rating-num">{{ section.settings.rating }}</span>
-      <span class="rating-count">({{ section.settings.review_count }} reviews)</span>
-      {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
-      <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
+      {% if product.metafields.judgeme.badge != blank %}
+        {%- comment -%} Real reviews via the Judge.me app - this metafield is
+          Judge.me's own ready-made star-badge widget, populated automatically
+          once the product has at least one real review synced. {%- endcomment -%}
+        {{ product.metafields.judgeme.badge }}
+        {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
+        <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
+      {% else %}
+        {%- comment -%} No Judge.me reviews synced for this product yet - fall
+          back to the merchant-set placeholder numbers so the row isn't empty. {%- endcomment -%}
+        <span class="stars">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
+        <span class="rating-num">{{ section.settings.rating }}</span>
+        <span class="rating-count">({{ section.settings.review_count }} reviews)</span>
+        {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
+        <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
+      {% endif %}
     </div>
     {% endif %}
 
@@ -440,7 +451,17 @@
 
 {% comment %} ── Reviews ── {% endcomment %}
 {% assign review_blocks = section.blocks | where: 'type', 'review' %}
-{% if section.settings.show_reviews and review_blocks.size > 0 %}
+{% if product.metafields.judgeme.widget != blank %}
+  {%- comment -%} Real customer reviews via Judge.me - this metafield is the
+    app's own full widget (summary, star breakdown, individual reviews, and
+    the "write a review" form), populated automatically once installed.
+    Renders with Judge.me's own styling rather than the hand-built markup
+    below, which only ever showed merchant-typed placeholder reviews. {%- endcomment -%}
+  <section class="reviews-section" id="reviews">
+    <h2 class="rev-heading">Customer Reviews</h2>
+    {{ product.metafields.judgeme.widget }}
+  </section>
+{% elsif section.settings.show_reviews and review_blocks.size > 0 %}
 <section class="reviews-section" id="reviews">
   <h2 class="rev-heading">Customer Reviews</h2>
   <div class="reviews-grid">
