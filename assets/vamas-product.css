@@ -14,9 +14,9 @@
        everywhere else, which was quietly capping this page at the same
        width on any monitor bigger than ~1300px: the gallery is a fixed
        620px, so all that extra room should have gone to .prod-info, and
-       instead nothing changed at all. max-width matches the collection
-       page's cap so it doesn't grow without bound on ultrawide screens. */
-    .product-section{display:flex;gap:56px;padding:24px 40px 64px;align-items:flex-start;max-width:1900px;margin:0 auto;}
+       instead nothing changed at all. No max-width - the page stays full
+       width with just the side padding on every screen, no big screens. */
+    .product-section{display:flex;gap:56px;padding:24px 40px 64px;align-items:flex-start;}
 
     /* ── Gallery ── */
     .prod-gallery{width:620px;flex-shrink:0;position:sticky;top:90px;display:flex;gap:12px;}
@@ -215,9 +215,7 @@
     .related-section{padding:56px 0;background:var(--w);}
     .rel-eyebrow{text-align:center;font-size:10px;letter-spacing:3px;font-weight:700;color:var(--gd);margin-bottom:10px;}
     .rel-heading{text-align:center;font-family:var(--font-heading);font-size:30px;font-weight:500;color:#1a1a1a;margin-bottom:0;}
-    /* max-width caps the grid at 5 columns on very wide screens, same as
-       .product-section above - this container had no ceiling before. */
-    .related-section .vamas-prod-grid{padding:36px 40px 0;max-width:1900px;margin-left:auto;margin-right:auto;}
+    .related-section .vamas-prod-grid{padding:36px 40px 0;}
 
     /* ── Reviews ── */
     .reviews-section{background:var(--bg);padding:60px 40px;}
