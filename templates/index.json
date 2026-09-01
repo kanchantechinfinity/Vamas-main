@@ -78,7 +78,7 @@
         "cat-2": {
           "type": "category",
           "settings": {
-            "image_asset": "casual.jpg",
+            "image_asset": "cat-summer-essentials.jpg",
             "cat_name": "SUMMER ESSENTIALS",
             "cat_count": "",
             "cat_url": "/collections/all?group=summer-essentials"
@@ -114,7 +114,7 @@
         "cat-6": {
           "type": "category",
           "settings": {
-            "image_asset": "prod-indigo.jpg",
+            "image_asset": "cat-brocade-bohemia.jpg",
             "cat_name": "BROCADE BOHEMIA",
             "cat_count": "",
             "cat_url": "/collections/re-verse-by-vamas-copy"
@@ -275,6 +275,7 @@
         "cat-7": {
           "type": "category",
           "settings": {
+            "image_asset": "cat-brigerton-series.jpg",
             "cat_name": "BRIGERTON INSPIRED SERIES",
             "cat_url": "/collections/the-kanjivaram-companion-copy"
           }
