@@ -233,10 +233,6 @@
       </div>
 
 
-      {% if section.settings.custom_note != blank %}
-      <div class="custom-note">&#9986; {{ section.settings.custom_note }}</div>
-      {% endif %}
-
       <div class="delivery-box">
         {% if section.settings.delivery_line_1 != blank %}<div class="delivery-row"><span class="d-icon">&#128666;</span><span>{{ section.settings.delivery_line_1 }}</span></div>{% endif %}
         {% if section.settings.delivery_line_2 != blank %}<div class="delivery-row"><span class="d-icon">&#128197;</span><span>{{ section.settings.delivery_line_2 }}</span></div>{% endif %}
@@ -304,7 +300,6 @@
       <div class="trust-item"><span class="trust-icon">&#128666;</span><span>Free Shipping &gt; {{ section.settings.free_shipping_threshold }}</span></div>
       <div class="trust-item"><span class="trust-icon">&#8635;</span><span>7-Day Easy Returns</span></div>
       <div class="trust-item"><span class="trust-icon">&#128274;</span><span>100% Secure Payment</span></div>
-      <div class="trust-item"><span class="trust-icon">&#9986;</span><span>Free Custom Stitching</span></div>
       <div class="trust-item"><span class="trust-icon">&#127470;&#127475;</span><span>Made in India</span></div>
     </div>
     {% endif %}
@@ -1099,8 +1094,6 @@
     { "type": "header", "content": "Social Proof" },
     { "type": "checkbox", "id": "show_social_proof", "label": "Show Viewer Count", "default": true },
     { "type": "text", "id": "viewer_count", "label": "Viewer Count", "default": "18" },
-    { "type": "header", "content": "Custom Stitching" },
-    { "type": "text", "id": "custom_note", "label": "Note", "default": "Free custom stitching available — just share your measurements at checkout" },
     { "type": "header", "content": "Delivery Box" },
     { "type": "text", "id": "delivery_line_1", "label": "Line 1", "default": "Free delivery on orders above ₹999" },
     { "type": "text", "id": "delivery_line_2", "label": "Line 2", "default": "Order now — estimated delivery in 3-5 days" },
