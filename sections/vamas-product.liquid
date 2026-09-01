@@ -60,14 +60,16 @@
 
     {% if section.settings.show_rating %}
     <div class="prod-rating">
-      {%- comment -%} Real reviews via the Judge.me app only - no placeholder
-        numbers. Nothing shows here until the product actually has a real,
-        customer-submitted review synced by Judge.me. {%- endcomment -%}
-      {% if product.metafields.judgeme.badge != blank %}
-        {{ product.metafields.judgeme.badge }}
-        <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
-      {% endif %}
-      {% if section.settings.sold_count != blank %}<span class="rating-sold">{% if product.metafields.judgeme.badge != blank %}| {% endif %}{{ section.settings.sold_count }} sold</span>{% endif %}
+      {%- comment -%} Real reviews via Judge.me only - no placeholder numbers.
+        This is Judge.me's standard preview-badge div (not the
+        .metafields.judgeme.badge metafield, which needs metafield sync
+        turned on in the app's settings to ever populate). Judge.me's script
+        fills this with the real star average + count, or renders nothing
+        visible if the product has no reviews yet - either way it's driven
+        by real data, not a Liquid guess. {%- endcomment -%}
+      <span class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" data-rating="0" data-number-of-reviews="0"></span>
+      <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
+      {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
     </div>
     {% endif %}
 
@@ -444,19 +446,19 @@
 {% comment %} ── Reviews ──
   Real customer reviews via Judge.me only - the hand-typed placeholder
   reviews, star-percentage bars, and non-functional "Write a Review" button
-  that used to render here (from merchant-set schema fields and "review"
-  blocks) are gone. This metafield is Judge.me's own full widget (summary,
-  star breakdown, individual reviews, and a working review form), populated
-  automatically once the app has at least one real review for the product.
-  Nothing renders here until then - see product.json to seed real reviews
-  via Judge.me's import tool, or wait for the first customer submission.
-{% endcomment %}
-{% if product.metafields.judgeme.widget != blank %}
-  <section class="reviews-section" id="reviews">
-    <h2 class="rev-heading">Customer Reviews</h2>
-    {{ product.metafields.judgeme.widget }}
-  </section>
-{% endif %}
+  that used to render here are gone.
+
+  This is Judge.me's standard widget div, not the .metafields.judgeme.widget
+  metafield - that metafield only populates once a product already HAS a
+  review, so gating on it left no way for a customer to write the FIRST
+  review. This div always renders; Judge.me's own script (loaded via its App
+  Embed - must be turned on in Theme Editor > App embeds) finds it and fills
+  in the summary, existing reviews if any, and a working "write a review"
+  form even at zero reviews. {% endcomment %}
+<section class="reviews-section" id="reviews">
+  <h2 class="rev-heading">Customer Reviews</h2>
+  <div class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>
+</section>
 
 {% if section.settings.show_size_chart %}
 <div class="sc-overlay" id="sc-overlay">
