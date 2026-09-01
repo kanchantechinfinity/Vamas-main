@@ -32,7 +32,7 @@
           "announce_speed": 22,
           "announce_switch_seconds": 3,
           "announce_text_1": "LOVED BY 2M+ WOMEN WORLDWIDE",
-          "announce_text_2": "SELLING FAST \u2014 1 BLOUSE / EVERY 60 SECS",
+          "announce_text_2": "SELLING FAST — 1 BLOUSE / EVERY 60 SECS",
           "announce_text_3": "100% Vegan Silk",
           "announce_text": ""
         }
@@ -63,7 +63,14 @@
         }
       }
     },
-    "content_for_index": []
+    "content_for_index": [],
+    "blocks": {
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      }
+    }
   },
   "presets": {
     "Default": {
