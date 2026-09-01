@@ -221,16 +221,21 @@
     .reviews-section{background:var(--bg);padding:60px 40px;}
     .rev-heading{font-size:26px;font-weight:500;color:#1a1a1a;margin-bottom:40px;}
 
-    /* Judge.me widget - the color fields set in its own app settings cover
-       the star/button/text colors; these fill the gaps their settings don't
-       reach (heading font, button shape/casing) so it reads as part of the
-       theme rather than a bolted-on plugin. */
-    .jdgm-rev-widg__title,
-    .jdgm-widget-title,
-    .jdgm-rev-widg__summary-title{font-family:var(--font-heading)!important;font-weight:600!important;}
-    .jdgm-write-rev-link,
-    .jdgm-rev-widg__btn{border-radius:12px!important;font-family:var(--font-body)!important;font-weight:700!important;letter-spacing:1px!important;text-transform:uppercase!important;}
-    .jdgm-rev-widg{font-family:var(--font-body);}
+    /* Judge.me widget (their current "jm-*" Vue-based rebuild, verified
+       against the live rendered markup - their older "jdgm-rev-widg__*"
+       classes are a different, discontinued version and don't exist here).
+       The color fields set in Judge.me's own app settings already cover the
+       star/button/text colors; this fills what their settings can't reach:
+       heading font, button casing, and turning each review into a proper
+       card instead of a bare row separated by a hairline. */
+    #judgeme_product_reviews{font-family:var(--font-body);}
+    .jm-review-widget-minimal-header__title{font-family:var(--font-heading)!important;font-size:28px!important;color:var(--m)!important;font-weight:600!important;}
+    .jm-button--primary.jm-action-buttons__button{border-radius:12px!important;font-family:var(--font-body)!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;font-size:12px!important;}
+    .jm-review-item{background:#fff;border:1px solid rgba(146,68,68,.08);border-radius:14px;padding:22px 24px!important;box-shadow:0 4px 16px rgba(146,68,68,.05);}
+    .jdgm-review-list.jm-stack{gap:var(--jm-space-400,20px)!important;}
+    .jm-reviewer-avatar__initial{background:var(--m)!important;}
+    .jm-reviewer-avatar__initial .jm-text{color:var(--g)!important;}
+    .jm-reviewer-info__name{font-family:var(--font-heading);font-weight:600!important;}
     .reviews-grid{display:grid;grid-template-columns:1fr 2fr;gap:48px;}
     .rev-big-score{font-size:68px;font-family:var(--font-heading);font-weight:600;color:#1a1a1a;line-height:1;}
     .rev-stars-big{font-size:20px;color:#FFC400;letter-spacing:2px;}
