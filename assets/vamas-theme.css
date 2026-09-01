@@ -513,11 +513,9 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
   padding-bottom: 2px;
 }
 .vamas-prod-grid--scroll::-webkit-scrollbar { display: none; }
-/* Fixed card width, not "100% / 4" - the section's own width is no longer
-   capped at ~1200px (see .vamas-tabbed-collections below), so a percentage
-   split would keep 4 cards forever, just wider. This way more cards come
-   into view as the section gets more room, same as the collection grid. */
-.vamas-prod-grid--scroll > * { flex: 0 0 230px; scroll-snap-align: start; min-width: 0; }
+/* Percentage split so exactly 5 cards are always in view on desktop,
+   regardless of viewport width. */
+.vamas-prod-grid--scroll > * { flex: 0 0 calc((100% - 4 * 20px) / 5); scroll-snap-align: start; min-width: 0; }
 /* Only used by .vamas-tabbed-collections (Shop Our Picks + Extra
    collections) - the growing-width fix, matching the collection and
    product pages: fixed side padding instead of the page-gutter that pins
