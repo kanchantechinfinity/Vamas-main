@@ -236,6 +236,16 @@
     .jm-reviewer-avatar__initial{background:var(--m)!important;}
     .jm-reviewer-avatar__initial .jm-text{color:var(--g)!important;}
     .jm-reviewer-info__name{font-family:var(--font-heading);font-weight:600!important;}
+
+    /* The "Write a review" popup form is a SEPARATE, older widget
+       (.jdgm-write-review-modal / .jdgm-star) from the review list above -
+       its star-rating input and Next/Back/Close buttons were still the
+       default teal, not the maroon/gold set in Judge.me's app settings
+       (those only cover the review list widget's own colors). */
+    .jdgm-write-review-modal .jdgm-star{color:#FFC400!important;}
+    .jdgm-write-review-modal__title{font-family:var(--font-heading)!important;color:var(--m)!important;}
+    .jdgm-write-review-modal__nav-btn{background:var(--m)!important;color:var(--g)!important;border:none!important;border-radius:12px!important;font-family:var(--font-body)!important;font-weight:700!important;letter-spacing:1.5px!important;text-transform:uppercase!important;}
+    .jdgm-write-review-modal__nav-btn:hover{background:var(--ml)!important;}
     .reviews-grid{display:grid;grid-template-columns:1fr 2fr;gap:48px;}
     .rev-big-score{font-size:68px;font-family:var(--font-heading);font-weight:600;color:#1a1a1a;line-height:1;}
     .rev-stars-big{font-size:20px;color:#FFC400;letter-spacing:2px;}
