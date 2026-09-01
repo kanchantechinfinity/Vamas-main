@@ -87,7 +87,7 @@
         "cat-3": {
           "type": "category",
           "settings": {
-            "image_asset": "prod-cobalt.jpg",
+            "image_asset": "cat-cover-dual-neck.jpg",
             "cat_name": "DUAL NECK BLOUSES",
             "cat_count": "",
             "cat_url": "/collections/occasion-wear-copy"
@@ -96,7 +96,7 @@
         "cat-4": {
           "type": "category",
           "settings": {
-            "image_asset": "slide-pink.jpg",
+            "image_asset": "cat-cover-side-stretch.jpg",
             "cat_name": "SIDE STRETCH BLOUSES",
             "cat_count": "",
             "cat_url": "/collections/dual-neck-blouses-copy"
@@ -123,7 +123,7 @@
         "cat-9": {
           "type": "category",
           "settings": {
-            "image_asset": "prod-green2.jpg",
+            "image_asset": "cat-cover-kanjivaram.jpg",
             "cat_name": "THE KANJIVARAM COMPANION",
             "cat_count": "",
             "cat_url": "/collections/brocade-bohemia-copy"
@@ -283,6 +283,7 @@
         "cat-8": {
           "type": "category",
           "settings": {
+            "image_asset": "cat-cover-corsets.jpg",
             "cat_name": "CORSETS",
             "cat_url": "/collections/corsets"
           }

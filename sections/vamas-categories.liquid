@@ -61,17 +61,33 @@
           quietly dropping a tile with no trace.
         {%- endcomment -%}
         {%- assign tile_url = c.url | default: '/collections/all' -%}
+        {%- comment -%}
+          Cover photo override, from the client's product-code sheet -
+          takes priority over the collection's own image/first product,
+          for the tiles the client picked a specific product/colour for.
+        {%- endcomment -%}
+        {%- assign tile_label = parts[1] | strip -%}
+        {%- assign cover_asset = blank -%}
+        {%- case tile_label -%}
+          {%- when 'Dual Neck Blouses' -%}{%- assign cover_asset = 'cat-cover-dual-neck.jpg' -%}
+          {%- when 'Side Stretch Blouses' -%}{%- assign cover_asset = 'cat-cover-side-stretch.jpg' -%}
+          {%- when 'Brocade Bohemia' -%}{%- assign cover_asset = 'cat-brocade-bohemia.jpg' -%}
+          {%- when 'The Kanjivaram Companion' -%}{%- assign cover_asset = 'cat-cover-kanjivaram.jpg' -%}
+          {%- when 'Brigerton Inspired Series' -%}{%- assign cover_asset = 'cat-brigerton-series.jpg' -%}
+        {%- endcase -%}
         {%- assign circle_img = c.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="{{ tile_url }}">
           <span class="vcat__ring">
-            {% if circle_img != blank %}
-              <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ parts[1] | strip | escape }}" loading="lazy" width="180" height="180">
+            {% if cover_asset != blank %}
+              <img src="{{ cover_asset | asset_url }}" alt="{{ tile_label | escape }}" loading="lazy" width="180" height="180">
+            {% elsif circle_img != blank %}
+              <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ tile_label | escape }}" loading="lazy" width="180" height="180">
             {% else %}
               {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
             {% endif %}
           </span>
-          <span class="vcat__label">{{ parts[1] | strip }}</span>
+          <span class="vcat__label">{{ tile_label }}</span>
         </a>
       {% endfor %}
       {% for entry in fallback_groups %}
@@ -80,11 +96,17 @@
         {%- assign group_label = parts[1] | strip -%}
         {%- assign img_source_handle = parts[2] | strip -%}
         {%- assign img_source = collections[img_source_handle] -%}
+        {%- assign cover_asset = blank -%}
+        {%- case group_label -%}
+          {%- when 'SUMMER ESSENTIALS' -%}{%- assign cover_asset = 'cat-summer-essentials.jpg' -%}
+        {%- endcase -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="/collections/all?group={{ group_slug }}">
           <span class="vcat__ring">
-            {% if circle_img != blank %}
+            {% if cover_asset != blank %}
+              <img src="{{ cover_asset | asset_url }}" alt="{{ group_label | escape }}" loading="lazy" width="180" height="180">
+            {% elsif circle_img != blank %}
               <img src="{{ circle_img | image_url: width: 360 }}" alt="{{ group_label | escape }}" loading="lazy" width="180" height="180">
             {% else %}
               {{ 'collection-1' | placeholder_svg_tag: 'vcat__ph' }}
