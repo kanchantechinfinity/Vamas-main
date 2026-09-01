@@ -382,11 +382,13 @@ a{text-decoration:none;color:inherit;}
 .prod-grid{
   display:grid;
   /* auto-fill instead of a fixed repeat(4,...) - columns keep adding as the
-     window grows past a laptop screen (4 -> 5 -> 6+) instead of the same 4
-     cards just stretching wider forever. Card breakpoints below still pin
-     it to 3/2/1 on tablet and phone. */
-  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:20px;
+     window grows past a laptop screen instead of the same 4 cards just
+     stretching wider forever, capped at 5 (not unbounded) to match
+     vamas.in's own reference layout - 280px combined with .col-body's
+     max-width:1900px never leaves room for a 6th column. Card breakpoints
+     below still pin it to 3/2/1 on tablet and phone. */
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:22px;
   margin-bottom:40px;
 }
 .p-card{

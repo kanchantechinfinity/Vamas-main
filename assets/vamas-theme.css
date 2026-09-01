@@ -493,7 +493,10 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
    page's related grid, so all of them add columns on a wider screen
    instead of the same 4 cards just stretching. Tablet/phone breakpoints
    below still pin it to fewer columns. */
-.vamas-prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 20px; }
+/* 280px/22px, capped at 5 columns together with each container's own
+   max-width:1900px - matches vamas.in's reference layout, not an
+   unbounded 6+ on very wide screens. */
+.vamas-prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
 /* Wishlist page only - fixed side padding instead of the .vamas-section
    default's var(--page-gutter), same growing-width fix as elsewhere. */
 .vamas-wishlist-section { padding-left: 40px; padding-right: 40px; max-width: 1900px; margin-left: auto; margin-right: auto; }
