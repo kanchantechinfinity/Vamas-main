@@ -60,22 +60,14 @@
 
     {% if section.settings.show_rating %}
     <div class="prod-rating">
+      {%- comment -%} Real reviews via the Judge.me app only - no placeholder
+        numbers. Nothing shows here until the product actually has a real,
+        customer-submitted review synced by Judge.me. {%- endcomment -%}
       {% if product.metafields.judgeme.badge != blank %}
-        {%- comment -%} Real reviews via the Judge.me app - this metafield is
-          Judge.me's own ready-made star-badge widget, populated automatically
-          once the product has at least one real review synced. {%- endcomment -%}
         {{ product.metafields.judgeme.badge }}
-        {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
-        <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
-      {% else %}
-        {%- comment -%} No Judge.me reviews synced for this product yet - fall
-          back to the merchant-set placeholder numbers so the row isn't empty. {%- endcomment -%}
-        <span class="stars">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>
-        <span class="rating-num">{{ section.settings.rating }}</span>
-        <span class="rating-count">({{ section.settings.review_count }} reviews)</span>
-        {% if section.settings.sold_count != blank %}<span class="rating-sold">| {{ section.settings.sold_count }} sold</span>{% endif %}
         <a href="#reviews" style="font-size:11px;color:var(--gd);text-decoration:none;margin-left:4px;">Read reviews &#8595;</a>
       {% endif %}
+      {% if section.settings.sold_count != blank %}<span class="rating-sold">{% if product.metafields.judgeme.badge != blank %}| {% endif %}{{ section.settings.sold_count }} sold</span>{% endif %}
     </div>
     {% endif %}
 
@@ -449,56 +441,21 @@
 </section>
 {% endif %}
 
-{% comment %} ── Reviews ── {% endcomment %}
-{% assign review_blocks = section.blocks | where: 'type', 'review' %}
+{% comment %} ── Reviews ──
+  Real customer reviews via Judge.me only - the hand-typed placeholder
+  reviews, star-percentage bars, and non-functional "Write a Review" button
+  that used to render here (from merchant-set schema fields and "review"
+  blocks) are gone. This metafield is Judge.me's own full widget (summary,
+  star breakdown, individual reviews, and a working review form), populated
+  automatically once the app has at least one real review for the product.
+  Nothing renders here until then - see product.json to seed real reviews
+  via Judge.me's import tool, or wait for the first customer submission.
+{% endcomment %}
 {% if product.metafields.judgeme.widget != blank %}
-  {%- comment -%} Real customer reviews via Judge.me - this metafield is the
-    app's own full widget (summary, star breakdown, individual reviews, and
-    the "write a review" form), populated automatically once installed.
-    Renders with Judge.me's own styling rather than the hand-built markup
-    below, which only ever showed merchant-typed placeholder reviews. {%- endcomment -%}
   <section class="reviews-section" id="reviews">
     <h2 class="rev-heading">Customer Reviews</h2>
     {{ product.metafields.judgeme.widget }}
   </section>
-{% elsif section.settings.show_reviews and review_blocks.size > 0 %}
-<section class="reviews-section" id="reviews">
-  <h2 class="rev-heading">Customer Reviews</h2>
-  <div class="reviews-grid">
-    <div class="rev-summary">
-      <div class="rev-big-score">{{ section.settings.rating }}</div>
-      <div class="rev-stars-big">{% for i in (1..5) %}{% if i <= section.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
-      <div class="rev-count">Based on {{ section.settings.review_count }} reviews</div>
-      <div class="rev-bars" id="rev-bars">
-        {% assign star_pcts = "5,pct_5star|4,pct_4star|3,pct_3star|2,pct_2star|1,pct_1star" | split: "|" %}
-        {% for row in star_pcts %}
-          {% assign parts = row | split: "," %}
-          {% assign star_n = parts[0] %}
-          {% assign pct = section.settings[parts[1]] %}
-          <div class="rev-bar-row">
-            <span class="rev-bar-label">{{ star_n }}★</span>
-            <div class="rev-bar-track" style="--bar-w:{{ pct }}%;"><div class="rev-bar-fill"></div></div>
-            <span class="rev-bar-pct">{{ pct }}%</span>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="rev-cards">
-      {% for block in review_blocks %}
-      <div class="rev-card">
-        <div class="rev-top">
-          <div><span class="rev-name">{{ block.settings.name }}</span><span class="rev-verified">&#10003; Verified Purchase</span></div>
-          <div><div class="rev-stars-sm">{% for i in (1..5) %}{% if i <= block.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div><div class="rev-date">{{ block.settings.date }}</div></div>
-        </div>
-        <div class="rev-title">{{ block.settings.title }}</div>
-        <div class="rev-text">{{ block.settings.text }}</div>
-        <div class="rev-helpful">Helpful? Yes ({{ block.settings.helpful_yes }}) &middot; No ({{ block.settings.helpful_no }})</div>
-      </div>
-      {% endfor %}
-      <div class="write-rev-wrap"><button class="write-rev-btn">Write a Review</button></div>
-    </div>
-  </div>
-</section>
 {% endif %}
 
 {% if section.settings.show_size_chart %}
@@ -1100,15 +1057,8 @@
     { "type": "text", "id": "badge_text", "label": "Badge Text", "default": "NEW ARRIVAL" },
     { "type": "text", "id": "badge_hot_text", "label": "Hot Badge Text", "default": "TRENDING" },
     { "type": "header", "content": "Rating" },
-    { "type": "checkbox", "id": "show_rating", "label": "Show Rating", "default": true },
-    { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 0.1, "label": "Rating Value", "default": 4.9 },
-    { "type": "text", "id": "review_count", "label": "Review Count", "default": "124" },
+    { "type": "checkbox", "id": "show_rating", "label": "Show Rating", "default": true, "info": "Rating shown is the real Judge.me badge only - no placeholder numbers." },
     { "type": "text", "id": "sold_count", "label": "Sold Count", "default": "847" },
-    { "type": "range", "id": "pct_5star", "min": 0, "max": 100, "step": 1, "label": "5 Star %", "default": 78 },
-    { "type": "range", "id": "pct_4star", "min": 0, "max": 100, "step": 1, "label": "4 Star %", "default": 15 },
-    { "type": "range", "id": "pct_3star", "min": 0, "max": 100, "step": 1, "label": "3 Star %", "default": 5 },
-    { "type": "range", "id": "pct_2star", "min": 0, "max": 100, "step": 1, "label": "2 Star %", "default": 1 },
-    { "type": "range", "id": "pct_1star", "min": 0, "max": 100, "step": 1, "label": "1 Star %", "default": 1 },
     { "type": "header", "content": "Offer Strip" },
     { "type": "text", "id": "offer_code", "label": "Coupon Code", "default": "FIRST10" },
     { "type": "text", "id": "offer_detail", "label": "Offer Detail", "default": "10% off on your first order" },
@@ -1130,8 +1080,6 @@
     { "type": "header", "content": "Related Products" },
     { "type": "text", "id": "related_heading", "label": "Heading", "default": "More Handcrafted Beauties" },
     { "type": "collection", "id": "related_collection", "label": "Related Products Collection", "info": "Products from this collection show below (up to 4). Used when no related product blocks are added." },
-    { "type": "header", "content": "Reviews" },
-    { "type": "checkbox", "id": "show_reviews", "label": "Show Reviews Section", "default": true },
     { "type": "header", "content": "Size Chart Modal" },
     { "type": "checkbox", "id": "show_size_chart", "label": "Enable Size Chart Modal", "default": true },
     { "type": "image_picker", "id": "measure_image", "label": "How-to-measure diagram", "info": "Optional override. The blouse diagram from the brand size chart is built into the theme and shows by default." }
@@ -1183,19 +1131,6 @@
         { "type": "product", "id": "product", "label": "Product" },
         { "type": "text", "id": "badge", "label": "Badge", "default": "BESTSELLER" }
       ]
-    },
-    {
-      "type": "review",
-      "name": "Customer Review",
-      "settings": [
-        { "type": "text", "id": "name", "label": "Reviewer Name", "default": "Priya Sharma" },
-        { "type": "range", "id": "rating", "min": 1, "max": 5, "step": 1, "label": "Rating", "default": 5 },
-        { "type": "text", "id": "title", "label": "Review Title", "default": "Absolutely Stunning!" },
-        { "type": "textarea", "id": "text", "label": "Review Text" },
-        { "type": "text", "id": "date", "label": "Date", "default": "Dec 2025" },
-        { "type": "text", "id": "helpful_yes", "label": "Helpful - Yes count", "default": "12" },
-        { "type": "text", "id": "helpful_no", "label": "Helpful - No count", "default": "1" }
-      ]
     }
   ],
   "presets": [
@@ -1217,8 +1152,7 @@
         { "type": "size_row", "settings": { "size": "36", "bust": "36", "waist": "30", "hip": "38", "length": "15.5" } },
         { "type": "care_item", "settings": { "icon": "🚫", "label": "No Machine Wash" } },
         { "type": "care_item", "settings": { "icon": "🧴", "label": "Dry Clean Only" } },
-        { "type": "care_item", "settings": { "icon": "✨", "label": "Handle Gently" } },
-        { "type": "review", "settings": { "name": "Priya Sharma", "rating": 5, "title": "Absolutely Stunning!", "text": "The quality of this blouse is beyond my expectations.", "date": "Dec 2025" } }
+        { "type": "care_item", "settings": { "icon": "✨", "label": "Handle Gently" } }
       ]
     }
   ]
