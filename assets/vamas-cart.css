@@ -110,7 +110,11 @@
     .pay-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(146,68,68,.07);}
     .pay-icon{height:22px;border:1px solid #eee;border-radius:4px;padding:2px 7px;font-size:10px;font-weight:700;color:#555;display:flex;align-items:center;background:#fff;}
 
-    .recently-section{padding:48px var(--page-gutter) 64px;}
+    /* Fixed padding, not var(--page-gutter) - same growing-width fix as the
+       collection/product pages, so the "You May Also Like" grid gets more
+       room (and more cards) on a wide screen instead of staying pinned to
+       a ~1200px reading width. */
+    .recently-section{padding:48px 40px 64px;max-width:1900px;margin-left:auto;margin-right:auto;}
     .rs-title{font-size:20px;font-weight:800;color:var(--m);margin-bottom:24px;}
     /* The rs-card rules that lived here are gone: this row now renders the shared
        vamas-product-card, styled from vamas-theme.css like every other grid. */

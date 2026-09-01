@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -28,11 +37,9 @@
         "size-6": { "type": "size_row", "settings": { "size": "42", "bust": "42", "waist": "36", "hip": "44", "length": "16" } },
         "care-1": { "type": "care_item", "settings": { "icon": "🚫", "label": "No Machine Wash" } },
         "care-2": { "type": "care_item", "settings": { "icon": "🧴", "label": "Dry Clean Only" } },
-        "care-3": { "type": "care_item", "settings": { "icon": "✨", "label": "Handle Gently" } },
-        "rev-1": { "type": "review", "settings": { "name": "Priya Sharma", "rating": 5, "title": "Absolutely Stunning!", "text": "The quality of this blouse is beyond my expectations. The mirror work is so delicate and the silk feels incredibly luxurious.", "date": "Dec 2025" } },
-        "rev-2": { "type": "review", "settings": { "name": "Meera Krishnan", "rating": 5, "title": "Perfect for my wedding!", "text": "Ordered a custom size and it fit like a dream. Highly recommended!", "date": "Nov 2025" } }
+        "care-3": { "type": "care_item", "settings": { "icon": "✨", "label": "Handle Gently" } }
       },
-      "block_order": ["sw-1", "sw-2", "sw-3", "sw-4", "det-0", "det-1", "det-2", "det-3", "det-4", "det-6", "det-7", "det-8", "det-12", "det-13", "size-1", "size-2", "size-3", "size-4", "size-5", "size-6", "care-1", "care-2", "care-3", "rev-1", "rev-2"]
+      "block_order": ["sw-1", "sw-2", "sw-3", "sw-4", "det-0", "det-1", "det-2", "det-3", "det-4", "det-6", "det-7", "det-8", "det-12", "det-13", "size-1", "size-2", "size-3", "size-4", "size-5", "size-6", "care-1", "care-2", "care-3"]
     }
   },
   "order": ["main"]

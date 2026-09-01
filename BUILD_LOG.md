@@ -981,3 +981,59 @@ Not verified against the live store this pass - `teamgfxbandits.myshopify.com`
 was password-protected and no credentials were available, so these are
 code-level fixes checked by reading the cascade/specificity, not by measuring
 the rendered page.
+
+## Maroon accents on filters, meaning-band logo/tagline alignment saga, product grids grow on wide screens
+
+- **Black -> maroon**: `.size-pill.is-active`, the phone `.col-filter-drawer__title`/
+  `__close`/`__tab.is-active`, and `.sidebar-head h3` ("FILTERS") were all
+  hardcoded `#1a1a1a`. Switched to `var(--m)`.
+- **Meaning-band logo/tagline alignment** - several rounds against user
+  screenshots since there's no live access to verify against:
+  1. Tightened the gap under the Hindi headword's underline (mobile
+     margin/padding 8px/6px -> 3px/2px).
+  2. Centered the logo to match the tagline (both were on different
+     alignments: logo inherited `text-align:right`, tagline was centered).
+  3. Tried a `-14px` manual nudge to compensate for the logo asset's own
+     internal transparent margin - overcorrected, reverted to plain
+     centering.
+  4. User clarified they actually wanted **right-align**, not left/center -
+     switched both to `text-align:right` so they share one edge.
+  5. Fixed the same class of bug on **mobile**, which uses a different
+     mechanism (CSS grid) than desktop (flex): `.vamas-meaning__mark` and
+     `.vamas-meaning__tag` were each an independent grid item with
+     `justify-self:end`, so they right-aligned to matching right edges but
+     had *different* left edges whenever their own content widths differed.
+     Stopped dissolving `.vamas-meaning__right` into the grid (only `__left`
+     dissolves now) so its two children share one shrink-wrapped width
+     internally, same mechanism as desktop.
+  6. Added `margin-right:24px` on mobile to pull the whole block in from
+     the phone's true right edge.
+  **Lesson**: this took 6 iterations precisely because there was no way to
+  screenshot the live result back - each fix was reasoned from CSS box
+  models against the user's own screenshots/circles, not measured.
+- **Product grids stuck at 4 columns on big screens, site-wide**: root
+  cause was `var(--page-gutter)` - the variable that pins every other
+  section to a constant ~1200px reading width - being reused for grid
+  container padding, so the available width for products never grew past
+  ~1200px on any monitor bigger than ~1300px; grids used a fixed
+  `repeat(4,1fr)` (or `100%/4` for the horizontal-scroll variant) so they
+  had no way to add columns even when they *did* get more room. Fixed
+  everywhere products render in a grid:
+  - Collection page (`.prod-grid`): `repeat(auto-fill,minmax(230px,1fr))`,
+    `.col-body` padding fixed at 40px (was `var(--page-gutter)`),
+    `max-width:1900px` cap.
+  - Product page (`.product-section`, breadcrumb, reviews, related grid
+    padding): same fixed-40px/1900px-cap treatment.
+  - Homepage "Shop Our Picks"/"Extra collections" (`.vamas-tabbed-collections`,
+    horizontal-scroll `.vamas-prod-grid--scroll`): fixed 230px card width
+    instead of a `100%/4` split, plus the same padding/cap fix.
+  - Shared `.vamas-prod-grid` (cart's "You May Also Like", wishlist page,
+    wishlist drawer, search results, product page's related grid): base
+    rule switched to the same `auto-fill` pattern; `.recently-section`
+    (cart) and a new scoped `.vamas-wishlist-section` class got the same
+    padding fix. Left the wishlist drawer's own 2-column override and the
+    search page's intentional 1000px cap alone.
+
+Not verified live (store still password-protected) - reasoned from the
+`var(--page-gutter)` formula and each container's flex/grid math, not
+measured on a real large monitor.
