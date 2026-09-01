@@ -1,0 +1,54 @@
+{%- comment -%}
+  Cover image override map, from the client's product-code sheet
+  (CATEGORY WISE COVER PHOTOS). Outputs an asset filename for a known
+  collection handle, or nothing if that handle has no override yet -
+  callers fall back to the collection's own image / first product photo.
+  Keyed by the collection's CURRENT real handle (not its title - handles
+  and titles don't match on this store after the collection restructure;
+  see the comment block at the top of vamas-collection.liquid).
+
+  Handle -> real current title -> source:
+    occasion-wear-copy          -> DUAL NECK BLOUSES        -> X-1343 INDIGO
+    dual-neck-blouses-copy      -> SIDE STRETCH BLOUSES      -> X-1216 MAROON
+    side-stretch-blouses        -> SIDE STRETCH BLOUSES      -> X-1216 MAROON (Plain Edit's "Plain Side Stretch Blouses")
+    brocade-bohemia-copy        -> THE KANJIVARAM COMPANION  -> X-1226 MAROON
+    re-verse-by-vamas-copy      -> BROCADE BOHEMIA           -> client-supplied photo
+    the-kanjivaram-companion-copy -> BRIGERTON INSPIRED SERIES -> client-supplied photo
+    corsets                     -> CORSETS                   -> CS-9 BLACK
+    signature-sleeveless        -> Signature Sleeveless      -> X-1205 BOTTLE-GREEN
+    timeless-elbow-length       -> Timeless Elbow Length     -> X-1206 WINE
+    classic-cottons             -> CLASSIC COTTONS           -> X-1248 PINK
+    royal-collar-necks          -> ROYAL COLLAR NECKS        -> X-1318 NAVY-BLUE
+    corsets-copy                -> EVERYDAY COTTONS          -> X-1329 HT
+    brezzy-prints-copy          -> CROCHE LINE               -> VFJ-256
+    croche-line-copy            -> HALDI AND MEHENDI         -> X-1321
+    haldi-and-mehendi-copy      -> WEDDING WEAR              -> KP-295 DARK-RED
+    party-wear-copy             -> PRAYER MEET BLOUSES       -> X-1242 WHITE
+    one-of-a-kind-blouses-copy  -> KASHMIRI WORK             -> B-192 FS BLACK
+
+  Still missing a client photo (sheet code didn't match any live vamas.in
+  product): everyday-cottons-copy (THE SHIRT BLOUSE, B-386), the-shirt-blouse-copy
+  (BREZZY PRINTS, X-1383), wedding-wear-copy (OCCASION WEAR, B-362),
+  prayer-meet-blouses-copy (ONE OF A KIND BLOUSES, B-375),
+  side-stretch-blouses-copy (RE-VERSE BY VAMAS, X-1338),
+  brigerton-inspired-series-copy (PARTY WEAR, B-330).
+{%- endcomment -%}
+{%- case handle -%}
+  {%- when 'occasion-wear-copy' -%}cat-cover-dual-neck.jpg
+  {%- when 'dual-neck-blouses-copy' -%}cat-cover-side-stretch.jpg
+  {%- when 'side-stretch-blouses' -%}cat-cover-side-stretch.jpg
+  {%- when 'brocade-bohemia-copy' -%}cat-cover-kanjivaram.jpg
+  {%- when 're-verse-by-vamas-copy' -%}cat-brocade-bohemia.jpg
+  {%- when 'the-kanjivaram-companion-copy' -%}cat-brigerton-series.jpg
+  {%- when 'corsets' -%}cat-cover-corsets.jpg
+  {%- when 'signature-sleeveless' -%}cat-cover-signature-sleeveless.jpg
+  {%- when 'timeless-elbow-length' -%}cat-cover-timeless-elbow.jpg
+  {%- when 'classic-cottons' -%}cat-cover-classic-cottons.jpg
+  {%- when 'royal-collar-necks' -%}cat-cover-royal-collar-necks.jpg
+  {%- when 'corsets-copy' -%}cat-cover-everyday-cottons.jpg
+  {%- when 'brezzy-prints-copy' -%}cat-cover-crocheo-line.jpg
+  {%- when 'croche-line-copy' -%}cat-cover-haldi-mehendi.jpg
+  {%- when 'haldi-and-mehendi-copy' -%}cat-cover-wedding-wear.jpg
+  {%- when 'party-wear-copy' -%}cat-cover-prayer-meet.jpg
+  {%- when 'one-of-a-kind-blouses-copy' -%}cat-cover-kashmiri-work.jpg
+{%- endcase -%}

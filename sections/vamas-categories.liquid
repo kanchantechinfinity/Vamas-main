@@ -67,14 +67,8 @@
           for the tiles the client picked a specific product/colour for.
         {%- endcomment -%}
         {%- assign tile_label = parts[1] | strip -%}
-        {%- assign cover_asset = blank -%}
-        {%- case tile_label -%}
-          {%- when 'Dual Neck Blouses' -%}{%- assign cover_asset = 'cat-cover-dual-neck.jpg' -%}
-          {%- when 'Side Stretch Blouses' -%}{%- assign cover_asset = 'cat-cover-side-stretch.jpg' -%}
-          {%- when 'Brocade Bohemia' -%}{%- assign cover_asset = 'cat-brocade-bohemia.jpg' -%}
-          {%- when 'The Kanjivaram Companion' -%}{%- assign cover_asset = 'cat-cover-kanjivaram.jpg' -%}
-          {%- when 'Brigerton Inspired Series' -%}{%- assign cover_asset = 'cat-brigerton-series.jpg' -%}
-        {%- endcase -%}
+        {%- capture cover_asset -%}{%- render 'vamas-cat-cover', handle: entry_handle -%}{%- endcapture -%}
+        {%- assign cover_asset = cover_asset | strip -%}
         {%- assign circle_img = c.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = c.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="{{ tile_url }}">
@@ -97,9 +91,7 @@
         {%- assign img_source_handle = parts[2] | strip -%}
         {%- assign img_source = collections[img_source_handle] -%}
         {%- assign cover_asset = blank -%}
-        {%- case group_label -%}
-          {%- when 'SUMMER ESSENTIALS' -%}{%- assign cover_asset = 'cat-summer-essentials.jpg' -%}
-        {%- endcase -%}
+        {%- if group_label == 'SUMMER ESSENTIALS' -%}{%- assign cover_asset = 'cat-summer-essentials.jpg' -%}{%- endif -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="/collections/all?group={{ group_slug }}">

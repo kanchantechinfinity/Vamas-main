@@ -231,9 +231,13 @@
             a collection image in admin. {%- endcomment -%}
           {%- assign circle_img = child.image -%}
           {%- if circle_img == blank -%}{%- assign circle_img = child.products.first.featured_image -%}{%- endif -%}
+          {%- capture cover_asset -%}{%- render 'vamas-cat-cover', handle: c_handle -%}{%- endcapture -%}
+          {%- assign cover_asset = cover_asset | strip -%}
           <a href="{{ child.url }}" class="col-cat">
             <span class="col-cat__ring">
-              {% if circle_img != blank %}
+              {% if cover_asset != blank %}
+                <img src="{{ cover_asset | asset_url }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
+              {% elsif circle_img != blank %}
                 <img src="{{ circle_img | img_url: '360x360', crop: 'top' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -271,9 +275,13 @@
               {% if child != blank and child.handle %}
                 {%- assign circle_img = child.image -%}
                 {%- if circle_img == blank -%}{%- assign circle_img = child.products.first.featured_image -%}{%- endif -%}
+                {%- capture cover_asset -%}{%- render 'vamas-cat-cover', handle: c_handle -%}{%- endcapture -%}
+                {%- assign cover_asset = cover_asset | strip -%}
                 <a href="{{ child.url }}" class="col-cat">
                   <span class="col-cat__ring">
-                    {% if circle_img != blank %}
+                    {% if cover_asset != blank %}
+                      <img src="{{ cover_asset | asset_url }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
+                    {% elsif circle_img != blank %}
                       <img src="{{ circle_img | img_url: '360x360', crop: 'top' }}" alt="{{ child.title | escape }}" loading="lazy" width="180" height="180">
                     {% else %}
                       {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
