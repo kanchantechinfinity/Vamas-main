@@ -460,10 +460,10 @@
     {% else %}
       {% assign rel_total = rel_col.products.size %}
       {% assign rel_offset = 0 %}
-      {% if rel_total > 4 %}{% assign rel_offset = product.id | modulo: rel_total %}{% endif %}
+      {% if rel_total > 5 %}{% assign rel_offset = product.id | modulo: rel_total %}{% endif %}
       {% assign rel_shown = 0 %}
       {% for i in (0..49) %}
-        {% if rel_shown >= 4 %}{% break %}{% endif %}
+        {% if rel_shown >= 5 %}{% break %}{% endif %}
         {% assign rel_idx = i | plus: rel_offset | modulo: rel_total %}
         {% assign rp = rel_col.products[rel_idx] %}
         {% if rp != blank and rp.id != product.id %}

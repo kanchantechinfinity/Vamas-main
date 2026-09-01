@@ -216,6 +216,9 @@
     .rel-eyebrow{text-align:center;font-size:10px;letter-spacing:3px;font-weight:700;color:var(--gd);margin-bottom:10px;}
     .rel-heading{text-align:center;font-family:var(--font-heading);font-size:30px;font-weight:500;color:#1a1a1a;margin-bottom:0;}
     .related-section .vamas-prod-grid{padding:36px 40px 0;}
+    @media (min-width: 1181px) {
+      .related-section .vamas-prod-grid{grid-template-columns:repeat(5, minmax(0, 280px));justify-content:center;}
+    }
 
     /* ── Reviews ── */
     .reviews-section{background:var(--bg);padding:60px 40px;}
