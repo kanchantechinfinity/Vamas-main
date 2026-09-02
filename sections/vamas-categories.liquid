@@ -92,6 +92,7 @@
         {%- assign img_source = collections[img_source_handle] -%}
         {%- assign cover_asset = blank -%}
         {%- if group_label == 'SUMMER ESSENTIALS' -%}{%- assign cover_asset = 'cat-summer-essentials.jpg' -%}{%- endif -%}
+        {%- if group_label == 'THE PLAIN EDIT' -%}{%- assign cover_asset = 'prod-darkmaroon.jpg' -%}{%- endif -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
         <a class="vcat" href="/collections/all?group={{ group_slug }}">
