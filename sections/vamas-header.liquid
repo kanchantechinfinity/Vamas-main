@@ -183,21 +183,45 @@
                   </div>
                 {% endif %}
                 <div class="vamas-nav__mega-main">
-                  {% if group_icons_1 %}
-                    <div class="vamas-nav__mega-section">
-                      <span class="vamas-nav__mega-section-title">{{ group_icons_1.title }}</span>
-                      <div class="vamas-nav__mega-icons">
-                        {% for cat in group_icons_1.links %}
-                          {% capture icon_img %}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
-                          {% capture icon_img_src %}{% render 'vamas-nav-icon-src', title: cat.title, default_asset: icon_img %}{% endcapture %}
-                          <a href="{{ cat.url }}" class="vamas-nav__icon-item">
-                            <span class="vamas-nav__icon-thumb"><img src="{{ icon_img_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
-                            <span class="vamas-nav__icon-label">{{ cat.title }}</span>
-                          </a>
-                        {% endfor %}
-                      </div>
+                  {%- comment -%} Featured Collections always mirrors the homepage's
+                    "Explore by Category" carousel - same handles/labels as
+                    vamas-categories.liquid's own fallback list, plus Corsets - so a
+                    shopper sees the identical 12 categories in both places, instead
+                    of whatever unrelated subset happens to be configured in the
+                    Admin navigation menu's "Featured Collections" submenu. {%- endcomment -%}
+                  <div class="vamas-nav__mega-section">
+                    <span class="vamas-nav__mega-section-title">{{ group_icons_1.title | default: 'Featured Collections' }}</span>
+                    <div class="vamas-nav__mega-icons">
+                      {%- assign mega_cats_direct = 'occasion-wear-copy|Dual Neck Blouses,dual-neck-blouses-copy|Side Stretch Blouses,side-stretch-blouses-copy|Re-Verse By Vamas,re-verse-by-vamas-copy|Brocade Bohemia,brocade-bohemia-copy|The Kanjivaram Companion,the-kanjivaram-companion-copy|Brigerton Inspired Series,brigerton-inspired-series-copy|Party Wear,corsets|Corsets' | split: ',' -%}
+                      {%- for entry in mega_cats_direct -%}
+                        {%- assign eparts = entry | split: '|' -%}
+                        {%- assign e_handle = eparts[0] | strip -%}
+                        {%- assign e_label = eparts[1] | strip -%}
+                        {%- assign e_coll = collections[e_handle] -%}
+                        {%- capture e_cover -%}{%- render 'vamas-cat-cover', handle: e_handle -%}{%- endcapture -%}
+                        {%- assign e_cover = e_cover | strip -%}
+                        {%- capture e_fallback_cycle -%}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{%- endcapture -%}
+                        {%- assign e_default_asset = e_cover | default: e_fallback_cycle -%}
+                        {%- capture e_icon_src -%}{%- render 'vamas-nav-icon-src', title: e_label, default_asset: e_default_asset -%}{%- endcapture -%}
+                        <a href="{{ e_coll.url | default: '/collections/all' }}" class="vamas-nav__icon-item">
+                          <span class="vamas-nav__icon-thumb"><img src="{{ e_icon_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
+                          <span class="vamas-nav__icon-label">{{ e_label }}</span>
+                        </a>
+                      {%- endfor -%}
+                      {%- assign mega_cats_groups = 'plain-edit|THE PLAIN EDIT|prod-darkmaroon.jpg,summer-essentials|SUMMER ESSENTIALS|cat-summer-essentials.jpg,festive-wear|FESTIVE WEAR|prod-brinjal.jpg,more-categories|MORE CATEGORIES|bridal.jpg' | split: ',' -%}
+                      {%- for entry in mega_cats_groups -%}
+                        {%- assign gparts = entry | split: '|' -%}
+                        {%- assign g_slug = gparts[0] | strip -%}
+                        {%- assign g_label = gparts[1] | strip -%}
+                        {%- assign g_asset = gparts[2] | strip -%}
+                        {%- capture g_icon_src -%}{%- render 'vamas-nav-icon-src', title: g_label, default_asset: g_asset -%}{%- endcapture -%}
+                        <a href="/collections/all?group={{ g_slug }}" class="vamas-nav__icon-item">
+                          <span class="vamas-nav__icon-thumb"><img src="{{ g_icon_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
+                          <span class="vamas-nav__icon-label">{{ g_label }}</span>
+                        </a>
+                      {%- endfor -%}
                     </div>
-                  {% endif %}
+                  </div>
                   {% if group_icons_2 %}
                     <div class="vamas-nav__mega-section">
                       <span class="vamas-nav__mega-section-title">{{ group_icons_2.title }}</span>
