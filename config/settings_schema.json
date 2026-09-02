@@ -37,5 +37,11 @@
       { "type": "text", "id": "social_instagram", "label": "Instagram URL" },
       { "type": "text", "id": "social_facebook", "label": "Facebook URL" }
     ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "Square image, at least 32x32px. Shown as the browser tab icon." }
+    ]
   }
 ]
