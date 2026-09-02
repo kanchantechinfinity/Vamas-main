@@ -151,7 +151,7 @@
                       {% endfor %}
                     </div>
                   </div>
-                {% elsif has_leaf %}
+                {% elsif has_leaf or group_icons_1 or group_icons_2 %}
                   <div class="vamas-nav__mega-promo-group">
                     <div class="vamas-nav__mega-promo">
                       <span class="vamas-nav__mega-looks-title">Big Discounts</span>
@@ -222,7 +222,12 @@
                       {%- endfor -%}
                     </div>
                   </div>
-                  {% if group_icons_2 %}
+                  {% comment %} Sale Blouse's own "Shop Blouse" submenu is just discount-percent
+                    tiles (Up to 65% Off / 50% Off / 80% Off / Clearance Products / Sale
+                    Collection) - dropped here, redundant with the Big Discounts promo card
+                    this dropdown already shows on the left. {% endcomment %}
+                  {% assign link_title_lc = link.title | downcase %}
+                  {% if group_icons_2 and link_title_lc != 'sale blouse' %}
                     <div class="vamas-nav__mega-section">
                       <span class="vamas-nav__mega-section-title">{{ group_icons_2.title }}</span>
                       <div class="vamas-nav__mega-icons">
