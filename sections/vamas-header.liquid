@@ -62,7 +62,8 @@
       </a>
 
       {% comment %} Fallback best-seller product for mega-menu promo cards whose own link has no collection of its own {% endcomment %}
-      {% assign mega_bestseller_collection = collections['best-sellers'] %}
+      {% comment %} Same source as the homepage's "Best Sellers" tab (bestsellers_collection setting) so the two never disagree. {% endcomment %}
+      {% assign mega_bestseller_collection = collections['demo-collection'] %}
       {% if mega_bestseller_collection == blank or mega_bestseller_collection.products.size == 0 %}
         {% assign mega_bestseller_collection = collections.all %}
       {% endif %}
@@ -160,6 +161,8 @@
                       <a href="{% if mega_promo_product %}{{ mega_promo_product.url }}{% else %}{{ link.url }}{% endif %}" class="vamas-nav__promo-card">
                         {% if mega_promo_product.featured_image %}
                           <img src="{{ mega_promo_product.featured_image | img_url: '400x' }}" alt="{{ mega_promo_product.title | escape }}" loading="lazy">
+                        {% else %}
+                          {{ 'lifestyle-1' | placeholder_svg_tag: 'vamas-nav__promo-placeholder' }}
                         {% endif %}
                         <span class="vamas-nav__promo-overlay">
                           <span class="vamas-nav__promo-cta">Shop Now</span>
