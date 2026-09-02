@@ -25,13 +25,15 @@
     haldi-and-mehendi-copy      -> WEDDING WEAR              -> KP-295 DARK-RED
     party-wear-copy             -> PRAYER MEET BLOUSES       -> X-1242 WHITE
     one-of-a-kind-blouses-copy  -> KASHMIRI WORK             -> B-192 FS BLACK
+    the-shirt-blouse-copy       -> BREZZY PRINTS             -> sheet code (X-1383) not found, using that collection's own first product instead
+    wedding-wear-copy           -> OCCASION WEAR             -> sheet code (B-362) not found, using that collection's own first product instead
+    brigerton-inspired-series-copy -> PARTY WEAR             -> sheet code (B-330) not found, using that collection's own first product instead
 
-  Still missing a client photo (sheet code didn't match any live vamas.in
-  product): everyday-cottons-copy (THE SHIRT BLOUSE, B-386), the-shirt-blouse-copy
-  (BREZZY PRINTS, X-1383), wedding-wear-copy (OCCASION WEAR, B-362),
+  Still no cover photo at all - the sheet's code didn't match any live
+  vamas.in product AND the collection itself has zero products to fall
+  back to: everyday-cottons-copy (THE SHIRT BLOUSE, B-386),
   prayer-meet-blouses-copy (ONE OF A KIND BLOUSES, B-375),
-  side-stretch-blouses-copy (RE-VERSE BY VAMAS, X-1338),
-  brigerton-inspired-series-copy (PARTY WEAR, B-330).
+  side-stretch-blouses-copy (RE-VERSE BY VAMAS, X-1338).
 {%- endcomment -%}
 {%- case handle -%}
   {%- when 'occasion-wear-copy' -%}cat-cover-dual-neck.jpg
@@ -51,4 +53,7 @@
   {%- when 'haldi-and-mehendi-copy' -%}cat-cover-wedding-wear.jpg
   {%- when 'party-wear-copy' -%}cat-cover-prayer-meet.jpg
   {%- when 'one-of-a-kind-blouses-copy' -%}cat-cover-kashmiri-work.jpg
+  {%- when 'the-shirt-blouse-copy' -%}cat-cover-brezzy-prints.jpg
+  {%- when 'wedding-wear-copy' -%}cat-cover-occasion-wear.jpg
+  {%- when 'brigerton-inspired-series-copy' -%}cat-cover-party-wear.jpg
 {%- endcase -%}
