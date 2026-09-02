@@ -158,7 +158,7 @@
     {% elsif current_color_key != '' %}
       {% assign cur_probe = '~' | append: current_color_key | append: '~' %}
       {% unless color_second_img_map contains cur_probe %}
-        {% assign img_thumb = img | img_url: '400x533', crop: 'center' %}
+        {% assign img_thumb = img | img_url: '400x533', crop: 'top' %}
         {% assign color_second_img_map = color_second_img_map | append: cur_probe | append: img_thumb | append: '§' %}
       {% endunless %}
     {% endif %}
@@ -199,7 +199,7 @@
       {% assign cur_key = new_key %}
     {% endif %}
     {% if cur_key != '' %}
-      {% assign img_u = img | img_url: '400x533', crop: 'center' %}
+      {% assign img_u = img | img_url: '400x533', crop: 'top' %}
       {% assign cur_list = cur_list | append: img_u | append: '¤' %}
     {% endif %}
   {% endfor %}
@@ -238,7 +238,7 @@
 {% endif %}
 {% if gallery_urls_str == '' %}
   {% for img in product.images limit: 4 %}
-    {% assign g_u = img | img_url: '400x533', crop: 'center' %}
+    {% assign g_u = img | img_url: '400x533', crop: 'top' %}
     {% assign gallery_urls_str = gallery_urls_str | append: g_u | append: '¤' %}
   {% endfor %}
 {% endif %}
@@ -303,7 +303,7 @@
     {% endif %}
     {% assign v_image_url = '' %}
     {% if v.featured_image %}
-      {% assign v_image_url = v.featured_image | img_url: '400x533', crop: 'center' %}
+      {% assign v_image_url = v.featured_image | img_url: '400x533', crop: 'top' %}
     {% endif %}
     {% assign v_color_for_hover = '' %}
     {% if color_option_position == 1 %}{% assign v_color_for_hover = v.option1 %}{% endif %}
@@ -338,17 +338,17 @@
   {% endfor %}
 ]{% endcapture %}
 
-<div class="vamas-prod-card" data-color-option="{{ color_option_position }}" data-size-option="{{ size_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'center' }}"{% endif %}>
+<div class="vamas-prod-card" data-color-option="{{ color_option_position }}" data-size-option="{{ size_option_position }}"{% if default_card_image %} data-default-img="{{ default_card_image | img_url: '400x533', crop: 'top' }}"{% endif %}>
   <div class="vamas-prod-card__img{% if gallery_slot_count > 1 %} has-gallery{% endif %}">
     <a href="{{ product.url }}" class="vamas-prod-card__img-desktop-link">
       {% if default_card_image %}
         <img class="vamas-prod-card__img-primary" data-primary-img
-             src="{{ default_card_image | img_url: '400x533', crop: 'center' }}"
+             src="{{ default_card_image | img_url: '400x533', crop: 'top' }}"
              alt="{{ default_card_image.alt | escape | default: product.title }}"
              loading="lazy" width="400" height="533">
         <img class="vamas-prod-card__img-hover"
              data-hover-img
-             src="{% if hover_image_url != blank %}{{ hover_image_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'center' }}{% endif %}"
+             src="{% if hover_image_url != blank %}{{ hover_image_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'top' }}{% endif %}"
              alt="" loading="lazy" aria-hidden="true">
       {% else %}
         {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg vamas-prod-card__img-primary' }}
@@ -363,7 +363,7 @@
         {% for i in (1..gallery_slot_count) %}
           {% assign slide_url = gallery_images[forloop.index0] %}
           <a href="{{ product.url }}" class="vamas-prod-card__gallery-slide"{% if slide_url == blank %} style="display:none;"{% endif %}>
-            <img src="{% if slide_url != blank %}{{ slide_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'center' }}{% endif %}" alt="{{ product.title | escape }}" loading="lazy" width="400" height="533">
+            <img src="{% if slide_url != blank %}{{ slide_url }}{% else %}{{ default_card_image | img_url: '400x533', crop: 'top' }}{% endif %}" alt="{{ product.title | escape }}" loading="lazy" width="400" height="533">
           </a>
         {% endfor %}
       </div>
@@ -382,7 +382,7 @@
             data-type="{{ product.type | escape | default: 'Blouse' }}"
             data-wish-price="{{ first_variant.price | money | replace: 'Rs. ', '₹' }}"
             {% if on_sale %}data-wish-compare="{{ first_variant.compare_at_price | money | replace: 'Rs. ', '₹' }}" data-wish-discount="{{ discount_pct }}"{% endif %}
-            data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+            data-image="{{ product.featured_image | img_url: '400x533', crop: 'top' }}"
             data-url="{{ product.url }}"
             data-variant="{{ first_variant.id }}">
       <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>

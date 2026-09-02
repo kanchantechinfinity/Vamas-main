@@ -572,7 +572,7 @@
   </div>
   <div class="vamas-brand__image">
     {% if section.settings.brand_image != blank %}
-      <img src="{{ section.settings.brand_image | img_url: '500x640', crop: 'center' }}"
+      <img src="{{ section.settings.brand_image | img_url: '500x640', crop: 'top' }}"
            alt="Vamas brand story" loading="lazy" width="500" height="640">
     {% elsif section.settings.brand_image_asset != blank %}
       <img src="{{ section.settings.brand_image_asset | asset_url }}"
@@ -654,11 +654,11 @@
             <div class="vamas-reel-card">
               <a class="vamas-reel" href="{{ block.settings.reel_url | default: '#' }}" {{ block.shopify_attributes }}>
                 {% if block.settings.reel_video != blank %}
-                  <video class="vamas-reel__img" autoplay muted loop playsinline preload="metadata"{% if block.settings.reel_image != blank %} poster="{{ block.settings.reel_image | img_url: '400x711', crop: 'center' }}"{% endif %}>
+                  <video class="vamas-reel__img" autoplay muted loop playsinline preload="metadata"{% if block.settings.reel_image != blank %} poster="{{ block.settings.reel_image | img_url: '400x711', crop: 'top' }}"{% endif %}>
                     {% for source in block.settings.reel_video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
                   </video>
                 {% elsif block.settings.reel_image != blank %}
-                  <img class="vamas-reel__img" src="{{ block.settings.reel_image | img_url: '400x711', crop: 'center' }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy" draggable="false">
+                  <img class="vamas-reel__img" src="{{ block.settings.reel_image | img_url: '400x711', crop: 'top' }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy" draggable="false">
                 {% elsif block.settings.image_asset != blank %}
                   <img class="vamas-reel__img" src="{{ block.settings.image_asset | asset_url }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy" draggable="false">
                 {% else %}
@@ -681,7 +681,7 @@
                 {% assign rp = block.settings.reel_product %}
                 <a href="{{ rp.url }}" class="vamas-reel-product">
                   <span class="vamas-reel-product__img">
-                    <img src="{{ rp.featured_image | img_url: '120x120', crop: 'center' }}" alt="{{ rp.title | escape }}" loading="lazy" draggable="false">
+                    <img src="{{ rp.featured_image | img_url: '120x120', crop: 'top' }}" alt="{{ rp.title | escape }}" loading="lazy" draggable="false">
                   </span>
                   <span class="vamas-reel-product__body">
                     <span class="vamas-reel-product__name">{{ rp.title }}</span>

@@ -78,7 +78,7 @@
          data-title="{{ product.title | escape }}"
          data-type="{{ product.type | escape | default: 'Blouse' }}"
          data-price="{{ product.selected_or_first_available_variant.price | money | replace: 'Rs. ', '₹' }}"
-         data-image="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+         data-image="{{ product.featured_image | img_url: '400x533', crop: 'top' }}"
          data-url="{{ product.url }}"
          data-variant="{{ product.selected_or_first_available_variant.id }}">&#9825; Add to Wishlist</a>
     </div>

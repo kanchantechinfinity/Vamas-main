@@ -22,7 +22,7 @@
   <div class="vamas-prod-card__img">
     <a href="{{ product.url }}">
       {% if product.featured_image %}
-        <img src="{{ product.featured_image | img_url: '400x533', crop: 'center' }}"
+        <img src="{{ product.featured_image | img_url: '400x533', crop: 'top' }}"
              alt="{{ product.featured_image.alt | escape | default: product.title }}"
              loading="lazy" width="400" height="533">
       {% else %}
