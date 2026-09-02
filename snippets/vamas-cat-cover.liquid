@@ -30,11 +30,8 @@
     brigerton-inspired-series-copy -> PARTY WEAR             -> sheet code (B-330) not found, using that collection's own first product instead
 
     everyday-cottons-copy        -> THE SHIRT BLOUSE         -> client-supplied photo (collection has 0 products)
-
-  Still no cover photo at all - the sheet's code didn't match any live
-  vamas.in product AND the collection itself has zero products to fall
-  back to: prayer-meet-blouses-copy (ONE OF A KIND BLOUSES, B-375),
-  side-stretch-blouses-copy (RE-VERSE BY VAMAS, X-1338).
+    prayer-meet-blouses-copy    -> ONE OF A KIND BLOUSES    -> no sheet code found, collection has 0 products; using a stock product photo
+    side-stretch-blouses-copy   -> RE-VERSE BY VAMAS        -> no sheet code found, collection has 0 products; reuses the homepage tile's own photo (prod-maroon2.jpg)
 {%- endcomment -%}
 {%- case handle -%}
   {%- when 'occasion-wear-copy' -%}cat-cover-dual-neck.jpg
@@ -58,4 +55,6 @@
   {%- when 'wedding-wear-copy' -%}cat-cover-occasion-wear.jpg
   {%- when 'brigerton-inspired-series-copy' -%}cat-cover-party-wear.jpg
   {%- when 'everyday-cottons-copy' -%}cat-cover-shirt-blouse.jpg
+  {%- when 'prayer-meet-blouses-copy' -%}cat-cover-one-of-a-kind.jpg
+  {%- when 'side-stretch-blouses-copy' -%}cat-cover-re-verse.jpg
 {%- endcase -%}
