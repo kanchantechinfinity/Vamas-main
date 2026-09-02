@@ -1,6 +1,16 @@
 
 # Build Log
 
+## 2026-09-02 — Cover photos for the last 2 handle-swapped collections
+
+`prayer-meet-blouses-copy` (real title **ONE OF A KIND BLOUSES**) and
+`side-stretch-blouses-copy` (real title **RE-VERSE BY VAMAS**) were the last
+two collections left with no cover image at all in `vamas-cat-cover.liquid`
+(0 products each, no client-sheet code match). Added stock product photos as
+placeholders: `cat-cover-one-of-a-kind.jpg` (from `prod-cobalt.jpg`) and
+`cat-cover-re-verse.jpg` (from `prod-maroon2.jpg`, matching the Re-Verse
+homepage tile). Swap for real client photos when supplied. Commit `3ba5721`.
+
 ## 2026-08-13 — Card size chips: 32-42 only, rest behind a +N
 
 Products run to 44/46/48/50, and half the catalogue still carries M/L/XL/XXL on its SIZE
