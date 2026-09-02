@@ -61,12 +61,9 @@
         {% endif %}
       </a>
 
-      {% comment %} Fallback best-seller product for mega-menu promo cards whose own link has no collection of its own {% endcomment %}
-      {% comment %} Same source as the homepage's "Best Sellers" tab (bestsellers_collection setting) so the two never disagree. {% endcomment %}
-      {% assign mega_bestseller_collection = collections['demo-collection'] %}
-      {% if mega_bestseller_collection == blank or mega_bestseller_collection.products.size == 0 %}
-        {% assign mega_bestseller_collection = collections.all %}
-      {% endif %}
+      {% comment %} Fallback "All Blouses" product for mega-menu promo cards whose own
+        link has no collection of its own - just any product from the full catalogue. {% endcomment %}
+      {% assign mega_bestseller_collection = collections.all %}
       {% assign mega_bestseller_product = mega_bestseller_collection.products.first %}
 
       {% comment %} Promo card image: pick a discounted product so "Big Discounts" shows a real sale item {% endcomment %}
@@ -171,7 +168,7 @@
                     </div>
                     {% if mega_bestseller_product %}
                       <div class="vamas-nav__mega-feature">
-                        <span class="vamas-nav__mega-looks-title">Best Seller</span>
+                        <span class="vamas-nav__mega-looks-title">All Blouses</span>
                         <a href="{{ mega_bestseller_product.url }}" class="vamas-nav__feature-card">
                           <span class="vamas-nav__feature-thumb">
                             {% if mega_bestseller_product.featured_image %}
@@ -217,7 +214,7 @@
                     </div>
                   {% endif %}
                   {% for childlink in link.links %}
-                    {% unless childlink.title == 'Categories' or childlink.title == 'Featured Collections' or childlink.title == 'Shop Blouse' or childlink.title == 'Shop by Look' or childlink.title == 'Shop by Colour' or childlink.title == 'Shop by Color' %}
+                    {% unless childlink.title == 'Categories' or childlink.title == 'Featured Collections' or childlink.title == 'Shop Blouse' or childlink.title == 'Shop by Look' or childlink.title == 'Shop by Colour' or childlink.title == 'Shop by Color' or childlink.title == 'Curated Collections' %}
                       {% if childlink.links != blank %}
                         <div class="vamas-nav__mega-section">
                           <span class="vamas-nav__mega-section-title">{{ childlink.title }}</span>
