@@ -63,6 +63,94 @@
             "title": "People, Always",
             "desc": "Vamas has been built stitch by stitch, with the love and hard work of our team and our karigars. Customer satisfaction remains at the heart of everything we do — the greatest compliment isn't that you bought a Vamas blouse, it's that you came back for another."
           }
+        },
+        "ms-1": {
+          "type": "milestone",
+          "settings": {
+            "year": "EARLY 1960s",
+            "desc": "The Beginning — Jalaram Cloth Store was started by the late Shri Vinodchandra Parekh, laying the foundation of our family's journey in fashion.",
+            "align_right": false
+          }
+        },
+        "ms-2": {
+          "type": "milestone",
+          "settings": {
+            "year": "1982",
+            "desc": "The Next Generation — His son, Jayesh Parekh, joined Jalaram Cloth Store and began carrying the family legacy forward.",
+            "align_right": true
+          }
+        },
+        "ms-3": {
+          "type": "milestone",
+          "settings": {
+            "year": "2009",
+            "desc": "The Birth of Vamas — Jayesh Parekh started Vamas, bringing readymade blouses to the wholesale market and making beautiful blouses more accessible.",
+            "align_right": false
+          }
+        },
+        "ms-4": {
+          "type": "milestone",
+          "settings": {
+            "year": "2010",
+            "desc": "A New Chapter — Vamas joined Ethnicity, taking our collection to a wider audience.",
+            "align_right": true
+          }
+        },
+        "ms-5": {
+          "type": "milestone",
+          "settings": {
+            "year": "2013",
+            "desc": "Our First Store & Going Online — We opened our first Vamas store in Thane and began our online journey, taking our blouses to customers beyond our stores.",
+            "align_right": false
+          }
+        },
+        "ms-6": {
+          "type": "milestone",
+          "settings": {
+            "year": "2016",
+            "desc": "Growing the Collection — Our collection continued to grow, with more designs, colours and styles created for every woman and every occasion.",
+            "align_right": true
+          }
+        },
+        "ms-7": {
+          "type": "milestone",
+          "settings": {
+            "year": "2018",
+            "desc": "A New Home — As Vamas grew, we moved into our new head office, creating a space for our expanding team and vision.",
+            "align_right": false
+          }
+        },
+        "ms-8": {
+          "type": "milestone",
+          "settings": {
+            "year": "2020",
+            "desc": "A New Beginning — We expanded beyond blouses with the launch of VIKRI, our kidswear brand.",
+            "align_right": true
+          }
+        },
+        "ms-9": {
+          "type": "milestone",
+          "settings": {
+            "year": "2022",
+            "desc": "The Vamas Community — Vamas grew beyond a brand into a community of women who came to us to express their style and celebrate themselves.",
+            "align_right": false
+          }
+        },
+        "ms-10": {
+          "type": "milestone",
+          "settings": {
+            "year": "2024",
+            "desc": "Growing Further — We acquired a new warehouse, strengthening our operations and making room for the journey ahead.",
+            "align_right": true
+          }
+        },
+        "ms-11": {
+          "type": "milestone",
+          "settings": {
+            "year": "2026",
+            "desc": "The Journey Continues — Today, as a third-generation family business, we continue to grow, create and evolve, while staying true to what started it all.",
+            "align_right": false
+          }
         }
       },
       "block_order": [
@@ -72,7 +160,18 @@
         "stat-4",
         "val-1",
         "val-2",
-        "val-3"
+        "val-3",
+        "ms-1",
+        "ms-2",
+        "ms-3",
+        "ms-4",
+        "ms-5",
+        "ms-6",
+        "ms-7",
+        "ms-8",
+        "ms-9",
+        "ms-10",
+        "ms-11"
       ],
       "settings": {
         "hero_eyebrow": "ABOUT US",
@@ -92,7 +191,7 @@
         "team_sub": "Passionate individuals united by a love for Indian textiles and a mission to celebrate our artisans.",
         "tl_eyebrow": "OUR JOURNEY",
         "tl_heading": "Milestones That Define Us",
-        "tl_sub": "From a small cloth store in 1960s Mumbai to India's trusted blouse brand — here is how we grew."
+        "tl_sub": "From Jalaram Cloth Store in the 1960s to a third-generation family business — here is how we grew."
       }
     }
   },
