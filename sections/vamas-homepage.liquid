@@ -765,13 +765,14 @@
 {% endif %}
 
 {% comment %} ── Promise strip ─────────────────────────────────────────────
-  Seven claims with an icon each, in the same visual language as the trust
+  Nine claims with an icon each, in the same visual language as the trust
   tiles this replaced. Icons are assigned by position, so the copy stays
   editable in the settings without breaking the pairing.
 
-  Desktop lays them 4 over 3; phones stack one per line.
+  Wraps automatically (flex-wrap, centred, fixed-width cells) - desktop
+  lays them 4 over 4 over 1; phones stack one per line.
 {% endcomment %}
-{% assign promise_lines = section.settings.promise_lines | default: 'MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, SHIPPING AND DELIVERABLES' | split: ',' %}
+{% assign promise_lines = section.settings.promise_lines | default: 'MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, FREE SHIPPING, 100% SECURE PAYMENTS, 7 DAYS RETURN' | split: ',' %}
 {% if promise_lines.size > 0 %}
 <div class="vamas-promise">
   <ul class="vamas-promise__list">
@@ -793,8 +794,12 @@
                 <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
               {% when 6 %}{% comment %}ruler - tailored cuts{% endcomment %}
                 <svg viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="1"/><line x1="7" y1="8" x2="7" y2="12"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="17" y1="8" x2="17" y2="12"/></svg>
-              {% else %}{% comment %}truck - shipping{% endcomment %}
+              {% when 7 %}{% comment %}truck - free shipping{% endcomment %}
                 <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              {% when 8 %}{% comment %}lock - secure payments{% endcomment %}
+                <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              {% else %}{% comment %}return arrow - 7 days return{% endcomment %}
+                <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 8 8 8"/></svg>
             {% endcase %}
           </span>
           <span class="vamas-promise__label">{{ line_clean }}</span>
@@ -823,7 +828,7 @@
   "tag": "div",
   "settings": [
     { "type": "header", "content": "Promise Strip" },
-    { "type": "textarea", "id": "promise_lines", "label": "Lines (comma separated)", "info": "Laid out 4 over 3 on desktop, two-up tiles on phones.", "default": "MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, SHIPPING AND DELIVERABLES" },
+    { "type": "textarea", "id": "promise_lines", "label": "Lines (comma separated)", "info": "Laid out 4 over 3 on desktop, two-up tiles on phones.", "default": "MADE IN INDIA, 100% VEGAN SILK, POCKET FRIENDLY, MARGIN IN EACH BLOUSE, SKIN FRIENDLY FABRICS, TAILORED CUTS THAT FIT, FREE SHIPPING, 100% SECURE PAYMENTS, 7 DAYS RETURN" },
     { "type": "textarea", "id": "promise_note", "label": "Closing note", "default": "WE ARE GRATEFUL TO HAVE YOU AS A CUSTOMER.\nHAPPY SHOPPING!!" },
     { "type": "header", "content": "Categories Section" },
     { "type": "checkbox", "id": "show_categories", "label": "Show Categories", "default": true },
