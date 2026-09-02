@@ -1105,8 +1105,11 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 @media (max-width: 768px) {
   /* Fills to the bottom nav bar; --vamas-hero-mobile-h is set by JS in
      vamas-homepage.liquid. Falls back to 420px before JS runs / if JS fails. */
-  .vamas-slide { min-height: var(--vamas-hero-mobile-h, 420px); }
-  .vamas-slide__inner { padding: 0 24px; }
+  .vamas-slide { min-height: var(--vamas-hero-mobile-h, 420px); align-items: flex-start; }
+  /* Vertically centered text (fine on the tall desktop hero) lands squarely on
+     the models' faces once the banner is cropped down to mobile height - pin
+     the copy to the top instead, clear of the crop. */
+  .vamas-slide__inner { padding: 36px 24px 0; }
   /* On phones the model sits on the RIGHT of the crop, so right-aligned slides
      flip fully to the left - block, text, button and all - or the copy lands on
      top of her. The desktop right-alignment rules have to be undone here, not
