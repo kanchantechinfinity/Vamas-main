@@ -166,7 +166,7 @@
         "stat-2": {
           "type": "stat",
           "settings": {
-            "stat_num": "10K+",
+            "stat_num": "2M+",
             "stat_lbl": "CUSTOMERS"
           }
         },

@@ -570,18 +570,6 @@
       {{ section.settings.brand_btn_text | default: 'EXPLORE OUR STORY' }}
     </a>
   </div>
-  <div class="vamas-brand__image">
-    {% if section.settings.brand_image != blank %}
-      <img src="{{ section.settings.brand_image | img_url: '500x640', crop: 'top' }}"
-           alt="Vamas brand story" loading="lazy" width="500" height="640">
-    {% elsif section.settings.brand_image_asset != blank %}
-      <img src="{{ section.settings.brand_image_asset | asset_url }}"
-           alt="Vamas brand story" loading="lazy" width="500" height="640">
-    {% else %}
-      <img src="https://images.unsplash.com/photo-1732949946085-cb7274e55bf1?w=900&q=80&auto=format&fit=crop"
-           alt="Vamas brand story" loading="lazy" width="500" height="640">
-    {% endif %}
-  </div>
 </section>
 {% endif %}
 <script>
@@ -983,7 +971,7 @@
         { "type": "category", "settings": { "cat_name": "CASUAL", "cat_count": "200+", "image_asset": "casual.jpg" } },
         { "type": "category", "settings": { "cat_name": "PARTY WEAR", "cat_count": "80+", "image_asset": "party-wear.jpg" } },
         { "type": "stat", "settings": { "stat_num": "500+", "stat_lbl": "DESIGNS" } },
-        { "type": "stat", "settings": { "stat_num": "10K+", "stat_lbl": "CUSTOMERS" } },
+        { "type": "stat", "settings": { "stat_num": "2M+", "stat_lbl": "CUSTOMERS" } },
         { "type": "stat", "settings": { "stat_num": "4.9★", "stat_lbl": "RATING" } },
         { "type": "testimonial", "settings": { "rating": 5, "review_text": "Absolutely gorgeous blouse! The zari work is stunning and stitching quality is perfect. Got so many compliments at the wedding!", "reviewer_name": "Priya Sharma", "product_type": "Silk Zari Blouse" } },
         { "type": "testimonial", "settings": { "rating": 5, "review_text": "Fast delivery and beautiful packaging. The fabric quality is exactly as shown. Will definitely order again from Vamas!", "reviewer_name": "Anita Menon", "product_type": "Kanjeevaram Blouse" } }
