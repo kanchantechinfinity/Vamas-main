@@ -727,9 +727,18 @@
     </div>
     {% endif %}
 
+    {%- comment -%} If a colour filter is active, cards show that colour's photo/
+      swatch as the default instead of always the first-created variant's -
+      otherwise picking Green here can still land you on a card whose cover
+      photo is the Black variant. {%- endcomment -%}
+    {%- assign active_color_label = '' -%}
+    {%- for value in color_filter.values -%}
+      {%- if value.active -%}{%- assign active_color_label = value.label -%}{%- endif -%}
+    {%- endfor -%}
+
     <div class="prod-grid">
       {% for product in collection.products %}
-        {% render 'vamas-product-card', product: product %}
+        {% render 'vamas-product-card', product: product, active_color: active_color_label %}
       {% else %}
         <p>No products found in this collection.</p>
       {% endfor %}

@@ -66,6 +66,27 @@
   {% endfor %}
 {% endif %}
 
+{% comment %} If the shopper is browsing with a colour filter active (passed in as
+  `active_color`, e.g. from the collection page), and this product actually has a
+  variant in that colour, show THAT variant's photo/swatch as the default instead
+  of always the first-created variant's - otherwise a green pick in the filter
+  can land you on a card whose cover photo is still the black variant. {% endcomment %}
+{% if active_color != blank and color_option_position > 0 %}
+  {% assign active_color_key = active_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+  {% for v in product.variants %}
+    {% assign v_color = '' %}
+    {% if color_option_position == 1 %}{% assign v_color = v.option1 %}{% endif %}
+    {% if color_option_position == 2 %}{% assign v_color = v.option2 %}{% endif %}
+    {% if color_option_position == 3 %}{% assign v_color = v.option3 %}{% endif %}
+    {% assign v_color_key = v_color | downcase | strip | replace: ' ', '' | replace: '-', '' %}
+    {% if v_color_key == active_color_key and v.featured_image %}
+      {% assign default_color = v_color %}
+      {% assign default_card_image = v.featured_image %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
 {% comment %} Short badge label for mobile, where the full collection title doesn't fit the pill {% endcomment %}
 {% assign badge_title = product.collections.first.title %}
 {% assign badge_title_lower = badge_title | downcase %}
