@@ -237,7 +237,17 @@
             {%- assign cat_handle = block.settings.cat_url | default: '' | split: '/collections/' | last | split: '?' | first | strip -%}
             {%- assign cat_target = block.settings.cat_url | default: '/collections/all' -%}
             {%- if cat_handle != '' and collections[cat_handle] == blank -%}
-              {%- assign cat_target = '/collections/all' -%}
+              {%- comment -%} The configured URL is often a legacy handle from one
+                store's collection restructuring - on any other store, a collection
+                is far more likely to exist at its own natural handle (derived from
+                the category name). Try that before giving up to /collections/all. {%- endcomment -%}
+              {%- assign cat_guessed_handle = block.settings.cat_name | handle -%}
+              {%- if collections[cat_guessed_handle] and collections[cat_guessed_handle].products.size > 0 -%}
+                {%- assign cat_handle = cat_guessed_handle -%}
+                {%- assign cat_target = collections[cat_guessed_handle].url -%}
+              {%- else -%}
+                {%- assign cat_target = '/collections/all' -%}
+              {%- endif -%}
             {%- endif -%}
             {%- comment -%}
               A tile with no cat_image and no image_asset used to fall straight
