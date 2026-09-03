@@ -88,6 +88,18 @@
           {% break %}
         {% endif %}
       {% endfor %}
+      {% comment %} No blouse currently on sale - a real blouse (even without a discount)
+        still reads better on this card than a discounted Shapewear/Kids item, so that
+        wins next; only fall back to "any discounted product" or "first product overall"
+        if there is no blouse at all. {% endcomment %}
+      {% if mega_promo_product == nil %}
+        {% for p in collections.all.products %}
+          {% if p.featured_image and p.type == 'Blouse' %}
+            {% assign mega_promo_product = p %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
       {% if mega_promo_product == nil %}
         {% for p in collections.all.products %}
           {% if p.compare_at_price > p.price and p.featured_image %}
