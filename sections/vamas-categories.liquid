@@ -56,6 +56,21 @@
         {%- assign parts = entry | split: '|' -%}
         {%- assign entry_handle = parts[0] | strip -%}
         {%- assign c = collections[entry_handle] -%}
+        {%- assign tile_label = parts[1] | strip -%}
+        {%- comment -%}
+          The hardcoded handle is a legacy quirk from one store's collection
+          restructuring - on any OTHER store, a collection is far more likely
+          to exist at its own natural handle (derived from the label). Try
+          that as a fallback so a freshly created, sensibly-named collection
+          connects on its own, with no code edit needed per store.
+        {%- endcomment -%}
+        {%- if c == blank or c.products.size == 0 -%}
+          {%- assign guessed_entry_handle = tile_label | handle -%}
+          {%- if collections[guessed_entry_handle] and collections[guessed_entry_handle].products.size > 0 -%}
+            {%- assign c = collections[guessed_entry_handle] -%}
+            {%- assign entry_handle = guessed_entry_handle -%}
+          {%- endif -%}
+        {%- endif -%}
         {%- comment -%}
           Always render the tile, same as the homepage carousel - if its
           collection was deleted/renamed, fall through to /collections/all
@@ -70,7 +85,6 @@
           takes priority over the collection's own image/first product,
           for the tiles the client picked a specific product/colour for.
         {%- endcomment -%}
-        {%- assign tile_label = parts[1] | strip -%}
         {%- capture cover_asset -%}{%- render 'vamas-cat-cover', handle: entry_handle -%}{%- endcapture -%}
         {%- assign cover_asset = cover_asset | strip -%}
         {%- assign circle_img = c.image -%}

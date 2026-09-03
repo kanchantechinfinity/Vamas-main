@@ -198,11 +198,36 @@
                         {%- assign e_handle = eparts[0] | strip -%}
                         {%- assign e_label = eparts[1] | strip -%}
                         {%- assign e_coll = collections[e_handle] -%}
+                        {%- comment -%} The hardcoded handle is a legacy quirk from one
+                          store's collection restructuring - on any OTHER store, a
+                          collection is far more likely to exist at its own natural
+                          handle (derived from the label). Try that as a fallback so a
+                          freshly created, sensibly-named collection connects on its
+                          own, with no code edit needed per store. {%- endcomment -%}
+                        {%- if e_coll == blank or e_coll.products.size == 0 -%}
+                          {%- assign e_guessed_handle = e_label | handle -%}
+                          {%- if collections[e_guessed_handle] and collections[e_guessed_handle].products.size > 0 -%}
+                            {%- assign e_coll = collections[e_guessed_handle] -%}
+                            {%- assign e_handle = e_guessed_handle -%}
+                          {%- endif -%}
+                        {%- endif -%}
                         {%- capture e_cover -%}{%- render 'vamas-cat-cover', handle: e_handle -%}{%- endcapture -%}
                         {%- assign e_cover = e_cover | strip -%}
-                        {%- capture e_fallback_cycle -%}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{%- endcapture -%}
-                        {%- assign e_default_asset = e_cover | default: e_fallback_cycle -%}
-                        {%- capture e_icon_src -%}{%- render 'vamas-nav-icon-src', title: e_label, default_asset: e_default_asset -%}{%- endcapture -%}
+                        {%- comment -%} Falls through to the resolved collection's OWN
+                          image/first product photo before the generic decorative cycle,
+                          so a newly created collection shows its real photo automatically -
+                          checked ahead of the merchant icon-override lookup below, which
+                          only understands theme asset filenames, not a live CDN photo URL. {%- endcomment -%}
+                        {%- assign e_circle_img = e_coll.image -%}
+                        {%- if e_circle_img == blank -%}{%- assign e_circle_img = e_coll.products.first.featured_image -%}{%- endif -%}
+                        {%- if e_cover != blank -%}
+                          {%- capture e_icon_src -%}{%- render 'vamas-nav-icon-src', title: e_label, default_asset: e_cover -%}{%- endcapture -%}
+                        {%- elsif e_circle_img != blank -%}
+                          {%- assign e_icon_src = e_circle_img | image_url: width: 150 -%}
+                        {%- else -%}
+                          {%- capture e_fallback_cycle -%}{% cycle 'nav-icons': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{%- endcapture -%}
+                          {%- capture e_icon_src -%}{%- render 'vamas-nav-icon-src', title: e_label, default_asset: e_fallback_cycle -%}{%- endcapture -%}
+                        {%- endif -%}
                         <a href="{{ e_coll.url | default: '/collections/all' }}" class="vamas-nav__icon-item">
                           <span class="vamas-nav__icon-thumb"><img src="{{ e_icon_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
                           <span class="vamas-nav__icon-label">{{ e_label }}</span>
