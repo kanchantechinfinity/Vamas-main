@@ -369,8 +369,32 @@
                       <div class="vamas-nav__mega-icons vamas-nav__mega-icons--compact">
                         {% for childlink in link.links %}
                           {% if childlink.links == blank and childlink.title != 'Categories' and childlink.title != 'Shop by Look' and childlink.title != 'Shop by Colour' and childlink.title != 'Shop by Color' %}
-                            {% capture leaf_img %}{% cycle 'nav-leaf': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
-                            {% capture leaf_img_src %}{% render 'vamas-nav-icon-src', title: childlink.title, default_asset: leaf_img %}{% endcapture %}
+                            {% comment %} Resolve this leaf link's own real collection (by
+                              link type, then URL, then a handle guessed from its title) so
+                              it shows ITS OWN photo instead of a generic decorative one -
+                              same reasoning as the category tiles elsewhere on this menu. {% endcomment %}
+                            {% assign leaf_coll = nil %}
+                            {% if childlink.type == 'collection_link' and childlink.object %}
+                              {% assign leaf_coll = childlink.object %}
+                            {% elsif childlink.url contains '/collections/' %}
+                              {% assign leaf_url_parts = childlink.url | split: '/collections/' %}
+                              {% assign leaf_handle = leaf_url_parts[1] | split: '/' | first | split: '?' | first %}
+                              {% assign leaf_coll = collections[leaf_handle] %}
+                            {% endif %}
+                            {% if leaf_coll == nil or leaf_coll.products.size == 0 %}
+                              {% assign leaf_guessed_handle = childlink.title | handle %}
+                              {% if collections[leaf_guessed_handle] and collections[leaf_guessed_handle].products.size > 0 %}
+                                {% assign leaf_coll = collections[leaf_guessed_handle] %}
+                              {% endif %}
+                            {% endif %}
+                            {% assign leaf_circle_img = leaf_coll.image %}
+                            {% if leaf_circle_img == blank %}{% assign leaf_circle_img = leaf_coll.products.first.featured_image %}{% endif %}
+                            {% if leaf_circle_img != blank %}
+                              {% assign leaf_img_src = leaf_circle_img | image_url: width: 150 %}
+                            {% else %}
+                              {% capture leaf_img %}{% cycle 'nav-leaf': 'prod-blue.jpg', 'prod-brinjal.jpg', 'prod-cobalt.jpg', 'prod-darkmaroon.jpg', 'prod-green2.jpg', 'prod-indigo.jpg', 'prod-maroon2.jpg' %}{% endcapture %}
+                              {% capture leaf_img_src %}{% render 'vamas-nav-icon-src', title: childlink.title, default_asset: leaf_img %}{% endcapture %}
+                            {% endif %}
                             <a href="{{ childlink.url }}" class="vamas-nav__icon-item">
                               <span class="vamas-nav__icon-thumb"><img src="{{ leaf_img_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
                               <span class="vamas-nav__icon-label">{{ childlink.title }}</span>
