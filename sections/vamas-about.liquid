@@ -16,7 +16,7 @@
   .about-hero__sub { font-size: 15px; font-weight: 300; color: rgba(235,211,173,0.75); max-width: 520px; margin: 0 auto 22px; line-height: 1.7; position: relative; z-index: 1; }
   .about-hero__line { width: 80px; height: 2px; background: linear-gradient(90deg, transparent, var(--color-gold), transparent); margin: 0 auto; position: relative; z-index: 1; }
 
-  .about-story { padding: 96px var(--page-gutter); background: var(--color-bg); }
+  .about-story { padding: 96px 48px; background: var(--color-bg); }
   .about-story__inner { max-width: none; }
   .about-story__inner::after { content: ''; display: table; clear: both; }
   .about-story__text h3 { font-family: var(--font-heading); font-size: 24px; font-weight: 700; color: var(--color-maroon); margin: 8px 0 14px; clear: both; }
@@ -150,23 +150,6 @@
 {% comment %} ── 2. Brand Story ──────────────────── {% endcomment %}
 <section class="about-story">
   <div class="about-story__inner">
-    {%- comment -%} Image markup comes first so it floats top-right and the
-      heading/opening paragraphs wrap beside it; once the story text runs
-      past the image's height it continues at the full container width. {%- endcomment -%}
-    <div class="about-story__img-wrap">
-      <div class="about-story__img-blob"></div>
-      {% if section.settings.story_image != blank %}
-        <img src="{{ section.settings.story_image | img_url: '800x' }}" alt="Vamas handcrafted blouse" class="about-story__img" loading="lazy" width="480" height="520">
-      {% elsif section.settings.story_image_asset != blank %}
-        <img src="{{ section.settings.story_image_asset | asset_url }}" alt="Vamas handcrafted blouse" class="about-story__img" loading="lazy" width="480" height="520">
-      {% else %}
-        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg about-story__img' }}
-      {% endif %}
-      <div class="about-story__img-badge">
-        <span class="about-story__img-badge-title">Handcrafted Heritage</span>
-        <span class="about-story__img-badge-sub">Since the 1960s</span>
-      </div>
-    </div>
     <div class="about-story__text">
       <div class="about-story__eyebrow">{{ section.settings.story_eyebrow }}</div>
       <h2 class="about-story__h2">{{ section.settings.story_heading }}</h2>
