@@ -15,6 +15,10 @@
 {%- assign picked = section.blocks | where: 'type', 'category' -%}
 {%- assign fallback_direct = 'occasion-wear-copy|Dual Neck Blouses,dual-neck-blouses-copy|Side Stretch Blouses,side-stretch-blouses-copy|Re-Verse By Vamas,re-verse-by-vamas-copy|Brocade Bohemia,brocade-bohemia-copy|The Kanjivaram Companion,the-kanjivaram-companion-copy|Brigerton Inspired Series,brigerton-inspired-series-copy|Party Wear' | split: ',' -%}
 {%- assign fallback_groups = 'plain-edit|THE PLAIN EDIT|royal-collar-necks-copy,summer-essentials|SUMMER ESSENTIALS|brezzy-prints-copy,festive-wear|FESTIVE WEAR|wedding-wear-copy,more-categories|MORE CATEGORIES|one-of-a-kind-blouses-copy' | split: ',' -%}
+{%- comment -%} Each group's real children (from vamas-collection.liquid's own
+  group_map default) - checked below so a group with NONE of these collections
+  on this store links straight to /collections/all instead of an empty hub page. {%- endcomment -%}
+{%- assign group_children_map = 'plain-edit~signature-sleeveless+timeless-elbow-length+side-stretch-blouses+classic-cottons+royal-collar-necks+corsets|summer-essentials~corsets-copy+everyday-cottons-copy+the-shirt-blouse-copy+brezzy-prints-copy|festive-wear~croche-line-copy+haldi-and-mehendi-copy+wedding-wear-copy|more-categories~party-wear-copy+prayer-meet-blouses-copy+one-of-a-kind-blouses-copy' -%}
 
 <section class="vcats">
   <div class="vcats__head">
@@ -97,7 +101,18 @@
         {%- if group_label == 'MORE CATEGORIES' -%}{%- assign cover_asset = 'bridal.jpg' -%}{%- endif -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
-        <a class="vcat" href="/collections/all?group={{ group_slug }}">
+        {%- comment -%} If none of this group's children exist as real collections
+          here, /collections/all?group=... shows an empty hub - send the tile
+          straight to /collections/all instead of a dead end. {%- endcomment -%}
+        {%- assign group_has_child = false -%}
+        {%- assign group_children_after = group_children_map | split: group_slug | last | remove_first: '~' -%}
+        {%- assign group_children_entry = group_children_after | split: '|' | first -%}
+        {%- for gc in group_children_entry | split: '+' -%}
+          {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign group_has_child = true -%}{%- endif -%}
+        {%- endfor -%}
+        {%- assign group_href = '/collections/all?group=' | append: group_slug -%}
+        {%- unless group_has_child -%}{%- assign group_href = '/collections/all' -%}{%- endunless -%}
+        <a class="vcat" href="{{ group_href }}">
           <span class="vcat__ring">
             {% if cover_asset != blank %}
               <img src="{{ cover_asset | asset_url }}" alt="{{ group_label | escape }}" loading="lazy" width="180" height="180">

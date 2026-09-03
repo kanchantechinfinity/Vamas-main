@@ -209,13 +209,26 @@
                         </a>
                       {%- endfor -%}
                       {%- assign mega_cats_groups = 'plain-edit|THE PLAIN EDIT|prod-darkmaroon.jpg,summer-essentials|SUMMER ESSENTIALS|cat-summer-essentials.jpg,festive-wear|FESTIVE WEAR|prod-brinjal.jpg,more-categories|MORE CATEGORIES|bridal.jpg' | split: ',' -%}
+                      {%- comment -%} Each group's real children (matching
+                        vamas-collection.liquid's group_map default) - checked so a
+                        group with none of these collections on this store links
+                        straight to /collections/all instead of an empty hub page. {%- endcomment -%}
+                      {%- assign group_children_map = 'plain-edit~signature-sleeveless+timeless-elbow-length+side-stretch-blouses+classic-cottons+royal-collar-necks+corsets|summer-essentials~corsets-copy+everyday-cottons-copy+the-shirt-blouse-copy+brezzy-prints-copy|festive-wear~croche-line-copy+haldi-and-mehendi-copy+wedding-wear-copy|more-categories~party-wear-copy+prayer-meet-blouses-copy+one-of-a-kind-blouses-copy' -%}
                       {%- for entry in mega_cats_groups -%}
                         {%- assign gparts = entry | split: '|' -%}
                         {%- assign g_slug = gparts[0] | strip -%}
                         {%- assign g_label = gparts[1] | strip -%}
                         {%- assign g_asset = gparts[2] | strip -%}
                         {%- capture g_icon_src -%}{%- render 'vamas-nav-icon-src', title: g_label, default_asset: g_asset -%}{%- endcapture -%}
-                        <a href="/collections/all?group={{ g_slug }}" class="vamas-nav__icon-item">
+                        {%- assign g_has_child = false -%}
+                        {%- assign g_children_after = group_children_map | split: g_slug | last | remove_first: '~' -%}
+                        {%- assign g_children_entry = g_children_after | split: '|' | first -%}
+                        {%- for gc in g_children_entry | split: '+' -%}
+                          {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign g_has_child = true -%}{%- endif -%}
+                        {%- endfor -%}
+                        {%- assign g_href = '/collections/all?group=' | append: g_slug -%}
+                        {%- unless g_has_child -%}{%- assign g_href = '/collections/all' -%}{%- endunless -%}
+                        <a href="{{ g_href }}" class="vamas-nav__icon-item">
                           <span class="vamas-nav__icon-thumb"><img src="{{ g_icon_src | strip }}" width="56" height="56" alt="" loading="lazy"></span>
                           <span class="vamas-nav__icon-label">{{ g_label }}</span>
                         </a>
