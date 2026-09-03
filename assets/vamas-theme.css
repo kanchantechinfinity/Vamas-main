@@ -1789,12 +1789,12 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   /* Upright Garamond, matching the reference; it was Poppins italic, since no
      family was set here and the body font took over. */
   font-family: 'Cormorant Garamond', var(--font-heading), Georgia, serif;
-  font-size: 17px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 500;
   line-height: 1.6;
   letter-spacing: .4px;
-  text-align: right;
+  text-align: center;
 }
 /* Each typed line is its own block so "BE YOU." and "BE BEAUTIFUL." always
    stack as two right-aligned lines (ending at the same point as the logo
@@ -1847,5 +1847,5 @@ body.vamas-cart-drawer-lock { overflow: hidden; }
   .vamas-meaning__mark { font-size: 22px; letter-spacing: 4px; }
   /* Garamond is narrower than the Poppins that used to sit here, so 15px still
      keeps BE YOU. BE BEAUTIFUL on one nowrap line at 375px. */
-  .vamas-meaning__tag { font-size: 15px; letter-spacing: .3px; }
+  .vamas-meaning__tag { font-size: 11px; letter-spacing: .3px; text-align: center; }
 }
