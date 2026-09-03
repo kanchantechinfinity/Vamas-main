@@ -214,7 +214,7 @@
                   <div class="vamas-nav__mega-section">
                     <span class="vamas-nav__mega-section-title">{{ group_icons_1.title | default: 'Featured Collections' }}</span>
                     <div class="vamas-nav__mega-icons vamas-nav__mega-icons--wide">
-                      {%- assign mega_cats_direct = 'occasion-wear-copy|Dual Neck Blouses,dual-neck-blouses-copy|Side Stretch Blouses,side-stretch-blouses-copy|Re-Verse By Vamas,re-verse-by-vamas-copy|Brocade Bohemia,brocade-bohemia-copy|The Kanjivaram Companion,the-kanjivaram-companion-copy|Brigerton Inspired Series,brigerton-inspired-series-copy|Party Wear,corsets|Corsets' | split: ',' -%}
+                      {%- assign mega_cats_direct = 'occasion-wear-copy|Dual Neck Blouses,dual-neck-blouses-copy|Side Stretch Blouses,side-stretch-blouses-copy|Re-Verse By Vamas,re-verse-by-vamas-copy|Brocade Bohemia,brocade-bohemia-copy|The Kanjivaram Companion,the-kanjivaram-companion-copy|Brigerton Inspired Series,brigerton-inspired-series-copy|Party Wear,corsets|Corsets,brizy-prints|Brizy Prints' | split: ',' -%}
                       {%- for entry in mega_cats_direct -%}
                         {%- assign eparts = entry | split: '|' -%}
                         {%- assign e_handle = eparts[0] | strip -%}
