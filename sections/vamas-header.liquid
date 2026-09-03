@@ -62,9 +62,21 @@
       </a>
 
       {% comment %} Fallback "All Blouses" product for mega-menu promo cards whose own
-        link has no collection of its own - just any product from the full catalogue. {% endcomment %}
+        link has no collection of its own. The catalogue now also carries Shapewear
+        and Kids lines, so "first product in collections.all" can just as easily
+        land on one of those - filter to an actual Type: Blouse product so the card
+        keeps its name honest. Falls back to any product if somehow none match. {% endcomment %}
       {% assign mega_bestseller_collection = collections.all %}
-      {% assign mega_bestseller_product = mega_bestseller_collection.products.first %}
+      {% assign mega_bestseller_product = nil %}
+      {% for p in mega_bestseller_collection.products %}
+        {% if p.type == 'Blouse' %}
+          {% assign mega_bestseller_product = p %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      {% if mega_bestseller_product == nil %}
+        {% assign mega_bestseller_product = mega_bestseller_collection.products.first %}
+      {% endif %}
 
       {% comment %} Promo card image: pick a discounted product so "Big Discounts" shows a real sale item {% endcomment %}
       {% assign mega_promo_product = nil %}
