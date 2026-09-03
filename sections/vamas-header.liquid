@@ -78,14 +78,24 @@
         {% assign mega_bestseller_product = mega_bestseller_collection.products.first %}
       {% endif %}
 
-      {% comment %} Promo card image: pick a discounted product so "Big Discounts" shows a real sale item {% endcomment %}
+      {% comment %} Promo card image: pick a discounted product so "Big Discounts" shows a
+        real sale item - Type: Blouse first, same reasoning as All Blouses above, since
+        the catalogue now also carries Shapewear and Kids lines. {% endcomment %}
       {% assign mega_promo_product = nil %}
       {% for p in collections.all.products %}
-        {% if p.compare_at_price > p.price and p.featured_image %}
+        {% if p.compare_at_price > p.price and p.featured_image and p.type == 'Blouse' %}
           {% assign mega_promo_product = p %}
           {% break %}
         {% endif %}
       {% endfor %}
+      {% if mega_promo_product == nil %}
+        {% for p in collections.all.products %}
+          {% if p.compare_at_price > p.price and p.featured_image %}
+            {% assign mega_promo_product = p %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
       {% if mega_promo_product == nil %}
         {% assign mega_promo_product = collections.all.products.first %}
       {% endif %}
