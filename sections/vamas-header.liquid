@@ -155,6 +155,19 @@
             {% if group_looks == nil and linked_collection and linked_collection.products.size > 0 %}
               {% assign feature_product = linked_collection.products.first %}
             {% endif %}
+            {% comment %} Featured Collections (the blouse category grid) and the Big
+              Discounts/All Blouses promo cards only make sense under blouse-focused
+              menus - Vikri Kids (and any other non-blouse line added later) gets its
+              own plain leaf/text-list content instead, not the blouse catalogue. {% endcomment %}
+            {% assign link_title_lc = link.title | downcase %}
+            {% assign show_blouse_promo = true %}
+            {% if link_title_lc == 'vikri kids' or link_title_lc == 'shapewear' %}
+              {% assign show_blouse_promo = false %}
+            {% endif %}
+            {% assign has_group_data = false %}
+            {% if has_leaf or group_icons_1 or group_icons_2 %}
+              {% assign has_group_data = true %}
+            {% endif %}
             <div class="vamas-nav__item vamas-nav__item--has-dropdown">
               <a href="{{ link.url }}"{% if link.active %} class="active"{% endif %}>{{ link.title | upcase }}</a>
               <div class="vamas-nav__dropdown vamas-nav__dropdown--rich" data-mega>
@@ -185,7 +198,7 @@
                       {% endfor %}
                     </div>
                   </div>
-                {% elsif has_leaf or group_icons_1 or group_icons_2 %}
+                {% elsif show_blouse_promo and has_group_data %}
                   <div class="vamas-nav__mega-promo-group">
                     <div class="vamas-nav__mega-promo">
                       <span class="vamas-nav__mega-looks-title">Big Discounts</span>
@@ -223,6 +236,7 @@
                     shopper sees the identical 12 categories in both places, instead
                     of whatever unrelated subset happens to be configured in the
                     Admin navigation menu's "Featured Collections" submenu. {%- endcomment -%}
+                  {% if show_blouse_promo %}
                   <div class="vamas-nav__mega-section">
                     <span class="vamas-nav__mega-section-title">{{ group_icons_1.title | default: 'Featured Collections' }}</span>
                     <div class="vamas-nav__mega-icons vamas-nav__mega-icons--wide">
@@ -294,11 +308,11 @@
                       {%- endfor -%}
                     </div>
                   </div>
+                  {% endif %}
                   {% comment %} Sale Blouse's own "Shop Blouse" submenu is just discount-percent
                     tiles (Up to 65% Off / 50% Off / 80% Off / Clearance Products / Sale
                     Collection) - dropped here, redundant with the Big Discounts promo card
                     this dropdown already shows on the left. {% endcomment %}
-                  {% assign link_title_lc = link.title | downcase %}
                   {% if group_icons_2 and link_title_lc != 'sale blouse' %}
                     <div class="vamas-nav__mega-section">
                       <span class="vamas-nav__mega-section-title">{{ group_icons_2.title }}</span>
