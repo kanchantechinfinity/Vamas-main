@@ -296,7 +296,8 @@
                         {%- assign g_has_child = false -%}
                         {%- assign g_children_after = group_children_map | split: g_slug | last | remove_first: '~' -%}
                         {%- assign g_children_entry = g_children_after | split: '|' | first -%}
-                        {%- for gc in g_children_entry | split: '+' -%}
+                        {%- assign g_children_list = g_children_entry | split: '+' -%}
+                        {%- for gc in g_children_list -%}
                           {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign g_has_child = true -%}{%- endif -%}
                         {%- endfor -%}
                         {%- assign g_href = '/collections/all?group=' | append: g_slug -%}

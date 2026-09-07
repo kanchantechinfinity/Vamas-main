@@ -139,7 +139,8 @@
         {%- assign group_has_child = false -%}
         {%- assign group_children_after = group_children_map | split: group_slug | last | remove_first: '~' -%}
         {%- assign group_children_entry = group_children_after | split: '|' | first -%}
-        {%- for gc in group_children_entry | split: '+' -%}
+        {%- assign group_children_list = group_children_entry | split: '+' -%}
+        {%- for gc in group_children_list -%}
           {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign group_has_child = true -%}{%- endif -%}
         {%- endfor -%}
         {%- assign group_href = '/collections/all?group=' | append: group_slug -%}
