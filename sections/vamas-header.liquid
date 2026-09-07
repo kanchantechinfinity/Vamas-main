@@ -433,8 +433,12 @@
     </div>
   </nav>
 
+  {%- comment -%} Mobile can show a different menu than desktop when the
+    "Mobile Navigation Menu" setting is picked - falls back to the same
+    Navigation Menu desktop uses when left blank. {%- endcomment -%}
+  {%- assign active_mobile_menu = section.settings.mobile_menu | default: section.settings.main_menu -%}
   <div class="vamas-nav__mobile-menu" id="vamas-nav-mobile-menu">
-    {% for link in section.settings.main_menu.links %}
+    {% for link in active_mobile_menu.links %}
       <div class="vamas-mobile-item">
         {% if link.links != blank %}
           <button class="vamas-mobile-toggle" type="button">
@@ -588,6 +592,7 @@
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "text", "id": "logo_asset", "label": "Or theme asset filename", "info": "e.g. vamas-logo.avif", "default": "vamas-logo.avif" },
     { "type": "link_list", "id": "main_menu", "label": "Navigation Menu", "default": "main-menu" },
+    { "type": "link_list", "id": "mobile_menu", "label": "Mobile Navigation Menu", "info": "Leave blank to reuse the Navigation Menu above on mobile too." },
     { "type": "header", "content": "Contact Button" },
     { "type": "text", "id": "contact_label", "label": "Button Text", "default": "Contact Us" },
     { "type": "url", "id": "contact_url", "label": "Button URL" },
