@@ -1506,7 +1506,10 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
       single, predictable 5-per-row width no matter which of theirs would
       otherwise have applied. */
 .rap__med__insta-img { aspect-ratio: 1 / 1 !important; height: auto !important; }
-#rap__med__instabox#rap__med__instabox { width: 20% !important; box-sizing: border-box !important; }
+/* 16.666% = 1/6, matching the 6 posts currently pulled in (the app's free
+   plan caps it at 6). If the post count ever changes, update this to
+   100 / (number of posts actually showing) to keep them all on one line. */
+#rap__med__instabox#rap__med__instabox { width: 16.666% !important; box-sizing: border-box !important; }
 /* Bleed the reel carousel itself to the true viewport edge, cancelling the
    section's own side padding - the heading above stays inset as normal. */
 .vamas-reels .vamas-cat-carousel { margin-left: calc(-1 * var(--page-gutter)); margin-right: calc(-1 * var(--page-gutter)); }
