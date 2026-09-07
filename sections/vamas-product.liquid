@@ -249,7 +249,12 @@
             </div>
             <div class="size-buttons" data-option-index="{{ forloop.index0 }}">
               {% for value in option.values %}
-                {% capture size_label %}{% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product %}{% endcapture %}
+                {%- comment -%} Only padded-blouse sizing uses the letter->bust-number
+                  conversion (S->34 etc). Shapewear/stretchable/kids all show their
+                  real S/M/L/XL values as-is, matching the collection card. {%- endcomment -%}
+                {% assign use_raw_size = false %}
+                {% unless chart_type == 'padded_blouse' %}{% assign use_raw_size = true %}{% endunless %}
+                {% capture size_label %}{% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product, use_raw: use_raw_size %}{% endcapture %}
                 <button type="button" class="size-btn{% if value == current_variant.options[opt_idx] %} active{% endif %}" data-value="{{ value | escape }}">{{ size_label | strip }}</button>
               {% endfor %}
             </div>

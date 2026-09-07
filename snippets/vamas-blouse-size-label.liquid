@@ -1,10 +1,12 @@
 {% comment %}
   Maps alphabetic blouse sizes to their numeric equivalent for display only
   (never changes the underlying variant option value used for cart/variant matching).
-  Usage: {% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product %}
+  Usage: {% render 'vamas-blouse-size-label', size_value: value, is_kids: is_kids_product, use_raw: use_raw_size %}
+  use_raw: true for anything that isn't padded-blouse sizing (shapewear,
+  stretchable...) - those show their real S/M/L/XL, not a bust number.
 {% endcomment %}
 {% assign size_label = size_value %}
-{% unless is_kids %}
+{% unless is_kids or use_raw %}
   {% assign size_key = size_value | upcase | strip %}
   {% case size_key %}
     {% when 'XS' %}{% assign size_label = '32' %}
