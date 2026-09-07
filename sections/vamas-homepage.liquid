@@ -632,14 +632,29 @@
 </script>
 
 {% comment %} ── Instagram Reels ─────────────────── {% endcomment %}
-{% comment %}
-  Replaced by the "Instagram Feed RPTR" app's own section (a real, auto-syncing
-  live feed connected to @vamas_thedesignerblouses) - this custom block, its
-  reel blocks, and the live-embed lightbox are no longer rendered. Left the
-  "reel" block type in the schema below so any existing reel blocks in
-  settings_data.json don't throw an "unknown block type" error; they simply
-  render nothing now.
-{% endcomment %}
+{%- comment -%}
+  The custom static reel grid is gone (replaced by the Instagram Feed RPTR
+  app's real, auto-syncing feed) but the heading stays ours - the app's block
+  is dropped in right below it via the "@app" block type, added in Theme
+  Editor: this section > Add block > Apps > Instagram feed - Raptor.
+{%- endcomment -%}
+{%- assign app_blocks = section.blocks | where: 'type', '@app' -%}
+{% if section.settings.show_reels %}
+<section class="vamas-reels">
+  <div class="vamas-section__header">
+    <div>
+      <h2 class="vamas-section__title">As Seen on <span>Instagram</span></h2>
+      <p class="vamas-section__subtitle">{{ section.settings.reels_sub | default: 'Follow @vamas.official for daily style inspiration' }}</p>
+    </div>
+    <a href="{{ section.settings.reels_follow_url | default: '#' }}" class="vamas-view-all" style="display:flex;align-items:center;gap:6px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>FOLLOW US
+    </a>
+  </div>
+  {% for block in app_blocks %}
+    {% render block %}
+  {% endfor %}
+</section>
+{% endif %}
 
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
 {% assign test_blocks = section.blocks | where: 'type', 'testimonial' %}
@@ -911,7 +926,8 @@
         { "type": "url", "id": "reel_url", "label": "Link URL" },
         { "type": "product", "id": "reel_product", "label": "Featured Product", "info": "Shows a floating shoppable card on this reel" }
       ]
-    }
+    },
+    { "type": "@app" }
   ],
   "presets": [
     {
