@@ -632,134 +632,14 @@
 </script>
 
 {% comment %} ── Instagram Reels ─────────────────── {% endcomment %}
-{% assign reel_blocks = section.blocks | where: 'type', 'reel' %}
-{% if reel_blocks.size > 0 and section.settings.show_reels %}
-<section class="vamas-reels">
-  <div class="vamas-section__header">
-    <div>
-      <h2 class="vamas-section__title">As Seen on <span>Instagram</span></h2>
-      <p class="vamas-section__subtitle">{{ section.settings.reels_sub | default: 'Follow @vamas.official for daily style inspiration' }}</p>
-    </div>
-    <a href="{{ section.settings.reels_follow_url | default: '#' }}" class="vamas-view-all" style="display:flex;align-items:center;gap:6px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>FOLLOW US
-    </a>
-  </div>
-  <div class="vamas-cat-carousel" data-cat-carousel data-count="{{ reel_blocks.size }}" data-speed="0.4">
-    <div class="vamas-reels__grid" data-cat-track>
-      {% for dup in (1..2) %}
-        {% for block in section.blocks %}
-          {% if block.type == 'reel' %}
-            <div class="vamas-reel-card">
-              {%- comment -%} A Link URL pointing at a real instagram.com post/reel opens
-                Instagram's own official embed on click - the real live post (real likes/
-                comments, real video), no app or API key needed. Any other link (or none)
-                just navigates normally, same as before. {%- endcomment -%}
-              {%- assign reel_is_ig = false -%}
-              {%- if block.settings.reel_url contains 'instagram.com' -%}{%- assign reel_is_ig = true -%}{%- endif -%}
-              <a class="vamas-reel" href="{{ block.settings.reel_url | default: '#' }}" {% if reel_is_ig %}data-ig-embed="{{ block.settings.reel_url }}"{% endif %} {{ block.shopify_attributes }}>
-                {% if block.settings.reel_video != blank %}
-                  <video class="vamas-reel__img" autoplay muted loop playsinline preload="metadata"{% if block.settings.reel_image != blank %} poster="{{ block.settings.reel_image | img_url: '400x711', crop: 'top' }}"{% endif %}>
-                    {% for source in block.settings.reel_video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
-                  </video>
-                {% elsif block.settings.reel_image != blank %}
-                  <img class="vamas-reel__img" src="{{ block.settings.reel_image | img_url: '400x711', crop: 'top' }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy" draggable="false">
-                {% elsif block.settings.image_asset != blank %}
-                  <img class="vamas-reel__img" src="{{ block.settings.image_asset | asset_url }}" alt="{{ block.settings.reel_handle | escape }}" loading="lazy" draggable="false">
-                {% else %}
-                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg vamas-reel__img' }}
-                {% endif %}
-                <div class="vamas-reel__overlay"></div>
-                <div class="vamas-reel__badge"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/></svg></div>
-                {% if block.settings.reel_video == blank %}
-                  <div class="vamas-reel__play"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
-                {% endif %}
-                <div class="vamas-reel__info">
-                  <div class="vamas-reel__handle">{{ block.settings.reel_handle | default: '@vamas.official' }}</div>
-                  <div class="vamas-reel__stats">
-                    <div class="vamas-reel__stat"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>{{ block.settings.reel_likes | default: '1.2k' }}</div>
-                    <div class="vamas-reel__stat"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>{{ block.settings.reel_views | default: '1,215' }}</div>
-                  </div>
-                </div>
-              </a>
-              {% if block.settings.reel_product != blank %}
-                {% assign rp = block.settings.reel_product %}
-                <a href="{{ rp.url }}" class="vamas-reel-product">
-                  <span class="vamas-reel-product__img">
-                    <img src="{{ rp.featured_image | img_url: '120x120', crop: 'top' }}" alt="{{ rp.title | escape }}" loading="lazy" draggable="false">
-                  </span>
-                  <span class="vamas-reel-product__body">
-                    <span class="vamas-reel-product__name">{{ rp.title }}</span>
-                    <span class="vamas-reel-product__price">{{ rp.price | money | replace: 'Rs. ', '₹' }}</span>
-                  </span>
-                  <span class="vamas-reel-product__cta">View</span>
-                </a>
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-{%- comment -%} Live Instagram lightbox - a tile with a real instagram.com Link URL
-  opens the actual post here via Instagram's own official embed (real likes/
-  comments/video, always current), instead of leaving the site. {%- endcomment -%}
-<div class="vamas-ig-overlay" id="vamas-ig-overlay">
-  <div class="vamas-ig-modal">
-    <button type="button" class="vamas-ig-close" id="vamas-ig-close" aria-label="Close">&times;</button>
-    <div class="vamas-ig-embed-wrap" id="vamas-ig-embed-wrap"></div>
-  </div>
-</div>
-<script>
-(function(){
-  var overlay = document.getElementById('vamas-ig-overlay');
-  var wrap = document.getElementById('vamas-ig-embed-wrap');
-  var closeBtn = document.getElementById('vamas-ig-close');
-  if (!overlay || !wrap) return;
-
-  function processEmbeds() {
-    if (window.instgrm && window.instgrm.Embeds) { window.instgrm.Embeds.process(); }
-  }
-  function loadInstagramScript(cb) {
-    if (window.instgrm) { cb(); return; }
-    var existing = document.getElementById('vamas-ig-script');
-    if (existing) { existing.addEventListener('load', cb); return; }
-    var s = document.createElement('script');
-    s.id = 'vamas-ig-script';
-    s.async = true;
-    s.src = 'https://www.instagram.com/embed.js';
-    s.onload = cb;
-    document.body.appendChild(s);
-  }
-  function openEmbed(url) {
-    wrap.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="' + url + '" data-instgrm-version="14" style="margin:0 auto;"></blockquote>';
-    overlay.classList.add('open');
-    loadInstagramScript(processEmbeds);
-  }
-  function close() {
-    overlay.classList.remove('open');
-    wrap.innerHTML = '';
-  }
-  document.querySelectorAll('[data-ig-embed]').forEach(function(el){
-    el.addEventListener('click', function(e){
-      e.preventDefault();
-      openEmbed(el.getAttribute('data-ig-embed'));
-    });
-  });
-  closeBtn.addEventListener('click', close);
-  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
-})();
-</script>
-<style>
-  .vamas-ig-overlay { position: fixed; inset: 0; z-index: 4000; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; }
-  .vamas-ig-overlay.open { opacity: 1; visibility: visible; }
-  .vamas-ig-modal { position: relative; width: min(400px, 92vw); max-height: 90vh; overflow-y: auto; }
-  .vamas-ig-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; }
-  .vamas-ig-embed-wrap iframe { max-width: 100% !important; }
-</style>
-{% endif %}
+{% comment %}
+  Replaced by the "Instagram Feed RPTR" app's own section (a real, auto-syncing
+  live feed connected to @vamas_thedesignerblouses) - this custom block, its
+  reel blocks, and the live-embed lightbox are no longer rendered. Left the
+  "reel" block type in the schema below so any existing reel blocks in
+  settings_data.json don't throw an "unknown block type" error; they simply
+  render nothing now.
+{% endcomment %}
 
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
 {% assign test_blocks = section.blocks | where: 'type', 'testimonial' %}
