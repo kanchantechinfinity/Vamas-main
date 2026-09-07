@@ -650,7 +650,13 @@
         {% for block in section.blocks %}
           {% if block.type == 'reel' %}
             <div class="vamas-reel-card">
-              <a class="vamas-reel" href="{{ block.settings.reel_url | default: '#' }}" {{ block.shopify_attributes }}>
+              {%- comment -%} A Link URL pointing at a real instagram.com post/reel opens
+                Instagram's own official embed on click - the real live post (real likes/
+                comments, real video), no app or API key needed. Any other link (or none)
+                just navigates normally, same as before. {%- endcomment -%}
+              {%- assign reel_is_ig = false -%}
+              {%- if block.settings.reel_url contains 'instagram.com' -%}{%- assign reel_is_ig = true -%}{%- endif -%}
+              <a class="vamas-reel" href="{{ block.settings.reel_url | default: '#' }}" {% if reel_is_ig %}data-ig-embed="{{ block.settings.reel_url }}"{% endif %} {{ block.shopify_attributes }}>
                 {% if block.settings.reel_video != blank %}
                   <video class="vamas-reel__img" autoplay muted loop playsinline preload="metadata"{% if block.settings.reel_image != blank %} poster="{{ block.settings.reel_image | img_url: '400x711', crop: 'top' }}"{% endif %}>
                     {% for source in block.settings.reel_video.sources %}<source src="{{ source.url }}" type="{{ source.mime_type }}">{% endfor %}
@@ -695,6 +701,64 @@
     </div>
   </div>
 </section>
+
+{%- comment -%} Live Instagram lightbox - a tile with a real instagram.com Link URL
+  opens the actual post here via Instagram's own official embed (real likes/
+  comments/video, always current), instead of leaving the site. {%- endcomment -%}
+<div class="vamas-ig-overlay" id="vamas-ig-overlay">
+  <div class="vamas-ig-modal">
+    <button type="button" class="vamas-ig-close" id="vamas-ig-close" aria-label="Close">&times;</button>
+    <div class="vamas-ig-embed-wrap" id="vamas-ig-embed-wrap"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var overlay = document.getElementById('vamas-ig-overlay');
+  var wrap = document.getElementById('vamas-ig-embed-wrap');
+  var closeBtn = document.getElementById('vamas-ig-close');
+  if (!overlay || !wrap) return;
+
+  function processEmbeds() {
+    if (window.instgrm && window.instgrm.Embeds) { window.instgrm.Embeds.process(); }
+  }
+  function loadInstagramScript(cb) {
+    if (window.instgrm) { cb(); return; }
+    var existing = document.getElementById('vamas-ig-script');
+    if (existing) { existing.addEventListener('load', cb); return; }
+    var s = document.createElement('script');
+    s.id = 'vamas-ig-script';
+    s.async = true;
+    s.src = 'https://www.instagram.com/embed.js';
+    s.onload = cb;
+    document.body.appendChild(s);
+  }
+  function openEmbed(url) {
+    wrap.innerHTML = '<blockquote class="instagram-media" data-instgrm-permalink="' + url + '" data-instgrm-version="14" style="margin:0 auto;"></blockquote>';
+    overlay.classList.add('open');
+    loadInstagramScript(processEmbeds);
+  }
+  function close() {
+    overlay.classList.remove('open');
+    wrap.innerHTML = '';
+  }
+  document.querySelectorAll('[data-ig-embed]').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      openEmbed(el.getAttribute('data-ig-embed'));
+    });
+  });
+  closeBtn.addEventListener('click', close);
+  overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+})();
+</script>
+<style>
+  .vamas-ig-overlay { position: fixed; inset: 0; z-index: 4000; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; padding: 24px; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; }
+  .vamas-ig-overlay.open { opacity: 1; visibility: visible; }
+  .vamas-ig-modal { position: relative; width: min(400px, 92vw); max-height: 90vh; overflow-y: auto; }
+  .vamas-ig-close { position: absolute; top: -40px; right: 0; background: none; border: none; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; }
+  .vamas-ig-embed-wrap iframe { max-width: 100% !important; }
+</style>
 {% endif %}
 
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
