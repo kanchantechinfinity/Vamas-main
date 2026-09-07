@@ -1081,7 +1081,9 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
   gap: 12px;
 }
 
-.vamas-footer__copy { font-size: 10px; color: rgba(235,211,173,0.3); }
+.vamas-footer__copy { font-size: 11px; color: rgba(235,211,173,0.55); }
+.vamas-footer__copy a { color: var(--color-gold); }
+.vamas-footer__copy a:hover { color: #fff; }
 .vamas-footer__payments { font-size: 10px; color: rgba(235,211,173,0.3); }
 
 /* ── Responsive ───────────────────────── */
