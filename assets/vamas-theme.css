@@ -1490,12 +1490,22 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ── Instagram Reels ──────────────────── */
 .vamas-reels { padding: 64px var(--page-gutter) 8px; background: #fff; }
-/* Instagram Feed RPTR app bug workaround: its own thumbnail divs
-   (.rap__med__insta-img, background-image driven) render with a computed
-   height of 0 - no CSS gives them one, so every image collapses invisible
-   regardless of the app's own column/row settings. Forcing a 1:1 box here
-   is the fix; safe to remove if the app patches this on their end. */
+/* Instagram Feed RPTR app bug workarounds - two separate bugs confirmed in its
+   own shipped CSS (safe to remove if/when the app fixes these on their end):
+   1) its thumbnail divs (.rap__med__insta-img, background-image driven)
+      render with a computed height of 0 - nothing gives them one, so every
+      image collapses invisible regardless of the app's column/row settings.
+   2) the image box (#rap__med__instabox) has THREE separate conflicting
+      width rules in the app's own stylesheet - 25% unconditionally, 33.33%
+      and 50% in two different @media breakpoints, all !important - so which
+      one wins depends on screen width and load order, causing it to wrap
+      after 2-4 images instead of showing them in one row. The doubled ID
+      selector below (specificity 0,2,0,0) beats all three of the app's
+      plain single-ID rules (0,1,0,0) regardless of load order, forcing a
+      single, predictable 5-per-row width no matter which of theirs would
+      otherwise have applied. */
 .rap__med__insta-img { aspect-ratio: 1 / 1 !important; height: auto !important; }
+#rap__med__instabox#rap__med__instabox { width: 20% !important; box-sizing: border-box !important; }
 /* Bleed the reel carousel itself to the true viewport edge, cancelling the
    section's own side padding - the heading above stays inset as normal. */
 .vamas-reels .vamas-cat-carousel { margin-left: calc(-1 * var(--page-gutter)); margin-right: calc(-1 * var(--page-gutter)); }
