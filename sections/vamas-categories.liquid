@@ -35,10 +35,18 @@
     {%- comment -%} Always-shown first tile, regardless of which grid below is
       active (merchant-picked blocks or the hardcoded fallback), so ALL BLOUSES
       appears both here and matches the homepage carousel's own "ALL BLOUSES"
-      block. {%- endcomment -%}
-    <a class="vcat" href="/collections/all?filter.p.product_type=Blouse">
+      block. Uses the real "All Blouses" collection now that one exists;
+      falls back to a type filter if it's ever renamed/deleted. {%- endcomment -%}
+    {%- assign all_blouses_col = collections['all-blouses'] -%}
+    <a class="vcat" href="{{ all_blouses_col.url | default: '/collections/all?filter.p.product_type=Blouse' }}">
       <span class="vcat__ring">
-        <img src="{{ 'prod-indigo.jpg' | asset_url }}" alt="All Blouses" loading="lazy" width="180" height="180">
+        {%- if all_blouses_col.image != blank -%}
+          <img src="{{ all_blouses_col.image | image_url: width: 360 }}" alt="All Blouses" loading="lazy" width="180" height="180">
+        {%- elsif all_blouses_col.products.first.featured_image != blank -%}
+          <img src="{{ all_blouses_col.products.first.featured_image | image_url: width: 360 }}" alt="All Blouses" loading="lazy" width="180" height="180">
+        {%- else -%}
+          <img src="{{ 'prod-indigo.jpg' | asset_url }}" alt="All Blouses" loading="lazy" width="180" height="180">
+        {%- endif -%}
       </span>
       <span class="vcat__label">ALL BLOUSES</span>
     </a>

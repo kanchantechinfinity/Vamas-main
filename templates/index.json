@@ -72,7 +72,7 @@
             "image_asset": "prod-indigo.jpg",
             "cat_name": "ALL BLOUSES",
             "cat_count": "",
-            "cat_url": "/collections/all?filter.p.product_type=Blouse"
+            "cat_url": "/collections/all-blouses"
           }
         },
         "cat-1": {
