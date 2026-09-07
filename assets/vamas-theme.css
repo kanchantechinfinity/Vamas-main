@@ -1490,6 +1490,12 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
 /* ── Instagram Reels ──────────────────── */
 .vamas-reels { padding: 64px var(--page-gutter) 8px; background: #fff; }
+/* Instagram Feed RPTR app bug workaround: its own thumbnail divs
+   (.rap__med__insta-img, background-image driven) render with a computed
+   height of 0 - no CSS gives them one, so every image collapses invisible
+   regardless of the app's own column/row settings. Forcing a 1:1 box here
+   is the fix; safe to remove if the app patches this on their end. */
+.rap__med__insta-img { aspect-ratio: 1 / 1 !important; height: auto !important; }
 /* Bleed the reel carousel itself to the true viewport edge, cancelling the
    section's own side padding - the heading above stays inset as normal. */
 .vamas-reels .vamas-cat-carousel { margin-left: calc(-1 * var(--page-gutter)); margin-right: calc(-1 * var(--page-gutter)); }
