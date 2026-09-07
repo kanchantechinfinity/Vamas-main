@@ -634,13 +634,16 @@
 {% comment %} ── Instagram Reels ─────────────────── {% endcomment %}
 {%- comment -%}
   The custom static reel grid is gone (replaced by the Instagram Feed RPTR
-  app's real, auto-syncing feed) but the heading stays ours - the app's block
-  is dropped in right below it via the "@app" block type, added in Theme
-  Editor: this section > Add block > Apps > Instagram feed - Raptor.
+  app's real, auto-syncing feed). Shopify rejects an "@app" block on this
+  section's schema (a live validation error, not documented anywhere), so the
+  app's feed can't be nested inside here - it stays its own separate section,
+  placed anywhere in Theme Editor. This heading is ours, and the script below
+  finds the app's section wherever it is on the page and moves its DOM node to
+  sit directly after this heading, so the two always appear together
+  regardless of where the app's section is left in the section list.
 {%- endcomment -%}
-{%- assign app_blocks = section.blocks | where: 'type', '@app' -%}
 {% if section.settings.show_reels %}
-<section class="vamas-reels">
+<section class="vamas-reels" id="vamas-ig-heading">
   <div class="vamas-section__header">
     <div>
       <h2 class="vamas-section__title">As Seen on <span>Instagram</span></h2>
@@ -650,10 +653,27 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>FOLLOW US
     </a>
   </div>
-  {% for block in app_blocks %}
-    {% render block %}
-  {% endfor %}
 </section>
+<script>
+(function(){
+  document.addEventListener('DOMContentLoaded', function(){
+    var heading = document.getElementById('vamas-ig-heading');
+    if (!heading) return;
+    var appBlocks = document.querySelectorAll('.shopify-app-block');
+    for (var i = 0; i < appBlocks.length; i++) {
+      var idOrHtml = (appBlocks[i].id || '') + appBlocks[i].innerHTML.slice(0, 300);
+      if (/raptor|instagram/i.test(idOrHtml)) {
+        var sectionEl = appBlocks[i].closest('.shopify-section');
+        if (sectionEl && sectionEl.parentNode) {
+          sectionEl.parentNode.removeChild(sectionEl);
+          heading.insertAdjacentElement('afterend', sectionEl);
+        }
+        break;
+      }
+    }
+  });
+})();
+</script>
 {% endif %}
 
 {% comment %} ── Testimonials ─────────────────────── {% endcomment %}
@@ -926,8 +946,7 @@
         { "type": "url", "id": "reel_url", "label": "Link URL" },
         { "type": "product", "id": "reel_product", "label": "Featured Product", "info": "Shows a floating shoppable card on this reel" }
       ]
-    },
-    { "type": "@app" }
+    }
   ],
   "presets": [
     {
