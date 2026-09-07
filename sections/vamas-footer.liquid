@@ -188,11 +188,11 @@
     <div>
       <div class="vamas-footer__col-title">QUICK LINKS</div>
       <div class="vamas-footer__links">
-        <a href="/collections/all">New Arrivals</a>
-        <a href="/collections/all">All Collections</a>
-        <a href="/collections/all">Best Sellers</a>
-        <a href="/pages/about">About Us</a>
-        <a href="/pages/contact">Contact</a>
+        <a href="{{ section.settings.new_arrivals_url | default: '/collections/all' }}">New Arrivals</a>
+        <a href="{{ section.settings.all_collections_url | default: '/collections' }}">All Collections</a>
+        <a href="{{ section.settings.best_sellers_url | default: '/collections/all' }}">Best Sellers</a>
+        <a href="{{ section.settings.about_url | default: '/pages/about' }}">About Us</a>
+        <a href="{{ section.settings.contact_page_url | default: '/pages/contact' }}">Contact</a>
       </div>
     </div>
 
@@ -200,9 +200,9 @@
       <div class="vamas-footer__col-title">CUSTOMER CARE</div>
       <div class="vamas-footer__links">
         <a href="#" id="vamas-size-guide-link">Size Guide</a>
-        <a href="{{ routes.account_url }}">Track Order</a>
+        <a href="{{ section.settings.track_order_url | default: routes.account_url }}">Track Order</a>
         <a href="{{ shop.refund_policy.url | default: '/pages/contact' }}">Returns &amp; Exchange</a>
-        <a href="/pages/contact#faq">FAQ</a>
+        <a href="{{ section.settings.faq_url | default: '/pages/contact#faq' }}">FAQ</a>
         <a href="{{ shop.shipping_policy.url | default: '/pages/contact' }}">Shipping Policy</a>
       </div>
     </div>
@@ -335,6 +335,15 @@
     { "type": "checkbox", "id": "show_newsletter", "label": "Show Newsletter", "default": true },
     { "type": "checkbox", "id": "show_shop_links", "label": "Show Shop By Links", "default": true },
     { "type": "checkbox", "id": "show_faq", "label": "Show FAQ Accordion", "default": true },
+    { "type": "header", "content": "Quick Links" },
+    { "type": "url", "id": "new_arrivals_url", "label": "New Arrivals URL", "default": "/collections/all" },
+    { "type": "url", "id": "all_collections_url", "label": "All Collections URL", "default": "/collections" },
+    { "type": "url", "id": "best_sellers_url", "label": "Best Sellers URL", "default": "/collections/all" },
+    { "type": "url", "id": "about_url", "label": "About Us URL", "default": "/pages/about" },
+    { "type": "url", "id": "contact_page_url", "label": "Contact URL", "default": "/pages/contact" },
+    { "type": "header", "content": "Customer Care Links" },
+    { "type": "url", "id": "track_order_url", "label": "Track Order URL", "info": "Leave blank to send customers to their account/orders page." },
+    { "type": "url", "id": "faq_url", "label": "FAQ URL", "default": "/pages/contact#faq" },
     { "type": "header", "content": "Meaning Band" },
     { "type": "checkbox", "id": "show_meaning", "label": "Show Meaning Band", "default": true },
     { "type": "text", "id": "meaning_word", "label": "Word", "default": "VAMAS" },
