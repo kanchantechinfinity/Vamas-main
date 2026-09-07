@@ -801,6 +801,38 @@
     if (notifyBtn) notifyBtn.hidden = available;
     var notifyVariant = document.getElementById('notify-variant');
     if (notifyVariant) notifyVariant.value = v.title || '';
+
+    /* Stock label was only ever set from the server-rendered current_variant on
+       first load - switching size/color via JS never touched it, so it could
+       keep reading "In stock" after picking a combination that's actually sold
+       out. Recompute it the same way the initial Liquid render does. */
+    var stockLabel = document.getElementById('stock-label');
+    if (stockLabel) {
+      if (v.inventory_management === 'shopify' && v.available && v.inventory_quantity <= 5) {
+        stockLabel.innerHTML = '&#9889; Only ' + v.inventory_quantity + ' left — hurry!';
+      } else if (v.available) {
+        stockLabel.innerHTML = '&#10003; In stock';
+      } else {
+        stockLabel.textContent = 'Out of stock';
+      }
+    }
+  }
+
+  /* Mark each size button whose combination (with the currently selected color/
+     other options) has no in-stock variant, so shoppers see a sold-out size
+     before tapping it instead of only finding out after. */
+  function updateSizeAvailability() {
+    var stockRow = document.querySelector('.stock-row');
+    var sizeGroup = stockRow ? stockRow.previousElementSibling : null;
+    if (!sizeGroup || !sizeGroup.classList.contains('size-buttons')) return;
+    var sizeIdx = parseInt(sizeGroup.dataset.optionIndex, 10);
+    var selected = getSelectedOptions();
+    sizeGroup.querySelectorAll('.size-btn').forEach(function(btn) {
+      var testOpts = selected.slice();
+      testOpts[sizeIdx] = btn.dataset.value;
+      var match = findVariant(testOpts);
+      btn.classList.toggle('size-btn--soldout', !match || !match.available);
+    });
   }
 
   /* Back-in-stock modal */
@@ -830,8 +862,10 @@
       }
       var v = findVariant(getSelectedOptions());
       if (v) applyVariant(v);
+      updateSizeAvailability();
     });
   });
+  updateSizeAvailability();
 
   /* Quantity */
   var qty = 1;

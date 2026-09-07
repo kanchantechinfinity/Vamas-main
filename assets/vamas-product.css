@@ -86,9 +86,13 @@
     .size-chart-link{font-size:11px;color:var(--gd);text-decoration:none;font-weight:600;}
     .size-chart-link:hover{color:var(--m);}
     .size-buttons{display:flex;gap:8px;flex-wrap:wrap;}
-    .size-btn{min-width:46px;padding:8px 10px;font-size:12px;font-family:var(--font-body);font-weight:400;border:1.5px solid #ddd;background:white;border-radius:6px;cursor:pointer;transition:all 0.2s;color:#1a1a1a;}
+    .size-btn{position:relative;min-width:46px;padding:8px 10px;font-size:12px;font-family:var(--font-body);font-weight:400;border:1.5px solid #ddd;background:white;border-radius:6px;cursor:pointer;transition:all 0.2s;color:#1a1a1a;overflow:hidden;}
     .size-btn:hover{border-color:var(--m);color:var(--m);}
     .size-btn.active{background:var(--m);color:white;border-color:var(--m);}
+    .size-btn--soldout{color:#bbb;border-color:#e5e5e5;background:#fafafa;cursor:pointer;}
+    .size-btn--soldout:hover{border-color:#e5e5e5;color:#bbb;}
+    .size-btn--soldout::after{content:'';position:absolute;left:-4px;right:-4px;top:50%;height:1.5px;background:#c33;transform:rotate(-18deg);}
+    .size-btn--soldout.active{background:white;color:#bbb;}
 
     /* ── Stock indicator ── */
     .stock-row{margin-top:10px;margin-bottom:14px;}
