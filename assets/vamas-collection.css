@@ -381,13 +381,10 @@ a{text-decoration:none;color:inherit;}
 /* -- PRODUCT GRID -- */
 .prod-grid{
   display:grid;
-  /* auto-fill instead of a fixed repeat(4,...) - columns keep adding as the
-     window grows past a laptop screen instead of the same 4 cards just
-     stretching wider forever, capped at 5 (not unbounded) to match
-     vamas.in's own reference layout - 280px combined with .col-body's
-     max-width:1900px never leaves room for a 6th column. Card breakpoints
-     below still pin it to 3/2/1 on tablet and phone. */
-  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  /* Fixed at 4 columns on desktop, regardless of screen width - cards grow
+     wider on big monitors instead of adding a 5th/6th column. Card
+     breakpoints below still pin it to 3/2/1 on tablet and phone. */
+  grid-template-columns:repeat(4,1fr);
   gap:22px;
   margin-bottom:40px;
 }
