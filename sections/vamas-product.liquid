@@ -40,6 +40,41 @@
 {%- endif -%}
 {%- if chart_type == blank -%}{%- assign chart_type = 'padded_blouse' -%}{%- endif -%}
 
+{%- comment -%}
+  5 real charts (Vamas's own printed sheets - PADDED BLOUSE, SHAPEWEAR,
+  STRETCHABLE, BOYS, GIRLS), keyed by chart_type above. Computed here (not
+  down by the size-chart modal that used to own this) so the MEASUREMENTS &
+  SIZING accordion can use the exact same data instead of always showing the
+  padded-blouse layout regardless of this product's actual chart type.
+  Header entries are "label" or, for the blouse chart, "label|sub" (the
+  small numeric size under the letter). Row entries are "LABEL:val1,val2,...".
+{%- endcomment -%}
+{%- case chart_type -%}
+  {%- when 'shapewear' or 'stretchable' -%}
+    {%- assign sc_headers = 'S-M,L-XL,2XL-3XL' | split: ',' -%}
+    {%- assign sc_rows_in = 'WAIST:30 (28-32),34 (32-36),38 (36-40)|HIP:36 (34-40),40 (38-44),44 (42-48)|LENGTH:37,37,37' | split: '|' -%}
+    {%- assign sc_rows_cm = 'WAIST:76.2 (71.12-81.28),86.36 (81.28-91.44),96.52 (91.44-101.6)|HIP:91.44 (86.36-101.6),101.6 (96.52-111.76),111.76 (106.68-121.92)|LENGTH:93.98,93.98,93.98' | split: '|' -%}
+    {%- if chart_type == 'shapewear' -%}{%- assign sc_title = 'SHAPEWEAR MEASUREMENT' -%}{%- else -%}{%- assign sc_title = 'STRETCHABLE MEASUREMENT' -%}{%- endif -%}
+  {%- when 'boys' -%}
+    {%- assign sc_headers = '1-2 Years,2-3 Years,3-4 Years,4-5 Years,5-6 Years,6-7 Years' | split: ',' -%}
+    {%- assign sc_rows_in = 'TOP LENGTH:19,21,23,25,27,29|CHEST:25.5,26.5,27.5,28.5,29.5,30.5|SLEEVE:12,13,14,15,16,17|BOTTOM LENGTH:20.5,22,23.5,25,26.5,28|WAIST:16.5,17,17.5,18,18.5,19|HIP:25,26,27,28,29,30|JACKET LENGTH:13.75,14.5,15.25,16,16.75,17.5' | split: '|' -%}
+    {%- assign sc_rows_cm = 'TOP LENGTH:48,53,58,63,68,73|CHEST:65,67,70,72,75,77|SLEEVE:30.5,33,35.5,38,40.5,43|BOTTOM LENGTH:52,56,60,63,67,71|WAIST:42,43,44,46,47,48|HIP:63,66,69,71,74,76|JACKET LENGTH:35,37,39,41,43,45' | split: '|' -%}
+    {%- assign sc_title = 'BOYS MEASUREMENT' -%}
+  {%- when 'girls' -%}
+    {%- assign sc_headers = '1-2 Years,2-3 Years,3-4 Years,4-5 Years,5-6 Years,6-7 Years' | split: ',' -%}
+    {%- assign sc_rows_in = 'TOP LENGTH:19,20.5,23,24.5,26.5,29|CHEST:26,27,28,29,30,31|SLEEVE:12,13,14,15,16,17|BOTTOM LENGTH:19,20.5,22,24.5,26,28|WAIST:16.5,17,17.5,18,18.5,19|JACKET CHEST:25,26,27,28,29,30' | split: '|' -%}
+    {%- assign sc_rows_cm = 'TOP LENGTH:48.26,52.07,58.42,62.23,67.31,73.66|CHEST:66.04,68.58,71.12,73.66,76.2,78.74|SLEEVE:30.48,33.02,35.56,38.1,40.64,43.18|BOTTOM LENGTH:48.26,52.07,55.88,62.23,66.04,71.12|WAIST:41.91,43.18,44.45,45.72,46.99,48.26|JACKET CHEST:63.5,66.04,68.58,71.12,73.66,76.2' | split: '|' -%}
+    {%- assign sc_title = 'GIRLS MEASUREMENT' -%}
+  {%- else -%}
+    {%- comment -%} padded_blouse - the numeric sizes sold on site ARE
+      the chest measurement (32 is XS, 50 is 6XL), so both labels sit
+      in the header rather than making shoppers guess. {%- endcomment -%}
+    {%- assign sc_headers = 'XS|32,S|34,M|36,L|38,XL|40,XXL|42,3XL|44,4XL|46,5XL|48,6XL|50' | split: ',' -%}
+    {%- assign sc_rows_in = 'CHEST:32,34,36,38,40,42,44,46,48,50|LENGTH:13,13.5,14,14.5,15,15.5,16,16.5,17,17.5|WAIST:26,28,30,32,34,36,38,40,42,44|SHORT SLEEVE:5,5,5,5.5,5.5,6.5,6.5,6.5,6.5,6.5|3/4 SLEEVE:10,10.5,11,11,11,11,11.5,11.5,11.5,11.5|FULL SLEEVE:21,21,21,21,21,22,22,22,22,22' | split: '|' -%}
+    {%- assign sc_rows_cm = 'CHEST:81.28,86.36,91.44,96.52,101.6,106.68,111.76,116.84,121.92,127|LENGTH:33.02,34.29,35.56,36.83,38.1,39.37,40.64,41.91,43.18,44.45|WAIST:66.04,71.12,76.2,81.28,86.36,91.44,96.52,101.6,106.68,111.76|SHORT SLEEVE:12.7,12.7,12.7,13.97,13.97,16.51,16.51,16.51,16.51,16.51|3/4 SLEEVE:25.4,26.67,27.94,27.94,27.94,27.94,29.21,29.21,29.21,29.21|FULL SLEEVE:53.34,53.34,53.34,53.34,53.34,55.88,55.88,55.88,55.88,55.88' | split: '|' -%}
+    {%- assign sc_title = 'PADDED BLOUSE MEASUREMENT' -%}
+{%- endcase -%}
+
 <section class="product-section">
 
   <!-- ═══ LEFT: Gallery ═══ -->
@@ -391,27 +426,47 @@
         </div>
       </div>
 
-      {% assign size_rows = section.blocks | where: 'type', 'size_row' %}
-      {% if size_rows.size > 0 %}
+      {% comment %} Same sc_headers/sc_rows_in this product's Size Chart modal uses
+        (resolved from the size_chart_type metafield near the top of this file) -
+        this used to be a fixed section-block table that always showed the padded
+        blouse Bust/Waist/Hip/Length layout regardless of the product's real chart
+        type. Oriented the same way as the modal (SIZE across the top, one row per
+        measurement) since that's the only layout that fits all 5 chart types -
+        shapewear/stretchable's 3 fit-range sizes, boys/girls' 6 age brackets and
+        7 measurement rows, none of which fit the old fixed 4-column shape. {% endcomment %}
       <div class="acc-item" id="acc-size">
         <div class="acc-header">MEASUREMENTS &amp; SIZING <span class="acc-icon">+</span></div>
         <div class="acc-body">
           <div class="acc-content">
             <p style="margin-bottom:10px;font-size:11px;color:#888;">All measurements are in inches. If between sizes, choose the larger size.</p>
             <table class="size-table">
-              <thead><tr><th>Size</th><th>Bust</th><th>Waist</th><th>Hip</th><th>Length</th></tr></thead>
-              <tbody id="size-table-body">
-                {% for block in size_rows %}
-                <tr data-size="{{ block.settings.size }}"{% if block.settings.size == current_variant.options[1] %} class="highlight"{% endif %}>
-                  <td>{{ block.settings.size }}</td><td>{{ block.settings.bust }}</td><td>{{ block.settings.waist }}</td><td>{{ block.settings.hip }}</td><td>{{ block.settings.length }}</td>
+              <thead>
+                <tr>
+                  <th>Size</th>
+                  {% for h in sc_headers %}
+                    {% assign h_parts = h | split: '|' %}
+                    {% assign h_is_current = false %}
+                    {% if h_parts[0] == current_variant.options[1] or h_parts[1] == current_variant.options[1] %}
+                      {% assign h_is_current = true %}
+                    {% endif %}
+                    <th data-size="{{ h_parts[1] | default: h_parts[0] }}"{% if h_is_current %} class="highlight"{% endif %}>{{ h_parts[0] }}{% if h_parts[1] %} ({{ h_parts[1] }}){% endif %}</th>
+                  {% endfor %}
                 </tr>
+              </thead>
+              <tbody id="size-table-body">
+                {% for row_in in sc_rows_in %}
+                  {% assign parts_in = row_in | split: ':' %}
+                  {% assign vals_in = parts_in[1] | split: ',' %}
+                  <tr>
+                    <td><strong>{{ parts_in[0] }}</strong></td>
+                    {% for v in vals_in %}<td>{{ v }}</td>{% endfor %}
+                  </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      {% endif %}
 
       {% assign care_items = section.blocks | where: 'type', 'care_item' %}
       {% if care_items.size > 0 %}
@@ -506,41 +561,9 @@
       <button class="sc-close" id="sc-close">&times;</button>
     </div>
     <div class="sc-body">
-      {%- comment -%}
-        5 real charts (Vamas's own printed sheets - PADDED BLOUSE, SHAPEWEAR,
-        STRETCHABLE, BOYS, GIRLS), keyed by chart_type (resolved above from
-        the size_chart_type metafield, or auto-detected). Same modal chrome
-        (title/toggle/table/fineprint) for every type - only the column
-        headers and row data change. Header entries are "label" or, for the
-        blouse chart, "label|sub" (the small numeric size under the letter).
-        Row entries are "LABEL:val1,val2,...".
-      {%- endcomment -%}
-      {%- case chart_type -%}
-        {%- when 'shapewear' or 'stretchable' -%}
-          {%- assign sc_headers = 'S-M,L-XL,2XL-3XL' | split: ',' -%}
-          {%- assign sc_rows_in = 'WAIST:30 (28-32),34 (32-36),38 (36-40)|HIP:36 (34-40),40 (38-44),44 (42-48)|LENGTH:37,37,37' | split: '|' -%}
-          {%- assign sc_rows_cm = 'WAIST:76.2 (71.12-81.28),86.36 (81.28-91.44),96.52 (91.44-101.6)|HIP:91.44 (86.36-101.6),101.6 (96.52-111.76),111.76 (106.68-121.92)|LENGTH:93.98,93.98,93.98' | split: '|' -%}
-          {%- if chart_type == 'shapewear' -%}{%- assign sc_title = 'SHAPEWEAR MEASUREMENT' -%}{%- else -%}{%- assign sc_title = 'STRETCHABLE MEASUREMENT' -%}{%- endif -%}
-        {%- when 'boys' -%}
-          {%- assign sc_headers = '1-2 Years,2-3 Years,3-4 Years,4-5 Years,5-6 Years,6-7 Years' | split: ',' -%}
-          {%- assign sc_rows_in = 'TOP LENGTH:19,21,23,25,27,29|CHEST:25.5,26.5,27.5,28.5,29.5,30.5|SLEEVE:12,13,14,15,16,17|BOTTOM LENGTH:20.5,22,23.5,25,26.5,28|WAIST:16.5,17,17.5,18,18.5,19|HIP:25,26,27,28,29,30|JACKET LENGTH:13.75,14.5,15.25,16,16.75,17.5' | split: '|' -%}
-          {%- assign sc_rows_cm = 'TOP LENGTH:48,53,58,63,68,73|CHEST:65,67,70,72,75,77|SLEEVE:30.5,33,35.5,38,40.5,43|BOTTOM LENGTH:52,56,60,63,67,71|WAIST:42,43,44,46,47,48|HIP:63,66,69,71,74,76|JACKET LENGTH:35,37,39,41,43,45' | split: '|' -%}
-          {%- assign sc_title = 'BOYS MEASUREMENT' -%}
-        {%- when 'girls' -%}
-          {%- assign sc_headers = '1-2 Years,2-3 Years,3-4 Years,4-5 Years,5-6 Years,6-7 Years' | split: ',' -%}
-          {%- assign sc_rows_in = 'TOP LENGTH:19,20.5,23,24.5,26.5,29|CHEST:26,27,28,29,30,31|SLEEVE:12,13,14,15,16,17|BOTTOM LENGTH:19,20.5,22,24.5,26,28|WAIST:16.5,17,17.5,18,18.5,19|JACKET CHEST:25,26,27,28,29,30' | split: '|' -%}
-          {%- assign sc_rows_cm = 'TOP LENGTH:48.26,52.07,58.42,62.23,67.31,73.66|CHEST:66.04,68.58,71.12,73.66,76.2,78.74|SLEEVE:30.48,33.02,35.56,38.1,40.64,43.18|BOTTOM LENGTH:48.26,52.07,55.88,62.23,66.04,71.12|WAIST:41.91,43.18,44.45,45.72,46.99,48.26|JACKET CHEST:63.5,66.04,68.58,71.12,73.66,76.2' | split: '|' -%}
-          {%- assign sc_title = 'GIRLS MEASUREMENT' -%}
-        {%- else -%}
-          {%- comment -%} padded_blouse - the numeric sizes sold on site ARE
-            the chest measurement (32 is XS, 50 is 6XL), so both labels sit
-            in the header rather than making shoppers guess. {%- endcomment -%}
-          {%- assign sc_headers = 'XS|32,S|34,M|36,L|38,XL|40,XXL|42,3XL|44,4XL|46,5XL|48,6XL|50' | split: ',' -%}
-          {%- assign sc_rows_in = 'CHEST:32,34,36,38,40,42,44,46,48,50|LENGTH:13,13.5,14,14.5,15,15.5,16,16.5,17,17.5|WAIST:26,28,30,32,34,36,38,40,42,44|SHORT SLEEVE:5,5,5,5.5,5.5,6.5,6.5,6.5,6.5,6.5|3/4 SLEEVE:10,10.5,11,11,11,11,11.5,11.5,11.5,11.5|FULL SLEEVE:21,21,21,21,21,22,22,22,22,22' | split: '|' -%}
-          {%- assign sc_rows_cm = 'CHEST:81.28,86.36,91.44,96.52,101.6,106.68,111.76,116.84,121.92,127|LENGTH:33.02,34.29,35.56,36.83,38.1,39.37,40.64,41.91,43.18,44.45|WAIST:66.04,71.12,76.2,81.28,86.36,91.44,96.52,101.6,106.68,111.76|SHORT SLEEVE:12.7,12.7,12.7,13.97,13.97,16.51,16.51,16.51,16.51,16.51|3/4 SLEEVE:25.4,26.67,27.94,27.94,27.94,27.94,29.21,29.21,29.21,29.21|FULL SLEEVE:53.34,53.34,53.34,53.34,53.34,55.88,55.88,55.88,55.88,55.88' | split: '|' -%}
-          {%- assign sc_title = 'PADDED BLOUSE MEASUREMENT' -%}
-      {%- endcase -%}
-
+      {% comment %} sc_headers/sc_rows_in/sc_rows_cm/sc_title are computed once near
+        the top of this file (shared with the MEASUREMENTS & SIZING accordion below,
+        so both show the exact same chart for this product). {% endcomment %}
       {% comment %} Diagram first, then the chart, then the notes - the same running
         order as the printed sheet. Only the padded blouse chart has Vamas's own
         measuring diagram; the others skip straight to the table. {% endcomment %}
