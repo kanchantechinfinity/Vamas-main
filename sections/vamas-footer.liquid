@@ -225,7 +225,7 @@
   </div>
 
   <div class="vamas-footer__bottom">
-    <div class="vamas-footer__copy">Copyright &copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand_name }} - Designed and developed by <a href="https://techinfinity.io" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">Techinfinity&reg;</a></div>
+    <div class="vamas-footer__copy">Copyright &copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand_name }} - {{ section.settings.credit_text | default: 'Designed and developed by' }} <a href="{{ section.settings.credit_url | default: 'https://techinfinity.io' }}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">{{ section.settings.credit_name | default: 'Techinfinity&reg;' }}</a></div>
     <div class="vamas-footer__payments">
       <span class="vamas-footer__payment-icon" style="font-size:11px;color:rgba(235,211,173,0.5);">UPI &nbsp;|&nbsp; Cards &nbsp;|&nbsp; Net Banking &nbsp;|&nbsp; COD</span>
     </div>
@@ -364,7 +364,11 @@
     { "type": "header", "content": "Contact" },
     { "type": "text", "id": "contact_email", "label": "Email" },
     { "type": "text", "id": "contact_phone", "label": "Phone" },
-    { "type": "text", "id": "contact_hours", "label": "Support Hours", "default": "Mon–Sat: 10am – 6pm" }
+    { "type": "text", "id": "contact_hours", "label": "Support Hours", "default": "Mon–Sat: 10am – 6pm" },
+    { "type": "header", "content": "Footer Credit" },
+    { "type": "text", "id": "credit_text", "label": "Credit Text", "default": "Designed and developed by" },
+    { "type": "text", "id": "credit_name", "label": "Credit Name", "default": "Techinfinity®" },
+    { "type": "url", "id": "credit_url", "label": "Credit Link", "info": "Leave blank for https://techinfinity.io" }
   ],
   "presets": [{ "name": "Vamas Footer" }]
 }
