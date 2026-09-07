@@ -32,6 +32,16 @@
   </div>
 
   <div class="vcats__grid">
+    {%- comment -%} Always-shown first tile, regardless of which grid below is
+      active (merchant-picked blocks or the hardcoded fallback), so ALL BLOUSES
+      appears both here and matches the homepage carousel's own "ALL BLOUSES"
+      block. {%- endcomment -%}
+    <a class="vcat" href="/collections/all?filter.p.product_type=Blouse">
+      <span class="vcat__ring">
+        <img src="{{ 'prod-indigo.jpg' | asset_url }}" alt="All Blouses" loading="lazy" width="180" height="180">
+      </span>
+      <span class="vcat__label">ALL BLOUSES</span>
+    </a>
     {% if picked.size > 0 %}
       {% for block in picked %}
         {%- assign c = collections[block.settings.collection] -%}

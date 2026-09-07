@@ -66,6 +66,15 @@
             "btn2_url": "/collections/all"
           }
         },
+        "cat-13": {
+          "type": "category",
+          "settings": {
+            "image_asset": "prod-indigo.jpg",
+            "cat_name": "ALL BLOUSES",
+            "cat_count": "",
+            "cat_url": "/collections/all?filter.p.product_type=Blouse"
+          }
+        },
         "cat-1": {
           "type": "category",
           "settings": {
@@ -292,6 +301,7 @@
       "block_order": [
         "slide-1",
         "slide-2",
+        "cat-13",
         "cat-1",
         "cat-2",
         "cat-3",
