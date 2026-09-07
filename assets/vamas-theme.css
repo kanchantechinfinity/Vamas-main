@@ -1489,7 +1489,12 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .vamas-full-banner__btn:hover { background: #fff; }
 
 /* ── Instagram Reels ──────────────────── */
-.vamas-reels { padding: 64px var(--page-gutter) 8px; background: #fff; }
+/* Top padding doubled to 128px: Customer Reviews gets its 64px top padding
+   PLUS the Instagram app feed's own 64px bottom padding stacked before it,
+   so it reads with much more headroom than this heading got from its own
+   64px alone with nothing stacked in front of it. Matching that combined
+   amount here evens out the two. */
+.vamas-reels { padding: 128px var(--page-gutter) 8px; background: #fff; }
 .vamas-reels .vamas-section__header { padding-left: var(--page-gutter); padding-right: var(--page-gutter); }
 /* The app's own feed section sits right after ours (moved there by the JS in
    vamas-homepage.liquid) and ends with its own "Powered by Raptor Media"
