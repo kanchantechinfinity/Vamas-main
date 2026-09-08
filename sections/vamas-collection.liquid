@@ -363,12 +363,24 @@
             {%- endif -%}
           {%- endif -%}
           {%- assign g_shopall_url = '/collections/all?group=' | append: g_slug -%}
+          {%- assign g_shopall_img = blank -%}
+          {%- assign g_shopall_cover = blank -%}
           {%- if g_real_col != blank and g_real_col.handle -%}
             {%- assign g_shopall_url = g_real_col.url -%}
+            {%- capture g_shopall_cover -%}{%- render 'vamas-cat-cover', handle: g_real_col.handle -%}{%- endcapture -%}
+            {%- assign g_shopall_cover = g_shopall_cover | strip -%}
+            {%- assign g_shopall_img = g_real_col.image -%}
+            {%- if g_shopall_img == blank -%}{%- assign g_shopall_img = g_real_col.products.first.featured_image -%}{%- endif -%}
           {%- endif -%}
           <a href="{{ g_shopall_url }}" class="col-cat">
             <span class="col-cat__ring">
-              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% if g_shopall_cover != blank %}
+                <img src="{{ g_shopall_cover | asset_url }}" alt="{{ g_title | escape }}" loading="lazy" width="180" height="180">
+              {% elsif g_shopall_img != blank %}
+                <img src="{{ g_shopall_img | img_url: '360x360', crop: 'top' }}" alt="{{ g_title | escape }}" loading="lazy" width="180" height="180">
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
             </span>
             <span class="col-cat__label">{{ g_title }}</span>
             <span class="col-cat__count">Shop All</span>
