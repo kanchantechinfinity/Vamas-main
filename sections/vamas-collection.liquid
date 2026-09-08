@@ -45,6 +45,7 @@
 {%- assign size_filter = blank -%}
 {%- assign availability_filter = blank -%}
 {%- assign color_filter = blank -%}
+{%- assign fabric_filter = blank -%}
 {%- for filter in collection.filters -%}
   {%- assign filter_label_down = filter.label | downcase -%}
   {%- if filter_label_down contains 'sleeve' -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
@@ -52,6 +53,7 @@
   {%- if filter_label_down contains 'size' -%}{%- assign size_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'vail' -%}{%- assign availability_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'colo' -%}{%- assign color_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'fabric' -%}{%- assign fabric_filter = filter -%}{%- endif -%}
 {%- endfor -%}
 
 {%- comment -%}
@@ -580,10 +582,7 @@
           <div class="acc-item" data-filter-group="fabric">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
-              {% for t in vtag_fabric %}
-                <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
-              {% endfor %}
+              {% render 'vamas-filter-group-options', native_filter: fabric_filter, tag_list: 'Silk,Cotton,Velvet,Georgette,Banarasi', current_tags: collection.current_tags, empty_note: 'Fabric filter not set up yet.' %}
             </div>
           </div>
 
@@ -705,7 +704,6 @@
     <div class="sidebar-scroll">
     {% comment %} Fixed filter order: Sleeve, Neckline, Color, Fabric, Price, Availability, Occasion {% endcomment %}
     {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
-    {% assign vtag_fabric = "Silk,Cotton,Velvet,Georgette,Banarasi" | split: "," %}
 
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
@@ -731,9 +729,7 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% for t in vtag_fabric %}
-          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
-        {% endfor %}
+        {% render 'vamas-filter-group-options', native_filter: fabric_filter, tag_list: 'Silk,Cotton,Velvet,Georgette,Banarasi', current_tags: collection.current_tags, empty_note: 'Fabric filter not set up yet.' %}
       </div>
     </div>
 
