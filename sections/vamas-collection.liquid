@@ -250,6 +250,50 @@
       {% endif %}
     {% endfor %}
   </div>
+
+  {%- comment -%}
+    Below the sub-category circles: every product across this parent
+    collection's own products AND its children's products, deduped by
+    handle, so a shopper can browse the whole category (e.g. "Summer") in
+    one scroll instead of first having to pick a sub-category. Safe to
+    render eagerly here (unlike the virtual group hubs on /collections/all)
+    because Shopify only ever loads ONE real collection page's Liquid at a
+    time - there's no "render all 4, hide 3" waste like that page had.
+  {%- endcomment -%}
+  {%- assign cp_seen = '' -%}
+  {%- assign cp_count = 0 -%}
+  {%- capture cp_cards -%}
+    {%- for product in collection.products limit: 48 -%}
+      {%- assign cp_probe = '~' | append: product.handle | append: '~' -%}
+      {%- unless cp_seen contains cp_probe -%}
+        {%- assign cp_seen = cp_seen | append: cp_probe -%}
+        {%- assign cp_count = cp_count | plus: 1 -%}
+        {% render 'vamas-product-card', product: product %}
+      {%- endunless -%}
+    {%- endfor -%}
+    {%- for c in subcat_children -%}
+      {%- assign c_handle = c | strip | downcase -%}
+      {%- if c_handle != '' -%}
+        {%- assign child = collections[c_handle] -%}
+        {%- for product in child.products limit: 48 -%}
+          {%- assign cp_probe = '~' | append: product.handle | append: '~' -%}
+          {%- unless cp_seen contains cp_probe -%}
+            {%- assign cp_seen = cp_seen | append: cp_probe -%}
+            {%- assign cp_count = cp_count | plus: 1 -%}
+            {% render 'vamas-product-card', product: product %}
+          {%- endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if cp_count > 0 -%}
+    <div class="col-cats__products">
+      <h2 class="col-cats__products-title">Shop All {{ collection.title }}</h2>
+      <div class="prod-grid">
+        {{ cp_cards }}
+      </div>
+    </div>
+  {%- endif -%}
 </div>
 {% else %}
 {%- if collection.handle == 'all' -%}
