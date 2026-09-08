@@ -14,12 +14,57 @@
   Params: native_filter, tag_list, current_tags, empty_note
 {% endcomment %}
 {% if native_filter != blank %}
-  {% for value in native_filter.values %}
-    <label class="filter-check-row">
-      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}>
-      {{ value.label }} ({{ value.count }})
-    </label>
-  {% endfor %}
+  {% if group_colors %}
+    {%- comment -%}
+      The real Color filter lists every exact variant shade (BOTTLE-GREEN,
+      OLIVE-GREEN, DARK-GOLD, COBALT-BLUE...) - 20+ raw checkboxes. Grouping
+      them under simple families (Green, Blue...) via substring match on the
+      label gives a shopper 8-ish broad choices instead. One family checkbox
+      carries ALL its real shade values (data-color-values); vamas-collection.
+      liquid's APPLY button expands that into one filter.v.option.color param
+      per shade when building the URL. Anything that doesn't match a known
+      family name still gets its own plain checkbox below, so no colour is
+      ever unselectable.
+    {%- endcomment -%}
+    {%- assign color_families = 'Black,Maroon,Gold,Green,Navy,Blue,Red,Pink,White,Grey,Purple,Yellow,Orange,Brown,Cream,Beige' | split: ',' -%}
+    {%- assign param_name = native_filter.values.first.param_name -%}
+    {%- assign assigned_values = '' -%}
+    {% for family in color_families %}
+      {%- assign family_down = family | downcase -%}
+      {%- assign group_values = '' -%}
+      {%- assign group_active = false -%}
+      {% for value in native_filter.values %}
+        {%- assign value_down = value.label | downcase -%}
+        {%- if value_down contains family_down -%}
+          {%- assign group_values = group_values | append: value.value | append: '||' -%}
+          {%- assign assigned_values = assigned_values | append: value.value | append: '||' -%}
+          {%- if value.active -%}{%- assign group_active = true -%}{%- endif -%}
+        {%- endif -%}
+      {% endfor %}
+      {% if group_values != '' %}
+        <label class="filter-check-row">
+          <input type="checkbox" class="vcolor-group-filter" data-color-param="{{ param_name }}" data-color-values="{{ group_values }}" {% if group_active %}checked{% endif %}>
+          {{ family }}
+        </label>
+      {% endif %}
+    {% endfor %}
+    {% for value in native_filter.values %}
+      {%- assign probe = value.value | append: '||' -%}
+      {% unless assigned_values contains probe %}
+        <label class="filter-check-row">
+          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}>
+          {{ value.label }} ({{ value.count }})
+        </label>
+      {% endunless %}
+    {% endfor %}
+  {% else %}
+    {% for value in native_filter.values %}
+      <label class="filter-check-row">
+        <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}>
+        {{ value.label }} ({{ value.count }})
+      </label>
+    {% endfor %}
+  {% endif %}
 {% elsif tag_list != blank %}
   {% assign group_tags = tag_list | split: ',' %}
   {% for t in group_tags %}

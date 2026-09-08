@@ -1021,6 +1021,16 @@ function wireVtagApply(id, scopeSelector){
     scope.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked').forEach(function(el){
       if (el.classList.contains('vtag-filter')) {
         tags.push(el.value.trim().toLowerCase().replace(/\s+/g, '-'));
+      } else if (el.classList.contains('vcolor-group-filter')) {
+        /* One family checkbox (e.g. "Green") stands in for every real shade
+           value that belongs to it (BOTTLE-GREEN, OLIVE-GREEN...) - expand
+           into one filter.v.option.color param per shade so Shopify's native
+           filter (which only understands exact values) matches all of them. */
+        var colorParam = el.getAttribute('data-color-param');
+        var colorValues = (el.getAttribute('data-color-values') || '').split('||').filter(Boolean);
+        colorValues.forEach(function(v){
+          params.push(encodeURIComponent(colorParam) + '=' + encodeURIComponent(v));
+        });
       } else if (el.name) {
         params.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
       }
