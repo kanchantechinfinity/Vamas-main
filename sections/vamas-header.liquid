@@ -210,22 +210,31 @@
                   {%- assign mega_all_blouses_col = collections['all-blouses'] -%}
                   <div class="vamas-nav__mega-promo-group">
                     <div class="vamas-nav__mega-promo">
-                      <span class="vamas-nav__mega-looks-title">Big Discounts</span>
-                      <a href="{{ mega_sale_col.url | default: mega_promo_product.url | default: link.url }}" class="vamas-nav__promo-card">
-                        {% if mega_promo_product.featured_image %}
-                          <img src="{{ mega_promo_product.featured_image | img_url: '400x' }}" alt="{{ mega_promo_product.title | escape }}" loading="lazy">
-                        {% else %}
-                          {{ 'lifestyle-1' | placeholder_svg_tag: 'vamas-nav__promo-placeholder' }}
-                        {% endif %}
-                        <span class="vamas-nav__promo-overlay">
-                          <span class="vamas-nav__promo-cta">Shop Now</span>
+                      {%- comment -%} Heading and photo card now share ONE outer <a> -
+                        it used to be a plain <span> outside the link, so only the
+                        photo below it was clickable, not the "Big Discounts" label
+                        itself. .vamas-nav__promo-card is a fixed 150x150 box with
+                        overflow:hidden built only for the image, so the heading
+                        can't go inside it (it would get clipped) - it's now a
+                        sibling inside a shared link wrapper instead. {%- endcomment -%}
+                      <a href="{{ mega_sale_col.url | default: mega_promo_product.url | default: link.url }}" style="display:block;text-decoration:none;">
+                        <span class="vamas-nav__mega-looks-title">Big Discounts</span>
+                        <span class="vamas-nav__promo-card">
+                          {% if mega_promo_product.featured_image %}
+                            <img src="{{ mega_promo_product.featured_image | img_url: '400x' }}" alt="{{ mega_promo_product.title | escape }}" loading="lazy">
+                          {% else %}
+                            {{ 'lifestyle-1' | placeholder_svg_tag: 'vamas-nav__promo-placeholder' }}
+                          {% endif %}
+                          <span class="vamas-nav__promo-overlay">
+                            <span class="vamas-nav__promo-cta">Shop Now</span>
+                          </span>
                         </span>
                       </a>
                     </div>
                     {% if mega_bestseller_product %}
                       <div class="vamas-nav__mega-feature">
-                        <span class="vamas-nav__mega-looks-title">All Blouses</span>
                         <a href="{{ mega_all_blouses_col.url | default: mega_bestseller_product.url }}" class="vamas-nav__feature-card">
+                          <span class="vamas-nav__mega-looks-title">All Blouses</span>
                           <span class="vamas-nav__feature-thumb">
                             {% if mega_bestseller_product.featured_image %}
                               <img src="{{ mega_bestseller_product.featured_image | img_url: '300x' }}" width="150" height="150" alt="{{ mega_bestseller_product.title | escape }}" loading="lazy">
