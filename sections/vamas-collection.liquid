@@ -347,18 +347,29 @@
               {% endif %}
             {% endif %}
           {% endfor %}
+          {%- comment -%}
+            A 5th circle standing for the group as a whole ("SUMMER
+            ESSENTIALS" itself, not one of its children) - clicking it reveals
+            the combined product grid below instead of that grid being dumped
+            on the page automatically for every visitor. {%- endcomment -%}
+          <button type="button" class="col-cat col-cat--shopall" data-shopall-trigger="{{ g_slug }}">
+            <span class="col-cat__ring">
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            </span>
+            <span class="col-cat__label">{{ g_title }}</span>
+            <span class="col-cat__count">Shop All</span>
+          </button>
         </div>
 
         {%- comment -%}
-          Below the sub-category circles: every product across this group's
-          children, so a shopper can browse the whole category without first
-          picking a sub-category. This is NOT rendered in Liquid - fetching
-          every child collection's full product list, for all 4 groups, on
-          every single page load (whether or not that group is even the one
-          being viewed) is what makes a group-hub page enormous and slow. The
-          script below fetches products via Shopify's public products.json
-          endpoint, client-side, ONLY for the one group actually named in the
-          page's own ?group= URL, and only once that group becomes visible.
+          Every product across this group's children, revealed only once the
+          "{{ g_title }}" circle above is actually clicked - NOT rendered in
+          Liquid and NOT fetched automatically. Fetching every child
+          collection's full product list, for all 4 groups, on every single
+          page load (whether or not anyone even wants to see it) is what made
+          this page enormous and slow before. The script below fetches
+          products via Shopify's public products.json endpoint, client-side,
+          only on that click.
         {%- endcomment -%}
         <div class="col-cats__products" data-group-products-wrap hidden>
           <h2 class="col-cats__products-title">Shop All {{ g_title }}</h2>
@@ -416,7 +427,11 @@
                 '<div class="vamas-prod-card__price"><span class="price">₹' + price + '</span></div></div></a>';
             });
           });
-          if (html) { grid.innerHTML = html; wrap.hidden = false; }
+          if (html) {
+            grid.innerHTML = html;
+            wrap.hidden = false;
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
         });
       }
       function run() {
@@ -425,7 +440,6 @@
         var hub = document.querySelector('[data-group-hub="' + CSS.escape(slug) + '"]');
         if (!hub) return;
         document.querySelectorAll('[data-group-hub]').forEach(function (el) { el.style.display = 'none'; });
-        loadGroupProducts(hub);
         document.querySelectorAll('[data-view-default]').forEach(function (el) { el.style.display = 'none'; });
         hub.style.display = 'block';
         hub.removeAttribute('hidden');
@@ -435,6 +449,15 @@
       } else {
         run();
       }
+      /* The "Shop All <Group>" circle - only this click fetches/reveals the
+         combined product grid, so a visitor who never clicks it never pays
+         for that fetch at all. */
+      document.querySelectorAll('[data-shopall-trigger]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var hub = btn.closest('[data-group-hub]');
+          if (hub) loadGroupProducts(hub);
+        });
+      });
     })();
   </script>
 {%- endif -%}
