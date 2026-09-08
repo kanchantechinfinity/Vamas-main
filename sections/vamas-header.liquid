@@ -298,7 +298,21 @@
                         {%- assign g_children_entry = g_children_after | split: '|' | first -%}
                         {%- assign g_children_list = g_children_entry | split: '+' -%}
                         {%- for gc in g_children_list -%}
-                          {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign g_has_child = true -%}{%- endif -%}
+                          {%- comment -%} The hardcoded "-copy" handle is a legacy quirk from one
+                            store's collection restructuring - on any other store, the real
+                            collection is far more likely to exist at the same handle WITHOUT
+                            that suffix. Without this fallback, a store whose handles never had
+                            "-copy" would show g_has_child = false for every group and silently
+                            send every group tile to the generic /collections/all page instead
+                            of its real hub. {%- endcomment -%}
+                          {%- if collections[gc] != blank and collections[gc].handle -%}
+                            {%- assign g_has_child = true -%}
+                          {%- else -%}
+                            {%- assign gc_guess = gc | remove: '-copy' -%}
+                            {%- if gc_guess != gc and collections[gc_guess] != blank and collections[gc_guess].handle -%}
+                              {%- assign g_has_child = true -%}
+                            {%- endif -%}
+                          {%- endif -%}
                         {%- endfor -%}
                         {%- assign g_href = '/collections/all?group=' | append: g_slug -%}
                         {%- unless g_has_child -%}{%- assign g_href = '/collections/all' -%}{%- endunless -%}

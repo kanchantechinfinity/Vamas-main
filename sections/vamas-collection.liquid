@@ -272,6 +272,16 @@
             {% assign c_handle = c | strip | downcase %}
             {% if c_handle != '' %}
               {% assign child = collections[c_handle] %}
+              {%- comment -%} Same "-copy" legacy-handle fallback used everywhere else in this
+                theme - a store whose collection handles never had "-copy" would otherwise
+                show every circle in this hub as missing. {%- endcomment -%}
+              {% if child == blank or child.handle == blank %}
+                {% assign c_handle_guess = c_handle | remove: '-copy' %}
+                {% if c_handle_guess != c_handle %}
+                  {% assign child = collections[c_handle_guess] %}
+                  {% assign c_handle = c_handle_guess %}
+                {% endif %}
+              {% endif %}
               {% if child != blank and child.handle %}
                 {%- assign circle_img = child.image -%}
                 {%- if circle_img == blank -%}{%- assign circle_img = child.products.first.featured_image -%}{%- endif -%}
@@ -294,9 +304,37 @@
             {% endif %}
           {% endfor %}
         </div>
+
+        {%- comment -%}
+          Below the sub-category circles: every product across this group's
+          children, so a shopper can browse the whole category without first
+          picking a sub-category. This is NOT rendered in Liquid - fetching
+          every child collection's full product list, for all 4 groups, on
+          every single page load (whether or not that group is even the one
+          being viewed) is what makes a group-hub page enormous and slow. The
+          script below fetches products via Shopify's public products.json
+          endpoint, client-side, ONLY for the one group actually named in the
+          page's own ?group= URL, and only once that group becomes visible.
+        {%- endcomment -%}
+        <div class="col-cats__products" data-group-products-wrap hidden>
+          <h2 class="col-cats__products-title">Shop All {{ g_title }}</h2>
+          <div class="prod-grid" data-group-products data-group-child-handles="{{ g_children | join: ',' }}"></div>
+        </div>
       </div>
     {%- endif -%}
   {%- endfor -%}
+  <style>
+    .col-cats__products { margin-top: 48px; }
+    .col-cats__products-title {
+      font-family: var(--font-heading), Georgia, serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--color-maroon);
+      text-align: center;
+      margin: 0 0 24px;
+    }
+    @media (max-width: 768px) { .col-cats__products-title { font-size: 22px; } }
+  </style>
   <script>
     (function () {
       /* Two traps already hit once here, both fixed:
@@ -307,12 +345,43 @@
             author stylesheet rule always beats the browser's [hidden]
             default), so a "hidden" hub still rendered. style.display is set
             directly instead, which nothing can outrank. */
+      function loadGroupProducts(hub) {
+        var wrap = hub.querySelector('[data-group-products-wrap]');
+        var grid = hub.querySelector('[data-group-products]');
+        if (!wrap || !grid || grid.dataset.loaded) return;
+        grid.dataset.loaded = '1';
+        var handles = (grid.getAttribute('data-group-child-handles') || '').split(',').map(function (h) { return h.trim(); }).filter(Boolean);
+        if (!handles.length) return;
+        var seen = {};
+        var fetches = handles.map(function (h) {
+          return fetch('/collections/' + h + '/products.json?limit=250')
+            .then(function (r) { return r.ok ? r.json() : { products: [] }; })
+            .catch(function () { return { products: [] }; });
+        });
+        Promise.all(fetches).then(function (results) {
+          var html = '';
+          results.forEach(function (data) {
+            (data.products || []).forEach(function (p) {
+              if (seen[p.handle]) return;
+              seen[p.handle] = true;
+              var img = p.images && p.images[0] ? p.images[0].src : '';
+              var price = p.variants && p.variants[0] ? p.variants[0].price : '';
+              html += '<a href="/products/' + p.handle + '" class="vamas-prod-card" style="text-decoration:none;">' +
+                '<div class="vamas-prod-card__img"><img src="' + img + '&width=400" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>' +
+                '<div class="vamas-prod-card__body"><div class="vamas-prod-card__name">' + p.title + '</div>' +
+                '<div class="vamas-prod-card__price"><span class="price">₹' + price + '</span></div></div></a>';
+            });
+          });
+          if (html) { grid.innerHTML = html; wrap.hidden = false; }
+        });
+      }
       function run() {
         var slug = new URLSearchParams(location.search).get('group');
         if (!slug) return;
         var hub = document.querySelector('[data-group-hub="' + CSS.escape(slug) + '"]');
         if (!hub) return;
         document.querySelectorAll('[data-group-hub]').forEach(function (el) { el.style.display = 'none'; });
+        loadGroupProducts(hub);
         document.querySelectorAll('[data-view-default]').forEach(function (el) { el.style.display = 'none'; });
         hub.style.display = 'block';
         hub.removeAttribute('hidden');
