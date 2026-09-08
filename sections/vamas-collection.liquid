@@ -349,47 +349,34 @@
           {% endfor %}
           {%- comment -%}
             A 5th circle standing for the group as a whole ("SUMMER
-            ESSENTIALS" itself, not one of its children) - clicking it reveals
-            the combined product grid below instead of that grid being dumped
-            on the page automatically for every visitor. {%- endcomment -%}
-          <button type="button" class="col-cat col-cat--shopall" data-shopall-trigger="{{ g_slug }}">
+            ESSENTIALS" itself, not one of its children) - links straight to
+            the real Shopify collection of the same name once it's created
+            (tries the group's own slug, then a natural-handle guess from its
+            title, same fallback pattern used everywhere else in this theme).
+            Falls back to this same hub page until that collection exists, so
+            the circle is never a dead link in the meantime. {%- endcomment -%}
+          {%- assign g_real_col = collections[g_slug] -%}
+          {%- if g_real_col == blank or g_real_col.handle == blank -%}
+            {%- assign g_real_guess = g_title | handle -%}
+            {%- if collections[g_real_guess] != blank and collections[g_real_guess].handle -%}
+              {%- assign g_real_col = collections[g_real_guess] -%}
+            {%- endif -%}
+          {%- endif -%}
+          {%- assign g_shopall_url = '/collections/all?group=' | append: g_slug -%}
+          {%- if g_real_col != blank and g_real_col.handle -%}
+            {%- assign g_shopall_url = g_real_col.url -%}
+          {%- endif -%}
+          <a href="{{ g_shopall_url }}" class="col-cat">
             <span class="col-cat__ring">
               {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
             </span>
             <span class="col-cat__label">{{ g_title }}</span>
             <span class="col-cat__count">Shop All</span>
-          </button>
-        </div>
-
-        {%- comment -%}
-          Every product across this group's children, revealed only once the
-          "{{ g_title }}" circle above is actually clicked - NOT rendered in
-          Liquid and NOT fetched automatically. Fetching every child
-          collection's full product list, for all 4 groups, on every single
-          page load (whether or not anyone even wants to see it) is what made
-          this page enormous and slow before. The script below fetches
-          products via Shopify's public products.json endpoint, client-side,
-          only on that click.
-        {%- endcomment -%}
-        <div class="col-cats__products" data-group-products-wrap hidden>
-          <h2 class="col-cats__products-title">Shop All {{ g_title }}</h2>
-          <div class="prod-grid" data-group-products data-group-child-handles="{{ g_children | join: ',' }}"></div>
+          </a>
         </div>
       </div>
     {%- endif -%}
   {%- endfor -%}
-  <style>
-    .col-cats__products { margin-top: 48px; }
-    .col-cats__products-title {
-      font-family: var(--font-heading), Georgia, serif;
-      font-size: 30px;
-      font-weight: 700;
-      color: var(--color-maroon);
-      text-align: center;
-      margin: 0 0 24px;
-    }
-    @media (max-width: 768px) { .col-cats__products-title { font-size: 22px; } }
-  </style>
   <script>
     (function () {
       /* Two traps already hit once here, both fixed:
@@ -400,40 +387,6 @@
             author stylesheet rule always beats the browser's [hidden]
             default), so a "hidden" hub still rendered. style.display is set
             directly instead, which nothing can outrank. */
-      function loadGroupProducts(hub) {
-        var wrap = hub.querySelector('[data-group-products-wrap]');
-        var grid = hub.querySelector('[data-group-products]');
-        if (!wrap || !grid || grid.dataset.loaded) return;
-        grid.dataset.loaded = '1';
-        var handles = (grid.getAttribute('data-group-child-handles') || '').split(',').map(function (h) { return h.trim(); }).filter(Boolean);
-        if (!handles.length) return;
-        var seen = {};
-        var fetches = handles.map(function (h) {
-          return fetch('/collections/' + h + '/products.json?limit=250')
-            .then(function (r) { return r.ok ? r.json() : { products: [] }; })
-            .catch(function () { return { products: [] }; });
-        });
-        Promise.all(fetches).then(function (results) {
-          var html = '';
-          results.forEach(function (data) {
-            (data.products || []).forEach(function (p) {
-              if (seen[p.handle]) return;
-              seen[p.handle] = true;
-              var img = p.images && p.images[0] ? p.images[0].src : '';
-              var price = p.variants && p.variants[0] ? p.variants[0].price : '';
-              html += '<a href="/products/' + p.handle + '" class="vamas-prod-card" style="text-decoration:none;">' +
-                '<div class="vamas-prod-card__img"><img src="' + img + '&width=400" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>' +
-                '<div class="vamas-prod-card__body"><div class="vamas-prod-card__name">' + p.title + '</div>' +
-                '<div class="vamas-prod-card__price"><span class="price">₹' + price + '</span></div></div></a>';
-            });
-          });
-          if (html) {
-            grid.innerHTML = html;
-            wrap.hidden = false;
-            wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        });
-      }
       function run() {
         var slug = new URLSearchParams(location.search).get('group');
         if (!slug) return;
@@ -449,15 +402,6 @@
       } else {
         run();
       }
-      /* The "Shop All <Group>" circle - only this click fetches/reveals the
-         combined product grid, so a visitor who never clicks it never pays
-         for that fetch at all. */
-      document.querySelectorAll('[data-shopall-trigger]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var hub = btn.closest('[data-group-hub]');
-          if (hub) loadGroupProducts(hub);
-        });
-      });
     })();
   </script>
 {%- endif -%}

@@ -901,9 +901,6 @@ a{text-decoration:none;color:inherit;}
   gap: 12px;
   text-decoration: none;
 }
-/* The "Shop All <Group>" circle is a <button>, not an <a> - reset the parts
-   a plain button doesn't share with the anchor tiles around it. */
-.col-cat--shopall { background: none; border: none; font: inherit; cursor: pointer; padding: 0; }
 .col-cat__ring {
   display: block;
   width: 100%;
