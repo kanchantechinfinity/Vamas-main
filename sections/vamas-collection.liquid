@@ -413,11 +413,14 @@
         hub.style.display = 'block';
         hub.removeAttribute('hidden');
       }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', run);
-      } else {
-        run();
-      }
+      /* Runs immediately, NOT on DOMContentLoaded - this script tag sits right
+         after every [data-group-hub] div in the HTML source, so they already
+         exist in the DOM the instant the parser reaches this line. Waiting
+         for DOMContentLoaded meant waiting for the ENTIRE rest of the page
+         (product images, sidebar, filters, everything below this point) to
+         finish parsing first - on a slow load that's exactly the "wrong page
+         shows for half a second, then flips to the real one" flash. */
+      run();
     })();
   </script>
 {%- endif -%}
