@@ -354,7 +354,10 @@
             (tries the group's own slug, then a natural-handle guess from its
             title, same fallback pattern used everywhere else in this theme).
             Falls back to this same hub page until that collection exists, so
-            the circle is never a dead link in the meantime. {%- endcomment -%}
+            the circle is never a dead link in the meantime. Skipped for
+            "More Categories" - a self-referencing "More Categories" circle
+            inside the More Categories hub itself is redundant. {%- endcomment -%}
+          {%- if g_slug != 'more-categories' -%}
           {%- assign g_real_col = collections[g_slug] -%}
           {%- if g_real_col == blank or g_real_col.handle == blank -%}
             {%- assign g_real_guess = g_title | handle -%}
@@ -385,6 +388,7 @@
             <span class="col-cat__label">{{ g_title }}</span>
             <span class="col-cat__count">Shop All</span>
           </a>
+          {%- endif -%}
         </div>
       </div>
     {%- endif -%}
