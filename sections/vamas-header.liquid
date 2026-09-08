@@ -199,10 +199,19 @@
                     </div>
                   </div>
                 {% elsif show_blouse_promo and has_group_data %}
+                  {%- comment -%} Both cards used to link to a single product; now they
+                    link to their real collections (products still preview the card's
+                    photo/title/price). "Big Discounts" tries sale_blouses first, since
+                    that's the real handle the merchant uses. {%- endcomment -%}
+                  {%- assign mega_sale_col = collections['sale_blouses'] -%}
+                  {%- if mega_sale_col == blank or mega_sale_col.handle == blank -%}
+                    {%- assign mega_sale_col = collections['sale-blouses'] -%}
+                  {%- endif -%}
+                  {%- assign mega_all_blouses_col = collections['all-blouses'] -%}
                   <div class="vamas-nav__mega-promo-group">
                     <div class="vamas-nav__mega-promo">
                       <span class="vamas-nav__mega-looks-title">Big Discounts</span>
-                      <a href="{% if mega_promo_product %}{{ mega_promo_product.url }}{% else %}{{ link.url }}{% endif %}" class="vamas-nav__promo-card">
+                      <a href="{{ mega_sale_col.url | default: mega_promo_product.url | default: link.url }}" class="vamas-nav__promo-card">
                         {% if mega_promo_product.featured_image %}
                           <img src="{{ mega_promo_product.featured_image | img_url: '400x' }}" alt="{{ mega_promo_product.title | escape }}" loading="lazy">
                         {% else %}
@@ -216,7 +225,7 @@
                     {% if mega_bestseller_product %}
                       <div class="vamas-nav__mega-feature">
                         <span class="vamas-nav__mega-looks-title">All Blouses</span>
-                        <a href="{{ mega_bestseller_product.url }}" class="vamas-nav__feature-card">
+                        <a href="{{ mega_all_blouses_col.url | default: mega_bestseller_product.url }}" class="vamas-nav__feature-card">
                           <span class="vamas-nav__feature-thumb">
                             {% if mega_bestseller_product.featured_image %}
                               <img src="{{ mega_bestseller_product.featured_image | img_url: '300x' }}" width="150" height="150" alt="{{ mega_bestseller_product.title | escape }}" loading="lazy">
