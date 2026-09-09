@@ -331,6 +331,17 @@
   object-fit: cover;
   display: block;
 }
+/* Live Instagram app block (Instagram Feed RPTR) - keep it inside the
+   sidebar column instead of whatever width/columns it defaults to */
+.vblog-ig-app {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.vblog-ig-app img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
 .vblog-btn {
   display: block;
   text-align: center;

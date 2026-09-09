@@ -1047,3 +1047,27 @@ the rendered page.
 Not verified live (store still password-protected) - reasoned from the
 `var(--page-gutter)` formula and each container's flex/grid math, not
 measured on a real large monitor.
+
+## 2026-09-09 — Occasion filter: replace fabricated tags with real ones
+
+- **Bug**: Occasion filter (Bridal, Festive, Casual, Party Wear) always
+  showed 0 products / silently fell back to the full unfiltered 287-product
+  catalog. Root cause: those tag values matched zero real products —
+  Shopify's tag-route filtering (`/collections/<handle>/tag`) silently
+  redirects to the unfiltered collection when a tag matches nothing
+  anywhere in the store, which looks identical to "filter broken" from the
+  front end. Confirmed live (`/bridal`, `/festive` both redirected).
+- **Fix**: user supplied a real category→tag mapping screenshot from
+  Shopify admin. Replaced the guessed list in both occurrences (lines
+  656, 740 of `sections/vamas-collection.liquid`) with the real
+  occasion-related tags: `Haldi And Mehendi, Wedding Wear, Occasion Wear,
+  Party Wear`.
+- Validated schema JSON + tag balance, committed (`7966639`), pushed to
+  `main` (live on teamgfxbandits), sent full file to user for manual
+  replacement on vamas.in.
+- **Still open**: Sleeve/Neckline filters still use tag fallback
+  (`vtag-instant`), not native Search & Discovery data, despite being
+  configured as real metafield filters with no collection restriction.
+  `VAMAS_FILTER_DEBUG` HTML comment (prints `collection.filters` labels/
+  types/counts) is live in `sections/vamas-collection.liquid`, waiting on
+  user to report the vamas.in page-source output.
