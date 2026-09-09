@@ -1143,3 +1143,26 @@ measured on a real large monitor.
   (exact viewport match) before shipping.
 - Committed `ca02381`, pushed (confirmed via `origin/main` after push),
   sent to user for vamas.in.
+
+## 2026-09-09 — PDP color swatches: phantom option values hidden
+
+- User: products with more colors showing broken swatches (flat colored
+  dots instead of garment photos, e.g. RED/ROSE-GOLD/ROYAL-BLUE/RUST/
+  SOUTH-PINK/WINE/HOT-PINK on "Vamas Taffeta Silk Zari Butti Round Neck
+  Festive Blouse").
+- Root cause confirmed via the product's own `.json` endpoint on
+  vamas.in: those 7 color values exist in `options_with_values.values`
+  (so the theme lists them) but have **zero actual variants** — not a
+  missing-image issue, they are genuinely unbuyable, leftover option
+  values (likely from a CSV import — same class of data issue as the
+  earlier CSV-merge work). Every other color on the same product (e.g.
+  BOTTLE-GREEN, BLACK, MAROON) had 10 real variants each.
+- Fix (`sections/vamas-product.liquid`): the swatch-building loop now
+  tracks every color with >=1 real variant (`pdp_color_valid_keys`) and
+  skips rendering any swatch — image or flat-circle fallback — for a
+  color not in that set, instead of showing an unbuyable dot.
+- Committed `6f52161`, pushed, sent to user for vamas.in.
+- **Not fixed by this** (data issue, not theme code): the phantom option
+  values themselves still exist in Shopify admin on an unknown number of
+  products, likely from the same CSV import history. Worth a catalog
+  audit in admin if the user wants them cleaned up entirely.

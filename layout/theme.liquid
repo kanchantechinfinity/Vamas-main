@@ -13,6 +13,13 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  {%- comment -%} New Customer Accounts (account.vamas.in) is a separate
+    domain Shopify hosts and controls - the login/account flow itself
+    can't be sped up from the theme, but warming up its DNS+TLS ahead of
+    time means that work is already done by the time someone taps
+    Account, instead of starting cold at that moment. {%- endcomment -%}
+  <link rel="preconnect" href="https://account.vamas.in" crossorigin>
+  <link rel="dns-prefetch" href="https://account.vamas.in">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Tiro+Devanagari+Sanskrit:ital@0;1&display=swap" rel="stylesheet">
 
   {{ 'vamas-theme.css' | asset_url | stylesheet_tag }}
