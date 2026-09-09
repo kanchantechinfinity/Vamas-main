@@ -309,7 +309,27 @@
     ?group=<slug> and swaps which one (if any) is visible. data-view-default
     marks the normal product-browsing markup so the script has one thing to
     hide, regardless of how much markup that is.
+
+    This synchronous script + CSS pairing is the actual mechanism that hides
+    data-view-default - it MUST run before that div is parsed (it sits above
+    it in the HTML), so it can't be the same script that reveals the active
+    hub further down (that one runs right after the hub divs, which is AFTER
+    this point but BEFORE data-view-default even exists yet - too early to
+    hide something not yet in the DOM). A plain CSS class on <html>, set the
+    instant this script tag is reached, has no such timing problem at all.
   {%- endcomment -%}
+  <script>
+    (function () {
+      try {
+        if (new URLSearchParams(location.search).get('group')) {
+          document.documentElement.classList.add('has-group-hub');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    .has-group-hub [data-view-default] { display: none !important; }
+  </style>
   {%- for line in group_lines -%}
     {%- assign gparts = line | split: '|' -%}
     {%- if gparts.size >= 3 -%}
