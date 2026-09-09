@@ -1099,3 +1099,47 @@ measured on a real large monitor.
 - Committed (`93dd655`, superseding an interim wrong-handle commit that
   was amended before it reached origin — verified via fetch that only the
   correct commit landed), pushed, sent to user for vamas.in.
+
+## 2026-09-09 — Homepage browse-tags: real tag routes, 5 pills pending
+
+- `sections/vamas-footer.liquid`'s homepage "Browse Tags" pill row
+  (Zari Work, Mirror Work, Embroidery, Velvet, Printed, Bridal, Backless,
+  Cotton, Pure Silk, Chikankari, Phulkari, Gota Patti) linked to guessed
+  `/collections/<handle>` collections that don't exist.
+- User wants each pill to show products with that TAG. Switched to
+  Shopify's tag route `/collections/all/<tag-slug>`. Verified live against
+  vamas.in (checked product count per slug — 311 = silent redirect/no
+  match, anything else = real tag):
+  - Confirmed real: Zari Work→`zari` (1), Embroidery→`embroidery` (47),
+    Velvet→`velvet` (4), Printed→`printed` (4), Cotton→`cotton` (21),
+    Pure Silk→`silk` (5), Gota Patti→`gota-patti` (1).
+  - No match found after ~15 guesses each: Mirror Work, Bridal, Backless,
+    Chikankari, Phulkari (mirror, mirror-work, mirrorwork, abhla-work,
+    bridal, bridal-wear, wedding-wear(23, real tag but not "bridal"),
+    backless, backless-blouse, deep-back, chikankari, chikan,
+    chikankari-work, phulkari, phulkari-work, phulkari-embroidery all
+    redirected to the full 311-product catalog).
+  - Shipped with only the 7 confirmed pills; the other 5 are commented
+    out of the loop, not deleted. **Pending**: user is checking Shopify
+    Admin → Products → tag filter for the real tag text on those 5 and
+    will send it over — add them back once confirmed, same live-verify
+    method (never re-guess).
+- Committed `b0b69cd`, pushed (after 2 retries — Windows Git Credential
+  Manager hang), sent to user for vamas.in.
+
+## 2026-09-09 — Mobile page-shift bug on pagination (page 2+)
+
+- User: on "Shop All Blouses" mobile, page 2 pagination causes the whole
+  page to shift/scroll horizontally.
+- Root cause confirmed live via JS on vamas.in `/collections/all?page=2`
+  at 375px viewport: `.pagination` is `display:flex` with no wrap: on
+  page 2 (more page-number buttons visible around current page than on
+  page 1) it measured 394px wide inside a 375px viewport, pushing
+  `document.body.scrollWidth` to 410 → page draggable sideways.
+- Fix (`assets/vamas-collection.css`): added `flex-wrap:wrap` + `max-width:
+  100%` to `.pagination`, plus `overflow-x:hidden` on `html`/`body` as a
+  safety net against any other stray overflow. Verified live by patching
+  the fix in via JS on the actual page: scrollWidth dropped 410→375
+  (exact viewport match) before shipping.
+- Committed `ca02381`, pushed (confirmed via `origin/main` after push),
+  sent to user for vamas.in.

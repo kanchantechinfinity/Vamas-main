@@ -878,15 +878,16 @@ body::-webkit-scrollbar { display: none; width: 0; height: 0; }
 /* ── Tags ─────────────────────────────── */
 .vamas-tags {
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  /* Was nowrap + horizontal-scroll for 12 chips; now only 7 remain (5 were
+     dropped for having no confirmed matching product tag - see BUILD_LOG),
+     so they're centered and allowed to wrap instead of needing a swipe. */
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   padding: 20px var(--page-gutter);
   background: var(--color-bg);
   border-top: 1px solid rgba(235, 211, 173, 0.35);
   border-bottom: 1px solid rgba(235, 211, 173, 0.35);
-  /* No visible bar - the row is swipeable and the chips already signal that it
-     continues. `thin` here was the grey bar showing under the strip. */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
