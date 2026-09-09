@@ -55,6 +55,9 @@
     {%- if sleeve_mismatch or neck_mismatch -%}
 {{ product.handle }} | sleeve_mf="{{ p_sleeve_mf }}" sleeve_tag="{{ p_sleeve_tag }}" | neck_mf="{{ p_neck_mf }}" neck_tag="{{ p_neck_tag }}"
     {%- endif -%}
+    {%- if forloop.index <= 8 -%}
+RAW[{{ forloop.index }}] {{ product.handle }} :: direct="{{ product.metafields.custom.blouse_sleeves }}" dotvalue="{{ product.metafields.custom.blouse_sleeves.value }}" type="{{ product.metafields.custom.blouse_sleeves.type }}" tags="{{ product.tags | join: ', ' }}"
+    {%- endif -%}
   {%- endfor -%}
 {%- endpaginate -%}
 </pre>
