@@ -663,13 +663,18 @@
       </div>
 
       <div class="col-filter-drawer__panel-inner" data-drawer-panel="featured">
-        <form method="get" id="toolbar-sort-form">
+        {%- comment -%} action is set explicitly to the tag-inclusive path
+          (size_base_url) - a form with no action resolves to the current
+          URL's path, which should already include any active tags, but
+          this makes it certain rather than relying on that, so sorting
+          never silently drops an Occasion/tag-based filter. {%- endcomment -%}
+        <form method="get" id="toolbar-sort-form" action="{{ size_base_url }}">
           {% for filter in collection.filters %}
             {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
             {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
             {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
           {% endfor %}
-          {% for option in collection.sort_options %}
+          {% for option in collection.sort_options reversed %}
             <label class="filter-check-row">
               <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %} onchange="this.form.submit()"> {{ option.name }}
             </label>
@@ -820,14 +825,14 @@
       <div class="prod-count">Showing <strong>{{ paginate.current_offset | plus: 1 }}-{{ paginate.current_offset | plus: collection.products.size }}</strong> of <strong>{{ collection.products_count }}</strong> products</div>
       <div class="sort-wrap">
         <span class="sort-label">SORT BY</span>
-        <form method="get">
+        <form method="get" action="{{ size_base_url }}">
         {% for filter in collection.filters %}
           {% for value in filter.active_values %}<input type="hidden" name="{{ value.param_name }}" value="{{ value.value }}">{% endfor %}
           {% if filter.min_value.value %}<input type="hidden" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}">{% endif %}
           {% if filter.max_value.value %}<input type="hidden" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}">{% endif %}
         {% endfor %}
         <select class="sort-sel" name="sort_by" onchange="this.form.submit()">
-          {% for option in collection.sort_options %}
+          {% for option in collection.sort_options reversed %}
             <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
           {% endfor %}
         </select>

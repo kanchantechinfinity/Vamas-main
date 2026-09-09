@@ -390,7 +390,12 @@ a{text-decoration:none;color:inherit;}
   transition:background .2s;
 }
 .f-chip:hover{background:rgba(146,68,68,.14);}
-.f-chip .x{font-size:13px;line-height:1;opacity:.6;}
+/* The remove icon was an empty <span> with no CSS content at all - the chip
+   showed its label but the "x" was invisible, so there was no visible way to
+   cancel a filter, on desktop or mobile. */
+.f-chip .x{font-size:14px;line-height:1;opacity:.6;font-weight:700;}
+.f-chip .x::before{content:'\00d7';}
+.f-chip:hover .x{opacity:1;}
 
 /* -- PRODUCT GRID -- */
 .prod-grid{
