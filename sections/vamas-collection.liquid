@@ -75,18 +75,18 @@
 {%- assign fabric_filter = blank -%}
 {%- for filter in collection.filters -%}
   {%- assign filter_label_down = filter.label | downcase -%}
-  {%- comment -%} Sleeve/Neckline only switch over to the native metafield
-    filter once it actually has more than one real value populated -
-    confirmed live that the merchant's metafield rollout currently covers
-    just 1 product each (Sleeveless / V-Neck), so adopting it unconditionally
-    left every OTHER option (Cap Sleeves, Elbow Sleeves, Round Neck, Boat
-    Neck...) missing entirely, since Shopify only lists filter values that
-    have a matching product. Falling back to the full tag list below until
-    there's real coverage means this corrects itself automatically as more
-    products get the metafield set, with no further code change needed.
+  {%- comment -%} Sleeve/Neckline always use the native metafield filter the
+    moment Shopify exposes it, by explicit merchant choice - accurate to the
+    real Sleeve Length/Neck Style metafield (product tags for these were
+    confirmed wrong/stale on some products, e.g. a product metafielded
+    ELBOW SLEEVES still tagged "sleeveless"). Trade-off accepted: until
+    Shopify's Search & Discovery index finishes catching up on the bulk
+    metafield rollout, most values show 0-1 products since it only lists
+    values with an indexed match yet - self-corrects as indexing completes,
+    no further code change needed then either.
   {%- endcomment -%}
-  {%- if filter_label_down contains 'sleeve' and filter.values.size > 1 -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
-  {%- if filter_label_down contains 'neck' and filter.values.size > 1 -%}{%- assign neckline_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'sleeve' -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'neck' -%}{%- assign neckline_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'size' -%}{%- assign size_filter = filter -%}{%- endif -%}
   {%- comment -%} Excludes a Vendor-sourced filter even if its label happens
     to contain "avail" (a merchant typo/duplicate like "Availabilty" sourced

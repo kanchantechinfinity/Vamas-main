@@ -1239,3 +1239,31 @@ measured on a real large monitor.
   something theme code can override without either this redirect or
   manually configuring every collection in Admin.
 - Committed `2f39481`, pushed, sent to user for vamas.in.
+
+## 2026-09-09 — Sleeve/Neckline filter mystery resolved: Shopify index lag
+
+- Long-standing open item ("Sleeve/Neckline still not native despite being
+  configured metafield filters") finally traced to ground truth via live
+  testing: they WERE native, correctly - but Shopify's Search & Discovery
+  filter index only reflected 1 product each (Sleeveless / V-Neck) despite
+  the user confirming the metafield is actually populated across the full
+  catalog. This is index lag after a bulk metafield update, not a theme
+  bug - confirmed the native filter's own href
+  (`?filter.p.m.custom.blouse_sleeves=Sleeveless`) returns exactly 1
+  correct product, no mismatched Elbow Sleeve items.
+- Side effect the user then hit: because Sleeve/Neckline unconditionally
+  adopted the native filter the moment it existed at all (even with just
+  1 sparse value), EVERY OTHER option (Cap Sleeves, Elbow Sleeves, Round
+  Neck, Boat Neck...) disappeared from the sidebar entirely, since
+  Shopify only lists filter values with a real product match. User:
+  "just 1 option, please bring that back."
+- Fix (`sections/vamas-collection.liquid`, filter-detection loop): Sleeve
+  and Neckline now only switch to the native filter once it has more than
+  1 real value (`filter.values.size > 1`); otherwise falls back to the
+  full hardcoded tag option list (all 6 sleeve / 7 neckline values),
+  exactly as before. Self-correcting - once Shopify's index catches up
+  with the metafield rollout and starts returning multiple real values,
+  it'll switch to native automatically with no further code change.
+- Also removed the now-resolved `VAMAS_FILTER_DEBUG` HTML comment line
+  that had been live since earlier this session.
+- Committed `f153821`, pushed, sent to user for vamas.in.
