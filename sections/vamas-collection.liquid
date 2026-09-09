@@ -47,8 +47,8 @@
   {%- assign scanned = 0 -%}
   {%- for product in collection.products -%}
     {%- assign scanned = scanned | plus: 1 -%}
-    {%- assign p_sleeve_mf = product.metafields.custom.blouse_sleeves.value | strip -%}
-    {%- assign p_neck_mf = product.metafields.custom.blouse_neckline.value | strip -%}
+    {%- assign p_sleeve_mf = product.metafields.custom.sleeve_length.value | strip -%}
+    {%- assign p_neck_mf = product.metafields.custom.neck_style.value | strip -%}
     {%- if p_sleeve_mf != '' -%}{%- assign mf_sleeve_count = mf_sleeve_count | plus: 1 -%}{%- endif -%}
     {%- if p_neck_mf != '' -%}{%- assign mf_neck_count = mf_neck_count | plus: 1 -%}{%- endif -%}
     {%- assign p_sleeve_tag = '' -%}
