@@ -1124,14 +1124,28 @@ function toggleAcc(head){
     });
   });
 
-  /* Plain product-tag option (Occasion, Fabric/Sleeve/Neckline fallback). */
+  /* Plain product-tag option (Occasion, Fabric/Sleeve/Neckline fallback).
+     data-group-tags (when present) lists every value in this SAME group -
+     e.g. Round Neck/V-Neck/Boat Neck all being Neckline. Combining two values
+     of ONE attribute via Shopify's tag route means AND ("has round-neck AND
+     v-neck"), which no real product can satisfy and always returns 0 - so
+     picking a new one first drops any other active tag from that same group,
+     same as choosing a different radio option would, instead of stacking an
+     impossible combination. Tags from DIFFERENT groups (Sleeve + Neckline)
+     still combine normally. */
   document.querySelectorAll('.vtag-instant').forEach(function (el) {
     el.addEventListener('click', function (e) {
       e.preventDefault();
       var tag = el.getAttribute('data-tag').trim().toLowerCase().replace(/\s+/g, '-');
       var tags = currentTagsFromPath();
       var idx = tags.indexOf(tag);
-      if (idx > -1) tags.splice(idx, 1); else tags.push(tag);
+      if (idx > -1) {
+        tags.splice(idx, 1);
+      } else {
+        var groupTags = (el.getAttribute('data-group-tags') || '').split('||').filter(Boolean);
+        if (groupTags.length) tags = tags.filter(function (t) { return groupTags.indexOf(t) === -1; });
+        tags.push(tag);
+      }
       navigate(tags, new URLSearchParams(location.search));
     });
   });
