@@ -3,10 +3,15 @@
 
   1. A native Search & Discovery filter (metafield / variant option / product
      attribute). Preferred when present - gives real counts.
-  2. Otherwise, a comma-separated tag list. Uses the same `.vtag-filter`
-     mechanism FABRIC/OCCASION already use on this page: the shared
-     "APPLY FILTERS" button collects every checked tag and navigates to
-     /collections/<handle>/tag-a+tag-b.
+  2. Otherwise, a comma-separated tag list - a plain product tag toggled in
+     the collection URL's own tag path (/collections/<handle>/tag-a+tag-b).
+
+  Every option here is a real link, applied INSTANTLY on click/tap (no
+  separate "Apply" step) - native ones use Shopify's own url_to_add/
+  url_to_remove directly (which already preserve every other active filter),
+  matching how Size already worked; tag and grouped-colour ones are handled
+  by the small vamasInstantFilter() JS in vamas-collection.liquid, which
+  merges into the current URL the same way.
 
   So the merchant can set these up either way (or migrate from tags to
   metafields later) without any theme change.
@@ -17,14 +22,13 @@
   {% if group_colors %}
     {%- comment -%}
       The real Color filter lists every exact variant shade (BOTTLE-GREEN,
-      OLIVE-GREEN, DARK-GOLD, COBALT-BLUE...) - 20+ raw checkboxes. Grouping
-      them under simple families (Green, Blue...) via substring match on the
-      label gives a shopper 8-ish broad choices instead. One family checkbox
-      carries ALL its real shade values (data-color-values); vamas-collection.
-      liquid's APPLY button expands that into one filter.v.option.color param
-      per shade when building the URL. Anything that doesn't match a known
-      family name still gets its own plain checkbox below, so no colour is
-      ever unselectable.
+      OLIVE-GREEN, DARK-GOLD, COBALT-BLUE...) - 20+ raw options. Grouping them
+      under simple families (Green, Blue...) via substring match on the label
+      gives a shopper 8-ish broad choices instead. One family link carries
+      ALL its real shade values (data-color-values) so clicking it adds/
+      removes every one of them at once. Anything that doesn't match a known
+      family name still gets its own plain link below, so no colour is ever
+      unselectable.
     {%- endcomment -%}
     {%- assign color_families = 'Black,Maroon,Gold,Green,Navy,Blue,Red,Pink,White,Grey,Purple,Yellow,Orange,Brown,Cream,Beige' | split: ',' -%}
     {%- assign param_name = native_filter.values.first.param_name -%}
@@ -42,27 +46,24 @@
         {%- endif -%}
       {% endfor %}
       {% if group_values != '' %}
-        <label class="filter-check-row">
-          <input type="checkbox" class="vcolor-group-filter" data-color-param="{{ param_name }}" data-color-values="{{ group_values }}" {% if group_active %}checked{% endif %}>
+        <a href="#" class="filter-check-row vcolor-instant{% if group_active %} is-active{% endif %}" data-color-param="{{ param_name }}" data-color-values="{{ group_values }}">
           {{ family }}
-        </label>
+        </a>
       {% endif %}
     {% endfor %}
     {% for value in native_filter.values %}
       {%- assign probe = value.value | append: '||' -%}
       {% unless assigned_values contains probe %}
-        <label class="filter-check-row">
-          <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}>
+        <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="filter-check-row{% if value.active %} is-active{% endif %}">
           {{ value.label }} ({{ value.count }})
-        </label>
+        </a>
       {% endunless %}
     {% endfor %}
   {% else %}
     {% for value in native_filter.values %}
-      <label class="filter-check-row">
-        <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}>
+      <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="filter-check-row{% if value.active %} is-active{% endif %}">
         {{ value.label }} ({{ value.count }})
-      </label>
+      </a>
     {% endfor %}
   {% endif %}
 {% elsif tag_list != blank %}
@@ -70,10 +71,9 @@
   {% for t in group_tags %}
     {% assign tag_clean = t | strip %}
     {% if tag_clean != '' %}
-      <label class="filter-check-row">
-        <input type="checkbox" class="vtag-filter" value="{{ tag_clean | escape }}" {% if current_tags contains tag_clean %}checked{% endif %}>
+      <a href="#" class="filter-check-row vtag-instant{% if current_tags contains tag_clean %} is-active{% endif %}" data-tag="{{ tag_clean | escape }}">
         {{ tag_clean }}
-      </label>
+      </a>
     {% endif %}
   {% endfor %}
 {% else %}

@@ -642,7 +642,7 @@
             <div class="acc-body open">
               {% if availability_filter != blank %}
                 {% for value in availability_filter.values %}
-                  <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}> {{ value.label }} ({{ value.count }})</label>
+                  <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="filter-check-row{% if value.active %} is-active{% endif %}">{{ value.label }} ({{ value.count }})</a>
                 {% endfor %}
               {% else %}
                 <p class="filter-empty-note">Availability filter not set up yet.</p>
@@ -655,7 +655,7 @@
             <div class="acc-body open">
               {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
               {% for t in vtag_occasion %}
-                <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+                <a href="#" class="filter-check-row vtag-instant{% if collection.current_tags contains t %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
               {% endfor %}
             </div>
           </div>
@@ -671,7 +671,7 @@
           {% endfor %}
           {% for option in collection.sort_options %}
             <label class="filter-check-row">
-              <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %}> {{ option.name }}
+              <input type="radio" name="sort_by" value="{{ option.value }}" {% if option.value == collection.sort_by %}checked{% endif %} onchange="this.form.submit()"> {{ option.name }}
             </label>
           {% endfor %}
         </form>
@@ -680,7 +680,6 @@
 
     <div class="col-filter-drawer__footer">
       <a href="/collections/{{ collection.handle | default: 'all' }}" class="btn-outline col-filter-drawer__clear">CLEAR ALL</a>
-      <button type="button" class="btn-primary col-filter-drawer__apply" id="vtag-apply-toolbar">APPLY</button>
     </div>
   </div>
 </div>
@@ -795,7 +794,7 @@
       <div class="acc-body open">
         {% if availability_filter != blank %}
           {% for value in availability_filter.values %}
-            <label class="filter-check-row"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %}> {{ value.label }} ({{ value.count }})</label>
+            <a href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" class="filter-check-row{% if value.active %} is-active{% endif %}">{{ value.label }} ({{ value.count }})</a>
           {% endfor %}
         {% else %}
           <p class="filter-empty-note">Availability filter not set up yet.</p>
@@ -808,14 +807,10 @@
       <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
         {% for t in vtag_occasion %}
-          <label class="filter-check-row"><input type="checkbox" class="vtag-filter" value="{{ t }}" {% if collection.current_tags contains t %}checked{% endif %}> {{ t }}</label>
+          <a href="#" class="filter-check-row vtag-instant{% if collection.current_tags contains t %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
         {% endfor %}
       </div>
     </div>
-    </div>
-
-    <div class="sidebar-apply">
-      <button type="button" class="btn-primary" style="width:100%;" id="vtag-apply">APPLY FILTERS</button>
     </div>
   </aside>
 
@@ -840,7 +835,20 @@
       </div>
     </div>
 
-    {% if collection.filters.size > 0 %}
+    {%- comment -%} Every active selection shows here as a removable chip - native
+      filters (Sleeve, Neckline, Color, Fabric, Availability, Price) via Shopify's
+      own url_to_remove, and plain product-tag options (Occasion, or Sleeve/
+      Neckline/Fabric before a native filter exists) via the same .vtag-instant
+      click handler used to apply them - clicking an already-active tag's chip
+      just toggles it off. {%- endcomment -%}
+    {%- assign has_active_filters = false -%}
+    {%- if collection.filters.size > 0 -%}
+      {%- for filter in collection.filters -%}
+        {%- if filter.active_values.size > 0 -%}{%- assign has_active_filters = true -%}{%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- if size_other_tags != '' -%}{%- assign has_active_filters = true -%}{%- endif -%}
+    {% if has_active_filters %}
     <div class="filter-chips" id="chip-container">
       {% for filter in collection.filters %}
         {% for value in filter.values %}
@@ -848,6 +856,12 @@
             <a href="{{ value.url_to_remove }}" class="f-chip">{{ value.label }}<span class="x"></span></a>
           {% endif %}
         {% endfor %}
+      {% endfor %}
+      {% for ct in current_tags %}
+        {% assign ct_head = ct | downcase | slice: 0, 5 %}
+        {% unless ct_head == 'size-' %}
+          <a href="#" class="f-chip vtag-instant" data-tag="{{ ct }}">{{ ct }}<span class="x"></span></a>
+        {% endunless %}
       {% endfor %}
     </div>
     {% endif %}
@@ -1057,57 +1071,88 @@ function toggleAcc(head){
   window.addEventListener('resize', fit);
 })();
 /* Nothing in the filter panels navigates on its own any more - a shopper ticks
-   whatever they want across FILTER and FEATURED, then APPLY sends the lot in a
-   single request. The button therefore has to rebuild the WHOLE query, not just
-   the tag checkboxes it used to read: native filter checkboxes, colour dots,
-   the sort radio and the price sliders all live here now. */
-function wireVtagApply(id, scopeSelector){
-  var apply = document.getElementById(id);
-  if(!apply) return;
-  var scope = scopeSelector ? document.querySelector(scopeSelector) : document;
-  if(!scope) return;
+   whatever they want, it applies the instant they click it - no separate
+   "Apply" step any more. Native filters (Sleeve/Neckline/Color-singles/
+   Fabric/Availability) are plain links using Shopify's own url_to_add/
+   url_to_remove, which already merge with whatever else is active, so they
+   need no JS at all. Only two things genuinely need it: a grouped colour
+   family (one click has to add/remove SEVERAL real shade values together)
+   and a tag-based option (toggling a tag in the collection URL's own tag
+   path, e.g. /collections/all/bridal). Price applies the moment the slider
+   handle is released, via the range inputs' own change event. */
+(function () {
+  var COLLECTION_HANDLE = {{ collection.handle | default: 'all' | json }};
 
-  apply.addEventListener('click', function(){
-    var params = [];
-    var tags = [];
+  function currentTagsFromPath() {
+    var parts = location.pathname.split('/').filter(Boolean);
+    var idx = parts.indexOf('collections');
+    if (idx === -1 || !parts[idx + 1]) return [];
+    var tagSeg = parts[idx + 2];
+    return tagSeg ? tagSeg.split('+') : [];
+  }
 
-    /* Ticked boxes and the chosen sort. Hidden inputs are skipped on purpose:
-       they only mirror the state these controls already carry, so reading both
-       would send every active filter twice. */
-    scope.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked').forEach(function(el){
-      if (el.classList.contains('vtag-filter')) {
-        tags.push(el.value.trim().toLowerCase().replace(/\s+/g, '-'));
-      } else if (el.classList.contains('vcolor-group-filter')) {
-        /* One family checkbox (e.g. "Green") stands in for every real shade
-           value that belongs to it (BOTTLE-GREEN, OLIVE-GREEN...) - expand
-           into one filter.v.option.color param per shade so Shopify's native
-           filter (which only understands exact values) matches all of them. */
-        var colorParam = el.getAttribute('data-color-param');
-        var colorValues = (el.getAttribute('data-color-values') || '').split('||').filter(Boolean);
-        colorValues.forEach(function(v){
-          params.push(encodeURIComponent(colorParam) + '=' + encodeURIComponent(v));
-        });
-      } else if (el.name) {
-        params.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
-      }
-    });
-
-    /* Price only counts as a filter once it has been moved off the full range,
-       otherwise every APPLY would pin a price band the shopper never chose. */
-    scope.querySelectorAll('input[type="range"][name]').forEach(function(el){
-      var isMin = el.id.indexOf('rangeMin') === 0;
-      var untouched = isMin ? (el.value === el.min) : (el.value === el.max);
-      if (!untouched) params.push(encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value));
-    });
-
-    var url = '/collections/{{ collection.handle | default: "all" }}';
-    if (tags.length) url += '/' + tags.join('+');
-    if (params.length) url += '?' + params.join('&');
+  function navigate(tags, params) {
+    var url = '/collections/' + COLLECTION_HANDLE;
+    if (tags.length) url += '/' + tags.map(encodeURIComponent).join('+');
+    var qs = params.toString();
+    if (qs) url += '?' + qs;
     window.location.href = url;
+  }
+
+  /* Grouped colour family - toggles every real shade value it stands for. */
+  document.querySelectorAll('.vcolor-instant').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      var isActive = el.classList.contains('is-active');
+      var param = el.getAttribute('data-color-param');
+      var values = (el.getAttribute('data-color-values') || '').split('||').filter(Boolean);
+      var params = new URLSearchParams(location.search);
+      if (isActive) {
+        var remaining = params.getAll(param).filter(function (v) { return values.indexOf(v) === -1; });
+        params.delete(param);
+        remaining.forEach(function (v) { params.append(param, v); });
+      } else {
+        var existing = params.getAll(param);
+        values.forEach(function (v) { if (existing.indexOf(v) === -1) params.append(param, v); });
+      }
+      navigate(currentTagsFromPath(), params);
+    });
   });
-}
-wireVtagApply('vtag-apply', '#sidebar');
-wireVtagApply('vtag-apply-toolbar', '#col-filter-drawer');
+
+  /* Plain product-tag option (Occasion, Fabric/Sleeve/Neckline fallback). */
+  document.querySelectorAll('.vtag-instant').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      var tag = el.getAttribute('data-tag').trim().toLowerCase().replace(/\s+/g, '-');
+      var tags = currentTagsFromPath();
+      var idx = tags.indexOf(tag);
+      if (idx > -1) tags.splice(idx, 1); else tags.push(tag);
+      navigate(tags, new URLSearchParams(location.search));
+    });
+  });
+
+  /* Price range - applies on release (native "change" fires on mouseup/
+     keyup-commit), not on every pixel of drag. Removes its own param
+     entirely when dragged back to the untouched full range. */
+  function wirePriceApply(minId, maxId) {
+    var minInput = document.getElementById(minId);
+    var maxInput = document.getElementById(maxId);
+    if (!minInput || !maxInput) return;
+    function apply() {
+      var params = new URLSearchParams(location.search);
+      var minName = minInput.name, maxName = maxInput.name;
+      if (minName) params.delete(minName);
+      if (maxName) params.delete(maxName);
+      if (minName && minInput.value !== minInput.min) params.set(minName, minInput.value);
+      if (maxName && maxInput.value !== maxInput.max) params.set(maxName, maxInput.value);
+      navigate(currentTagsFromPath(), params);
+    }
+    minInput.addEventListener('change', apply);
+    maxInput.addEventListener('change', apply);
+  }
+  wirePriceApply('rangeMin', 'rangeMax');
+  wirePriceApply('rangeMinT', 'rangeMaxT');
+})();
 
 
 function wirePriceSlider(minId, maxId, fillId, minLabelId, maxLabelId){

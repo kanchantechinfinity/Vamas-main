@@ -210,9 +210,23 @@ a{text-decoration:none;color:inherit;}
 .acc-body::-webkit-scrollbar{width:6px;}
 .acc-body::-webkit-scrollbar-thumb{background:rgba(146,68,68,.18);border-radius:3px;}
 /* Filter list, headings and size pills all read black now. */
-.filter-check-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:400;color:#1a1a1a;cursor:pointer;}
+.filter-check-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:400;color:#1a1a1a;cursor:pointer;text-decoration:none;}
 .filter-check-row:last-child{margin-bottom:0;}
 .filter-check-row input{flex-shrink:0;margin:0;}
+/* Options are real links now (applied instantly on click, no checkbox/Apply
+   step) - a small square standing in for the old checkbox, filled + ticked
+   once .is-active is set by Liquid (native filters) or JS (grouped colour/
+   tag options), same idea as the size/colour pills already used. */
+.filter-check-row::before{
+  content:'';flex-shrink:0;width:15px;height:15px;border-radius:3px;
+  border:1.5px solid rgba(26,26,26,.28);background:#fff;transition:background .15s,border-color .15s;
+}
+.filter-check-row.is-active{color:var(--m,#924444);font-weight:600;}
+.filter-check-row.is-active::before{
+  background:var(--m,#924444);border-color:var(--m,#924444);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M6.2 11.4 3 8.2l1.1-1.1 2.1 2.1 4.7-4.7L12 5.6z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:center;background-size:11px;
+}
 .check-row{
   display:flex;
   align-items:center;
