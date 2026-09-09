@@ -60,6 +60,11 @@
   {%- if filter_label_down contains 'colo' -%}{%- assign color_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'fabric' -%}{%- assign fabric_filter = filter -%}{%- endif -%}
 {%- endfor -%}
+{%- comment -%} TEMPORARY DEBUG - remove once Sleeve/Neckline are diagnosed.
+  Prints every real filter Shopify returns for this exact page, so we can see
+  precisely what label/type Sleeve and Neckline actually have (or confirm
+  they're missing entirely), instead of guessing. {%- endcomment -%}
+<!-- VAMAS_FILTER_DEBUG: {% for f in collection.filters %}[{{ f.label }} | type={{ f.type }} | values={{ f.values.size }}]{% endfor %} -->
 
 {%- comment -%}
   Size, three ways, in order of preference:
