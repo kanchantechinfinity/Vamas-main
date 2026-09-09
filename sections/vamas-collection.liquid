@@ -51,7 +51,12 @@
   {%- if filter_label_down contains 'sleeve' -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'neck' -%}{%- assign neckline_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'size' -%}{%- assign size_filter = filter -%}{%- endif -%}
-  {%- if filter_label_down contains 'vail' -%}{%- assign availability_filter = filter -%}{%- endif -%}
+  {%- comment -%} Excludes a Vendor-sourced filter even if its label happens
+    to contain "avail" (a merchant typo/duplicate like "Availabilty" sourced
+    from Vendor was overwriting the real Availability filter here, since both
+    labels matched the same substring check). {%- endcomment -%}
+  {%- assign filter_param_probe = filter.values.first.param_name -%}
+  {%- if filter_label_down contains 'vail' and filter_param_probe != 'filter.p.vendor' -%}{%- assign availability_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'colo' -%}{%- assign color_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'fabric' -%}{%- assign fabric_filter = filter -%}{%- endif -%}
 {%- endfor -%}
