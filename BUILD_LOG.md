@@ -1200,3 +1200,15 @@ measured on a real large monitor.
   own server-side processing time across the multi-hop redirect - login
   will still take a few seconds, just not quite as many.
 - Committed `82d491c`, pushed, sent to user for vamas.in.
+
+## 2026-09-09 — Category circle labels uppercased
+
+- User wanted all category circle labels in caps, matching "ALL BLOUSES"
+  (which was already hardcoded uppercase) — others like "Dual Neck
+  Blouses", "Brocade Bohemia" were title-case.
+- Added `text-transform: uppercase` to `.vcat__label`
+  (`sections/vamas-categories.liquid` - the dedicated category grid page)
+  and `.vamas-cat-circle__label` (`assets/vamas-theme.css` - the
+  homepage "Explore by Category" carousel), so every label displays in
+  caps without touching each collection's title text.
+- Committed `53aea48`, pushed, sent both files to user for vamas.in.

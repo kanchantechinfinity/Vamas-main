@@ -1,6 +1,33 @@
 {{ 'vamas-collection.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
+  Every collection defaults to whatever "Sort" order is set in its own
+  Admin page (usually manual/oldest-first) unless the URL already carries
+  ?sort_by=. Merchant wants newest-first as the default everywhere a
+  shopper lands, without configuring every collection individually in
+  Admin. Enforced with a synchronous redirect placed before anything else
+  in this section, so it runs (and blocks parsing) before the wrongly-
+  sorted grid ever paints - same "run before paint" idea as the
+  has-group-hub script further down. Only fires when sort_by is genuinely
+  absent from the URL (a real first visit) - once a shopper explicitly
+  picks a different sort from the dropdown, that choice's own sort_by
+  param is in the URL and this leaves it alone.
+{%- endcomment -%}
+{%- unless collection.sort_by == 'created-descending' -%}
+<script>
+  (function () {
+    try {
+      if (!new URLSearchParams(location.search).get('sort_by')) {
+        var u = new URL(location.href);
+        u.searchParams.set('sort_by', 'created-descending');
+        location.replace(u.toString());
+      }
+    } catch (e) {}
+  })();
+</script>
+{%- endunless -%}
+
+{%- comment -%}
   On the /collections list page there is no single collection - show all products.
   Test the handle, NOT products_count: on a tag route that matches nothing (say
   /collections/the-plain-edit/size-48) the count is 0, and falling back there
