@@ -1267,3 +1267,29 @@ measured on a real large monitor.
 - Also removed the now-resolved `VAMAS_FILTER_DEBUG` HTML comment line
   that had been live since earlier this session.
 - Committed `f153821`, pushed, sent to user for vamas.in.
+
+## 2026-09-09 — Sleeve/Neckline: forced to metafield-only per merchant decision
+
+- Confirmed root cause with the user's own Admin screenshot: this product
+  (X-1398.ELB) has tag "sleeveless" but its real "Sleeve Length" metafield
+  says "ELBOW SLEEVES" - the tag is simply wrong/stale. User: "I want it
+  to be by metafield."
+- Re-tested live: filtering by the metafield value for Elbow Sleeves still
+  returns 0 products right now (Shopify's Search & Discovery index still
+  hasn't caught up on the bulk metafield edit), confirming the earlier
+  fallback (previous commit `f153821`, same day) was masking this with
+  stale tags rather than fixing it.
+- Presented the trade-off explicitly and let the user decide: they chose
+  "force metafield-only now" over waiting for reindexing or manually
+  fixing tags. Reverted the `filter.values.size > 1` threshold from the
+  prior commit - Sleeve/Neckline now adopt the native filter unconditionally
+  the moment Shopify exposes it at all, same as before that commit.
+  Accepted consequence: most sleeve/neckline options will show 0-1
+  products until Shopify's index finishes catching up on the full
+  metafield rollout - self-corrects with no further code change once it
+  does.
+- Committed `0a9b5c0`, pushed, sent to user for vamas.in.
+- **Net effect of today's two Sleeve/Neckline commits**: `f153821`
+  (tag fallback) was shipped then reverted by `0a9b5c0` (forced native)
+  within the same session, per the user's explicit follow-up decision -
+  the tag fallback is no longer active for Sleeve/Neckline.
