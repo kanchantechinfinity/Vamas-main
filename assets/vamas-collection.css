@@ -7,8 +7,8 @@
   --bg: var(--color-bg, #FEF9F2);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:var(--font-body);background:var(--bg);color:#1a1a1a;font-size:14px;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{font-family:var(--font-body);background:var(--bg);color:#1a1a1a;font-size:14px;overflow-x:hidden;}
 a{text-decoration:none;color:inherit;}
 
 /* -- ANNOUNCE BAR -- */
@@ -523,7 +523,9 @@ a{text-decoration:none;color:inherit;}
   display:flex;
   align-items:center;
   justify-content:center;
+  flex-wrap:wrap;
   gap:6px;
+  max-width:100%;
 }
 .page-btn{
   min-width:36px;height:36px;
