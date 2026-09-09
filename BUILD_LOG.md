@@ -1166,3 +1166,37 @@ measured on a real large monitor.
   values themselves still exist in Shopify admin on an unknown number of
   products, likely from the same CSV import history. Worth a catalog
   audit in admin if the user wants them cleaned up entirely.
+
+## 2026-09-09 — Site-load/login investigation: New Customer Accounts is the cause
+
+- User reported "site not loading" then "login takes me to Shopify login"
+  then "takes too much time to load" with a screenshot confirming: tapping
+  Account on vamas.in mobile lands on `account.vamas.in`'s Shopify-hosted
+  sign-in screen after several seconds.
+- Investigated site-wide slowness first: DNS healthy (23.227.38.65,
+  correct CNAME to shops.myshopify.com, consistent across resolvers),
+  server healthy (~0.4s TTFB, valid SSL, proper Shopify/Cloudflare
+  headers), not Incognito-specific, not reproducible from this session's
+  browser (fast on both stores, mobile + desktop). Likely was transient/
+  local to the user's device or network at that moment - no theme-code
+  fix applies there.
+- Login specifically: confirmed real and measured. `/account/login`
+  redirects to `account.vamas.in/authentication/login` -> `/oauth/
+  authorize` -> `/callback` -> hosted sign-in screen. First hop alone
+  measured 3.4s `loadEventEnd`. Root cause: this store is fully migrated
+  to Shopify's **New Customer Accounts** - confirmed live in Admin ->
+  Settings -> Customer accounts -> Authentication -> Manage: no Classic
+  toggle exists anymore (only Shop/Google/Facebook sign-in options), so
+  there is no way to revert to the theme's own fast login page
+  (`templates/customers/login.json` exists in the theme but is
+  unreachable while New Accounts owns the route). This is a Shopify
+  platform limitation, not a theme bug - same experience on every store
+  using New Accounts.
+- Only mitigation available in theme code: added `<link rel="preconnect">`
+  + `<link rel="dns-prefetch">` for `https://account.vamas.in` in
+  `layout/theme.liquid`, so DNS+TLS setup for that domain happens in the
+  background before the customer taps Account, instead of cold-starting
+  at that moment. This shaves connection-setup time only, not Shopify's
+  own server-side processing time across the multi-hop redirect - login
+  will still take a few seconds, just not quite as many.
+- Committed `82d491c`, pushed, sent to user for vamas.in.
