@@ -30,20 +30,28 @@
 {% endif %}
 
 {% if template == 'index' %}
-{% comment %} ── Browse Tags (homepage only, shown after FAQ) ── {% endcomment %}
+{% comment %} ── Browse Tags (homepage only, shown after FAQ) ──
+  Each pill links to the "all" collection filtered by that PRODUCT TAG
+  (Shopify's own /collections/<handle>/<tag> route), not a separate
+  collection - so it shows every product actually tagged with it, however
+  many collections that product also belongs to. {% endcomment %}
+{%- comment -%}
+  Label => real tag slug, verified live against vamas.in (each slug below
+  actually returns filtered products, not the full 311-product fallback).
+  Mirror Work / Bridal / Backless / Chikankari / Phulkari have NO confirmed
+  matching tag yet - every guess tried (mirror, mirror-work, mirrorwork,
+  abhla-work, bridal, bridal-wear, backless, backless-blouse, deep-back,
+  chikankari, chikan, chikankari-work, phulkari, phulkari-work,
+  phulkari-embroidery) silently redirected to the unfiltered catalog, so
+  those 5 pills are left out until the real tag names are confirmed - see
+  BUILD_LOG.md.
+{%- endcomment -%}
+{% assign browse_tag_labels = "Zari Work,Embroidery,Velvet,Printed,Cotton,Pure Silk,Gota Patti" | split: "," %}
+{% assign browse_tag_slugs = "zari,embroidery,velvet,printed,cotton,silk,gota-patti" | split: "," %}
 <div class="vamas-tags">
-  <a href="/collections/zari-work" class="vamas-tag">ZARI WORK</a>
-  <a href="/collections/mirror-work" class="vamas-tag">MIRROR WORK</a>
-  <a href="/collections/embroidery" class="vamas-tag">EMBROIDERY</a>
-  <a href="/collections/velvet" class="vamas-tag">VELVET</a>
-  <a href="/collections/printed" class="vamas-tag">PRINTED</a>
-  <a href="/collections/bridal" class="vamas-tag">BRIDAL</a>
-  <a href="/collections/backless" class="vamas-tag">BACKLESS</a>
-  <a href="/collections/cotton" class="vamas-tag">COTTON</a>
-  <a href="/collections/pure-silk" class="vamas-tag">PURE SILK</a>
-  <a href="/collections/chikankari" class="vamas-tag">CHIKANKARI</a>
-  <a href="/collections/phulkari" class="vamas-tag">PHULKARI</a>
-  <a href="/collections/gota-patti" class="vamas-tag">GOTA PATTI</a>
+  {% for label in browse_tag_labels %}
+    <a href="/collections/all/{{ browse_tag_slugs[forloop.index0] }}" class="vamas-tag">{{ label | strip | upcase }}</a>
+  {% endfor %}
 </div>
 {% endif %}
 

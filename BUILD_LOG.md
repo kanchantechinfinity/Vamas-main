@@ -1087,3 +1087,15 @@ measured on a real large monitor.
   `assets/vamas-blog.css`) to keep the app's own widget square and
   contained inside the ~280px sidebar column instead of its default
   width/columns. Committed (`f82ed8b`), pushed, sent to user for vamas.in.
+
+## 2026-09-09 — Mobile bottom nav "New Arrivals" link fixed
+
+- `snippets/vamas-mobile-bottom-nav.liquid` had "New Arrivals" hardcoded
+  to link to a `jackets` collection (leftover placeholder), falling back
+  to `/collections/all`.
+- Changed to link to the real collection, handle `new-arrivals-1`
+  (user provided URL: vamas.in/collections/new-arrivals-1), falling back
+  to `/collections/all` if that collection is ever removed.
+- Committed (`93dd655`, superseding an interim wrong-handle commit that
+  was amended before it reached origin — verified via fetch that only the
+  correct commit landed), pushed, sent to user for vamas.in.
