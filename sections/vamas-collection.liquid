@@ -28,6 +28,47 @@
 {%- endunless -%}
 
 {%- comment -%}
+  TEMPORARY tag/metafield mismatch audit - only runs with ?tagaudit=1, not
+  shown to shoppers. Dumps every product whose Sleeve/Neckline TAG disagrees
+  with its real custom.blouse_sleeves/custom.blouse_neckline metafield (or
+  has the metafield but no matching tag at all), so the merchant can bulk-
+  correct tags in Admin instead of guessing product-by-product. Remove once
+  used.
+{%- endcomment -%}
+{%- assign sleeve_tags = 'Sleeveless,Cap Sleeves,Short Sleeves,Elbow Sleeves,Three-Quarter Sleeves,Full Sleeves' | split: ',' -%}
+{%- assign neck_tags = 'Round Neck,V-Neck,Boat Neck,Square Neck,Sweetheart Neck,High Neck,Halter Neck' | split: ',' -%}
+<pre id="vamas-tag-audit" hidden style="white-space:pre-wrap;font-size:11px;">
+{%- paginate collection.products by 250 -%}
+  {%- for product in collection.products -%}
+    {%- assign p_sleeve_mf = product.metafields.custom.blouse_sleeves.value | strip -%}
+    {%- assign p_neck_mf = product.metafields.custom.blouse_neckline.value | strip -%}
+    {%- assign p_sleeve_tag = '' -%}
+    {%- for t in sleeve_tags -%}{%- if product.tags contains t -%}{%- assign p_sleeve_tag = t -%}{%- endif -%}{%- endfor -%}
+    {%- assign p_neck_tag = '' -%}
+    {%- for t in neck_tags -%}{%- if product.tags contains t -%}{%- assign p_neck_tag = t -%}{%- endif -%}{%- endfor -%}
+    {%- assign sleeve_mismatch = false -%}
+    {%- if p_sleeve_mf != '' and p_sleeve_tag != '' and p_sleeve_mf != p_sleeve_tag -%}{%- assign sleeve_mismatch = true -%}{%- endif -%}
+    {%- if p_sleeve_mf != '' and p_sleeve_tag == '' -%}{%- assign sleeve_mismatch = true -%}{%- endif -%}
+    {%- assign neck_mismatch = false -%}
+    {%- if p_neck_mf != '' and p_neck_tag != '' and p_neck_mf != p_neck_tag -%}{%- assign neck_mismatch = true -%}{%- endif -%}
+    {%- if p_neck_mf != '' and p_neck_tag == '' -%}{%- assign neck_mismatch = true -%}{%- endif -%}
+    {%- if sleeve_mismatch or neck_mismatch -%}
+{{ product.handle }} | sleeve_mf="{{ p_sleeve_mf }}" sleeve_tag="{{ p_sleeve_tag }}" | neck_mf="{{ p_neck_mf }}" neck_tag="{{ p_neck_tag }}"
+    {%- endif -%}
+  {%- endfor -%}
+{%- endpaginate -%}
+</pre>
+<script>
+  (function () {
+    try {
+      if (new URLSearchParams(location.search).get('tagaudit') === '1') {
+        document.getElementById('vamas-tag-audit').hidden = false;
+      }
+    } catch (e) {}
+  })();
+</script>
+
+{%- comment -%}
   On the /collections list page there is no single collection - show all products.
   Test the handle, NOT products_count: on a tag route that matches nothing (say
   /collections/the-plain-edit/size-48) the count is 0, and falling back there
