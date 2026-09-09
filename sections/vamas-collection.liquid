@@ -653,7 +653,7 @@
           <div class="acc-item" data-filter-group="occasion">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
+              {% assign vtag_occasion = "Haldi And Mehendi,Wedding Wear,Occasion Wear,Party Wear" | split: "," %}
               {% for t in vtag_occasion %}
                 <a href="#" class="filter-check-row vtag-instant{% if collection.current_tags contains t %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
               {% endfor %}
@@ -737,7 +737,7 @@
 
     <div class="sidebar-scroll">
     {% comment %} Fixed filter order: Sleeve, Neckline, Color, Fabric, Price, Availability, Occasion {% endcomment %}
-    {% assign vtag_occasion = "Bridal,Festive,Casual,Party Wear" | split: "," %}
+    {% assign vtag_occasion = "Haldi And Mehendi,Wedding Wear,Occasion Wear,Party Wear" | split: "," %}
 
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
