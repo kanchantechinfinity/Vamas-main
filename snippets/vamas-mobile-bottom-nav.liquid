@@ -3,8 +3,8 @@
   Five slots with the search action raised in the middle.
 {% endcomment %}
 {% assign new_arrivals_url = '/collections/all' %}
-{% if collections['jackets'] != blank and collections['jackets'].products_count > 0 %}
-  {% assign new_arrivals_url = collections['jackets'].url %}
+{% if collections['new-arrivals-1'] != blank %}
+  {% assign new_arrivals_url = collections['new-arrivals-1'].url %}
 {% endif %}
 
 <nav class="vamas-botnav" aria-label="Primary mobile navigation">

@@ -1071,3 +1071,19 @@ measured on a real large monitor.
   `VAMAS_FILTER_DEBUG` HTML comment (prints `collection.filters` labels/
   types/counts) is live in `sections/vamas-collection.liquid`, waiting on
   user to report the vamas.in page-source output.
+
+## 2026-09-09 — Blog sidebar: live Instagram feed
+
+- User wants latest real Instagram posts in the blog sidebar's
+  "Follow @vamas.official" widget (`sections/vamas-blog.liquid`),
+  currently showing static `ig_image` blocks / article-thumbnail fallback.
+- Code already supports this: an `@app` block type is in the section's
+  schema (unlike `vamas-collection.liquid`, where `@app` is rejected —
+  worked fine here) and `has_ig_app` detection already renders it via
+  `{% render block %}` when present. No Liquid change needed — the
+  merchant just adds the Instagram Feed RPTR app block (already used on
+  homepage) through the theme editor's block list for this section.
+- Added defensive CSS (`.vblog-ig-app` / `.vblog-ig-app img` in
+  `assets/vamas-blog.css`) to keep the app's own widget square and
+  contained inside the ~280px sidebar column instead of its default
+  width/columns. Committed (`f82ed8b`), pushed, sent to user for vamas.in.
