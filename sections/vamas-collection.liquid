@@ -75,8 +75,18 @@
 {%- assign fabric_filter = blank -%}
 {%- for filter in collection.filters -%}
   {%- assign filter_label_down = filter.label | downcase -%}
-  {%- if filter_label_down contains 'sleeve' -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
-  {%- if filter_label_down contains 'neck' -%}{%- assign neckline_filter = filter -%}{%- endif -%}
+  {%- comment -%} Sleeve/Neckline only switch over to the native metafield
+    filter once it actually has more than one real value populated -
+    confirmed live that the merchant's metafield rollout currently covers
+    just 1 product each (Sleeveless / V-Neck), so adopting it unconditionally
+    left every OTHER option (Cap Sleeves, Elbow Sleeves, Round Neck, Boat
+    Neck...) missing entirely, since Shopify only lists filter values that
+    have a matching product. Falling back to the full tag list below until
+    there's real coverage means this corrects itself automatically as more
+    products get the metafield set, with no further code change needed.
+  {%- endcomment -%}
+  {%- if filter_label_down contains 'sleeve' and filter.values.size > 1 -%}{%- assign sleeve_filter = filter -%}{%- endif -%}
+  {%- if filter_label_down contains 'neck' and filter.values.size > 1 -%}{%- assign neckline_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'size' -%}{%- assign size_filter = filter -%}{%- endif -%}
   {%- comment -%} Excludes a Vendor-sourced filter even if its label happens
     to contain "avail" (a merchant typo/duplicate like "Availabilty" sourced
@@ -87,11 +97,6 @@
   {%- if filter_label_down contains 'colo' -%}{%- assign color_filter = filter -%}{%- endif -%}
   {%- if filter_label_down contains 'fabric' -%}{%- assign fabric_filter = filter -%}{%- endif -%}
 {%- endfor -%}
-{%- comment -%} TEMPORARY DEBUG - remove once Sleeve/Neckline are diagnosed.
-  Prints every real filter Shopify returns for this exact page, so we can see
-  precisely what label/type Sleeve and Neckline actually have (or confirm
-  they're missing entirely), instead of guessing. {%- endcomment -%}
-<!-- VAMAS_FILTER_DEBUG: {% for f in collection.filters %}[{{ f.label }} | type={{ f.type }} | values={{ f.values.size }}]{% endfor %} -->
 
 {%- comment -%}
   Size, three ways, in order of preference:

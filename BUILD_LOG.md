@@ -1212,3 +1212,30 @@ measured on a real large monitor.
   homepage "Explore by Category" carousel), so every label displays in
   caps without touching each collection's title text.
 - Committed `53aea48`, pushed, sent both files to user for vamas.in.
+
+## 2026-09-09 — Default collection sort: newest-first everywhere
+
+- User: opening "All Blouses" (or any collection) fresh shows old products
+  first; only after manually picking "Date, new to old" does it show
+  correctly. Wants new-to-old as the DEFAULT on first visit to any
+  collection, without requiring the customer to sort every time.
+- Root cause: `collection.sort_by` falls back to `collection.
+  default_sort_by`, an Admin setting configured PER COLLECTION - would
+  need manually setting on every one of dozens of collections.
+- Fix (`sections/vamas-collection.liquid`, very top of the file, before
+  anything else renders): a synchronous inline script checks
+  `location.search` for `sort_by` - if genuinely absent (real first
+  visit, no explicit choice made), redirects once to add `sort_by=
+  created-descending` before the wrongly-sorted grid ever paints.
+  Verified live: confirmed `created-descending` is the exact value for
+  "Date, new to old" from the sort `<select>`'s own options; simulated
+  the redirect logic against a plain collection URL, a tag-route URL,
+  and URLs that already carry an explicit `sort_by` (best-selling,
+  already-descending) - only the genuinely-unsorted case redirects, no
+  loop risk since the redirected URL then carries `sort_by` itself.
+- Trade-off disclosed to user: adds one extra redirect (extra page load)
+  on a shopper's very first hit to any collection page, unavoidable since
+  Shopify's default-sort-per-collection is an Admin setting, not
+  something theme code can override without either this redirect or
+  manually configuring every collection in Admin.
+- Committed `2f39481`, pushed, sent to user for vamas.in.
