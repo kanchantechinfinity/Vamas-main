@@ -35,30 +35,39 @@
   correct tags in Admin instead of guessing product-by-product. Remove once
   used.
 {%- endcomment -%}
+{%- comment -%} Real tags are lowercase-hyphenated (elbow-sleeves, v-neck),
+  not the Title Case shown in the filter UI - handleize the known list to
+  match what's actually on the product. {%- endcomment -%}
 {%- assign sleeve_tags = 'Sleeveless,Cap Sleeves,Short Sleeves,Elbow Sleeves,Three-Quarter Sleeves,Full Sleeves' | split: ',' -%}
-{%- assign neck_tags = 'Round Neck,V-Neck,Boat Neck,Square Neck,Sweetheart Neck,High Neck,Halter Neck' | split: ',' -%}
+{%- assign neck_tags = 'Round Neck,V-Neck,Boat Neck,Square Neck,Sweetheart Neck,High Neck,Halter Neck,Collar Neck,Paan Neck,Sweetheart Neckline' | split: ',' -%}
 <pre id="vamas-tag-audit" hidden style="white-space:pre-wrap;font-size:11px;">
 {%- paginate collection.products by 250 -%}
+  {%- assign mf_sleeve_count = 0 -%}
+  {%- assign mf_neck_count = 0 -%}
+  {%- assign scanned = 0 -%}
   {%- for product in collection.products -%}
+    {%- assign scanned = scanned | plus: 1 -%}
     {%- assign p_sleeve_mf = product.metafields.custom.blouse_sleeves.value | strip -%}
     {%- assign p_neck_mf = product.metafields.custom.blouse_neckline.value | strip -%}
+    {%- if p_sleeve_mf != '' -%}{%- assign mf_sleeve_count = mf_sleeve_count | plus: 1 -%}{%- endif -%}
+    {%- if p_neck_mf != '' -%}{%- assign mf_neck_count = mf_neck_count | plus: 1 -%}{%- endif -%}
     {%- assign p_sleeve_tag = '' -%}
-    {%- for t in sleeve_tags -%}{%- if product.tags contains t -%}{%- assign p_sleeve_tag = t -%}{%- endif -%}{%- endfor -%}
+    {%- for t in sleeve_tags -%}{%- assign t_slug = t | handle -%}{%- if product.tags contains t_slug -%}{%- assign p_sleeve_tag = t_slug -%}{%- endif -%}{%- endfor -%}
     {%- assign p_neck_tag = '' -%}
-    {%- for t in neck_tags -%}{%- if product.tags contains t -%}{%- assign p_neck_tag = t -%}{%- endif -%}{%- endfor -%}
+    {%- for t in neck_tags -%}{%- assign t_slug = t | handle -%}{%- if product.tags contains t_slug -%}{%- assign p_neck_tag = t_slug -%}{%- endif -%}{%- endfor -%}
+    {%- assign p_sleeve_mf_slug = p_sleeve_mf | handle -%}
+    {%- assign p_neck_mf_slug = p_neck_mf | handle -%}
     {%- assign sleeve_mismatch = false -%}
-    {%- if p_sleeve_mf != '' and p_sleeve_tag != '' and p_sleeve_mf != p_sleeve_tag -%}{%- assign sleeve_mismatch = true -%}{%- endif -%}
+    {%- if p_sleeve_mf != '' and p_sleeve_tag != '' and p_sleeve_mf_slug != p_sleeve_tag -%}{%- assign sleeve_mismatch = true -%}{%- endif -%}
     {%- if p_sleeve_mf != '' and p_sleeve_tag == '' -%}{%- assign sleeve_mismatch = true -%}{%- endif -%}
     {%- assign neck_mismatch = false -%}
-    {%- if p_neck_mf != '' and p_neck_tag != '' and p_neck_mf != p_neck_tag -%}{%- assign neck_mismatch = true -%}{%- endif -%}
+    {%- if p_neck_mf != '' and p_neck_tag != '' and p_neck_mf_slug != p_neck_tag -%}{%- assign neck_mismatch = true -%}{%- endif -%}
     {%- if p_neck_mf != '' and p_neck_tag == '' -%}{%- assign neck_mismatch = true -%}{%- endif -%}
     {%- if sleeve_mismatch or neck_mismatch -%}
 {{ product.handle }} | sleeve_mf="{{ p_sleeve_mf }}" sleeve_tag="{{ p_sleeve_tag }}" | neck_mf="{{ p_neck_mf }}" neck_tag="{{ p_neck_tag }}"
     {%- endif -%}
-    {%- if forloop.index <= 8 -%}
-RAW[{{ forloop.index }}] {{ product.handle }} :: direct="{{ product.metafields.custom.blouse_sleeves }}" dotvalue="{{ product.metafields.custom.blouse_sleeves.value }}" type="{{ product.metafields.custom.blouse_sleeves.type }}" tags="{{ product.tags | join: ', ' }}"
-    {%- endif -%}
   {%- endfor -%}
+COUNTS sleeve_populated={{ mf_sleeve_count }} neck_populated={{ mf_neck_count }} scanned={{ scanned }}
 {%- endpaginate -%}
 </pre>
 <script>
