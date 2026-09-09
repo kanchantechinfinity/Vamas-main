@@ -83,7 +83,15 @@
   {% for t in group_tags %}
     {% assign tag_clean = t | strip %}
     {% if tag_clean != '' %}
-      {% assign group_tag_slugs = group_tag_slugs | append: tag_clean | handle | append: '||' %}
+      {%- comment -%} `| handle` has to run on tag_clean ALONE, in its own
+        assign, before appending - chained onto the accumulator directly
+        (group_tag_slugs | append: tag_clean | handle | append: '||') it
+        re-slugs the WHOLE growing string every loop, collapsing every tag
+        added so far into one hyphenated blob instead of separate "||"
+        entries (confirmed live: produced "round-neck-v-neck-boat-neck-...||"
+        - one blob - instead of "round-neck||v-neck||boat-neck||..."). {%- endcomment -%}
+      {% assign tag_slug = tag_clean | handle %}
+      {% assign group_tag_slugs = group_tag_slugs | append: tag_slug | append: '||' %}
     {% endif %}
   {% endfor %}
   {% for t in group_tags %}
