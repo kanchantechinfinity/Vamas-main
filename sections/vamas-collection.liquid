@@ -1131,6 +1131,14 @@ function toggleAcc(head){
   function navigate(tags, params) {
     var url = '/collections/' + COLLECTION_HANDLE;
     if (tags.length) url += '/' + tags.map(encodeURIComponent).join('+');
+    /* Any filter/sort change here means the result set just changed size,
+       so a page number carried over from browsing before that (e.g. page 3
+       of 287 products) is almost certainly invalid for the new, usually
+       much smaller, result set - confirmed live: filtering to a 6-product
+       match while still on page 3 showed "Showing 25-24 of 6 products" and
+       "No products found", even though page 1 had all 6. Always reset to
+       page 1 on a filter change instead of carrying page= forward. */
+    params.delete('page');
     var qs = params.toString();
     if (qs) url += '?' + qs;
     window.location.href = url;
