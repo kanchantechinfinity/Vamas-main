@@ -124,18 +124,14 @@
       remaining link group here now. {%- endcomment -%}
     {%- comment -%}
       Popular Searches - label|real-handle pairs, not a naive | handleize
-      guess like the four lists above. Verified live one by one against
-      real collections: e.g. "Sleeveless Blouse" only resolves as
-      signature-sleeveless (sleeveless-blouse is a 404), "Cotton Blouse" as
-      everyday-cottons (classic-cottons exists too but only has 1 product),
-      "New Arrivals" specifically as new-arrivals-1 per the merchant's own
-      confirmed URL (a separate new-arrivals collection also exists but is
-      not the one used elsewhere in this theme). "Blouse For Lehenga" from
-      the merchant's original list had no matching collection under any
-      handle tried and was dropped rather than left as a dead link.
+      guess. Replaced with the merchant's own curated 31-item list, each
+      verified live one at a time against real collections (30/31 resolved
+      first try; "Summer Blouse" needed summer-essentials, not the singular
+      summer-essential the merchant's list originally had - confirmed 31
+      products on the correct handle).
     {%- endcomment -%}
-    {% assign popular_labels = "Designer Blouse Online,Cotton Blouse,Kanjivaram Silk Blouse,Corset Blouse,Sleeveless Blouse,Stretchable Blouse,Collar Neck Blouse,Wedding Saree Blouse,Party Wear Blouse Online,Festive Blouse Designs,Crochet Blouse,Brocade Blouse,Bridgerton Inspired Blouse,Kashmiri Work Blouse,Re-Verse By Vamas,Shapewear,New Arrivals" | split: "," %}
-    {% assign popular_handles = "all-blouses,everyday-cottons,the-kanjivaram-companion,corsets,signature-sleeveless,side-stretch-blouses,royal-collar-necks,wedding-wear,party-wear,festive-wear,crochet-line,brocade-bohemia,brigerton-inspired-series,kashmiri-work,re-verse-by-vamas,shapewear,new-arrivals-1" | split: "," %}
+    {% assign popular_labels = "Designer Blouse,Printed Blouse,Bridgerton Inspired Blouse,Brocade Bohemia Blouse,Plain Cotton Blouse,Corset Blouse,Crochet Blouse,Dual Neck Blouse,Everyday Cotton Blouse,Festive Blouse Designs,Haldi Mehendi Blouse,Kashmiri Work Blouse,Kids Ethnic Wear,New Arrivals,Occasion Wear Blouse,Designer Blouse Pattern,Party Wear Blouse,Prayer Meet Blouse,Reverse Blouse,Royal Collar Neck Blouse,Shapewear,Stretchable Blouse,Sleeveless Blouse,Summer Blouse,Kanjivaram Blouse,Plain Blouse,Shirt Blouse,Elbow Sleeve Blouse,Boys Ethnic Wear,Girls Ethnic Wear,Wedding Wear Blouse" | split: "," %}
+    {% assign popular_handles = "all-blouses,brezzy-prints,brigerton-inspired-series,brocade-bohemia,classic-cottons,corsets,crochet-line,dual-neck-blouses,everyday-cottons,festive-wear,haldi-and-mehendi,kashmiri-work,kids,new-arrivals,occasion-wear,one-of-a-kind-blouses,party-wear,prayer-meet-blouses,re-verse-by-vamas,royal-collar-necks,shapewear,side-stretch-blouses,signature-sleeveless,summer-essentials,the-kanjivaram-companion,the-plain-edit,the-shirt-blouse,timeless-elbow-length,vikri-boys,vikri-girls,wedding-wear" | split: "," %}
     <div class="vamas-shopby__group">
       <div class="vamas-shopby__title">Popular Searches</div>
       <div class="vamas-shopby__links">
@@ -277,9 +273,16 @@
   .vamas-sizeguide__table tbody tr:nth-child(even) { background: var(--color-bg); }
   .vamas-sizeguide__note { margin-top: 16px; font-size: 12px; color: rgba(146,68,68,0.6); line-height: 1.6; }
 
-  /* Shop By mega links */
-  .vamas-shopby { max-width: 1280px; margin: 0 auto; padding: 8px var(--page-gutter) 32px; border-bottom: 1px solid rgba(235,211,173,0.18); }
-  .vamas-shopby__group { padding: 16px 0; border-top: 1px solid rgba(235,211,173,0.12); }
+  /* Shop By mega links (now just Popular Searches) - no own max-width/
+     horizontal padding any more, so its left/right edges match the meaning
+     band and footer grid above/below it exactly (both rely solely on the
+     parent .vamas-footer's own gutter padding; this used to ALSO add
+     var(--page-gutter) on top of that, double-indenting and, combined with
+     its own 1280px cap, centering differently from everything else in the
+     footer). Top/bottom padding and the border line above the newsletter
+     trimmed down too - both were excess. */
+  .vamas-shopby { padding: 0; }
+  .vamas-shopby__group { padding: 8px 0; border-top: 1px solid rgba(235,211,173,0.12); }
   .vamas-shopby__group:first-child { border-top: none; }
   .vamas-shopby__title { font-family: var(--font-heading); color: var(--color-gold); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
   .vamas-shopby__links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin-left: -10px; }
@@ -301,9 +304,6 @@
   .vamas-faq__item.open .vamas-faq__a { max-height: 240px; }
   .vamas-faq__a p { margin: 0; padding: 0 4px 20px; font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: rgba(146,68,68,0.7); }
 
-  @media (max-width: 768px) {
-    .vamas-shopby { padding: 8px 0 24px; }
-  }
 </style>
 
 <script>

@@ -261,7 +261,10 @@
 {%- comment -%} CATEGORY PAGE - sub-category circles, no filters and no product
   grid. Each circle opens the child collection, which renders normally. {%- endcomment -%}
 <div class="col-cats">
-  <h1 class="col-cats__title">{{ collection.title }}</h1>
+  {%- comment -%} Not an h1 - col-hero-title above already is the page's one
+    H1 (confirmed live via an SEO checker that this page had 2 H1s: this one
+    duplicating the same collection.title, plus col-mhead's mobile copy). {%- endcomment -%}
+  <div class="col-cats__title">{{ collection.title }}</div>
   {% if collection.description != blank %}
     <div class="col-cats__desc">{{ collection.description }}</div>
   {% endif %}
@@ -375,7 +378,7 @@
       {%- assign g_title = gparts[1] | strip -%}
       {%- assign g_children = gparts[2] | split: ',' -%}
       <div class="col-cats" data-group-hub="{{ g_slug }}" hidden>
-        <h1 class="col-cats__title">{{ g_title }}</h1>
+        <div class="col-cats__title">{{ g_title }}</div>
         <div class="col-cats__grid">
           {% for c in g_children %}
             {% assign c_handle = c | strip | downcase %}
@@ -490,9 +493,13 @@
   </script>
 {%- endif -%}
 <div data-view-default>
-{%- comment -%} Mobile-only collection header: title, count {%- endcomment -%}
+{%- comment -%} Mobile-only collection header: title, count. Not an h1 -
+  col-hero-title above already is the page's one H1; this is a CSS-hidden-
+  on-desktop duplicate of the same text, which still counts as a real H1 in
+  the DOM to an SEO crawler regardless of display:none (confirmed live: 2
+  H1s reported on this exact page). {%- endcomment -%}
 <div class="col-mhead">
-  <h1 class="col-mhead__title">{{ collection.title }}</h1>
+  <div class="col-mhead__title">{{ collection.title }}</div>
   <div class="col-mhead__count">
     {{ collection.products_count }} Products
     <div class="col-mhead__views" role="group" aria-label="Grid size">
