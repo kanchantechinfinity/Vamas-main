@@ -116,38 +116,12 @@
 
   {% if section.settings.show_shop_links %}
   <div class="vamas-shopby">
-    {% assign shopby_cat = "Sarees | Kurtas for Women | Short Kurtas for Women | Blouse | Kurta Sets for Women | Co-Ord Sets | Dress Materials | Suits for Women | Tunics | Dresses for Women | Kaftans | Shrugs | Ethnic Gowns | Jumpsuits | Lehenga | Chudidars | Dupatta | Petticoats | Pants | Palazzos | Sharara Suits | Anarkali Suits | Kurta Pant Sets | Palazzo Kurta Sets | Dhoti Sets | Collar Kurtas and Sets | Punjabi Suits | Sleeveless Kurta Sets | Indo-Western Wear for Women | Lehenga Choli for Women | Crop Top Lehenga | Long Dresses" | split: "|" %}
-    <div class="vamas-shopby__group">
-      <div class="vamas-shopby__title">Shop By Category</div>
-      <div class="vamas-shopby__links">
-        {% for item in shopby_cat %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
-      </div>
-    </div>
-
-    {% assign shopby_fest = "Diwali | Karwa Chauth | Bhai Dooj Special | Onam | Rakhi Collection | Navratri | Dussehra | Durga Pujo | The Festival of Lohri and Sankranti | Pongal | Holi | Ugadi and Gudi Padwa | Christmas | Ramadan & Eid | Ganesh Chaturthi" | split: "|" %}
-    <div class="vamas-shopby__group">
-      <div class="vamas-shopby__title">Shop By Festival</div>
-      <div class="vamas-shopby__links">
-        {% for item in shopby_fest %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
-      </div>
-    </div>
-
-    {% assign shopby_occ = "Wedding Dresses for Women | Wedding Guest Outfits | Bridesmaid Dresses | Mehendi Outfits | Sangeet Dresses | Haldi Ready Dresses | Reception Outfits | Party Wear Dresses for Women | Engagement Dresses | Autumn Outfits | Festive Edit | Bridal Lehenga | Kasavu Sarees | Colors of Freedom | Valentine Day | Women's Day Special | Summer Outfits | Black Friday | Office Work Wear | Monsoon Edit | Winter Outfits" | split: "|" %}
-    <div class="vamas-shopby__group">
-      <div class="vamas-shopby__title">Shop By Occasion</div>
-      <div class="vamas-shopby__links">
-        {% for item in shopby_occ %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
-      </div>
-    </div>
-
-    {% assign shopby_trend = "Purple and Lavender Collection | Embroidered Outfits | Fendi Suits | Black Ethnic Dresses | Fendi Sarees | Red Ethnic Dresses | Green Ethnic Wear | Vivid Blooms | Tales of Tissue | Simply Solids | Linen Loom | Gypsy Ink - Bohemian Inspired Collection | Bandhej Treasures | Print Perfection | Pastel Harmony | Kalamkari Chronicles | Baroque Collection | Ivory Elegance | Floral Drifts | Glimmer Glam | Muse of Mirror | Black Sarees | Our Top Picks | Evergreen Anarkali | Chikankari Collection | Kota Couture" | split: "|" %}
-    <div class="vamas-shopby__group">
-      <div class="vamas-shopby__title">Top Trendsetter's Collection</div>
-      <div class="vamas-shopby__links">
-        {% for item in shopby_trend %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
-      </div>
-    </div>
-
+    {%- comment -%} The old Shop By Category / Festival / Occasion / Top
+      Trendsetter's Collection lists were removed per merchant request -
+      most of their items used a naive `| handleize` guess against a
+      collection that doesn't exist (the same class of dead link Popular
+      Searches below was built to avoid). Popular Searches is the sole
+      remaining link group here now. {%- endcomment -%}
     {%- comment -%}
       Popular Searches - label|real-handle pairs, not a naive | handleize
       guess like the four lists above. Verified live one by one against
