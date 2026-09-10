@@ -688,7 +688,7 @@
             <div class="acc-body open">
               {% assign vtag_occasion = "Haldi And Mehendi,Wedding Wear,Occasion Wear,Party Wear" | split: "," %}
               {% for t in vtag_occasion %}
-                {% assign t_slug_active = t | handle %}<a href="#" class="filter-check-row vtag-instant{% if current_tags contains t_slug_active %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
+                <a href="#" class="filter-check-row vtag-instant" data-tag="{{ t }}">{{ t }}</a>
               {% endfor %}
             </div>
           </div>
@@ -845,7 +845,7 @@
       <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
         {% for t in vtag_occasion %}
-          {% assign t_slug_active = t | handle %}<a href="#" class="filter-check-row vtag-instant{% if current_tags contains t_slug_active %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
+          <a href="#" class="filter-check-row vtag-instant" data-tag="{{ t }}">{{ t }}</a>
         {% endfor %}
       </div>
     </div>
@@ -879,15 +879,25 @@
       Neckline/Fabric before a native filter exists) via the same .vtag-instant
       click handler used to apply them - clicking an already-active tag's chip
       just toggles it off. {%- endcomment -%}
-    {%- assign has_active_filters = false -%}
-    {%- if collection.filters.size > 0 -%}
-      {%- for filter in collection.filters -%}
-        {%- if filter.active_values.size > 0 -%}{%- assign has_active_filters = true -%}{%- endif -%}
-      {%- endfor -%}
-    {%- endif -%}
-    {%- if size_other_tags != '' -%}{%- assign has_active_filters = true -%}{%- endif -%}
-    {% if has_active_filters %}
-    <div class="filter-chips" id="chip-container">
+    {%- comment -%}
+      Always rendered now (was gated behind has_active_filters, computed
+      from server-visible state only) - Sleeve/Neckline/Fabric/Occasion
+      chips come from filter.p.tag query params, which Liquid can't see at
+      all, so vamasSyncTagActiveState() in the script below needs this
+      container to exist unconditionally to inject/remove chips into as it
+      reads the URL client-side. Left empty (and hidden via CSS/JS) when
+      nothing is active, same visual result as before.
+    {%- endcomment -%}
+    {%- assign has_server_chips = false -%}
+    {%- for filter in collection.filters -%}
+      {%- if filter.active_values.size > 0 -%}{%- assign has_server_chips = true -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if size_other_tags != '' -%}{%- assign has_server_chips = true -%}{%- endif -%}
+    {%- comment -%} Inline style only decides the pre-JS default (no flash
+      of an empty bar before vamasSyncTagActiveState() runs) - that function
+      always sets style.display itself right after, based on the real
+      children count once filter.p.tag chips are added too. {%- endcomment -%}
+    <div class="filter-chips" id="chip-container"{% unless has_server_chips %} style="display:none"{% endunless %}>
       {% for filter in collection.filters %}
         {% for value in filter.values %}
           {% if value.active %}
@@ -902,7 +912,6 @@
         {% endunless %}
       {% endfor %}
     </div>
-    {% endif %}
 
     {%- comment -%} If a colour filter is active, cards show that colour's photo/
       swatch as the default instead of always the first-created variant's -
@@ -1165,31 +1174,71 @@ function toggleAcc(head){
     });
   });
 
-  /* Plain product-tag option (Occasion, Fabric/Sleeve/Neckline fallback).
-     data-group-tags (when present) lists every value in this SAME group -
-     e.g. Round Neck/V-Neck/Boat Neck all being Neckline. Combining two values
-     of ONE attribute via Shopify's tag route means AND ("has round-neck AND
-     v-neck"), which no real product can satisfy and always returns 0 - so
-     picking a new one first drops any other active tag from that same group,
-     same as choosing a different radio option would, instead of stacking an
-     impossible combination. Tags from DIFFERENT groups (Sleeve + Neckline)
-     still combine normally. */
+  /* Plain product-tag option (Sleeve, Neckline, Fabric, Occasion fallback) -
+     multi-select OR within and across all of these groups at once, by
+     merchant decision, via Shopify's filter.p.tag query param (repeated
+     values OR together - confirmed live). Trade-off accepted: filter.p.tag
+     has no concept of "this belongs to Sleeve vs Neckline", so picking
+     Sleeveless + V-Neck now means "either", not "both" - only Occasion/
+     Fabric/Sleeve/Neckline share this one pool; native filters (Color,
+     Availability, Price) and PATH-based tags (Size) are separate params
+     and still AND with this pool and each other normally. */
   document.querySelectorAll('.vtag-instant').forEach(function (el) {
     el.addEventListener('click', function (e) {
       e.preventDefault();
       var tag = el.getAttribute('data-tag').trim().toLowerCase().replace(/\s+/g, '-');
-      var tags = currentTagsFromPath();
-      var idx = tags.indexOf(tag);
-      if (idx > -1) {
-        tags.splice(idx, 1);
-      } else {
-        var groupTags = (el.getAttribute('data-group-tags') || '').split('||').filter(Boolean);
-        if (groupTags.length) tags = tags.filter(function (t) { return groupTags.indexOf(t) === -1; });
-        tags.push(tag);
-      }
-      navigate(tags, new URLSearchParams(location.search));
+      var params = new URLSearchParams(location.search);
+      var existing = params.getAll('filter.p.tag');
+      var idx = existing.indexOf(tag);
+      if (idx > -1) existing.splice(idx, 1); else existing.push(tag);
+      params.delete('filter.p.tag');
+      existing.forEach(function (t) { params.append('filter.p.tag', t); });
+      navigate(currentTagsFromPath(), params);
     });
   });
+
+  /* filter.p.tag lives in the query string, which Liquid's current_tags
+     can't see (confirmed live: it only reflects the PATH tag segment), so
+     is-active and the removable chips for this group can't be rendered
+     server-side at all - built here instead, on load and reused after
+     every click (the click above always does a full navigation, so a
+     fresh page load is all this needs to handle). */
+  function vamasSyncTagActiveState() {
+    var active = new URLSearchParams(location.search).getAll('filter.p.tag').map(function (t) { return t.toLowerCase(); });
+    document.querySelectorAll('.vtag-instant').forEach(function (el) {
+      var tag = (el.getAttribute('data-tag') || '').trim().toLowerCase().replace(/\s+/g, '-');
+      el.classList.toggle('is-active', active.indexOf(tag) > -1);
+    });
+    var container = document.getElementById('chip-container');
+    if (!container) return;
+    Array.prototype.slice.call(container.querySelectorAll('[data-ptag-chip]')).forEach(function (el) { el.remove(); });
+    active.forEach(function (tag) {
+      var label = tag.split('-').map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
+      var a = document.createElement('a');
+      a.href = '#';
+      a.className = 'f-chip vtag-instant';
+      a.setAttribute('data-tag', tag);
+      a.setAttribute('data-ptag-chip', '');
+      a.textContent = label;
+      var x = document.createElement('span');
+      x.className = 'x';
+      a.appendChild(x);
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var params = new URLSearchParams(location.search);
+        var existing = params.getAll('filter.p.tag').filter(function (t) { return t.toLowerCase() !== tag; });
+        params.delete('filter.p.tag');
+        existing.forEach(function (t) { params.append('filter.p.tag', t); });
+        navigate(currentTagsFromPath(), params);
+      });
+      container.appendChild(a);
+    });
+    /* .filter-chips has its own display:flex rule, which beats the plain
+       `hidden` attribute (same trap already documented on has-group-hub
+       above) - set style.display directly instead. */
+    container.style.display = container.children.length === 0 ? 'none' : '';
+  }
+  vamasSyncTagActiveState();
 
   /* Price range - applies on release (native "change" fires on mouseup/
      keyup-commit), not on every pixel of drag. Removes its own param

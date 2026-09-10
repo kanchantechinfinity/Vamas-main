@@ -68,43 +68,29 @@
   {% endif %}
 {% elsif tag_list != blank %}
   {%- comment -%}
-    These are different VALUES of the SAME attribute (a blouse can't be both
-    Round Neck and V-Neck), so picking a second one in this group has to
-    REPLACE the first, not add to it - "round-neck+v-neck" combined via
-    Shopify's tag route means AND, which is impossible for two values of one
-    attribute and always returns 0 products. data-group-tags carries every
-    slug in this specific group so the click handler in vamas-collection.
-    liquid knows which sibling to remove before adding the new one. Filters
-    from a DIFFERENT group (e.g. Sleeve + Neckline together) still combine
-    normally - only same-group swapping is special-cased.
+    By merchant decision, every value here is independently selectable
+    (multi-select OR within this group, e.g. Sleeveless + Full Sleeves both
+    at once) rather than the earlier "pick one, replaces the other" pattern.
+    This ONLY works via Shopify's filter.p.tag QUERY PARAM (repeated values
+    OR together - confirmed live), not the /handle/tag-a+tag-b PATH route
+    (which is always AND, impossible for two values of one attribute).
+    Trade-off accepted: filter.p.tag has no concept of "this tag belongs to
+    Sleeve vs Neckline" - it's one flat bucket, so every group using this
+    branch (Sleeve, Neckline, Fabric, Occasion) shares the SAME OR pool.
+    Confirmed live: this correctly ANDs with PATH-based tags (Occasion) and
+    with native filters (Color/Availability/Price), just not with each
+    OTHER - i.e. Sleeveless+V-Neck now means "either", not "both".
+
+    current_tags (path-based) can't see a query-param tag, so is-active
+    can't be set here in Liquid - vamasSyncTagActiveState() in vamas-
+    collection.liquid reads location.search on load/navigation and adds
+    .is-active + rebuilds the removable chips instead.
   {%- endcomment -%}
   {% assign group_tags = tag_list | split: ',' %}
-  {% assign group_tag_slugs = '' %}
   {% for t in group_tags %}
     {% assign tag_clean = t | strip %}
     {% if tag_clean != '' %}
-      {%- comment -%} `| handle` has to run on tag_clean ALONE, in its own
-        assign, before appending - chained onto the accumulator directly
-        (group_tag_slugs | append: tag_clean | handle | append: '||') it
-        re-slugs the WHOLE growing string every loop, collapsing every tag
-        added so far into one hyphenated blob instead of separate "||"
-        entries (confirmed live: produced "round-neck-v-neck-boat-neck-...||"
-        - one blob - instead of "round-neck||v-neck||boat-neck||..."). {%- endcomment -%}
-      {% assign tag_slug = tag_clean | handle %}
-      {% assign group_tag_slugs = group_tag_slugs | append: tag_slug | append: '||' %}
-    {% endif %}
-  {% endfor %}
-  {% for t in group_tags %}
-    {% assign tag_clean = t | strip %}
-    {% if tag_clean != '' %}
-      {%- comment -%} current_tags holds the real tag as it exists in the
-        URL/store - lowercase-hyphenated ("elbow-sleeves"), never the Title
-        Case label ("Elbow Sleeves") this loop displays. Comparing against
-        the unslugified label here meant is-active never matched, so the
-        tick never showed even though the actual filtering (which already
-        slugifies before navigating) worked correctly. {%- endcomment -%}
-      {% assign tag_slug_active = tag_clean | handle %}
-      <a href="#" class="filter-check-row vtag-instant{% if current_tags contains tag_slug_active %} is-active{% endif %}" data-tag="{{ tag_clean | escape }}" data-group-tags="{{ group_tag_slugs }}">
+      <a href="#" class="filter-check-row vtag-instant" data-tag="{{ tag_clean | escape }}">
         {{ tag_clean }}
       </a>
     {% endif %}
