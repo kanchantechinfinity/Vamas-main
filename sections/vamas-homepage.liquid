@@ -662,7 +662,7 @@
     var appBlocks = document.querySelectorAll('.shopify-app-block');
     for (var i = 0; i < appBlocks.length; i++) {
       var idOrHtml = (appBlocks[i].id || '') + appBlocks[i].innerHTML.slice(0, 300);
-      if (/raptor|instagram/i.test(idOrHtml)) {
+      if (/raptor|instagram|instafeed/i.test(idOrHtml)) {
         var sectionEl = appBlocks[i].closest('.shopify-section');
         if (sectionEl && sectionEl.parentNode) {
           sectionEl.parentNode.removeChild(sectionEl);
