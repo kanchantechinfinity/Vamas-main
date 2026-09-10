@@ -133,18 +133,40 @@
         {%- if group_label == 'MORE CATEGORIES' -%}{%- assign cover_asset = 'bridal.jpg' -%}{%- endif -%}
         {%- assign circle_img = img_source.image -%}
         {%- if circle_img == blank -%}{%- assign circle_img = img_source.products.first.featured_image -%}{%- endif -%}
-        {%- comment -%} If none of this group's children exist as real collections
-          here, /collections/all?group=... shows an empty hub - send the tile
-          straight to /collections/all instead of a dead end. {%- endcomment -%}
-        {%- assign group_has_child = false -%}
-        {%- assign group_children_after = group_children_map | split: group_slug | last | remove_first: '~' -%}
-        {%- assign group_children_entry = group_children_after | split: '|' | first -%}
-        {%- assign group_children_list = group_children_entry | split: '+' -%}
-        {%- for gc in group_children_list -%}
-          {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign group_has_child = true -%}{%- endif -%}
-        {%- endfor -%}
-        {%- assign group_href = '/collections/all?group=' | append: group_slug -%}
-        {%- unless group_has_child -%}{%- assign group_href = '/collections/all' -%}{%- endunless -%}
+        {%- comment -%} Same "5th circle" pattern already used in vamas-
+          collection.liquid's own group hub: a real collection matching the
+          group itself now often exists (confirmed live: summer-essentials
+          and festive-wear both are, 31 and 101 products) - link straight to
+          that instead of the old ?group= hub, which only ever checked
+          stale "-copy" suffixed child collections (most of which no longer
+          exist) and otherwise fell back to the generic /collections/all,
+          landing shoppers on the wrong page for a category that DOES have
+          a real, dedicated collection now. plain-edit itself 404s but its
+          title-guess the-plain-edit is real, same fallback order as
+          everywhere else in this theme. {%- endcomment -%}
+        {%- assign group_real_col = collections[group_slug] -%}
+        {%- if group_real_col == blank or group_real_col.handle == blank -%}
+          {%- assign group_real_guess = group_label | handle -%}
+          {%- if collections[group_real_guess] != blank and collections[group_real_guess].handle -%}
+            {%- assign group_real_col = collections[group_real_guess] -%}
+          {%- endif -%}
+        {%- endif -%}
+        {%- if group_real_col != blank and group_real_col.handle -%}
+          {%- assign group_href = group_real_col.url -%}
+        {%- else -%}
+          {%- comment -%} No real collection for this group yet (e.g. More
+            Categories) - fall back to the old ?group= hub if it still has
+            at least one working "-copy" child, else the generic listing. {%- endcomment -%}
+          {%- assign group_has_child = false -%}
+          {%- assign group_children_after = group_children_map | split: group_slug | last | remove_first: '~' -%}
+          {%- assign group_children_entry = group_children_after | split: '|' | first -%}
+          {%- assign group_children_list = group_children_entry | split: '+' -%}
+          {%- for gc in group_children_list -%}
+            {%- if collections[gc] != blank and collections[gc].handle -%}{%- assign group_has_child = true -%}{%- endif -%}
+          {%- endfor -%}
+          {%- assign group_href = '/collections/all?group=' | append: group_slug -%}
+          {%- unless group_has_child -%}{%- assign group_href = '/collections/all' -%}{%- endunless -%}
+        {%- endif -%}
         <a class="vcat" href="{{ group_href }}">
           <span class="vcat__ring">
             {% if cover_asset != blank %}

@@ -1385,3 +1385,51 @@ measured on a real large monitor.
 - Committed `21e1b40`, pushed, sent all 3 affected files (both liquid files
   + `assets/vamas-collection.css`, unchanged aside from an added-then-
   reverted no-op) to user for vamas.in.
+
+## 2026-09-10 — Footer Popular Searches content/alignment/spacing + duplicate H1 fix
+
+- Replaced Popular Searches list with the merchant's curated 31-item list
+  (from a shared demo HTML). Verified all 31 live before shipping: 30/31
+  correct first try, 1 wrong (`summer-essential` -> corrected to
+  `summer-essentials`, confirmed 31 real products on the right handle).
+- Fixed alignment: `.vamas-shopby` had its own `max-width:1280px;
+  margin:0 auto` PLUS `padding: ... var(--page-gutter)`, while the parent
+  `.vamas-footer` already applies that same gutter as ITS OWN padding and
+  the meaning band / footer grid rely solely on that (no extra width cap)
+  - so Popular Searches was both narrower AND offset differently than
+    everything else in the footer. Removed the extra max-width/margin/
+    horizontal padding entirely so it now shares the exact same left/right
+    edges as the logo section and footer columns.
+- Trimmed excess top/bottom padding (`.vamas-shopby` outer wrapper down to
+  0, `.vamas-shopby__group` from 16px to 8px vertical) and removed the
+  border-bottom line that sat above the newsletter ("Stay in style")
+  section, per explicit request.
+- Separately: user's SEO checker screenshot showed 2 H1 tags on a normal
+  collection page (Dual Neck Blouses). Found the cause in
+  `sections/vamas-collection.liquid`: FOUR `<h1>` tags existed total -
+  `col-hero-title` (the real one, always rendered) plus three duplicates
+  of the exact same `collection.title` text: `col-mhead__title` (mobile-
+  only header, CSS-hidden on desktop but still counted as a real H1 in the
+  DOM by the SEO tool), and two `col-cats__title` occurrences (category-
+  page circles view, and each hidden group-hub div on /collections/all -
+  up to 5 H1s possible there). Downgraded all three to plain `<div>`s with
+  the same CSS classes (zero visual change) - `col-hero-title` is now the
+  page's only H1, confirmed by grep (1 match) before shipping.
+- Committed `b92a18e` (schema/style validated), pushed (confirmed via
+  fetch after a stalled first push attempt), sent both files to user for
+  vamas.in.
+
+## 2026-09-10 — Instagram app: Instafeed compatibility check
+
+- User considering switching from Instagram Feed RPTR to Instafeed.
+- Blog sidebar (`sections/vamas-blog.liquid`) already generically detects
+  ANY `@app` block (comment literally anticipated this: "Instafeed etc.")
+  - no changes needed there.
+- Homepage (`sections/vamas-homepage.liquid`) JS repositioning script only
+  matched `/raptor|instagram/i` against the app's injected section
+  id/HTML to find and move it - widened to `/raptor|instagram|instafeed/i`
+  defensively, in case Instafeed's section doesn't contain the literal
+  word "instagram" anywhere in its id/markup.
+- Committed `c68a12b`, pushed, sent to user for vamas.in. Recommend the
+  user verify live once Instafeed's block is actually added/activated,
+  in case its DOM needs a different match than anticipated.
