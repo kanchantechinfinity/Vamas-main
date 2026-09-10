@@ -912,12 +912,16 @@
           {% endif %}
         {% endfor %}
       {% endfor %}
-      {% for ct in current_tags %}
-        {% assign ct_head = ct | downcase | slice: 0, 5 %}
-        {% unless ct_head == 'size-' %}
-          <a href="#" class="f-chip vtag-instant" data-tag="{{ ct }}">{{ ct }}<span class="x"></span></a>
-        {% endunless %}
-      {% endfor %}
+      {%- comment -%} No more server-rendered chip loop here for Sleeve/
+        Neckline/Fabric/Occasion tags - they're all filter.p.tag (query
+        param) now, not path tags, and vamasSyncTagActiveState() below
+        builds their chips client-side. Confirmed live this was rendering
+        a DUPLICATE chip for the same tag: Shopify echoes a single active
+        filter.p.tag value back into current_tags too (just not multiple
+        values at once), so this loop and the JS one were both firing for
+        the same tag - "short-sleeves" (this loop, raw) plus "Short
+        Sleeves" (JS, title-cased), and removing either chip cleared both
+        since they're really one underlying state. {%- endcomment -%}
     </div>
 
     {%- comment -%} If a colour filter is active, cards show that colour's photo/

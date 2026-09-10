@@ -1433,3 +1433,33 @@ measured on a real large monitor.
 - Committed `c68a12b`, pushed, sent to user for vamas.in. Recommend the
   user verify live once Instafeed's block is actually added/activated,
   in case its DOM needs a different match than anticipated.
+
+## 2026-09-10 — Category grid: Summer Essentials/Festive Wear/More Categories tiles fixed
+
+- User: on the category circle grid page, Summer Essentials/Festive Wear/
+  More Categories tiles weren't opening their sub-category pages, while
+  Plain Edit (and Brezzy Prints) did.
+- First attempt (WRONG, reverted): assumed the fix was linking directly to
+  a real collection matching the group's own handle (confirmed live that
+  summer-essentials/festive-wear DO exist as real collections now, 31/101
+  products). User corrected: they want the SAME ?group= hub circle-page
+  experience as Plain Edit, not a flat product listing.
+- Real root cause, found by comparing against `vamas-header.liquid`'s
+  mega-menu (confirmed by user as already working correctly there): both
+  files use the same `?group=` hub destination and the same "does this
+  group have at least one real child collection" check - but
+  `vamas-categories.liquid`'s version only tested the literal "-copy"
+  suffixed handle (e.g. "corsets-copy", which mostly doesn't exist),
+  while the header's version ALSO tries the handle with "-copy" stripped
+  (e.g. "corsets", which does exist) as a fallback. Missing that fallback
+  meant this page always concluded "no real child" for Summer Essentials/
+  Festive Wear/More Categories and silently sent shoppers to the generic
+  /collections/all instead of their real hub - Plain Edit worked by
+  coincidence, because ITS "-copy" child handles genuinely still exist.
+- Fix: mirrored the header's exact child-check logic (including the
+  "-copy" strip fallback) into `sections/vamas-categories.liquid`.
+  Confirmed the hub page itself already correctly resolves its OWN child
+  circles with the same fallback (`vamas-collection.liquid` line ~391),
+  so no further fix needed there once navigation lands on the right URL.
+- Committed `2b5bdbd` (reverting the first wrong attempt's commit
+  `366a0d6` in effect), pushed, sent to user for vamas.in.
