@@ -1338,3 +1338,50 @@ measured on a real large monitor.
   any filter/sort change.
 - Debug lines removed. Committed `703e5f8`, pushed, sent both files to
   user for vamas.in.
+
+## 2026-09-10 — Filter architecture change: multi-select via filter.p.tag
+
+- User explicitly requested multi-select (OR) within Sleeve/Neckline (e.g.
+  Sleeveless + Full Sleeves both selected together), overriding the earlier
+  "same-group replace" design from earlier in the session.
+- Investigated Shopify's `filter.p.tag` query param live: repeated values
+  OR together natively (confirmed: sleeveless+full-sleeves = 130 products,
+  vs the impossible-AND 0 the old path-route gave). Confirmed it still ANDs
+  correctly with PATH-based tags (Occasion) and native filters (Color/
+  Availability/Price/Size) - only same-bucket filter.p.tag values OR with
+  each other.
+- Real constraint surfaced and explicitly accepted by the user: filter.p.tag
+  is one flat bucket with no concept of "Sleeve" vs "Neckline" as separate
+  categories, so making ALL FOUR groups (Sleeve, Neckline, Fabric, Occasion)
+  multi-select means they now OR with EACH OTHER too, not just within
+  themselves - Sleeveless + V-Neck now means "either", not "both" (previously
+  correctly AND'd via the path route). User chose "every group multiselect"
+  after this trade-off was explained twice.
+- Implementation:
+  - `snippets/vamas-filter-group-options.liquid`: tag_list branch simplified
+    - removed the group-tag-slugs/replace mechanism entirely (no longer
+      needed), removed server-side is-active (current_tags can't see query-
+      string tags at all - confirmed live, chip never appeared for a
+      `?filter.p.tag=` URL).
+  - `sections/vamas-collection.liquid`:
+    - Both hardcoded Occasion blocks simplified the same way.
+    - `.vtag-instant` click handler rewritten to add/remove filter.p.tag
+      query values instead of URL path segments.
+    - New `vamasSyncTagActiveState()` runs on every page load: reads
+      `filter.p.tag` from location.search, toggles `.is-active` client-side,
+      and builds/removes the matching chips (title-cased from the slug)
+      into `#chip-container`, since Liquid has no way to see these anymore.
+    - `#chip-container` now always renders (was conditionally gated on
+      server-only-visible state) so the JS always has somewhere to inject
+      into; still avoids a flash-of-empty-bar via a Liquid-computed inline
+      `style="display:none"` default that JS overwrites once it knows the
+      real children count - deliberately NOT using the `hidden` attribute,
+      since this exact file already has a documented case
+      (`has-group-hub`) of `hidden` losing to this file's own `display`
+      rules.
+- Verified live before shipping: multi-select within Sleeve (130 products),
+  cross-group AND with Occasion preserved (5 products for Sleeveless+Full
+  Sleeves+Wedding Wear together).
+- Committed `21e1b40`, pushed, sent all 3 affected files (both liquid files
+  + `assets/vamas-collection.css`, unchanged aside from an added-then-
+  reverted no-op) to user for vamas.in.

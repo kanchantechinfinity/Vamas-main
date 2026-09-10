@@ -147,6 +147,27 @@
         {% for item in shopby_trend %}<a href="/collections/{{ item | strip | handleize }}">{{ item | strip }}</a>{% endfor %}
       </div>
     </div>
+
+    {%- comment -%}
+      Popular Searches - label|real-handle pairs, not a naive | handleize
+      guess like the four lists above. Verified live one by one against
+      real collections: e.g. "Sleeveless Blouse" only resolves as
+      signature-sleeveless (sleeveless-blouse is a 404), "Cotton Blouse" as
+      everyday-cottons (classic-cottons exists too but only has 1 product),
+      "New Arrivals" specifically as new-arrivals-1 per the merchant's own
+      confirmed URL (a separate new-arrivals collection also exists but is
+      not the one used elsewhere in this theme). "Blouse For Lehenga" from
+      the merchant's original list had no matching collection under any
+      handle tried and was dropped rather than left as a dead link.
+    {%- endcomment -%}
+    {% assign popular_labels = "Designer Blouse Online,Cotton Blouse,Kanjivaram Silk Blouse,Corset Blouse,Sleeveless Blouse,Stretchable Blouse,Collar Neck Blouse,Wedding Saree Blouse,Party Wear Blouse Online,Festive Blouse Designs,Crochet Blouse,Brocade Blouse,Bridgerton Inspired Blouse,Kashmiri Work Blouse,Re-Verse By Vamas,Shapewear,New Arrivals" | split: "," %}
+    {% assign popular_handles = "all-blouses,everyday-cottons,the-kanjivaram-companion,corsets,signature-sleeveless,side-stretch-blouses,royal-collar-necks,wedding-wear,party-wear,festive-wear,crochet-line,brocade-bohemia,brigerton-inspired-series,kashmiri-work,re-verse-by-vamas,shapewear,new-arrivals-1" | split: "," %}
+    <div class="vamas-shopby__group">
+      <div class="vamas-shopby__title">Popular Searches</div>
+      <div class="vamas-shopby__links">
+        {% for label in popular_labels %}<a href="/collections/{{ popular_handles[forloop.index0] }}">{{ label }}</a>{% endfor %}
+      </div>
+    </div>
   </div>
   {% endif %}
 
