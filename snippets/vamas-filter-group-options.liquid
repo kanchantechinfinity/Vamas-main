@@ -97,7 +97,14 @@
   {% for t in group_tags %}
     {% assign tag_clean = t | strip %}
     {% if tag_clean != '' %}
-      <a href="#" class="filter-check-row vtag-instant{% if current_tags contains tag_clean %} is-active{% endif %}" data-tag="{{ tag_clean | escape }}" data-group-tags="{{ group_tag_slugs }}">
+      {%- comment -%} current_tags holds the real tag as it exists in the
+        URL/store - lowercase-hyphenated ("elbow-sleeves"), never the Title
+        Case label ("Elbow Sleeves") this loop displays. Comparing against
+        the unslugified label here meant is-active never matched, so the
+        tick never showed even though the actual filtering (which already
+        slugifies before navigating) worked correctly. {%- endcomment -%}
+      {% assign tag_slug_active = tag_clean | handle %}
+      <a href="#" class="filter-check-row vtag-instant{% if current_tags contains tag_slug_active %} is-active{% endif %}" data-tag="{{ tag_clean | escape }}" data-group-tags="{{ group_tag_slugs }}">
         {{ tag_clean }}
       </a>
     {% endif %}
