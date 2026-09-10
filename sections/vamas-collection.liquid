@@ -36,7 +36,6 @@
 {%- unless collection.handle != blank -%}
   {%- assign collection = collections.all -%}
 {%- endunless -%}
-<!-- DBG2 handle="{{ collection.handle }}" url="{{ collection.url }}" current_tags="{{ collection.current_tags | join: ',' }}" current_tags_size="{{ collection.current_tags.size }}" request_path="{{ request.path }}" -->
 
 
 {%- comment -%}
@@ -625,28 +624,28 @@
           <div class="acc-item" data-filter-group="sleeve">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% render 'vamas-filter-group-options', native_filter: sleeve_filter, tag_list: section.settings.sleeve_tag_list, current_tags: collection.current_tags, empty_note: 'Sleeve filter not set up yet.' %}
+              {% render 'vamas-filter-group-options', native_filter: sleeve_filter, tag_list: section.settings.sleeve_tag_list, current_tags: current_tags, empty_note: 'Sleeve filter not set up yet.' %}
             </div>
           </div>
 
           <div class="acc-item" data-filter-group="neckline">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% render 'vamas-filter-group-options', native_filter: neckline_filter, tag_list: section.settings.neckline_tag_list, current_tags: collection.current_tags, empty_note: 'Neckline filter not set up yet.' %}
+              {% render 'vamas-filter-group-options', native_filter: neckline_filter, tag_list: section.settings.neckline_tag_list, current_tags: current_tags, empty_note: 'Neckline filter not set up yet.' %}
             </div>
           </div>
 
           <div class="acc-item" data-filter-group="color">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% render 'vamas-filter-group-options', native_filter: color_filter, group_colors: true, tag_list: 'Black,Maroon,Gold,Green,Navy Blue,Red,Pink,White', current_tags: collection.current_tags, empty_note: 'Colour filter not set up yet.' %}
+              {% render 'vamas-filter-group-options', native_filter: color_filter, group_colors: true, tag_list: 'Black,Maroon,Gold,Green,Navy Blue,Red,Pink,White', current_tags: current_tags, empty_note: 'Colour filter not set up yet.' %}
             </div>
           </div>
 
           <div class="acc-item" data-filter-group="fabric">
             <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
             <div class="acc-body open">
-              {% render 'vamas-filter-group-options', native_filter: fabric_filter, tag_list: 'Silk,Cotton,Velvet,Georgette,Banarasi', current_tags: collection.current_tags, empty_note: 'Fabric filter not set up yet.' %}
+              {% render 'vamas-filter-group-options', native_filter: fabric_filter, tag_list: 'Silk,Cotton,Velvet,Georgette,Banarasi', current_tags: current_tags, empty_note: 'Fabric filter not set up yet.' %}
             </div>
           </div>
 
@@ -689,7 +688,7 @@
             <div class="acc-body open">
               {% assign vtag_occasion = "Haldi And Mehendi,Wedding Wear,Occasion Wear,Party Wear" | split: "," %}
               {% for t in vtag_occasion %}
-                <a href="#" class="filter-check-row vtag-instant{% if collection.current_tags contains t %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
+                {% assign t_slug_active = t | handle %}<a href="#" class="filter-check-row vtag-instant{% if current_tags contains t_slug_active %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
               {% endfor %}
             </div>
           </div>
@@ -776,28 +775,28 @@
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>SLEEVE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% render 'vamas-filter-group-options', native_filter: sleeve_filter, tag_list: section.settings.sleeve_tag_list, current_tags: collection.current_tags, empty_note: 'Sleeve filter not set up yet.' %}
+        {% render 'vamas-filter-group-options', native_filter: sleeve_filter, tag_list: section.settings.sleeve_tag_list, current_tags: current_tags, empty_note: 'Sleeve filter not set up yet.' %}
       </div>
     </div>
 
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>NECKLINE</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% render 'vamas-filter-group-options', native_filter: neckline_filter, tag_list: section.settings.neckline_tag_list, current_tags: collection.current_tags, empty_note: 'Neckline filter not set up yet.' %}
+        {% render 'vamas-filter-group-options', native_filter: neckline_filter, tag_list: section.settings.neckline_tag_list, current_tags: current_tags, empty_note: 'Neckline filter not set up yet.' %}
       </div>
     </div>
 
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>COLOR</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% render 'vamas-filter-group-options', native_filter: color_filter, group_colors: true, tag_list: 'Black,Maroon,Gold,Green,Navy Blue,Red,Pink,White', current_tags: collection.current_tags, empty_note: 'Colour filter not set up yet.' %}
+        {% render 'vamas-filter-group-options', native_filter: color_filter, group_colors: true, tag_list: 'Black,Maroon,Gold,Green,Navy Blue,Red,Pink,White', current_tags: current_tags, empty_note: 'Colour filter not set up yet.' %}
       </div>
     </div>
 
     <div class="acc-item">
       <div class="acc-head open" onclick="toggleAcc(this)"><span>FABRIC</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
-        {% render 'vamas-filter-group-options', native_filter: fabric_filter, tag_list: 'Silk,Cotton,Velvet,Georgette,Banarasi', current_tags: collection.current_tags, empty_note: 'Fabric filter not set up yet.' %}
+        {% render 'vamas-filter-group-options', native_filter: fabric_filter, tag_list: 'Silk,Cotton,Velvet,Georgette,Banarasi', current_tags: current_tags, empty_note: 'Fabric filter not set up yet.' %}
       </div>
     </div>
 
@@ -846,7 +845,7 @@
       <div class="acc-head open" onclick="toggleAcc(this)"><span>OCCASION</span><span class="acc-arrow">&#9660;</span></div>
       <div class="acc-body open">
         {% for t in vtag_occasion %}
-          <a href="#" class="filter-check-row vtag-instant{% if collection.current_tags contains t %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
+          {% assign t_slug_active = t | handle %}<a href="#" class="filter-check-row vtag-instant{% if current_tags contains t_slug_active %} is-active{% endif %}" data-tag="{{ t }}">{{ t }}</a>
         {% endfor %}
       </div>
     </div>

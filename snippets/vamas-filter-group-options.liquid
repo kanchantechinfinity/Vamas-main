@@ -104,7 +104,6 @@
         tick never showed even though the actual filtering (which already
         slugifies before navigating) worked correctly. {%- endcomment -%}
       {% assign tag_slug_active = tag_clean | handle %}
-      <!-- DBG tag_slug_active="{{ tag_slug_active }}" current_tags="{{ current_tags | join: ',' }}" current_tags_class="{{ current_tags.class }}" -->
       <a href="#" class="filter-check-row vtag-instant{% if current_tags contains tag_slug_active %} is-active{% endif %}" data-tag="{{ tag_clean | escape }}" data-group-tags="{{ group_tag_slugs }}">
         {{ tag_clean }}
       </a>
