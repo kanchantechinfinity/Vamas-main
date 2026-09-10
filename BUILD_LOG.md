@@ -1293,3 +1293,22 @@ measured on a real large monitor.
   (tag fallback) was shipped then reverted by `0a9b5c0` (forced native)
   within the same session, per the user's explicit follow-up decision -
   the tag fallback is no longer active for Sleeve/Neckline.
+
+## 2026-09-10 — Filter tick-mark missing for Sleeve/Neckline/Fabric/Occasion
+
+- User (video): filtering works correctly for these groups, but the
+  selected option never shows its checkmark/active state in the sidebar
+  (Color was fine).
+- Root cause (`snippets/vamas-filter-group-options.liquid`, tag_list
+  branch): the active-state check compared `collection.current_tags`
+  against the raw Title Case label from settings (e.g. "Elbow Sleeves"),
+  but Shopify's real active tags are lowercase-hyphenated ("elbow-
+  sleeves") - same class of bug as the CSV tag-casing issue found
+  earlier. Never matched, so `is-active` never applied, even though the
+  actual navigation (which already slugifies via the JS click handler)
+  filtered correctly.
+- Fix: handleize the label before comparing (`tag_clean | handle`).
+  Applies to every group using this shared snippet: Sleeve, Neckline,
+  Fabric, Occasion.
+- Committed `c4031bc`, pushed (confirmed via fetch), sent to user for
+  vamas.in.
