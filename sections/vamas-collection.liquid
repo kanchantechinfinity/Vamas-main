@@ -36,6 +36,8 @@
 {%- unless collection.handle != blank -%}
   {%- assign collection = collections.all -%}
 {%- endunless -%}
+<!-- DBG2 handle="{{ collection.handle }}" url="{{ collection.url }}" current_tags="{{ collection.current_tags | join: ',' }}" current_tags_size="{{ collection.current_tags.size }}" request_path="{{ request.path }}" -->
+
 
 {%- comment -%}
   GROUP HUB PAGES - Explore by Category groupings (THE PLAIN EDIT, SUMMER
