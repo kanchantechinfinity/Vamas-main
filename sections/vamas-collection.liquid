@@ -895,9 +895,17 @@
       reads the URL client-side. Left empty (and hidden via CSS/JS) when
       nothing is active, same visual result as before.
     {%- endcomment -%}
+    {%- comment -%} Shopify has its OWN native "Tags" filter that
+      automatically tracks filter.p.tag (confirmed live: its url_to_remove
+      correctly drops just one tag, label is the raw tag text) - excluded
+      here by param_name, since vamasSyncTagActiveState() already renders a
+      nicer, title-cased chip for the exact same state. Without this
+      exclusion both rendered a chip for the same active tag (this one raw
+      lowercase, the JS one title-cased) at once. {%- endcomment -%}
     {%- assign has_server_chips = false -%}
     {%- for filter in collection.filters -%}
-      {%- if filter.active_values.size > 0 -%}{%- assign has_server_chips = true -%}{%- endif -%}
+      {%- assign filter_probe_param = filter.values.first.param_name -%}
+      {%- if filter.active_values.size > 0 and filter_probe_param != 'filter.p.tag' -%}{%- assign has_server_chips = true -%}{%- endif -%}
     {%- endfor -%}
     {%- if size_other_tags != '' -%}{%- assign has_server_chips = true -%}{%- endif -%}
     {%- comment -%} Inline style only decides the pre-JS default (no flash
@@ -906,6 +914,8 @@
       children count once filter.p.tag chips are added too. {%- endcomment -%}
     <div class="filter-chips" id="chip-container"{% unless has_server_chips %} style="display:none"{% endunless %}>
       {% for filter in collection.filters %}
+        {% assign chip_filter_param = filter.values.first.param_name %}
+        {% if chip_filter_param == 'filter.p.tag' %}{% continue %}{% endif %}
         {% for value in filter.values %}
           {% if value.active %}
             <a href="{{ value.url_to_remove }}" class="f-chip">{{ value.label }}<span class="x"></span></a>

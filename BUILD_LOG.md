@@ -1463,3 +1463,21 @@ measured on a real large monitor.
   so no further fix needed there once navigation lands on the right URL.
 - Committed `2b5bdbd` (reverting the first wrong attempt's commit
   `366a0d6` in effect), pushed, sent to user for vamas.in.
+
+## 2026-09-10 — Duplicate filter chip fixed
+
+- User: filters work correctly, but selecting one tag (e.g. Short Sleeves)
+  shows TWO chips ("short-sleeves" and "Short Sleeves"), and removing
+  either one clears both.
+- Root cause: the multi-select rearchitecture (commit `21e1b40`) added a
+  new client-side chip builder for Sleeve/Neckline/Fabric/Occasion (now
+  filter.p.tag-based), but never removed the OLD server-rendered chip
+  loop (`{% for ct in current_tags %}`), which is now redundant. Turns
+  out Shopify echoes a SINGLE active filter.p.tag value back into
+  current_tags too (confirmed live) - just not multiple values at once -
+  so both the old loop and the new JS fired for the same one active tag,
+  producing two chips for one underlying selection.
+- Fix: removed the dead old loop entirely from `sections/vamas-
+  collection.liquid`. The JS chip builder (`vamasSyncTagActiveState()`)
+  is now the sole source of chips for these four groups.
+- Committed `e78f158`, pushed, sent to user for vamas.in.
