@@ -1255,7 +1255,7 @@ wirePriceSlider('rangeMinT', 'rangeMaxT', 'priceFillT', 'priceMinT', 'priceMaxT'
     { "type": "text", "id": "size_list", "label": "Size Row (comma-separated)", "info": "Shown in the sticky filter bar. Used only as a last resort — a native Size filter (Search & Discovery) wins, then size-NN product tags. Neither needs this list.", "default": "32,34,36,38,40,42,44,46,48,50" },
     { "type": "header", "content": "Sleeve & Neckline" },
     { "type": "paragraph", "content": "These use a Search & Discovery filter if one exists (matched by label containing 'sleeve' / 'neck'). If not, the tag lists below are used instead — tags must match the product tags exactly." },
-    { "type": "text", "id": "sleeve_tag_list", "label": "Sleeve Tags (comma-separated)", "default": "Sleeveless, Cap Sleeves, Short Sleeves, Elbow Sleeves, Three-Quarter Sleeves, Full Sleeves" },
+    { "type": "text", "id": "sleeve_tag_list", "label": "Sleeve Tags (comma-separated)", "info": "Cap Sleeves removed from the default list - confirmed live that 0 products currently carry that tag, so clicking it silently redirected back with nothing selected. Add it back here once a real product has it.", "default": "Sleeveless, Short Sleeves, Elbow Sleeves, Three-Quarter Sleeves, Full Sleeves" },
     { "type": "text", "id": "neckline_tag_list", "label": "Neckline Tags (comma-separated)", "default": "Round Neck, V-Neck, Boat Neck, Square Neck, Sweetheart Neck, High Neck, Halter Neck" },
     { "type": "textarea", "id": "hero_subtitle", "label": "Hero Subtitle (overrides collection description)" },
     { "type": "checkbox", "id": "show_hero_motif", "label": "Show Decorative Motif", "default": true },

@@ -1312,3 +1312,29 @@ measured on a real large monitor.
   Fabric, Occasion.
 - Committed `c4031bc`, pushed (confirmed via fetch), sent to user for
   vamas.in.
+
+## 2026-09-10 — Filter tick-mark bug: real root cause found
+
+- Previous fix (`c4031bc`) corrected a real casing bug but didn't solve it -
+  user confirmed uploaded correctly, still no tick. Added temporary debug
+  output (`sections/vamas-collection.liquid` + the snippet) to dump the
+  actual current_tags value reaching the filter code.
+- Debug output proved it: `collection.current_tags` is EMPTY in this
+  render context, even on a genuine tag-filtered URL
+  (`/collections/all-blouses/sleeveless`) - while the bare global
+  `current_tags` (no `collection.` prefix) is correctly populated, proven
+  by the filter CHIP (which already used the bare version and was ticking
+  correctly all along).
+- Real fix: every `{% render 'vamas-filter-group-options', ... %}` call
+  and both hardcoded Occasion blocks now pass/read the bare `current_tags`
+  instead of `collection.current_tags`. Also fixed the Occasion blocks'
+  own Title-Case-vs-slug comparison bug (same class as the earlier
+  Sleeve/Neckline one) while in there.
+- Also fixed, same investigation session: pagination carrying a stale
+  `page=` param across filter changes (`1ee0a98`) - clicking a filter
+  that narrowed results while on page 2+ of the unfiltered set produced
+  an out-of-range page request and a false "no products found" (e.g.
+  Halter Neck on All Blouses). `navigate()` now always resets `page` on
+  any filter/sort change.
+- Debug lines removed. Committed `703e5f8`, pushed, sent both files to
+  user for vamas.in.
